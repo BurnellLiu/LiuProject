@@ -62,11 +62,13 @@
   <ItemGroup>
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
+    <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
+    <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

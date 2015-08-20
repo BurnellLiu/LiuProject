@@ -2,10 +2,14 @@
 #include <cstdio>
 #include <Windows.h>
 
+#include <intrin.h>
+
 #include "..\\Src\\Wmi\\LWMIHardwareClasses.h"
+#include "..\\src\\Wmi\\LWMISystemClasses.h"
 
 int main()
 {
+    //__cpuid()
     setlocale(LC_CTYPE, "");
 
     wstring name;
@@ -14,6 +18,7 @@ int main()
     wstring serialNumber;
     wstring version;
     wstring strArchitecture;
+    wstring model;
     unsigned long maxClockSpeed;
     unsigned long coresNum;
     unsigned long logicalProcessorsNum;
@@ -114,6 +119,49 @@ int main()
         wprintf(L"\n");
     }
 
+    LWMI::LComputerSystemManager computerSystemManager;
+    wprintf(L"ComputerSystem: \n");
+    model.clear();
+    computerSystemManager.GetComputerSystemModel(0, model);
+    wprintf(L"ModelName: %s\n", model.c_str());
+    manufacturer.clear();
+    computerSystemManager.GetComputerSystemManufacturer(0, manufacturer);
+    wprintf(L"Manufacturer: %s\n", manufacturer.c_str());
+    LWMI::LComputerSystemManager::LPC_SYSTEM_TYPE pcSystemType;
+    computerSystemManager.GetComputerSystemPCType(0, pcSystemType);
+    wstring strPCSystemType;
+    if (pcSystemType == LWMI::LComputerSystemManager::DESKTOP)
+    {
+        strPCSystemType = L"Desktop";
+    }
+    if (pcSystemType == LWMI::LComputerSystemManager::NOTE_BOOK)
+    {
+        strPCSystemType = L"NoteBook";
+    }
+    if (pcSystemType == LWMI::LComputerSystemManager::TABLET)
+    {
+        strPCSystemType = L"Tablet";
+    }
+    wprintf(L"PCSystemType: %s\n", strPCSystemType.c_str());
+    wstring systemType;
+    computerSystemManager.GetComputerSystemType(0, systemType);
+    wprintf(L"SystemType: %s\n", systemType.c_str());
+    wprintf(L"\n");
+
+    LWMI::LOperatingSystemManager osManager;
+    wprintf(L"OperatingSystem:\n");
+    wstring caption;
+    osManager.GetOSCaption(0, caption);
+    wprintf(L"Caption: %s\n", caption.c_str());
+    strArchitecture.clear();
+    osManager.GetOSArchitecture(0, strArchitecture);
+    wprintf(L"Architecture: %s\n", strArchitecture.c_str());
+    version.clear();
+    osManager.GetOSVersion(0, version);
+    wprintf(L"Version: %s\n", version.c_str());
+    wstring systemDrive;
+    osManager.GetOSSystemDrive(0, systemDrive);
+    wprintf(L"SystemDrive: %s\n", systemDrive.c_str());
     system("pause");
     return 0;
 }
