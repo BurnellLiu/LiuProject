@@ -101,10 +101,10 @@ public:
     /// @return 转置后的结果矩阵
     LMatrix<Type> T() const;
 
-	/// @brief 获取矩阵中的一行数据
-	/// @param[in] row 行索引
-	/// @return 行向量
-	LMatrix<Type> GetRow(unsigned int row) const;
+    /// @brief 获取矩阵中的一行数据
+    /// @param[in] row 行索引
+    /// @return 行向量
+    LMatrix<Type> GetRow(unsigned int row) const;
 
     /// @brief 获取矩阵中的一列数据
     /// @param[in] col 列索引
@@ -234,9 +234,9 @@ LMatrix<Type>& LMatrix<Type>::operator = (const LMatrix<Type>& rhs)
 LTEMPLATE
 LMatrix<Type> LMatrix<Type>::operator * (IN const LMatrix<Type>& B) const
 {
-	LMatrix<Type> C;
-	MUL(*this, B, C);
-	return C;
+    LMatrix<Type> C;
+    MUL(*this, B, C);
+    return C;
 }
 
 LTEMPLATE
@@ -262,13 +262,13 @@ LMatrix<Type> LMatrix<Type>::T() const
 LTEMPLATE
 LMatrix<Type> LMatrix<Type>::GetRow(unsigned int row) const
 {
-	LMatrix<Type> rowVector(1, this->ColumnLen);
-	for (unsigned int i = 0; i < this->ColumnLen; i++)
-	{
-		rowVector.Data[0][i] = this->Data[row][i];
-	}
+    LMatrix<Type> rowVector(1, this->ColumnLen);
+    for (unsigned int i = 0; i < this->ColumnLen; i++)
+    {
+        rowVector.Data[0][i] = this->Data[row][i];
+    }
 
-	return rowVector;
+    return rowVector;
 }
 
 LTEMPLATE
