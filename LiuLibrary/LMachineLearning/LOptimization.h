@@ -35,8 +35,8 @@
 /// @brief 基因范围结构
 struct LOGeneDomain
 {
-	int Min; ///< 最小值
-	int Max; ///< 最大值
+    int Min; ///< 最小值
+    int Max; ///< 最大值
 };
 
 typedef LArray<int> LOGenome; ///< 基因组
@@ -48,14 +48,14 @@ struct LOSolution
 {
     static const int MAX_COST; ///< 最大成本
 
-	LOGenome* PGenome; ///< 基因组
-	int Cost; ///< 解成本
-	
-	/// @brief 重载<操作符, 使该结构可被排序函数使用
-	bool operator < (const LOSolution& other)
-	{
-		return this->Cost < other.Cost;
-	}
+    LOGenome* PGenome; ///< 基因组
+    int Cost; ///< 解成本
+    
+    /// @brief 重载<操作符, 使该结构可被排序函数使用
+    bool operator < (const LOSolution& other)
+    {
+        return this->Cost < other.Cost;
+    }
 };
 
 /// @brief 解变异类
@@ -127,62 +127,62 @@ class LOCostFunInterface
 public:
     virtual ~LOCostFunInterface(){};
 
-	/// @brief 计算基因组的成本
+    /// @brief 计算基因组的成本
     ///
     /// 越差的基因组, 返回的成本越高
-	/// @param[in] genome 基因组
+    /// @param[in] genome 基因组
     /// @return 成本
-	virtual int CalculateGenomeCost(IN LOGenome& genome) = 0;
+    virtual int CalculateGenomeCost(IN LOGenome& genome) = 0;
 };
 
 /// @brief 遗传算法优化抽象基类
 class LGeneticOptimize
 {
 public:
-	LGeneticOptimize();
-	virtual ~LGeneticOptimize();
+    LGeneticOptimize();
+    virtual ~LGeneticOptimize();
 
 public:
-	/// @brief 设置种群大小
+    /// @brief 设置种群大小
     ///
     /// 请在使用Init()方法前,设置种群大小
-	/// @param[in] popSize 种群大小, 范围为大于0的整数, 默认值(200)
-	/// @return 参数错误返回false
-	bool SetPopSize(IN int popSize);
+    /// @param[in] popSize 种群大小, 范围为大于0的整数, 默认值(200)
+    /// @return 参数错误返回false
+    bool SetPopSize(IN int popSize);
 
-	/// @brief 设置每一代直接胜出者的比例
+    /// @brief 设置每一代直接胜出者的比例
     ///
     /// 请在使用Init()方法前,设置胜出者比例
-	/// @param[in] elitePer 胜出者比例, 范围为0~1的浮点数, 默认值(0.2)
-	/// @return 参数错误返回false
-	bool SetElitePercent(IN float elitePer);
-
-	/// @brief 设置变异概率
-	///
-	/// 请在使用Init()方法前,设置变异概率
-	/// @param[in] mutateProb 变异概率, 范围为0~1的浮点数, 默认值(0.02)
+    /// @param[in] elitePer 胜出者比例, 范围为0~1的浮点数, 默认值(0.2)
     /// @return 参数错误返回false
-	bool SetMutateProb(IN float mutateProb);
+    bool SetElitePercent(IN float elitePer);
 
-	/// @brief 设置变异步长
-	///
-	/// 请在使用Init()方法前,设置变异步长
-	/// @param[in] mutateStep 变异步长, 步长为大于等于1的整数, 默认值(1)
+    /// @brief 设置变异概率
+    ///
+    /// 请在使用Init()方法前,设置变异概率
+    /// @param[in] mutateProb 变异概率, 范围为0~1的浮点数, 默认值(0.02)
     /// @return 参数错误返回false
-	bool SetMutateStep(IN int mutateStep);
+    bool SetMutateProb(IN float mutateProb);
 
-	/// @brief 设置交叉切割点列表
+    /// @brief 设置变异步长
+    ///
+    /// 请在使用Init()方法前,设置变异步长
+    /// @param[in] mutateStep 变异步长, 步长为大于等于1的整数, 默认值(1)
+    /// @return 参数错误返回false
+    bool SetMutateStep(IN int mutateStep);
+
+    /// @brief 设置交叉切割点列表
     /// 
     /// 请在使用Init()方法前,设置变异步长
-	/// @param[in] splitPointList 切割点列表
+    /// @param[in] splitPointList 切割点列表
     /// @return true
-	bool SetCrossOverSplitPointList(IN const LGOCrossOverSplitPointList& splitPointList);
+    bool SetCrossOverSplitPointList(IN const LGOCrossOverSplitPointList& splitPointList);
 
-	/// @brief 初始化
-	/// @param[in] pCostFun 成本函数
-	/// @param[in] genomeDomain 基因组范围
+    /// @brief 初始化
+    /// @param[in] pCostFun 成本函数
+    /// @param[in] genomeDomain 基因组范围
    /// @return 参数错误返回false
-	virtual bool Init(IN LOCostFunInterface* pCostFun, IN const LOGenomeDomain& genomeDomain) = 0;
+    virtual bool Init(IN LOCostFunInterface* pCostFun, IN const LOGenomeDomain& genomeDomain) = 0;
 
 protected:
     /// @brief 初始种群
@@ -193,36 +193,36 @@ protected:
     /// @return true
     bool PopulationCompete();
 
-	/// @brief 赌轮选择法
-	/// @return 个体索引
-	int RouletteWheelSelection();
+    /// @brief 赌轮选择法
+    /// @return 个体索引
+    int RouletteWheelSelection();
 
-	/// @brief 清理资源
+    /// @brief 清理资源
     /// @return true
-	bool CleanUp();
+    bool CleanUp();
 
 protected:
-	typedef LArray<LOSolution> LSolutionList; // 解列表
+    typedef LArray<LOSolution> LSolutionList; // 解列表
 
     LOSolutionMutate m_solutionMutate; ///< 解变异
     LOSolutionCrossOver m_solutionCrossOver; ///< 解交叉
 
-	float m_elitePer; ///< 胜出者比例
-	int m_popSize; ///< 种群大小
+    float m_elitePer; ///< 胜出者比例
+    int m_popSize; ///< 种群大小
 
-	int m_genomeLength; ///< 基因组长度
-	LSolutionList m_solutionList; ///< 解列表(种群)
-	LSolutionList m_solutionListCopy; ///< 解列表副本
-	LOGenomeDomain m_genomeDomain; ///< 基因组范围
+    int m_genomeLength; ///< 基因组长度
+    LSolutionList m_solutionList; ///< 解列表(种群)
+    LSolutionList m_solutionListCopy; ///< 解列表副本
+    LOGenomeDomain m_genomeDomain; ///< 基因组范围
 
-	LOCostFunInterface* m_pCostFun; ///< 成本函数接口指针
+    LOCostFunInterface* m_pCostFun; ///< 成本函数接口指针
 
     bool m_bInitSuccess; ///< 初始化成功
 
 private:
-	// 禁止默认赋值操作符和拷贝构造函数
-	LGeneticOptimize(const LGeneticOptimize&);
-	LGeneticOptimize& operator = (const LGeneticOptimize&);
+    // 禁止默认赋值操作符和拷贝构造函数
+    LGeneticOptimize(const LGeneticOptimize&);
+    LGeneticOptimize& operator = (const LGeneticOptimize&);
 };
 
 /// @brief 开放式遗传算法

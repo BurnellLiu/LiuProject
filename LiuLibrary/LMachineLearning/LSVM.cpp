@@ -332,7 +332,7 @@ void LSVM::SMOTrainModelExample(
     unsigned int sampleNum = sampleMatrix.RowLen; // 样本数量
     unsigned int featureNum = sampleMatrix.ColumnLen; // 样本的特征数量
 
-	float B = 0.0f; // 分割超平面的截距
+    float B = 0.0f; // 分割超平面的截距
 
     // 将alpha向量初始化为0向量(列向量)
     alphaVector.Reset(sampleNum, 1);
@@ -348,26 +348,26 @@ void LSVM::SMOTrainModelExample(
         // 循环扫描每一个alpha, 对可优化的alpha进行优化
         for (unsigned int i = 0; i < sampleNum; i++)
         {
-			// 根据现有alpha计算出第i个样本的间隔, 计算出的值不符合KKT条件表明需要优化
+            // 根据现有alpha计算出第i个样本的间隔, 计算出的值不符合KKT条件表明需要优化
 
-			// 计算权重
-			// w = sum for i = 1 to m (alpha(i) * y(i) * x(i))
+            // 计算权重
+            // w = sum for i = 1 to m (alpha(i) * y(i) * x(i))
             LSVMMatrix W = LSVMMatrix::DOTMUL(alphaVector, classVector).T() * sampleMatrix;// 计算出的权重为行向量
 
-			// 根据权重计算间隔
-			// margin = y(i) * (W * X(i) + b)
-			LSVMMatrix Xi = sampleMatrix.GetRow(i); // 行向量
+            // 根据权重计算间隔
+            // margin = y(i) * (W * X(i) + b)
+            LSVMMatrix Xi = sampleMatrix.GetRow(i); // 行向量
             LSVMMatrix XiT = Xi.T(); // 列向量
-			LSVMMatrix WXi = W * XiT;
+            LSVMMatrix WXi = W * XiT;
             float Ei = WXi[0][0] + B - classVector[i][0]; // 样本i标签的误差
-			float marginXi = classVector[i][0] * (WXi[0][0] + B); // 样本i的间隔
+            float marginXi = classVector[i][0] * (WXi[0][0] + B); // 样本i的间隔
             
-			// KKT条件::
-			//alpha如果小于C, 那么margin应该大于等于1, 如不符合那么违反KKT条件, 则需要优化
-			//alpha如果大于0, 那么margin应该小于等于1, 如不符合那么违反KKT条件, 则需要优化
-			if (((alphaVector[i][0] < C) && (marginXi < 1 - toler)) ||
-				((alphaVector[i][0] > 0) && (marginXi > 1 + toler)))
-			{
+            // KKT条件::
+            //alpha如果小于C, 那么margin应该大于等于1, 如不符合那么违反KKT条件, 则需要优化
+            //alpha如果大于0, 那么margin应该小于等于1, 如不符合那么违反KKT条件, 则需要优化
+            if (((alphaVector[i][0] < C) && (marginXi < 1 - toler)) ||
+                ((alphaVector[i][0] > 0) && (marginXi > 1 + toler)))
+            {
                 // 随机选择另一个alpha j
                 int j = this->SelectRand(i, sampleNum-1);
                 LSVMMatrix Xj = sampleMatrix.GetRow(j); // 行向量
@@ -445,7 +445,7 @@ void LSVM::SMOTrainModelExample(
                
                alphaChanged = true;
              
-			}
+            }
         }
     
         if (alphaChanged)
