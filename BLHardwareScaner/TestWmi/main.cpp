@@ -2,14 +2,13 @@
 #include <cstdio>
 #include <Windows.h>
 
-#include <intrin.h>
-
 #include "..\\Src\\Wmi\\LWMIHardwareClasses.h"
 #include "..\\src\\Wmi\\LWMISystemClasses.h"
 
+#include "..\\\Src\LCPUID.h"
+
 int main()
 {
-    //__cpuid()
     setlocale(LC_CTYPE, "");
 
     wstring name;
@@ -162,6 +161,16 @@ int main()
     wstring systemDrive;
     osManager.GetOSSystemDrive(0, systemDrive);
     wprintf(L"SystemDrive: %s\n", systemDrive.c_str());
+    wprintf(L"\n");
+
+    LCPUID cpuid;
+    printf("CPUID:\n");
+    string cpuVendor;
+    cpuid.GetVendor(cpuVendor);
+    printf("Vendor: %s\n", cpuVendor.c_str());
+    string cpuBrand;
+    cpuid.GetBrand(cpuBrand);
+    printf("Brand: %s\n", cpuBrand.c_str());
     system("pause");
     return 0;
 }
