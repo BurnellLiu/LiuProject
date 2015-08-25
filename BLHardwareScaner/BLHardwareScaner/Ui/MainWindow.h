@@ -13,7 +13,7 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindowClass ui;
+    Ui::MainWindowForm ui;
 };
 
 #endif // MAINWINDOW_H

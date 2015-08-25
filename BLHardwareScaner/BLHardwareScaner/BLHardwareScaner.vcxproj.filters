@@ -19,6 +19,9 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="WMI">
+      <UniqueIdentifier>{e7645185-a8f5-48b6-b86d-42a30774510f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -33,6 +36,21 @@
     <ClCompile Include="GeneratedFiles\qrc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\HardwareInformation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_HardwareInformation.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp">
+      <Filter>WMI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp">
+      <Filter>WMI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp">
+      <Filter>WMI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\MainWindow.h">
@@ -44,10 +62,28 @@
     <CustomBuild Include="Resources\MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="Ui\HardwareInformation.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\HardwareInformation.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_HardwareInformation.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMICoreManager.h">
+      <Filter>WMI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
+      <Filter>WMI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h">
+      <Filter>WMI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
