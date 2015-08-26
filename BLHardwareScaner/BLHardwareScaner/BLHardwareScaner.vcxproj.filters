@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;cxx;c;def</Extensions>
-    </Filter>
     <Filter Include="Form Files">
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
@@ -19,16 +15,20 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="WMI">
+    <Filter Include="Ui">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Src">
       <UniqueIdentifier>{e7645185-a8f5-48b6-b86d-42a30774510f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Ui</Filter>
     </ClCompile>
     <ClCompile Include="Ui\MainWindow.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Ui</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\moc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
@@ -36,25 +36,28 @@
     <ClCompile Include="GeneratedFiles\qrc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ui\HardwareInformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\moc_HardwareInformation.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\HardwareInfor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\HardwareInforPage.cpp">
+      <Filter>Ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\MainWindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>Ui</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\MainWindow.ui">
       <Filter>Form Files</Filter>
@@ -62,28 +65,31 @@
     <CustomBuild Include="Resources\MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\HardwareInformation.ui">
-      <Filter>Form Files</Filter>
+    <CustomBuild Include="Ui\HardwareInforPage.h">
+      <Filter>Ui</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\HardwareInformation.h">
-      <Filter>Source Files</Filter>
+    <CustomBuild Include="Ui\HardwareInfor.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_HardwareInformation.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h">
-      <Filter>WMI</Filter>
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\HardwareInfor.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
