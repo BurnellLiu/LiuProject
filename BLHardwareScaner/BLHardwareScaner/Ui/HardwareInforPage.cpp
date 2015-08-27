@@ -11,6 +11,8 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
 
     const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
     QString strPCSystemInfor = QString::fromStdWString(computerSystemInfor.Manufacturer);
+    strPCSystemInfor += QString::fromStdWString(L"  ");
+    strPCSystemInfor += QString::fromStdWString(computerSystemInfor.ModelName);
     switch (computerSystemInfor.Type)
     {
     case DESKTOP:

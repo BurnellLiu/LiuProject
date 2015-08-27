@@ -48,4 +48,5 @@ void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSys
     LWMI::LComputerSystemManager::LPC_SYSTEM_TYPE pcType;
     computerSytemManager.GetComputerSystemPCType(0, pcType);
     computerSystemInfor.Type = (PC_SYSTEM_TYPE)pcType;
+    computerSytemManager.GetComputerSystemModel(0, computerSystemInfor.ModelName);
 }

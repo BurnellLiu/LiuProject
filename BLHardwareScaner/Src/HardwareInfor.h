@@ -30,8 +30,10 @@ enum PC_SYSTEM_TYPE
 /// @brief 计算机系统信息结构
 struct ComputerSystemInfor
 {
+    wstring ModelName; ////< 机种名
     PC_SYSTEM_TYPE Type; ///< 计算机类型
     wstring Manufacturer; ///< 制造商
+    
 };
 
 /// @brief 硬件信息类
