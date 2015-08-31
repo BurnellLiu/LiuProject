@@ -4,6 +4,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_MainWindow.h"
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

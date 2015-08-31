@@ -91,5 +91,8 @@
     <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ui\UiDefines.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

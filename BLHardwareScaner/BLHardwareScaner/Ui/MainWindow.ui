@@ -82,10 +82,23 @@
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
+        <property name="minimumSize">
+         <size>
+          <width>776</width>
+          <height>397</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
-        <widget class="QWidget" name="page"/>
+        <widget class="QWidget" name="page">
+         <property name="baseSize">
+          <size>
+           <width>776</width>
+           <height>397</height>
+          </size>
+         </property>
+        </widget>
         <widget class="QWidget" name="page_2"/>
        </widget>
       </item>

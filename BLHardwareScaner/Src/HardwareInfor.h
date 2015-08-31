@@ -36,6 +36,15 @@ struct ComputerSystemInfor
     
 };
 
+/// @brief 操作系统信息结构
+struct OperatingSystemInfor
+{
+    wstring Caption; ////< 标题
+    wstring Architecture; ////< 架构
+    wstring Version; ////< 版本
+    wstring SystemDrive; ////< 系统盘
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -50,6 +59,10 @@ public:
     /// @return 计算机系统信息
     const ComputerSystemInfor& GetComputerSystemInfor() const; 
 
+    /// @brief 获取操作系统信息
+    /// @return 操作系统信息
+    const OperatingSystemInfor& GetOperatingSystemInfor() const;
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -61,12 +74,17 @@ private:
     /// @param[in] computerSystemInfor 存储计算机系统信息
     void ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor);
 
+    /// @brief 扫描操作系统信息
+    /// @param[in] operatingSystemInfor 操作系统信息
+    void ScanOperatingSystemInfor(OUT OperatingSystemInfor& operatingSystemInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
 
 private:
     ComputerSystemInfor m_computerSystemInfor; ///< 计算机系统信息
+    OperatingSystemInfor m_operatingSystemInfor; ///< 操作系统信息
 };
 
 #endif
