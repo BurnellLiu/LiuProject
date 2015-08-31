@@ -9,6 +9,7 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
 {
     ui.setupUi(this);
 
+    // 填充计算机系统信息
     const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
 
     QString strManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
@@ -43,6 +44,7 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     }
     ui.labelComputerSystemInfor->setText(strPCSystemInfor);
 
+    // 填充操作系统信息
     const OperatingSystemInfor& operatingSystemInfor = HardwareInfor::GetInstance().GetOperatingSystemInfor();
     
     QString systemCaption = QString::fromStdWString(operatingSystemInfor.Caption);
@@ -56,6 +58,24 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     strOperatingSystemInfor += systemArchitecture;
 
     ui.labelOperatingSystemInfor->setText(strOperatingSystemInfor);
+
+    // 填写主板信息
+    const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
+    QString baseBoardDesc = QString::fromStdWString(baseBoardInfor.Description);
+    baseBoardDesc = baseBoardDesc.trimmed();
+    QString baseBoardManufacturer = QString::fromStdWString(baseBoardInfor.Manufacturer);
+    baseBoardManufacturer = baseBoardManufacturer.trimmed();
+    QString strBaseBoardInfor = baseBoardManufacturer;
+    strBaseBoardInfor += "  ";
+    strBaseBoardInfor += baseBoardDesc;
+
+    ui.labelBaseBoardInfor->setText(strBaseBoardInfor);
+
+    // 填写处理器信息
+    const ProcessorInfor& processorInfor = HardwareInfor::GetInstance().GetProcessorInfor();
+    QString processorName = QString::fromStdWString(processorInfor.Name);
+    processorName = processorName.trimmed();
+    ui.labelProcessorInfor->setText(processorName);
 }
 
 HardwareInforPage::~HardwareInforPage()

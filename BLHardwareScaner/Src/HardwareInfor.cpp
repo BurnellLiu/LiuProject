@@ -2,6 +2,7 @@
 #include "HardwareInfor.h"
 
 #include "Wmi/LWMISystemClasses.h"
+#include "Wmi/LWMIHardwareClasses.h"
 
 
 
@@ -39,10 +40,22 @@ const OperatingSystemInfor& HardwareInfor::GetOperatingSystemInfor() const
     return m_operatingSystemInfor;
 }
 
+const BaseBoardInfor& HardwareInfor::GetBaseBoardInfor() const
+{
+    return m_baseBoardInfor;
+}
+
+const ProcessorInfor& HardwareInfor::GetProcessorInfor() const
+{
+    return m_processorInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
     this->ScanOperatingSystemInfor(m_operatingSystemInfor);
+    this->ScanBaseBoardInfor(m_baseBoardInfor);
+    this->ScanProcessorInfor(m_processorInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
@@ -64,4 +77,22 @@ void HardwareInfor::ScanOperatingSystemInfor(OUT OperatingSystemInfor& operating
     operatingSystemManager.GetOSArchitecture(0, operatingSystemInfor.Architecture);
     operatingSystemManager.GetOSVersion(0, operatingSystemInfor.Version);
     operatingSystemManager.GetOSSystemDrive(0, operatingSystemInfor.SystemDrive);
+}
+
+void HardwareInfor::ScanBaseBoardInfor(OUT BaseBoardInfor& baseBoardInfor)
+{
+    LWMI::LBaseBoardManager baseBoardManager;
+    baseBoardManager.GetBaseBoardDescription(0, baseBoardInfor.Description);
+    baseBoardManager.GetBaseBoardManufacturer(0, baseBoardInfor.Manufacturer);
+    baseBoardManager.GetBaseBoardSerialNumber(0, baseBoardInfor.SerialNumber);
+}
+
+void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
+{
+    LWMI::LProcessorManager processorManager;
+    processorManager.GetProcessorName(0, processorInfor.Name);
+    processorManager.GetProcessorDesription(0, processorInfor.Description);
+    processorManager.GetProcessorManufacturer(0, processorInfor.Manufacturer);
+    processorManager.GetProcessorCoresNumber(0, processorInfor.CoresNumber);
+    processorManager.GetProcessorLogicalProcessorNumber(0, processorInfor.LogicalProcessorNumber);
 }

@@ -112,7 +112,7 @@
       </widget>
      </item>
      <item row="4" column="1" colspan="2">
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="labelBaseBoardInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>
@@ -136,7 +136,7 @@
       </widget>
      </item>
      <item row="5" column="1" colspan="2">
-      <widget class="QLabel" name="label_9">
+      <widget class="QLabel" name="labelProcessorInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>
