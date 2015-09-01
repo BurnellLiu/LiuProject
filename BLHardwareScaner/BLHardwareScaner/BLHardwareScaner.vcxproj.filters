@@ -22,6 +22,9 @@
     <Filter Include="Src">
       <UniqueIdentifier>{e7645185-a8f5-48b6-b86d-42a30774510f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Wmi">
+      <UniqueIdentifier>{3552ea21-5cf1-44c8-bf3b-5fdfecbb3844}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -36,15 +39,6 @@
     <ClCompile Include="GeneratedFiles\qrc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\HardwareInfor.cpp">
       <Filter>Src</Filter>
     </ClCompile>
@@ -53,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="Ui\HardwareInforPage.cpp">
       <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp">
+      <Filter>Src\Wmi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp">
+      <Filter>Src\Wmi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp">
+      <Filter>Src\Wmi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,15 +79,6 @@
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Src\Wmi\LWMICoreManager.h">
-      <Filter>Src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
-      <Filter>Src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\HardwareInfor.h">
       <Filter>Src</Filter>
     </ClInclude>
@@ -93,6 +87,15 @@
     </ClInclude>
     <ClInclude Include="Ui\UiDefines.h">
       <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMICoreManager.h">
+      <Filter>Src\Wmi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h">
+      <Filter>Src\Wmi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
+      <Filter>Src\Wmi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
