@@ -9,7 +9,6 @@
 TemperatureProbe::TemperatureProbe()
 {
     m_pCpuTemperature = new LIntelCpuTemperature();
-    m_pGpu = new LNvGpu();
 }
 
 TemperatureProbe::~TemperatureProbe()
@@ -30,5 +29,16 @@ unsigned int TemperatureProbe::GetCpuTemp()
 
 unsigned int TemperatureProbe::GetGpuTemp()
 {
-    return m_pGpu->GetTemperature();
+    static LNvGpu nvGpu;
+    static LAMDGpu amdGpu;
+
+    unsigned int temp = nvGpu.GetTemperature();
+    if (temp != 0)
+        return temp;
+
+    temp = amdGpu.GetTemperature();
+    if (temp != 0)
+        return temp;
+
+    return 0;
 }
