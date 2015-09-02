@@ -10,7 +10,7 @@ int main()
     TemperatureProbe tempProbe;
     while (true)
     {
-        printf("Cpu Temp: %u\n", tempProbe.GetCpuTemp());
+        printf("Cpu Temp: %u\r", tempProbe.GetCpuTemp());
         Sleep(1000);
     }
     return 0;

@@ -9,6 +9,56 @@
 
 #pragma comment(lib, "WinRing0.lib")
 
+bool LCpuTemperature::GetProcessorCoreNumber(unsigned long& physicalCoreNumber, unsigned long& logicalProcessorNumber)
+{
+    bool bRet = false;
+    PSYSTEM_LOGICAL_PROCESSOR_INFORMATION processorInforList = NULL;
+    DWORD dwRequireSize = 0;
+    SYSTEM_INFO systemInfo = {0};
+    DWORD listCount = 0;
+
+    BOOL dwRet = GetLogicalProcessorInformation(processorInforList, &dwRequireSize);
+    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+    {
+        bRet = false;
+        goto SAFE_EXIT;
+    }
+
+    processorInforList = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)new char[dwRequireSize];
+
+    dwRet = GetLogicalProcessorInformation(processorInforList, &dwRequireSize);
+    if (FALSE == dwRet)
+    {
+        bRet = false;
+        goto SAFE_EXIT;
+    }
+
+    listCount = dwRequireSize/sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+    physicalCoreNumber = 0;
+    for (unsigned long i = 0; i < listCount; i++)
+    {
+        if (processorInforList[i].Relationship == RelationProcessorCore)
+        {
+            physicalCoreNumber += 1;
+        }
+    }
+
+    // 获取逻辑处理器数量
+    
+    GetNativeSystemInfo(&systemInfo);
+    logicalProcessorNumber = systemInfo.dwNumberOfProcessors;
+
+    bRet = true;
+
+SAFE_EXIT:
+    if (processorInforList != NULL)
+    {
+        delete processorInforList;
+    }
+
+    return bRet;
+}
+
 
 LIntelCpuTemperature::LIntelCpuTemperature()
 {
@@ -25,10 +75,12 @@ LIntelCpuTemperature::~LIntelCpuTemperature()
         DeinitializeOls();
 }
 
-unsigned int LIntelCpuTemperature::Get()
+bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
 {
     if (!m_bInitWinRing0Success)
-        return 0;
+        return false;
+
+    ZeroMemory(temp, sizeof(unsigned long) * MAX_PROCESSOR_CORE_NUMBER);
 
     /*
     DTS( Digital Thermal Senser)方式获取CPU温度，通过读取MSR来实现
@@ -51,7 +103,7 @@ unsigned int LIntelCpuTemperature::Get()
 
     DWORD maxCmdNum = eax;
     if (maxCmdNum < 6)
-        return 0;
+        return false;
 
     // 使用CPUID指令6, 查看CPU是否支持DTS
     // eax第一位为1则表示支持DTS, 反之不支持DTS
@@ -63,7 +115,7 @@ unsigned int LIntelCpuTemperature::Get()
     Cpuid(6, &eax, &ebx, &ecx, &edx);
 
     if (0 == (eax & 1))
-        return 0;
+        return false;
 
     // 使用0xee执行rdmsr指令, 如果exa的第30位为1, 则表示Tjunction为85, 否则为100
     eax = 0;
@@ -76,13 +128,29 @@ unsigned int LIntelCpuTemperature::Get()
     else
         tjunction = 100;
 
+    unsigned long processorCoreNum = 0;
+    unsigned long logicalProcessorNum = 0;
+    if (!this->GetProcessorCoreNumber(processorCoreNum, logicalProcessorNum))
+        return false;
+
     // 使用0x19c执行rdmsr指令, eax的16:23位表示当前DTS值
-    eax = 0;
-    edx = 0;
-    Rdmsr(0x19c, &eax, &edx);
+    // 分别获取每个逻辑处理器的温度
+    for (DWORD processorIndex = 0; processorIndex < logicalProcessorNum; processorIndex += logicalProcessorNum/processorCoreNum)
+    {
+        DWORD threadMask = 1;
+        threadMask = threadMask << processorIndex;
+        DWORD oldMask = SetThreadAffinityMask(GetCurrentThread(), threadMask);
+        if (0 == oldMask)
+            return false;
 
-    DWORD delta = (eax&0x007f0000) >> 16;
+        eax = 0;
+        edx = 0;
+        Rdmsr(0x19c, &eax, &edx);
+        DWORD delta = (eax&0x007f0000) >> 16;
+        temp[processorIndex] = tjunction - delta;
 
+        SetThreadAffinityMask(GetCurrentThread(), oldMask);
+    }
 
-    return tjunction - delta;
+    return true;
 }

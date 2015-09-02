@@ -17,7 +17,13 @@ TemperatureProbe::~TemperatureProbe()
 
 unsigned int TemperatureProbe::GetCpuTemp()
 {
-    return m_pCpuTemperature->Get();
+    unsigned long temp[MAX_PROCESSOR_CORE_NUMBER] = {0};
+    bool bRet = m_pCpuTemperature->Get(temp);
+
+    if (bRet)
+        return temp[0];
+    else
+        return 0;
 }
 
 unsigned int TemperatureProbe::GetGpuTemp()
