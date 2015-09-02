@@ -3,11 +3,13 @@
 #include "TemperatureProbe.h"
 
 #include "Cpu\\LCpuTemperature.h"
+#include "Gpu\\Gpu.h"
 
 
 TemperatureProbe::TemperatureProbe()
 {
     m_pCpuTemperature = new LIntelCpuTemperature();
+    m_pGpu = new LNvGpu();
 }
 
 TemperatureProbe::~TemperatureProbe()
@@ -28,5 +30,5 @@ unsigned int TemperatureProbe::GetCpuTemp()
 
 unsigned int TemperatureProbe::GetGpuTemp()
 {
-    return 0;
+    return m_pGpu->GetTemperature();
 }

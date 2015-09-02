@@ -23,6 +23,7 @@
 #endif
 
 class LCpuTemperature;
+class LGpu;
 
 /// @brief ÎÂ¶ÈÌ½²âÀà
 class TemperatureProbe
@@ -43,6 +44,7 @@ public:
     unsigned int GetGpuTemp();
 private:
     LCpuTemperature* m_pCpuTemperature;
+    LGpu* m_pGpu;
 };
 
 

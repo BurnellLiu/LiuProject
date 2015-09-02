@@ -133,9 +133,11 @@ bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
     if (!this->GetProcessorCoreNumber(processorCoreNum, logicalProcessorNum))
         return false;
 
+    DWORD step =  logicalProcessorNum/processorCoreNum;
+
     // 使用0x19c执行rdmsr指令, eax的16:23位表示当前DTS值
     // 分别获取每个逻辑处理器的温度
-    for (DWORD processorIndex = 0; processorIndex < logicalProcessorNum; processorIndex += logicalProcessorNum/processorCoreNum)
+    for (DWORD processorIndex = 0; processorIndex < logicalProcessorNum; processorIndex += step)
     {
         DWORD threadMask = 1;
         threadMask = threadMask << processorIndex;
@@ -147,7 +149,7 @@ bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
         edx = 0;
         Rdmsr(0x19c, &eax, &edx);
         DWORD delta = (eax&0x007f0000) >> 16;
-        temp[processorIndex] = tjunction - delta;
+        temp[processorIndex/step] = tjunction - delta;
 
         SetThreadAffinityMask(GetCurrentThread(), oldMask);
     }
