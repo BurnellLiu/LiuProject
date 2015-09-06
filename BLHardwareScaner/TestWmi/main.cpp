@@ -5,8 +5,6 @@
 #include "..\\Src\\Wmi\\LWMIHardwareClasses.h"
 #include "..\\src\\Wmi\\LWMISystemClasses.h"
 
-#include "..\\\Src\LCPUID.h"
-
 int main()
 {
     setlocale(LC_CTYPE, "");
@@ -126,18 +124,18 @@ int main()
     manufacturer.clear();
     computerSystemManager.GetComputerSystemManufacturer(0, manufacturer);
     wprintf(L"Manufacturer: %s\n", manufacturer.c_str());
-    LWMI::LComputerSystemManager::LPC_SYSTEM_TYPE pcSystemType;
+    LWMI::LComputerSystemManager::LCOMPUTER_SYSTEM_TYPE pcSystemType;
     computerSystemManager.GetComputerSystemPCType(0, pcSystemType);
     wstring strPCSystemType;
-    if (pcSystemType == LWMI::LComputerSystemManager::DESKTOP)
+    if (pcSystemType == LWMI::LComputerSystemManager::COMPUTER_SYSTEM_DESKTOP)
     {
         strPCSystemType = L"Desktop";
     }
-    if (pcSystemType == LWMI::LComputerSystemManager::NOTE_BOOK)
+    if (pcSystemType == LWMI::LComputerSystemManager::COMPUTER_SYSTEM_NOTE_BOOK)
     {
         strPCSystemType = L"NoteBook";
     }
-    if (pcSystemType == LWMI::LComputerSystemManager::TABLET)
+    if (pcSystemType == LWMI::LComputerSystemManager::COMPUTER_SYSTEM_TABLET)
     {
         strPCSystemType = L"Tablet";
     }
@@ -163,14 +161,6 @@ int main()
     wprintf(L"SystemDrive: %s\n", systemDrive.c_str());
     wprintf(L"\n");
 
-    LCPUID cpuid;
-    printf("CPUID:\n");
-    string cpuVendor;
-    cpuid.GetVendor(cpuVendor);
-    printf("Vendor: %s\n", cpuVendor.c_str());
-    string cpuBrand;
-    cpuid.GetBrand(cpuBrand);
-    printf("Brand: %s\n", cpuBrand.c_str());
     system("pause");
     return 0;
 }

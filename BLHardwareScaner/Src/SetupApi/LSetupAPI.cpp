@@ -1,6 +1,6 @@
 
 
-#include "SetupAPI.h"
+#include "LSetupAPI.h"
 
 #include <algorithm>  
 using std::transform;
@@ -32,7 +32,7 @@ using std::vector;
 /// <RETURNS>
 /// ³É¹¦·µ»Ø0, Ê§°Ü·µ»Øfalse
 /// </RETURNS>
-bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
+static bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
 {
 	int nLen = WideCharToMultiByte(CP_ACP, 0, strSrc.c_str(), -1, NULL, 0, NULL, NULL);  
 	if (nLen<= 0)
@@ -49,6 +49,37 @@ bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
 	delete[] pszDst;
 
 	return true;
+}
+
+/// <SUMMARY>
+/// ×Ö·û´®×ª»»Îª¿í×Ö·û´®
+/// </SUMMARY>
+/// <PARAM name = " strSrc" dir = "IN">
+/// Ô´×Ö·û´®
+/// </PARAM>
+/// <PARAM name = " strDest" dir = "OUT">
+/// ´æ´¢×ª»»ºóµÄ¿í×Ö·û´®
+/// </PARAM>
+/// <RETURNS>
+/// ³É¹¦·µ»Ø0, Ê§°Ü·µ»Øfalse
+/// </RETURNS>
+static bool StringToWString(const string& strSrc, wstring& strDest)
+{
+    int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);  
+    if(nSize <= 0)
+        return false;  
+    wchar_t* pwszDst = new wchar_t[nSize+1];
+
+    int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
+
+    pwszDst[nSize] = 0; 
+
+    strDest.clear();
+    strDest.assign(pwszDst);
+
+    delete[] pwszDst;
+
+    return true;
 }
 
 /// <SUMMARY>
@@ -79,6 +110,7 @@ public:
     DWORD GetLoctionInfo(IN int index, OUT string& devLocationInfo);
 
     DWORD GetInstanceID(IN int index, OUT string& devInstanceID);
+    DWORD GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
     DWORD GetParentInstanceId(IN int index, OUT string& devInstanceID);
 
@@ -350,6 +382,59 @@ DWORD CSADevObject::GetInstanceID(IN int index, OUT string& devInstanceID)
     if (pBuffer)
     {
         LocalFree(pBuffer);
+        pBuffer = NULL;
+    }
+
+    return returnCode;
+}
+
+DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
+{
+    DWORD bufferSize = 0;
+    PWSTR pBuffer = NULL;
+
+    DWORD returnCode = 0;
+    while (true)
+    {
+        BOOL bRet = SetupDiGetDeviceInstanceIdW(m_hDevInfoSet,
+            &m_pDevInfoList[index],
+            pBuffer,
+            bufferSize,
+            &bufferSize);
+        if (bRet == TRUE)
+        {
+            break;
+        }
+
+        if (bRet == FALSE)
+        {
+            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+            {
+                if (pBuffer)
+                {
+                    delete[] pBuffer;
+                    pBuffer = NULL;
+                }
+                pBuffer = (LPWSTR)new wchar_t[bufferSize];
+                ZeroMemory(pBuffer, bufferSize * sizeof(wchar_t));
+            }
+            else
+            {
+                returnCode = GetLastError();
+                break;
+            }
+        }
+    }
+
+    if (returnCode == 0)
+    {
+        devInstanceID.clear();
+        devInstanceID = pBuffer;
+    }
+
+    if (pBuffer)
+    {
+        delete[] pBuffer;
         pBuffer = NULL;
     }
 
@@ -749,6 +834,11 @@ DWORD LSetupDev::GetLoctionInfo(IN int index, OUT string& devLocationInfo)
 }
 
 DWORD LSetupDev::GetInstanceID(IN int index, OUT string& devInstanceID)
+{
+    return m_pSADevObject->GetInstanceID(index, devInstanceID);
+}
+
+DWORD LSetupDev::GetInstanceID(IN int index, OUT wstring& devInstanceID)
 {
     return m_pSADevObject->GetInstanceID(index, devInstanceID);
 }

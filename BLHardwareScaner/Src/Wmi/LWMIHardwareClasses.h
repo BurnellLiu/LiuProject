@@ -22,7 +22,7 @@ namespace LWMI
 {
     class LWMICoreManager;
 
-     /// @brief 主板管理者类
+    /// @brief 主板管理者类
     class LBaseBoardManager
     {
     public:
@@ -59,6 +59,11 @@ namespace LWMI
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LBaseBoardManager(const LBaseBoardManager&);
+        LBaseBoardManager& operator = (const LBaseBoardManager&);
     };
 
     /// @brief BIOS管理者类
@@ -104,6 +109,11 @@ namespace LWMI
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LBIOSManager(const LBIOSManager&);
+        LBIOSManager& operator = (const LBIOSManager&);
     };
 
     /// @brief 处理器管理者类
@@ -134,7 +144,7 @@ namespace LWMI
         /// @param[out] name 存储名称
         /// @return 成功返回true, 失败返回false
         bool GetProcessorName(IN int index, OUT wstring& name);
-        
+
         /// @brief 获取处理器描述
         /// @param[in] index 处理器索引
         /// @param[out] description 存储描述信息
@@ -146,13 +156,13 @@ namespace LWMI
         /// @param[out] architecture 存储架构信息
         /// @return 成功返回true, 失败返回false
         bool GetProcessorArchitecture(IN int index, OUT LPROCESSOR_ARCHITECTURE& architecture);
-        
+
         /// @brief 获取处理器制造商
         /// @param[in] index 处理器索引
         /// @param[out] manufacturer 存储制造商
         /// @return 成功返回true, 失败返回false
         bool GetProcessorManufacturer(IN int index, OUT wstring& manufacturer);
-    
+
         /// @brief 获取处理器最大频率(单位MHz)
         /// @param[in] index 处理器索引
         /// @param[in] speed 存储频率
@@ -173,6 +183,11 @@ namespace LWMI
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LProcessorManager(const LProcessorManager&);
+        LProcessorManager& operator = (const LProcessorManager&);
     };
 
     /// @brief 物理内存管理者类
@@ -210,8 +225,25 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetPhysicalMemoryCapacity(IN int index, OUT unsigned long& capacity);
 
+        /// @brief 获取物理内存频率(单位MHz)
+        /// @param[in] index 物理内存索引
+        /// @param[out] speed 存储频率
+        /// @return 成功返回true, 失败返回false
+        bool GetPhysicalMemorySpeed(IN int index, OUT unsigned long& speed);
+
+        /// @brief 获取物理内存型号
+        /// @param[in] index 索引
+        /// @param[out] partNumber 存储型号
+        /// @return 成功返回true, 失败返回false
+        bool GetPhysicalMemoryPartNumber(IN int index, OUT wstring& partNumber);
+
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LPhysicalMemoryManager(const LPhysicalMemoryManager&);
+        LPhysicalMemoryManager& operator = (const LPhysicalMemoryManager&);
     };
 
     /// @brief 视屏控制器(显卡)管理者类
@@ -219,6 +251,7 @@ namespace LWMI
     {
     public:
         LVideoControllerManager();
+        LVideoControllerManager(IN const wstring& pnpDeviceID);
         ~LVideoControllerManager();
 
         /// @brief 获取视屏控制器数量
@@ -236,8 +269,65 @@ namespace LWMI
         /// @param[in] ramCapacity 记忆体容量
         /// @return 成功返回true, 失败返回false
         bool GetVideoControllerAdapterRAMCapacity(IN int index, OUT unsigned long& ramCapacity);
+
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LVideoControllerManager(const  LVideoControllerManager&);
+        LVideoControllerManager& operator = (const  LVideoControllerManager&);
+    };
+
+    /// @brief 磁盘驱动器管理者类
+    class LDiskDriveManager
+    {
+    public:
+        LDiskDriveManager();
+        ~LDiskDriveManager();
+
+        /// @brief 获取磁盘驱动器数量
+        /// @return 磁盘数量
+        int GetDiskCount();
+
+        /// @brief 获取磁盘型号
+        /// @param[in] index 磁盘索引
+        /// @param[out] model 磁盘型号
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskModel(IN int index, OUT wstring& model);
+
+        /// @brief 获取磁盘序列号
+        ///  
+        /// @param[in] index 磁盘索引
+        /// @param[out] serialNumber 序列号
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskSerialNumber(IN int index, OUT wstring& serialNumber);
+
+        /// @brief 获取磁盘大小
+        /// @param[in] index 磁盘索引
+        /// @param[out] size 存储磁盘大小, 单位(G)
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskSize(IN int index, OUT unsigned long& size);
+
+        /// @brief 获取磁盘设备ID
+        /// @param[in] index 磁盘索引
+        /// @param[out] deviceID 存储磁盘设备ID
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskDeviceID(IN int index, OUT wstring& deviceID);
+
+        /// @brief 获取磁盘实例路径
+        /// @param[in] index 磁盘索引
+        /// @param[out] pnpDeviceID 存储磁盘实例路径
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        // 禁止拷贝构造函数和赋值操作符
+        LDiskDriveManager(const  LDiskDriveManager&);
+        LDiskDriveManager& operator = (const  LDiskDriveManager&);
     };
 
 }

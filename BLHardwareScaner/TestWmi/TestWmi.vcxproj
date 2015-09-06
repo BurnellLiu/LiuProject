@@ -60,14 +60,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\LCPUID.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Src\LCPUID.h" />
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h" />

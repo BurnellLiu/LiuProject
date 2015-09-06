@@ -1,8 +1,9 @@
-#ifndef _SETUPAPI_H_
-#define _SETUPAPI_H_
+#ifndef _LSETUPAPI_H_
+#define _LSETUPAPI_H_
 
 #include <string>
 using std::string;
+using std::wstring;
 
 #ifndef IN
 #define IN
@@ -121,12 +122,13 @@ public:
     /// 设备索引
     /// </PARAM>
     /// <PARAM name = "devLocationInfo" dir = "OUT">
-    /// 保存设备实例ID(大写模式)
+    /// 保存设备实例ID
     /// </PARAM>
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
     unsigned long GetInstanceID(IN int index, OUT string& devInstanceID);
+    unsigned long GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
     /// 获取父系设备实例ID
@@ -135,7 +137,7 @@ public:
     /// 设备索引
     /// </PARAM>
     /// <PARAM name = "devLocationInfo" dir = "OUT">
-    /// 保存父系设备实例ID(大写模式)
+    /// 保存父系设备实例ID
     /// </PARAM>
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
@@ -166,7 +168,7 @@ public:
     /// 列表大小
     /// </PARAM>
     /// <PARAM name = "devInstanceIDList" dir = "OUT">
-    /// 保存子代设备实例ID列表(请先使用GetChildrenNumber分配好需要的空间, 子设备实例ID为大写模式)
+    /// 保存子代设备实例ID列表(请先使用GetChildrenNumber分配好需要的空间)
     /// </PARAM>
     /// <RETURNS>
     /// 成功返回0, 失败返回ErrorCode, 返回系统的GetLastError()

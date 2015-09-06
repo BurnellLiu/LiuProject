@@ -19,21 +19,20 @@ using std::wstring;
 #endif
 
 /// @brief 获取计算机类型
-enum PC_SYSTEM_TYPE
+enum COMPUTER_TYPE
 {
-    UNKNOWN = 0, ///< 未知
-    DESKTOP = 1, ///< 台式机
-    NOTE_BOOK = 2, ///< 笔记本
-    TABLET = 3 ///< 平板电脑
+    COMPUTER_TYPE_UNKNOWN = 0, ///< 未知
+    COMPUTER_TYPE_DESKTOP = 1, ///< 台式机
+    COMPUTER_TYPE_NOTE_BOOK = 2, ///< 笔记本
+    COMPUTER_TYPE_TABLET = 3 ///< 平板电脑
 };
 
 /// @brief 计算机系统信息结构
 struct ComputerSystemInfor
 {
     wstring ModelName; ////< 机种名
-    PC_SYSTEM_TYPE Type; ///< 计算机类型
     wstring Manufacturer; ///< 制造商
-    
+    COMPUTER_TYPE Type; ///< 计算机类型
 };
 
 /// @brief 操作系统信息结构
@@ -63,6 +62,40 @@ struct ProcessorInfor
     unsigned long LogicalProcessorNumber; ///< 逻辑处理器数量
 };
 
+/// @brief 显卡类型
+enum DISPLAY_CARD_TYPE
+{
+    DISPLAY_CARD_UNKNOWN = 0, ///< 未知
+    DISPLAY_CARD_INTERNAL, ///< 集成显卡
+    DISPLAY_CARD_EXTERNAL ///< 独立显卡
+};
+
+/// @brief 最大显卡数量
+#define MAX_DISPLAYCARD_NUMBER 4
+
+/// @brief 显卡信息组
+struct DisplayCardInforArray
+{
+    unsigned long Count; ///< 显卡数量
+    wstring Description[MAX_DISPLAYCARD_NUMBER]; ///< 显卡描述
+    DISPLAY_CARD_TYPE Type[MAX_DISPLAYCARD_NUMBER]; ///< 显卡类型
+    unsigned long RAMSize[MAX_DISPLAYCARD_NUMBER]; ///< 显存大小, 单位(M)
+};
+
+/// @brief 最大物理内存数量
+#define MAX_PHYSICAL_MEMORY_NUMBER 8
+
+/// @brief 内存信息组
+struct PhysicalMemoryInforArray
+{
+    unsigned long Count; ///< 内存数量
+    wstring Manufacturer[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 制造商
+    wstring SerialNumber[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 序列号
+    wstring PartNumbe[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 型号
+    unsigned long Capacity[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 内存容量, 单位(M)
+    unsigned long Speed[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 内存频率
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -89,6 +122,14 @@ public:
     /// @return 处理器信息
     const ProcessorInfor& GetProcessorInfor() const;
 
+    /// @brief 获取显卡信息
+    /// @return 显卡信息
+    const DisplayCardInforArray& GetDisplayCardInfor() const;
+
+    /// @brief 获取物理内存信息
+    /// @return 物理内存信息
+    const PhysicalMemoryInforArray& GetPhysicalMemoryInfor() const;
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -112,6 +153,14 @@ private:
     /// @param[out] processorInfor 存储处理器信息
     void ScanProcessorInfor(OUT ProcessorInfor& processorInfor);
 
+    /// @brief 扫描显卡信息
+    /// @param[out] displayCardInfor 存储显卡信息
+    void ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardInfor);
+
+    /// @brief 扫描显卡信息
+    /// @param[out] physicalMemoryInfor 存储物理内存信息
+    void ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physicalMemoryInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -121,6 +170,8 @@ private:
     OperatingSystemInfor m_operatingSystemInfor; ///< 操作系统信息
     BaseBoardInfor m_baseBoardInfor; ///< 主板信息
     ProcessorInfor m_processorInfor; ///< 处理器信息
+    DisplayCardInforArray m_displayCardInfor; ///< 显卡信息
+    PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
 };
 
 #endif

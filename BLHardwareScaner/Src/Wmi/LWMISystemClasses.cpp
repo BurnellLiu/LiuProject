@@ -31,9 +31,9 @@ namespace LWMI
         return m_pWMICoreManager->GetStringProperty(index, L"Manufacturer", manufacturer);
     }
 
-    bool LComputerSystemManager::GetComputerSystemPCType(IN int index, OUT LPC_SYSTEM_TYPE& type)
+    bool LComputerSystemManager::GetComputerSystemPCType(IN int index, OUT LCOMPUTER_SYSTEM_TYPE& type)
     {
-        type = UNKNOWN;
+        type = COMPUTER_SYSTEM_UNKNOWN;
 
         LUINT16 u16Type;
         bool bRet = m_pWMICoreManager->GetUINT16Property(index, L"PCSystemType", u16Type);
@@ -43,16 +43,16 @@ namespace LWMI
         if (bRet)
         {
             if (1 == u16Type)
-                type = DESKTOP;
+                type = COMPUTER_SYSTEM_DESKTOP;
 
             if (2 == u16Type)
-                type = NOTE_BOOK;
+                type = COMPUTER_SYSTEM_NOTE_BOOK;
         }
 
         if (bRetEx)
         {
             if (8 == u16TypeEx)
-                type = TABLET;
+                type = COMPUTER_SYSTEM_TABLET;
         }
 
         return bRet;

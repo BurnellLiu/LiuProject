@@ -27,9 +27,6 @@
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\LCPUID.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
@@ -39,9 +36,6 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Src\LCPUID.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

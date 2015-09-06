@@ -160,7 +160,7 @@
       </widget>
      </item>
      <item row="6" column="1" colspan="2">
-      <widget class="QLabel" name="label_11">
+      <widget class="QLabel" name="labelDisplayCardInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>
@@ -184,7 +184,7 @@
       </widget>
      </item>
      <item row="7" column="1" colspan="2">
-      <widget class="QLabel" name="label_13">
+      <widget class="QLabel" name="labelMemoryInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>
@@ -208,7 +208,7 @@
       </widget>
      </item>
      <item row="8" column="1" colspan="2">
-      <widget class="QLabel" name="label_15">
+      <widget class="QLabel" name="labelDiskInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>
@@ -232,7 +232,7 @@
       </widget>
      </item>
      <item row="9" column="1" colspan="2">
-      <widget class="QLabel" name="label_17">
+      <widget class="QLabel" name="labelMonitorInfor">
        <property name="font">
         <font>
          <family>Microsoft YaHei UI</family>

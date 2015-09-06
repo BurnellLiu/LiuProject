@@ -30,12 +30,12 @@ namespace LWMI
         ~LComputerSystemManager();
 
         /// @brief 获取计算机类型
-        enum LPC_SYSTEM_TYPE
+        enum LCOMPUTER_SYSTEM_TYPE
         {
-            UNKNOWN = 0, ///< 未知
-            DESKTOP = 1, ///< 台式机
-            NOTE_BOOK = 2, ///< 笔记本
-            TABLET = 3 ///< 平板电脑
+            COMPUTER_SYSTEM_UNKNOWN = 0, ///< 未知
+            COMPUTER_SYSTEM_DESKTOP = 1, ///< 台式机
+            COMPUTER_SYSTEM_NOTE_BOOK = 2, ///< 笔记本
+            COMPUTER_SYSTEM_TABLET = 3 ///< 平板电脑
         };
 
         /// @brief 获取计算机系统数量
@@ -58,7 +58,7 @@ namespace LWMI
         /// @param[in] index 索引
         /// @param[out] type 存储类型
         /// @return 成功返回true, 失败返回false
-        bool GetComputerSystemPCType(IN int index, OUT LPC_SYSTEM_TYPE& type);
+        bool GetComputerSystemPCType(IN int index, OUT LCOMPUTER_SYSTEM_TYPE& type);
 
         /// @brief 获取计算机系统类型
         /// @param[in] index 索引

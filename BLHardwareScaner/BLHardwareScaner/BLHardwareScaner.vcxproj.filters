@@ -25,6 +25,9 @@
     <Filter Include="Src\Wmi">
       <UniqueIdentifier>{3552ea21-5cf1-44c8-bf3b-5fdfecbb3844}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\SetupApi">
+      <UniqueIdentifier>{fe006d18-dd04-410c-a8d4-8def10243f0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp">
       <Filter>Src\Wmi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp">
+      <Filter>Src\SetupApi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h">
       <Filter>Src\Wmi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\SetupApi\LSetupAPI.h">
+      <Filter>Src\SetupApi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
