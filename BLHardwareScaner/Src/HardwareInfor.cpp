@@ -25,6 +25,8 @@ HardwareInfor& HardwareInfor::GetInstance()
 HardwareInfor::HardwareInfor()
 {
     m_displayCardInfor.Count = 0;
+    m_physicalMemoryInfor.Count = 0;
+    m_diskInfor.Count = 0;
 }
 
 HardwareInfor::~HardwareInfor()
@@ -62,6 +64,16 @@ const PhysicalMemoryInforArray& HardwareInfor::GetPhysicalMemoryInfor() const
     return m_physicalMemoryInfor;
 }
 
+const DiskInforArray& HardwareInfor::GetDiskInfor()
+{
+    /*
+    磁盘信息会发生变化所以需要在每次获取的时候重新扫描
+    */
+    this->ScanDiskInfor(m_diskInfor);
+
+    return m_diskInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
@@ -70,6 +82,7 @@ void HardwareInfor::Scan()
     this->ScanProcessorInfor(m_processorInfor);
     this->ScanDisplayCardInfor(m_displayCardInfor);
     this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
+    this->ScanDiskInfor(m_diskInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
@@ -113,6 +126,8 @@ void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
 
 void HardwareInfor::ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardInfor)
 {
+    displayCardInfor.Count = 0;
+
     LSetupDisplayCard displayCard;
     int cardCount = displayCard.GetDevNum();
     if (cardCount < 1)
@@ -154,6 +169,8 @@ void HardwareInfor::ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardI
 
 void HardwareInfor::ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physicalMemoryInfor)
 {
+    physicalMemoryInfor.Count = 0;
+
     LWMI::LPhysicalMemoryManager memoryManager;
     physicalMemoryInfor.Count = (unsigned long)memoryManager.GetPhysicalMemoryCount();
     for (int i = 0; i < (int)physicalMemoryInfor.Count && i < MAX_PHYSICAL_MEMORY_NUMBER; i++)
@@ -163,5 +180,23 @@ void HardwareInfor::ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physic
         memoryManager.GetPhysicalMemoryPartNumber(i, physicalMemoryInfor.PartNumbe[i]);
         memoryManager.GetPhysicalMemorySerialNumber(i, physicalMemoryInfor.SerialNumber[i]);
         memoryManager.GetPhysicalMemorySpeed(i, physicalMemoryInfor.Speed[i]);
+    }
+}
+
+void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
+{
+    diskInfor.Count  = 0;
+    LWMI::LDiskDriveManager diskDriveManager;
+    diskInfor.Count = (unsigned long)diskDriveManager.GetDiskCount();
+    for (int i = 0; i < (int)diskInfor.Count && i < MAX_DISK_NUMBER; i++)
+    {
+        diskDriveManager.GetDiskModel(i, diskInfor.Model[i]);
+        diskDriveManager.GetDiskSerialNumber(i, diskInfor.SerialNumber[i]);
+        diskDriveManager.GetDiskSize(i, diskInfor.TotalSize[i]);
+        diskDriveManager.GetDiskDeviceID(i, diskInfor.DeviceID[i]);
+        diskDriveManager.GetDiskPNPDeviceID(i, diskInfor.PNPDeviceID[i]);
+        LWMI::LDiskDriveManager::LDISK_TYPE diskType;
+        diskDriveManager.GetDiskType(i, diskType);
+        diskInfor.DiskType[i] = (DISK_TYPE )diskType;
     }
 }

@@ -286,6 +286,17 @@ namespace LWMI
         LDiskDriveManager();
         ~LDiskDriveManager();
 
+        /// @brief 磁盘类型
+        enum LDISK_TYPE
+        {
+            UNKNOWN_DISK = 0, // 未知类型
+            FIXED_IDE_DISK = 1, // 固定磁盘(如本地硬盘)
+            EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
+            VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
+            USB_FLASH_DISK = 4, // U盘
+            SD_CARD_DISK = 5// SD卡
+        };
+
         /// @brief 获取磁盘驱动器数量
         /// @return 磁盘数量
         int GetDiskCount();
@@ -320,6 +331,18 @@ namespace LWMI
         /// @param[out] pnpDeviceID 存储磁盘实例路径
         /// @return 成功返回true, 失败返回false
         bool GetDiskPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
+
+        /// @brief 获取磁盘接口类型
+        /// @param[in] index 磁盘索引
+        /// @param[out] type 磁盘接口类型(SCSI, HDC, IDE, USB, 1394)
+        /// @return
+        bool GetDiskInterfaceType(IN int index, OUT wstring& type);
+
+        /// @brief 获取磁盘类型
+        /// @param[in] index 磁盘索引
+        /// @param[out] type 存储磁盘类型
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskType(IN int index, OUT LDISK_TYPE& type);
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者

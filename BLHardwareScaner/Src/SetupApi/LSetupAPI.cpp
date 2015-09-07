@@ -894,5 +894,103 @@ LSetupDisplayCard::~LSetupDisplayCard()
 
 }
 
+#pragma pack (1) //取消内存对齐
+/// <SUMMARY>
+/// 显示器扩展显示标识数据
+/// </SUMMARY>
+struct LMonitorEDID
+{
+    unsigned char HeadInfor[8]; ///< 头信息, 8个字节
+    unsigned char VendorID[2]; ///< 厂商ID
+    unsigned char ProductID[2]; ///< 产品ID
+    unsigned char SerialNumber[4]; ///< 序列号
+    unsigned char Date[2]; ///< 制造日期
+    unsigned char EDIDVersion[2]; ///< EDID版本
+    unsigned char BasicInfor[5]; ///< 显示器基本信息(电源, 最大高度, 宽度)
+    unsigned char ColorFeature[10]; ///< 显示器颜色特征
+    unsigned char OtherInfor[93]; ///< 其他信息
+};
+#pragma pack() // 恢复内存对齐
+
+LSetupMonitor::LSetupMonitor()
+    : LSetupDev()
+{
+    m_pSADevObject->Scan(&GUID_DEVCLASS_MONITOR);
+}
+
+LSetupMonitor::~LSetupMonitor()
+{
+
+}
+
+bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extendInfor)
+{
+    LMonitorEDID edid = {0};
+    bool bRet = this->GetEDID(index, edid);
+    if (!bRet)
+        return false;
+
+    string hardwareID;
+    if (this->GetHardwareId(index, hardwareID) != 0)
+        return false;
+
+    int loc = hardwareID.find('\\');
+    if (loc == string::npos)
+        return false;
+
+    extendInfor.Name = hardwareID.substr(loc);
+
+
+
+    return true;
+}
+
+
+bool LSetupMonitor::GetEDID(IN int index, OUT LMonitorEDID& edid)
+{
+    bool bRet = false;
+    HKEY hMonitorKey = NULL;
+    LSTATUS lRet;
+    string monitorKeyName;
+
+    string instanceID;
+    if (0 != this->GetInstanceID(index, instanceID))
+    {
+        bRet = false;
+        goto SAFE_EXIT;
+    }
+
+    monitorKeyName = "SYSTEM\\CurrentControlSet\\Enum\\";
+    monitorKeyName += instanceID;
+    monitorKeyName += "\\Device Parameters";
+
+    lRet = RegOpenKeyExA(HKEY_LOCAL_MACHINE, monitorKeyName.c_str(), 0, KEY_READ, &hMonitorKey);
+    if (ERROR_SUCCESS != lRet)
+    {
+        bRet = false;
+        goto SAFE_EXIT;
+    }
+
+    DWORD dataType = REG_BINARY;
+    DWORD dataLen = sizeof(LMonitorEDID);
+    lRet = RegQueryValueExA(hMonitorKey, "EDID", 0, &dataType, (BYTE*)&edid, &dataLen);
+    if (ERROR_SUCCESS != lRet)
+    {
+        bRet = false;
+        goto SAFE_EXIT;
+    }
+
+    bRet = true;
+
+SAFE_EXIT:
+
+    if (hMonitorKey != NULL)
+    {
+        RegCloseKey(hMonitorKey);
+        hMonitorKey = NULL;
+    }
+
+    return bRet;
+}
 
 

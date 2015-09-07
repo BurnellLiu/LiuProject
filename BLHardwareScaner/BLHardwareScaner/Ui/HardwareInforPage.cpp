@@ -75,6 +75,7 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     const ProcessorInfor& processorInfor = HardwareInfor::GetInstance().GetProcessorInfor();
     QString processorName = QString::fromStdWString(processorInfor.Name);
     processorName = processorName.trimmed();
+    processorName += QString::fromStdWString(L" ( %1核 %2线程 )").arg(processorInfor.CoresNumber).arg(processorInfor.LogicalProcessorNumber);
     ui.labelProcessorInfor->setText(processorName);
 
     // 填写显卡信息
@@ -109,7 +110,7 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
 
     // 填写内存信息
     QString memoryInfor;
-    const PhysicalMemoryInforArray physicalMemoryInfor = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
+    const PhysicalMemoryInforArray& physicalMemoryInfor = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInfor.Count; i++)
     {
         memoryInfor += QString::fromStdWString(L"内存%1(").arg(i + 1);
@@ -117,6 +118,24 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
         memoryInfor += QString::fromStdWString(L" 频率: %1MHz)  ").arg(physicalMemoryInfor.Speed[i]);
     }
     ui.labelMemoryInfor->setText(memoryInfor);
+
+    // 填写磁盘信息
+    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    QString diskInfor;
+    for (unsigned long i = 0; i < diskInforArray.Count; i++)
+    {
+        if (diskInforArray.DiskType[i] != FIXED_IDE_DISK)
+            continue;
+
+        QString diskName = QString::fromStdWString(diskInforArray.Model[i]);
+        diskName = diskName.trimmed();
+        diskInfor += diskName;
+        diskInfor += QString::fromStdWString(L" ( %1 G )").arg(diskInforArray.TotalSize[i]);
+
+        break;
+    }
+
+    ui.labelDiskInfor->setText(diskInfor);
 
 }
 

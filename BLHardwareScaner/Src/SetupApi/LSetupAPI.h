@@ -261,4 +261,56 @@ public:
     ~LSetupDisplayCard();
 };
 
+/// <SUMMARY>
+/// 显示器扩展信息
+/// </SUMMARY>
+struct LMonitorExtendInfor
+{
+    string Name; ///< 名称
+    string VendorID; ///< 厂商ID
+    string ProductID; ///< 产品ID
+    string Data; ///< 制造日期
+};
+
+struct LMonitorEDID;
+
+/// <SUMMARY>
+/// 显示器设备类
+/// </SUMMARY>
+class LSetupMonitor : public LSetupDev
+{
+public:
+    LSetupMonitor();
+    ~LSetupMonitor();
+
+    /// <SUMMARY>
+    /// 获取显示器扩展信息
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 设备索引
+    /// </PARAM>
+    /// <PARAM name = "extendInfor" dir = "OUT">
+    /// 存储扩展信息
+    /// </PARAM>
+    /// <RETURNS>
+    /// 成功返回true, 失败返回false
+    /// </RETURNS>
+    bool GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extendInfor);
+
+private:
+    /// <SUMMARY>
+    /// 获取显示器扩展显示标识数据
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 设备索引
+    /// </PARAM>
+    /// <PARAM name = "extendInfor" dir = "OUT">
+    /// 存储扩展显示标识数据
+    /// </PARAM>
+    /// <RETURNS>
+    /// 成功返回true, 失败返回false
+    /// </RETURNS>
+    bool GetEDID(IN int index, OUT LMonitorEDID& edid);
+};
+
 #endif

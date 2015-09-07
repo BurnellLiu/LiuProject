@@ -1,6 +1,8 @@
 
 #include "LWMIHardwareClasses.h"
 
+#include <Windows.h>
+
 #include "LWMICoreManager.h"
 
 namespace LWMI
@@ -336,6 +338,132 @@ namespace LWMI
     bool LDiskDriveManager::GetDiskPNPDeviceID(IN int index, OUT wstring& pnpDeviceID)
     {
         return m_pWMICoreManager->GetStringProperty(index, L"PNPDeviceID", pnpDeviceID);
+    }
+
+    bool LDiskDriveManager::GetDiskInterfaceType(IN int index, OUT wstring& type)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"InterfaceType", type);
+    }
+
+    bool LDiskDriveManager::GetDiskType(IN int index, OUT LDISK_TYPE& type)
+    {
+        bool bRet = false;
+        HANDLE hDiskDrive = NULL;
+        STORAGE_DEVICE_DESCRIPTOR* pDeviceDescriptor = NULL;
+
+        wstring deviceId;
+        wstring interfaceType;
+        if (!this->GetDiskDeviceID(index, deviceId))
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (!this->GetDiskInterfaceType(index, interfaceType))
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        // 打开设备句柄
+        hDiskDrive = CreateFileW(deviceId.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        if (hDiskDrive == INVALID_HANDLE_VALUE)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        STORAGE_PROPERTY_QUERY propertyQuery;
+        ZeroMemory(&propertyQuery, sizeof(propertyQuery));
+        propertyQuery.PropertyId = StorageDeviceProperty;
+        propertyQuery.QueryType = PropertyStandardQuery;
+
+        ULONG nBytes;
+        STORAGE_DEVICE_DESCRIPTOR deviceDescriptor;
+        BOOL dwRet = DeviceIoControl(
+            hDiskDrive, 
+            IOCTL_STORAGE_QUERY_PROPERTY, 
+            &propertyQuery, 
+            sizeof(propertyQuery), 
+            &deviceDescriptor, 
+            sizeof(deviceDescriptor), 
+            &nBytes, 
+            NULL);
+
+        if (dwRet == FALSE)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        pDeviceDescriptor = (PSTORAGE_DEVICE_DESCRIPTOR)malloc(nBytes);
+        bRet = DeviceIoControl(
+            hDiskDrive, 
+            IOCTL_STORAGE_QUERY_PROPERTY, 
+            &propertyQuery, 
+            sizeof(propertyQuery), 
+            pDeviceDescriptor, 
+            nBytes, 
+            &nBytes, 
+            NULL);
+
+        if (bRet == FALSE)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (pDeviceDescriptor->RemovableMedia == TRUE)
+        {
+            switch (pDeviceDescriptor->DeviceTypeModifier)
+            {
+            case 13:
+                type = SD_CARD_DISK;
+                break;
+            case 0:
+                type = USB_FLASH_DISK;
+                break;
+            default:
+                type = UNKNOWN_DISK;
+                break;
+            }
+        }
+
+        if (pDeviceDescriptor->RemovableMedia == FALSE)
+        {
+            switch (pDeviceDescriptor->BusType)
+            {
+            case BusTypeVirtual:
+            case BusTypeFileBackedVirtual:
+                type = VIRTUAL_DISK;
+                break;
+            default:
+                if (interfaceType.find(L"USB") != wstring::npos)
+                    type = EXTERNAL_USB_DISK;
+                else if (interfaceType.find(L"IDE") != wstring::npos)
+                    type = FIXED_IDE_DISK;
+                else
+                    type = UNKNOWN_DISK;
+                break;
+            }
+        }
+
+        bRet = true;
+
+SAFE_EXIT:
+        if (hDiskDrive != NULL)
+        {
+            CloseHandle(hDiskDrive);
+            hDiskDrive = NULL;
+        }
+
+        if (pDeviceDescriptor != NULL)
+        {
+            free(pDeviceDescriptor);
+            pDeviceDescriptor = NULL;
+        }
+
+        return bRet;
     }
 
     

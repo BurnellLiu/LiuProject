@@ -96,6 +96,33 @@ struct PhysicalMemoryInforArray
     unsigned long Speed[MAX_PHYSICAL_MEMORY_NUMBER]; ///< 内存频率
 };
 
+/// @brief 最大磁盘驱动器数量
+#define MAX_DISK_NUMBER 8
+
+/// @brief 磁盘类型
+enum DISK_TYPE
+{
+    UNKNOWN_DISK = 0, // 未知类型
+    FIXED_IDE_DISK = 1, // 固定磁盘(如本地硬盘)
+    EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
+    VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
+    USB_FLASH_DISK = 4, // U盘
+    SD_CARD_DISK = 5// SD卡
+};
+
+/// @brief 磁盘信息组
+struct DiskInforArray 
+{
+    unsigned long Count; ///< 磁盘数量
+    wstring Model[MAX_DISK_NUMBER]; ///< 磁盘型号
+    wstring SerialNumber[MAX_DISK_NUMBER]; ///< 磁盘序列号
+    unsigned long TotalSize[MAX_DISK_NUMBER]; ///< 磁盘总大小, 单位(G)
+    wstring DeviceID[MAX_DISK_NUMBER]; ///< 磁盘设备ID
+    wstring PNPDeviceID[MAX_DISK_NUMBER]; ///< 磁盘设备实例路径
+    wstring InterfaceType[MAX_DISK_NUMBER]; ///< 磁盘接口类型(SCSI, HDC, IDE, USB 1394)
+    DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< 磁盘类型
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -130,6 +157,10 @@ public:
     /// @return 物理内存信息
     const PhysicalMemoryInforArray& GetPhysicalMemoryInfor() const;
 
+    /// @brief 获取磁盘信息
+    /// @return 磁盘信息
+    const DiskInforArray& GetDiskInfor();
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -161,6 +192,10 @@ private:
     /// @param[out] physicalMemoryInfor 存储物理内存信息
     void ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physicalMemoryInfor);
 
+    /// @brief 扫描磁盘信息
+    /// @param[out] diskInfor 存储磁盘信息
+    void ScanDiskInfor(OUT DiskInforArray& diskInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -172,6 +207,7 @@ private:
     ProcessorInfor m_processorInfor; ///< 处理器信息
     DisplayCardInforArray m_displayCardInfor; ///< 显卡信息
     PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
+    DiskInforArray m_diskInfor; ///< 磁盘信息
 };
 
 #endif
