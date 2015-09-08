@@ -925,6 +925,10 @@ LSetupMonitor::~LSetupMonitor()
 
 bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extendInfor)
 {
+    /*
+    理解以下代码前, 请查阅如何解析显示器EDID
+    */
+
     LMonitorEDID edid = {0};
     bool bRet = this->GetEDID(index, edid);
     if (!bRet)
@@ -948,6 +952,9 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
 
 bool LSetupMonitor::GetEDID(IN int index, OUT LMonitorEDID& edid)
 {
+    /*
+    理解以下代码前, 请查阅显示器EDID
+    */
     bool bRet = false;
     HKEY hMonitorKey = NULL;
     LSTATUS lRet;
