@@ -269,7 +269,7 @@ struct LMonitorExtendInfor
     string Name; ///< 名称
     string VendorID; ///< 厂商ID
     string ProductID; ///< 产品ID
-    string Data; ///< 制造日期
+    string Date; ///< 制造日期 (年.月)
 };
 
 struct LMonitorEDID;

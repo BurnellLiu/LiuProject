@@ -4,6 +4,7 @@
 #define _HARDWAREINFOR_H_
 
 #include <string>
+using std::string;
 using std::wstring;
 
 #ifndef IN
@@ -123,6 +124,17 @@ struct DiskInforArray
     DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< 磁盘类型
 };
 
+/// @brief 最大显示器数量
+#define MAX_MONITOR_NUMBER 8
+
+/// @brief 显示器信息组
+struct MonitorInforArray
+{
+    unsigned long Count; ///< 显示器数量
+    string Name[MAX_MONITOR_NUMBER]; ///< 显示器名称
+    string Date[MAX_MONITOR_NUMBER]; ////< 显示器生产日期
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -161,6 +173,10 @@ public:
     /// @return 磁盘信息
     const DiskInforArray& GetDiskInfor();
 
+    /// @brief 获取显示器信息
+    /// @return 显示器信息
+    const MonitorInforArray& GetMonitorInfor();
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -196,6 +212,10 @@ private:
     /// @param[out] diskInfor 存储磁盘信息
     void ScanDiskInfor(OUT DiskInforArray& diskInfor);
 
+    /// @brief 扫描显示器信息
+    /// @param[out] monitorInfor 存储显示器信息
+    void ScanMonitorInfor(OUT MonitorInforArray& monitorInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -208,6 +228,7 @@ private:
     DisplayCardInforArray m_displayCardInfor; ///< 显卡信息
     PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
     DiskInforArray m_diskInfor; ///< 磁盘信息
+    MonitorInforArray m_monitorInfor; ////< 显示器信息
 };
 
 #endif

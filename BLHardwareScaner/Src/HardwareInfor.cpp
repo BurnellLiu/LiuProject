@@ -74,6 +74,16 @@ const DiskInforArray& HardwareInfor::GetDiskInfor()
     return m_diskInfor;
 }
 
+const MonitorInforArray& HardwareInfor::GetMonitorInfor()
+{
+    /*
+    显示器信息会发生变化所以需要在每次获取的时候重新扫描
+    */
+    this->ScanMonitorInfor(m_monitorInfor);
+
+    return m_monitorInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
@@ -198,5 +208,19 @@ void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
         LWMI::LDiskDriveManager::LDISK_TYPE diskType;
         diskDriveManager.GetDiskType(i, diskType);
         diskInfor.DiskType[i] = (DISK_TYPE )diskType;
+    }
+}
+
+void HardwareInfor::ScanMonitorInfor(OUT MonitorInforArray& monitorInfor)
+{
+    monitorInfor.Count = 0;
+    LSetupMonitor setupMonitor;
+    monitorInfor.Count = (unsigned long)setupMonitor.GetDevNum();
+    for (unsigned long i = 0; i < monitorInfor.Count && i < MAX_MONITOR_NUMBER; i++)
+    {
+        LMonitorExtendInfor extendInfor;
+        setupMonitor.GetExtendInfor(i, extendInfor);
+        monitorInfor.Name[i] = extendInfor.Name;
+        monitorInfor.Date[i] = extendInfor.Date;
     }
 }

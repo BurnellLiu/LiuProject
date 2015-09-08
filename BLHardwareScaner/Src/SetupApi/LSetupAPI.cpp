@@ -934,6 +934,7 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
     if (!bRet)
         return false;
 
+    // 从硬件ID中获取显示器名称
     string hardwareID;
     if (this->GetHardwareId(index, hardwareID) != 0)
         return false;
@@ -942,13 +943,34 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
     if (loc == string::npos)
         return false;
 
-    extendInfor.Name = hardwareID.substr(loc);
+    extendInfor.Name = hardwareID.substr(loc + 1);
 
+    // 获取显示器厂商ID
     unsigned char cVendorID[2];
     cVendorID[0] = edid.VendorID[1];
     cVendorID[1] = edid.VendorID[0];
     unsigned short sVendorID = *((unsigned short*)cVendorID);
 
+    char threeChar = char(sVendorID&0x1F-0x1) + 'A';
+    char secondChar = char(((sVendorID >> 5)&0x1F)-0x1) + 'A';
+    char fristChar = char((sVendorID >> 10)&0x1F-0x1) + 'A';
+
+    extendInfor.VendorID.push_back(fristChar);
+    extendInfor.VendorID.push_back(secondChar);
+    extendInfor.VendorID.push_back(threeChar);
+
+    // 获取显示器产品ID
+    char productID[5] = {0};
+    sprintf_s(productID, "%02X%02X", edid.ProductID[1], edid.ProductID[0]);
+
+    extendInfor.ProductID = productID;
+
+    // 获取显示器生产日期, 没有严格计算
+    int moon = (int)((float)edid.Date[0]/4.35f) + 1;
+    int year = (int)edid.Date[1] + 1990;
+    char date[16] = {0};
+    sprintf_s(date, "%d.%d", year, moon);
+    extendInfor.Date = date;
 
 
     return true;

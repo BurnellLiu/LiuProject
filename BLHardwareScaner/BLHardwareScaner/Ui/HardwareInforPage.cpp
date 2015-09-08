@@ -9,6 +9,18 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
 {
     ui.setupUi(this);
 
+    ui.listWidgetHWItem->setStyleSheet("QListWidget #listWidgetHWItem::item { height: 30px;}");
+
+    ui.listWidgetHWItem->insertItem(0, tr("Computer"));
+    ui.listWidgetHWItem->insertItem(1, tr("Processor"));
+    ui.listWidgetHWItem->insertItem(2, tr("MotherBoard"));
+    ui.listWidgetHWItem->insertItem(3, tr("Memory"));
+    ui.listWidgetHWItem->insertItem(4, tr("Disk"));
+    ui.listWidgetHWItem->insertItem(5, tr("VideoCard"));
+    ui.listWidgetHWItem->insertItem(6, tr("Monitor"));
+    
+
+    /*
     // 填充计算机系统信息
     const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
 
@@ -136,6 +148,17 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     }
 
     ui.labelDiskInfor->setText(diskInfor);
+
+    // 填写显示器信息
+    QString monitorInfor;
+    const MonitorInforArray& monitorInforArray = HardwareInfor::GetInstance().GetMonitorInfor();
+    for (unsigned long i = 0; i < monitorInforArray.Count; i++)
+    {
+        monitorInfor += QString::fromStdWString(L"%1: ").arg(i + 1);
+        monitorInfor += QString::fromStdWString(L"%1  ").arg(monitorInforArray.Name[i].c_str());
+    }
+    ui.labelMonitorInfor->setText(monitorInfor);
+    */
 
 }
 
