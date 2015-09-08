@@ -944,6 +944,11 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
 
     extendInfor.Name = hardwareID.substr(loc);
 
+    unsigned char cVendorID[2];
+    cVendorID[0] = edid.VendorID[1];
+    cVendorID[1] = edid.VendorID[0];
+    unsigned short sVendorID = *((unsigned short*)cVendorID);
+
 
 
     return true;

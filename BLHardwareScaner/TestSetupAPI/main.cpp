@@ -4,8 +4,9 @@
 
 int main()
 {
-    LMonitorEDID edid;
+
     LSetupMonitor monitor;
-    monitor.GetEDID(1, edid);
+    LMonitorExtendInfor extendInfor;
+    monitor.GetExtendInfor(0, extendInfor);
     return 0;
 }
