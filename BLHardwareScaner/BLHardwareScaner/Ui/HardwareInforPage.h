@@ -88,8 +88,6 @@ private:
 class ComputerItemInfor : public HWItemInfor
 {
 public: 
-    ComputerItemInfor();
-    virtual ~ComputerItemInfor();
 
     /// @brief 加载硬件信息
     virtual void LoadHWInfor();
@@ -99,10 +97,25 @@ public:
 class ProcessorItemInfor : public HWItemInfor
 {
 public:
-    ProcessorItemInfor();
-    virtual ~ProcessorItemInfor();
 
     /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 主板项信息
+class BaseBoardItemInfor : public HWItemInfor
+{
+public:
+
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 内存项信息
+class MemoryItemInfor : public HWItemInfor
+{
+public:
+     /// @brief 加载硬件信息
     virtual void LoadHWInfor();
 };
 

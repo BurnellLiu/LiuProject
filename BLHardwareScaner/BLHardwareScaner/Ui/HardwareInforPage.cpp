@@ -41,11 +41,18 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     m_hwItemVec.push_back(pComputerItem);
 
     ui.listWidgetHWItem->addItem(tr("Processor"));
-    HWItemInfor* pProcessorItem = new ProcessorItemInfor;
+    HWItemInfor* pProcessorItem = new ProcessorItemInfor();
     m_hwItemVec.push_back(pProcessorItem);
 
     ui.listWidgetHWItem->addItem(tr("MotherBoard"));
+    HWItemInfor* pMotherBoard = new BaseBoardItemInfor();
+    m_hwItemVec.push_back(pMotherBoard);
+
     ui.listWidgetHWItem->addItem(tr("Memory"));
+    HWItemInfor* pMemoryItem = new MemoryItemInfor();
+    m_hwItemVec.push_back(pMemoryItem);
+
+
     ui.listWidgetHWItem->addItem(tr("Disk"));
     ui.listWidgetHWItem->addItem(tr("VideoCard"));
     ui.listWidgetHWItem->addItem(tr("Monitor"));
@@ -137,16 +144,6 @@ void HWItemInfor::ClearInfor()
 {
     m_title.clear();
     m_content.clear();
-}
-
-ComputerItemInfor::ComputerItemInfor()
-{
-
-}
-
-ComputerItemInfor::~ComputerItemInfor()
-{
-
 }
 
 void ComputerItemInfor::LoadHWInfor()
@@ -265,16 +262,6 @@ void ComputerItemInfor::LoadHWInfor()
     }
 }
 
-ProcessorItemInfor::ProcessorItemInfor()
-{
-
-}
-
-ProcessorItemInfor::~ProcessorItemInfor()
-{
-
-}
-
 void ProcessorItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
@@ -296,5 +283,61 @@ void ProcessorItemInfor::LoadHWInfor()
 
     QString speed = QString::fromStdString("%1MHz").arg(processprInfor.MaxClockSpeed);
     this->ContentAddItem(QObject::tr("Speed"), speed);
+
+}
+
+void BaseBoardItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
+    QString baseBoardDesc = QString::fromStdWString(baseBoardInfor.Description);
+    baseBoardDesc = baseBoardDesc.trimmed();
+    QString baseBoardManufacturer = QString::fromStdWString(baseBoardInfor.Manufacturer);
+    QString strBaseBoardInfor = ConvertManufacturer(baseBoardManufacturer);
+    strBaseBoardInfor += "  ";
+    strBaseBoardInfor += baseBoardDesc;
+
+    this->SetTitle(strBaseBoardInfor);
+
+    this->ContentAddItem(QObject::tr("Mother Board"), strBaseBoardInfor);
+
+    QString boardSN = QString::fromStdWString(baseBoardInfor.SerialNumber);
+    this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
+
+    QString biosSN = QString::fromStdWString(baseBoardInfor.BiosSerialNumber);
+    this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
+
+    QString biosVersion = QString::fromStdWString(baseBoardInfor.BiosVersion);
+    this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
+}
+
+void MemoryItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Memory");
+
+    // ÃÓ–¥ƒ⁄¥Ê–≈œ¢
+    const PhysicalMemoryInforArray& physicalMemoryInfor = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
+    for (unsigned long i = 0; i < physicalMemoryInfor.Count; i++)
+    {
+        QString memoryModel = QString::fromStdWString(physicalMemoryInfor.PartNumbe[i]);
+        this->ContentAddItem(QObject::tr("Model Name"), memoryModel);
+
+        QString memoryManufacturer = QString::fromStdWString(physicalMemoryInfor.Manufacturer[i]);
+        this->ContentAddItem(QObject::tr("Manufacturer"), memoryManufacturer);
+
+        QString memorySerialNumber = QString::fromStdWString(physicalMemoryInfor.SerialNumber[i]);
+        this->ContentAddItem(QObject::tr("Serial Number"), memorySerialNumber);
+
+        QString memorySize = QString::fromStdWString(L"%1M").arg(physicalMemoryInfor.Capacity[i]);
+        this->ContentAddItem(QObject::tr("Size"), memorySize);
+
+        QString memorySpeed = QString::fromStdWString(L"%1MHz").arg(physicalMemoryInfor.Speed[i]);
+        this->ContentAddItem(QObject::tr("Speed"), memorySpeed);
+
+        this->ContendAddBlankLine();
+    }
 
 }

@@ -51,6 +51,9 @@ struct BaseBoardInfor
     wstring Description; ///< 描述
     wstring Manufacturer; ///< 制造商
     wstring SerialNumber; ///< 序列号
+
+    wstring BiosSerialNumber; ///< Bios序列号
+    wstring BiosVersion; ///< Bios版本
 };
 
 /// @brief 处理器信息

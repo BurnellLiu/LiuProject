@@ -122,6 +122,10 @@ void HardwareInfor::ScanBaseBoardInfor(OUT BaseBoardInfor& baseBoardInfor)
     baseBoardManager.GetBaseBoardDescription(0, baseBoardInfor.Description);
     baseBoardManager.GetBaseBoardManufacturer(0, baseBoardInfor.Manufacturer);
     baseBoardManager.GetBaseBoardSerialNumber(0, baseBoardInfor.SerialNumber);
+
+    LWMI::LBIOSManager biosManager;
+    biosManager.GetBIOSSerialNumber(0, baseBoardInfor.BiosSerialNumber);
+    biosManager.GetSMBIOSBIOSVersion(0, baseBoardInfor.BiosVersion);
 }
 
 void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
