@@ -58,7 +58,7 @@ background-color: rgb(167, 205, 255);</string>
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>
-           <pointsize>20</pointsize>
+           <pointsize>16</pointsize>
           </font>
          </property>
          <property name="text">

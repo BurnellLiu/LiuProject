@@ -79,7 +79,7 @@ enum DISPLAY_CARD_TYPE
 #define MAX_DISPLAYCARD_NUMBER 4
 
 /// @brief 显卡信息组
-struct DisplayCardInforArray
+struct VideoCardInforArray
 {
     unsigned long Count; ///< 显卡数量
     wstring Description[MAX_DISPLAYCARD_NUMBER]; ///< 显卡描述
@@ -167,7 +167,7 @@ public:
 
     /// @brief 获取显卡信息
     /// @return 显卡信息
-    const DisplayCardInforArray& GetDisplayCardInfor() const;
+    const VideoCardInforArray& GetVideoCardInfor() const;
 
     /// @brief 获取物理内存信息
     /// @return 物理内存信息
@@ -205,8 +205,8 @@ private:
     void ScanProcessorInfor(OUT ProcessorInfor& processorInfor);
 
     /// @brief 扫描显卡信息
-    /// @param[out] displayCardInfor 存储显卡信息
-    void ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardInfor);
+    /// @param[out] videoCardInfor 存储显卡信息
+    void ScanVideoCardInfor(OUT VideoCardInforArray& displayCardInfor);
 
     /// @brief 扫描显卡信息
     /// @param[out] physicalMemoryInfor 存储物理内存信息
@@ -229,7 +229,7 @@ private:
     OperatingSystemInfor m_operatingSystemInfor; ///< 操作系统信息
     BaseBoardInfor m_baseBoardInfor; ///< 主板信息
     ProcessorInfor m_processorInfor; ///< 处理器信息
-    DisplayCardInforArray m_displayCardInfor; ///< 显卡信息
+    VideoCardInforArray m_videoCardInfor; ///< 显卡信息
     PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
     DiskInforArray m_diskInfor; ///< 磁盘信息
     MonitorInforArray m_monitorInfor; ////< 显示器信息

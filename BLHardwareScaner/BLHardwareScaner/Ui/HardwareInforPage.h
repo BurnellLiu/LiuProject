@@ -74,7 +74,7 @@ protected:
     void ContentAddItem(IN const QString& subTitle, IN const QString text);
 
     /// @brief 内容中增加空行
-    void ContendAddBlankLine();
+    void ContentAddBlankLine();
 
     /// @brief 清除现有的信息
     void ClearInfor();
@@ -103,7 +103,7 @@ public:
 };
 
 /// @brief 主板项信息
-class BaseBoardItemInfor : public HWItemInfor
+class MotherBoardItemInfor : public HWItemInfor
 {
 public:
 
@@ -119,5 +119,28 @@ public:
     virtual void LoadHWInfor();
 };
 
+/// @brief 磁盘项信息
+class DiskItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 显卡信息
+class VideoCardItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 显示器信息
+class MonitorItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
 
 #endif

@@ -45,8 +45,8 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     m_hwItemVec.push_back(pProcessorItem);
 
     ui.listWidgetHWItem->addItem(tr("MotherBoard"));
-    HWItemInfor* pMotherBoard = new BaseBoardItemInfor();
-    m_hwItemVec.push_back(pMotherBoard);
+    HWItemInfor* pMotherBoardItem = new MotherBoardItemInfor();
+    m_hwItemVec.push_back(pMotherBoardItem);
 
     ui.listWidgetHWItem->addItem(tr("Memory"));
     HWItemInfor* pMemoryItem = new MemoryItemInfor();
@@ -54,8 +54,16 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
 
 
     ui.listWidgetHWItem->addItem(tr("Disk"));
+    HWItemInfor* pDiskItem = new DiskItemInfor();
+    m_hwItemVec.push_back(pDiskItem);
+
     ui.listWidgetHWItem->addItem(tr("VideoCard"));
+    HWItemInfor* pVideoCardItem = new VideoCardItemInfor();
+    m_hwItemVec.push_back(pVideoCardItem);
+
     ui.listWidgetHWItem->addItem(tr("Monitor"));
+    HWItemInfor* pMonitorItem = new MonitorItemInfor();
+    m_hwItemVec.push_back(pMonitorItem);
 
     for (int i = 0; i < m_hwItemVec.size(); i++)
     {
@@ -135,7 +143,7 @@ void HWItemInfor::ContentAddItem(IN const QString& subTitle, IN const QString te
     m_content += "\n\n";
 }
 
-void HWItemInfor::ContendAddBlankLine()
+void HWItemInfor::ContentAddBlankLine()
 {
     m_content += "\n\n";
 }
@@ -190,7 +198,7 @@ void ComputerItemInfor::LoadHWInfor()
     strOperatingSystemInfor += "  ";
     strOperatingSystemInfor += systemArchitecture;
     this->ContentAddItem(QObject::tr("Operating System"), strOperatingSystemInfor);
-    this->ContendAddBlankLine();
+    this->ContentAddBlankLine();
 
     // 填写主板信息
     const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
@@ -210,14 +218,14 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Processor"), processorName);
 
     // 填写显卡信息
-    const DisplayCardInforArray& displayCardInfor = HardwareInfor::GetInstance().GetDisplayCardInfor();
-    for (int i = 0; i < displayCardInfor.Count; i++)
+    const VideoCardInforArray& videoCardInfor = HardwareInfor::GetInstance().GetVideoCardInfor();
+    for (int i = 0; i < videoCardInfor.Count; i++)
     {
-        QString displayCardName = QString::fromStdWString(displayCardInfor.Description[i]);
+        QString displayCardName = QString::fromStdWString(videoCardInfor.Description[i]);
         displayCardName = displayCardName.trimmed();
-        if (displayCardInfor.Type[i] == DISPLAY_CARD_INTERNAL)
+        if (videoCardInfor.Type[i] == DISPLAY_CARD_INTERNAL)
             displayCardName += QString::fromStdWString(L"  (Integrated)");
-        else if(displayCardInfor.Type[i] == DISPLAY_CARD_EXTERNAL)
+        else if(videoCardInfor.Type[i] == DISPLAY_CARD_EXTERNAL)
             displayCardName += QString::fromStdWString(L"  (Independent)");
         else
             displayCardName += QString::fromStdWString(L"  (Unknown)");
@@ -286,9 +294,11 @@ void ProcessorItemInfor::LoadHWInfor()
 
 }
 
-void BaseBoardItemInfor::LoadHWInfor()
+void MotherBoardItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
+
+    this->SetTitle(QObject::tr("Mother Board"));
 
     const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
     QString baseBoardDesc = QString::fromStdWString(baseBoardInfor.Description);
@@ -298,7 +308,7 @@ void BaseBoardItemInfor::LoadHWInfor()
     strBaseBoardInfor += "  ";
     strBaseBoardInfor += baseBoardDesc;
 
-    this->SetTitle(strBaseBoardInfor);
+    
 
     this->ContentAddItem(QObject::tr("Mother Board"), strBaseBoardInfor);
 
@@ -319,25 +329,103 @@ void MemoryItemInfor::LoadHWInfor()
     this->SetTitle("Memory");
 
     // 填写内存信息
-    const PhysicalMemoryInforArray& physicalMemoryInfor = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
-    for (unsigned long i = 0; i < physicalMemoryInfor.Count; i++)
+    const PhysicalMemoryInforArray& physicalMemoryInforArray = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
+    for (unsigned long i = 0; i < physicalMemoryInforArray.Count; i++)
     {
-        QString memoryModel = QString::fromStdWString(physicalMemoryInfor.PartNumbe[i]);
+        QString memoryModel = QString::fromStdWString(physicalMemoryInforArray.PartNumbe[i]);
         this->ContentAddItem(QObject::tr("Model Name"), memoryModel);
 
-        QString memoryManufacturer = QString::fromStdWString(physicalMemoryInfor.Manufacturer[i]);
+        QString memoryManufacturer = QString::fromStdWString(physicalMemoryInforArray.Manufacturer[i]);
         this->ContentAddItem(QObject::tr("Manufacturer"), memoryManufacturer);
 
-        QString memorySerialNumber = QString::fromStdWString(physicalMemoryInfor.SerialNumber[i]);
+        QString memorySerialNumber = QString::fromStdWString(physicalMemoryInforArray.SerialNumber[i]);
         this->ContentAddItem(QObject::tr("Serial Number"), memorySerialNumber);
 
-        QString memorySize = QString::fromStdWString(L"%1M").arg(physicalMemoryInfor.Capacity[i]);
+        QString memorySize = QString::fromStdWString(L"%1M").arg(physicalMemoryInforArray.Capacity[i]);
         this->ContentAddItem(QObject::tr("Size"), memorySize);
 
-        QString memorySpeed = QString::fromStdWString(L"%1MHz").arg(physicalMemoryInfor.Speed[i]);
+        QString memorySpeed = QString::fromStdWString(L"%1MHz").arg(physicalMemoryInforArray.Speed[i]);
         this->ContentAddItem(QObject::tr("Speed"), memorySpeed);
 
-        this->ContendAddBlankLine();
+        this->ContentAddBlankLine();
     }
 
+}
+
+void DiskItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Disk");
+
+    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    for (unsigned long i = 0; i < diskInforArray.Count; i++)
+    {
+        if (diskInforArray.DiskType[i] != FIXED_IDE_DISK)
+            continue;
+
+        QString model = QString::fromStdWString(diskInforArray.Model[i]);
+        this->ContentAddItem(QObject::tr("Model"), model);
+
+        QString size = QString::fromStdString("%1G").arg(diskInforArray.TotalSize[i]);
+        this->ContentAddItem(QObject::tr("Size"), size);
+
+        QString serialNumber = QString::fromStdWString(diskInforArray.SerialNumber[i]);
+        this->ContentAddItem(QObject::tr("Serial Number"), serialNumber);
+
+        this->ContentAddBlankLine();
+    }
+
+
+}
+
+void VideoCardItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Video Card");
+
+    // 填写显卡信息
+    const VideoCardInforArray& videoCardInforArray = HardwareInfor::GetInstance().GetVideoCardInfor();
+    for (int i = 0; i < videoCardInforArray.Count; i++)
+    {
+        QString videoCardName = QString::fromStdWString(videoCardInforArray.Description[i]);
+        this->ContentAddItem(QObject::tr("Model"), videoCardName);
+
+        QString videoCardType;
+        if (videoCardInforArray.Type[i] == DISPLAY_CARD_INTERNAL)
+            videoCardType = QString::fromStdWString(L"Integrated");
+        else if(videoCardInforArray.Type[i] == DISPLAY_CARD_EXTERNAL)
+            videoCardType = QString::fromStdWString(L"Independent");
+        else
+            videoCardType = QString::fromStdWString(L"Unknown");
+
+        this->ContentAddItem(QObject::tr("Type"), videoCardType);
+
+        QString videoSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
+
+        this->ContentAddItem(QObject::tr("Size"), videoSize);
+
+        this->ContentAddBlankLine();
+    }
+}
+
+void MonitorItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Monitor");
+
+    const MonitorInforArray& monitorInforArray = HardwareInfor::GetInstance().GetMonitorInfor();
+    for (unsigned long i = 0; i < monitorInforArray.Count; i++)
+    {
+        
+        QString monitorName = QString::fromStdString(monitorInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("Model"), monitorName);
+
+        QString date = QString::fromStdString(monitorInforArray.Date[i]);
+        this->ContentAddItem(QObject::tr("Product Date"), date);
+
+        this->ContentAddBlankLine();
+    }
 }

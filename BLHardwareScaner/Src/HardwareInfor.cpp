@@ -24,7 +24,7 @@ HardwareInfor& HardwareInfor::GetInstance()
 
 HardwareInfor::HardwareInfor()
 {
-    m_displayCardInfor.Count = 0;
+    m_videoCardInfor.Count = 0;
     m_physicalMemoryInfor.Count = 0;
     m_diskInfor.Count = 0;
 }
@@ -54,9 +54,9 @@ const ProcessorInfor& HardwareInfor::GetProcessorInfor() const
     return m_processorInfor;
 }
 
-const DisplayCardInforArray& HardwareInfor::GetDisplayCardInfor() const
+const VideoCardInforArray& HardwareInfor::GetVideoCardInfor() const
 {
-    return m_displayCardInfor;
+    return m_videoCardInfor;
 }
 
 const PhysicalMemoryInforArray& HardwareInfor::GetPhysicalMemoryInfor() const
@@ -90,7 +90,7 @@ void HardwareInfor::Scan()
     this->ScanOperatingSystemInfor(m_operatingSystemInfor);
     this->ScanBaseBoardInfor(m_baseBoardInfor);
     this->ScanProcessorInfor(m_processorInfor);
-    this->ScanDisplayCardInfor(m_displayCardInfor);
+    this->ScanVideoCardInfor(m_videoCardInfor);
     this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
     this->ScanDiskInfor(m_diskInfor);
 }
@@ -139,20 +139,20 @@ void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
     processorManager.GetProcessorMaxClockSpeed(0, processorInfor.MaxClockSpeed);
 }
 
-void HardwareInfor::ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardInfor)
+void HardwareInfor::ScanVideoCardInfor(OUT VideoCardInforArray& videoCardInfor)
 {
-    displayCardInfor.Count = 0;
+    videoCardInfor.Count = 0;
 
     LSetupDisplayCard displayCard;
     int cardCount = displayCard.GetDevNum();
     if (cardCount < 1)
         return;
 
-    displayCardInfor.Count = (unsigned long)cardCount;
+    videoCardInfor.Count = (unsigned long)cardCount;
 
     for (int i = 0; i < cardCount && i < MAX_DISPLAYCARD_NUMBER; i++)
     {
-        displayCardInfor.Type[i] = DISPLAY_CARD_UNKNOWN;
+        videoCardInfor.Type[i] = DISPLAY_CARD_UNKNOWN;
 
         wstring instanceID;
         unsigned long dwRet = displayCard.GetInstanceID(i, instanceID);
@@ -167,17 +167,17 @@ void HardwareInfor::ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardI
         // 独立显卡挂在PCI插槽口上所以总线号不为0
         // 集成显卡挂在PCI上总线好为0
         if (0 == busNumber)
-            displayCardInfor.Type[i] = DISPLAY_CARD_INTERNAL;
+            videoCardInfor.Type[i] = DISPLAY_CARD_INTERNAL;
         else
-            displayCardInfor.Type[i] = DISPLAY_CARD_EXTERNAL;
+            videoCardInfor.Type[i] = DISPLAY_CARD_EXTERNAL;
 
 
         LWMI::LVideoControllerManager videoControllerManager(instanceID);
         if (videoControllerManager.GetVideoControllerCount() != 1)
             continue;
 
-        videoControllerManager.GetVideoControllerDescription(0, displayCardInfor.Description[i]);
-        videoControllerManager.GetVideoControllerAdapterRAMCapacity(0, displayCardInfor.RAMSize[i]);
+        videoControllerManager.GetVideoControllerDescription(0, videoCardInfor.Description[i]);
+        videoControllerManager.GetVideoControllerAdapterRAMCapacity(0, videoCardInfor.RAMSize[i]);
     }
 
 }
