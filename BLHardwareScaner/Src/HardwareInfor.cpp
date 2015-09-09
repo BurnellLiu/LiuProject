@@ -132,6 +132,7 @@ void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
     processorManager.GetProcessorManufacturer(0, processorInfor.Manufacturer);
     processorManager.GetProcessorCoresNumber(0, processorInfor.CoresNumber);
     processorManager.GetProcessorLogicalProcessorNumber(0, processorInfor.LogicalProcessorNumber);
+    processorManager.GetProcessorMaxClockSpeed(0, processorInfor.MaxClockSpeed);
 }
 
 void HardwareInfor::ScanDisplayCardInfor(OUT DisplayCardInforArray& displayCardInfor)

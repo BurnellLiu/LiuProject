@@ -3,19 +3,107 @@
 #ifndef _HARDWAREINFORPAGE_H_
 #define _HARDWAREINFORPAGE_H_
 
+#include <QtCore/QVector>
 
 #include "ui_HardwareInfor.h"
 
+#ifndef IN
+#define IN
+#endif
+
+#ifndef INOUT
+#define INOUT
+#endif
+
+#ifndef OUT
+#define OUT
+#endif
+
+class HWItemInfor;
+
+    /// @brief 硬件信息页面
 class HardwareInforPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    HardwareInforPage(QWidget *parent = 0, Qt::WFlags flags = 0);
+    HardwareInforPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~HardwareInforPage();
+
+private slots:
+    /// @brief 当前所选项改变槽函数
+    void CurrentItemChanged();
+
+private:
+   
 
 private:
     Ui::HardwareInforForm ui;
+
+    QVector<HWItemInfor*> m_hwItemVec; ///< 硬件项列表
+};
+
+/// @brief 硬件项信息
+class HWItemInfor
+{
+public:
+    HWItemInfor();
+    virtual ~HWItemInfor();
+
+    /// @brief 获取项标题
+    /// @return 项标题
+    const QString& GetTitle() const;
+
+    /// @brief 获取项内容
+    /// @return 项内容
+    const QString& GetContent() const;
+
+
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor() = 0;
+
+protected:
+    /// @brief 设置项标题
+    ///  
+    /// @param[in] title 标题
+    void SetTitle(IN const QString& title);
+
+    /// @brief 内容中增加一项
+    /// @param[in] subTitle 内容中的子标题
+    /// @param[in] text 文本
+    void ContentAddItem(IN const QString& subTitle, IN const QString text);
+
+    /// @brief 内容中增加空行
+    void ContendAddBlankLine();
+
+    /// @brief 清除现有的信息
+    void ClearInfor();
+
+private:
+    QString m_title; ///< 项标题
+    QString m_content; ///< 项类容
+};
+
+/// @brief 计算机项信息项信息
+class ComputerItemInfor : public HWItemInfor
+{
+public: 
+    ComputerItemInfor();
+    virtual ~ComputerItemInfor();
+
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 处理器项信息
+class ProcessorItemInfor : public HWItemInfor
+{
+public:
+    ProcessorItemInfor();
+    virtual ~ProcessorItemInfor();
+
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
 };
 
 

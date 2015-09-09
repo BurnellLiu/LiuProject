@@ -39,6 +39,10 @@
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(167, 205, 255);</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -74,6 +78,12 @@
        </item>
        <item>
         <widget class="QTextEdit" name="textEditHWIinfor">
+         <property name="font">
+          <font>
+           <family>Microsoft JhengHei UI</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="contextMenuPolicy">
           <enum>Qt::DefaultContextMenu</enum>
          </property>

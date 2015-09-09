@@ -61,6 +61,7 @@ struct ProcessorInfor
     wstring Manufacturer; ///< 制造商
     unsigned long CoresNumber; ///< 核心数
     unsigned long LogicalProcessorNumber; ///< 逻辑处理器数量
+    unsigned long MaxClockSpeed; ///< 最大频率(MHz)
 };
 
 /// @brief 显卡类型
