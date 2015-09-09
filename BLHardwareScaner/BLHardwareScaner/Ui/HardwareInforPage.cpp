@@ -114,9 +114,12 @@ void HWItemInfor::ContentAddItem(IN const QString& subTitle, IN const QString te
     if (subTitle.isEmpty())
         return;
 
-    QString formatSubTitle = subTitle;
+    QString formatSubTitle = subTitle.trimmed();
 
-    formatSubTitle += "\t";
+    while (formatSubTitle.length() < 20)
+    {
+        formatSubTitle += " ";
+    }
 
     m_content += formatSubTitle;
     
@@ -206,8 +209,8 @@ void ComputerItemInfor::LoadHWInfor()
     const ProcessorInfor& processorInfor = HardwareInfor::GetInstance().GetProcessorInfor();
     QString processorName = QString::fromStdWString(processorInfor.Name);
     processorName = processorName.trimmed();
-    processorName += QString::fromStdWString(L" ( Cores: %1 Logical Processor: %2 )").arg(processorInfor.CoresNumber).arg(processorInfor.LogicalProcessorNumber);
-    this->ContentAddItem(QObject::tr("Processor\t"), processorName);
+    processorName += QString::fromStdWString(L"(Cores: %1 Threads: %2)").arg(processorInfor.CoresNumber).arg(processorInfor.LogicalProcessorNumber);
+    this->ContentAddItem(QObject::tr("Processor"), processorName);
 
     // 填写显卡信息
     const DisplayCardInforArray& displayCardInfor = HardwareInfor::GetInstance().GetDisplayCardInfor();
@@ -222,7 +225,7 @@ void ComputerItemInfor::LoadHWInfor()
         else
             displayCardName += QString::fromStdWString(L"  (Unknown)");
 
-        this->ContentAddItem(QObject::tr("Video Card\t"), displayCardName);
+        this->ContentAddItem(QObject::tr("Video Card"), displayCardName);
     }
 
     // 填写内存信息
@@ -232,7 +235,7 @@ void ComputerItemInfor::LoadHWInfor()
         QString memoryInfor;
         memoryInfor += QString::fromStdWString(L"Size: %1M").arg(physicalMemoryInfor.Capacity[i]);
         memoryInfor += QString::fromStdWString(L" Speed: %1MHz").arg(physicalMemoryInfor.Speed[i]);
-        this->ContentAddItem(QObject::tr("Memory\t"), memoryInfor);
+        this->ContentAddItem(QObject::tr("Memory"), memoryInfor);
     }
     
     // 填写磁盘信息
@@ -249,7 +252,7 @@ void ComputerItemInfor::LoadHWInfor()
         diskInfor += diskName;
         diskInfor += QString::fromStdWString(L" ( %1 G )").arg(diskInforArray.TotalSize[i]);
 
-        this->ContentAddItem(QObject::tr("Disk\t"), diskInfor);
+        this->ContentAddItem(QObject::tr("Disk"), diskInfor);
     }
 
     // 填写显示器信息
@@ -258,7 +261,7 @@ void ComputerItemInfor::LoadHWInfor()
     {
         QString monitorInfor;
         monitorInfor += QString::fromStdWString(L"%1  ").arg(monitorInforArray.Name[i].c_str());
-        this->ContentAddItem(QObject::tr("Monitor\t"), monitorInfor);
+        this->ContentAddItem(QObject::tr("Monitor"), monitorInfor);
     }
 }
 
@@ -280,10 +283,10 @@ void ProcessorItemInfor::LoadHWInfor()
 
     QString name = QString::fromStdWString(processprInfor.Name);
     this->SetTitle(name);
-    this->ContentAddItem(QObject::tr("Name\t"), name);
+    this->ContentAddItem(QObject::tr("Name"), name);
 
     QString description = QString::fromStdWString(processprInfor.Description);
-    this->ContentAddItem(QObject::tr("Description\t"), description);
+    this->ContentAddItem(QObject::tr("Description"), description);
 
     QString manufacturer = QString::fromStdWString(processprInfor.Manufacturer);
     this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(manufacturer));
@@ -292,6 +295,6 @@ void ProcessorItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Cores Number"), coresNumber);
 
     QString speed = QString::fromStdString("%1MHz").arg(processprInfor.MaxClockSpeed);
-    this->ContentAddItem(QObject::tr("Speed\t"), speed);
+    this->ContentAddItem(QObject::tr("Speed"), speed);
 
 }

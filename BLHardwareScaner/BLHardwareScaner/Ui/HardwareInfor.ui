@@ -80,7 +80,7 @@ background-color: rgb(167, 205, 255);</string>
         <widget class="QTextEdit" name="textEditHWIinfor">
          <property name="font">
           <font>
-           <family>Microsoft JhengHei UI</family>
+           <family>Consolas</family>
            <pointsize>10</pointsize>
           </font>
          </property>
@@ -95,6 +95,12 @@ background-color: rgb(167, 205, 255);</string>
          </property>
          <property name="lineWidth">
           <number>1</number>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
