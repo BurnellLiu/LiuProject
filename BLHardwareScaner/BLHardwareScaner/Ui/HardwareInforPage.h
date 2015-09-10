@@ -151,4 +151,12 @@ public:
     virtual void LoadHWInfor();
 };
 
+/// @brief 网卡项信息
+class NetworkCardItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
 #endif

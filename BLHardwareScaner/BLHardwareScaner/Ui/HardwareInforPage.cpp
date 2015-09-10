@@ -26,6 +26,12 @@ static QString ConvertManufacturer(IN const QString& manufacturer)
         goto EXIT;
     }
 
+    if (oldStr.indexOf("QUALCOMM") != -1)
+    {
+        newStr = "Qualcomn";
+        goto EXIT;
+    }
+
 EXIT:
     return newStr;
 }
@@ -59,6 +65,14 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     ui.listWidgetHWItem->addItem(tr("Disk"));
     HWItemInfor* pDiskItem = new DiskItemInfor();
     m_hwItemVec.push_back(pDiskItem);
+
+    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+    if (networkCardInforArray.Count >= 1)
+    {
+        ui.listWidgetHWItem->addItem(tr("Network Card"));
+        HWItemInfor* pNetworkCardItem = new NetworkCardItemInfor();
+        m_hwItemVec.push_back(pNetworkCardItem);
+    }
 
     ui.listWidgetHWItem->addItem(tr("Monitor"));
     HWItemInfor* pMonitorItem = new MonitorItemInfor();
@@ -267,6 +281,14 @@ void ComputerItemInfor::LoadHWInfor()
         diskInfor += QString::fromStdWString(L" ( %1 G )").arg(diskInforArray.TotalSize[i]);
 
         this->ContentAddItem(QObject::tr("Disk"), diskInfor);
+    }
+
+    // 获取网卡信息
+    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+    for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
+    {
+        QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("Network Card"), name);
     }
 
     // 填写显示器信息
@@ -486,4 +508,27 @@ void BatteryItemInfor::LoadHWInfor()
     QString designedVoltage = QString::fromStdString("%1 mV").arg(batteryStaticInfor.DesignedVoltage);
     this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
 
+}
+
+void NetworkCardItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle(QObject::tr("Network Card"));
+
+    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+
+    for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
+    {
+        QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("Name"), name);
+
+        QString manufacturer = ConvertManufacturer(QString::fromStdWString(networkCardInforArray.Manufacturer[i]));
+        this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
+
+        QString macAddress = QString::fromStdWString(networkCardInforArray.MACAddress[i]);
+        this->ContentAddItem(QObject::tr("MACAddress"), macAddress);
+
+        this->ContentAddBlankLine();
+    }
 }

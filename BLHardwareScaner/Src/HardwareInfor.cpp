@@ -91,6 +91,13 @@ const BatteryStaticInfor& HardwareInfor::GetBatteryStaticInfor()
     return m_batteryStaticInfor;
 }
 
+const NetworkCardInforArray& HardwareInfor::GetNetworkCardInfor()
+{
+    this->ScanNetworkCardInfor(m_networkCardInfor);
+
+    return m_networkCardInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
@@ -102,6 +109,7 @@ void HardwareInfor::Scan()
     this->ScanDiskInfor(m_diskInfor);
     this->ScanMonitorInfor(m_monitorInfor);
     this->ScanBatteryStaticInfor(m_batteryStaticInfor);
+    this->ScanNetworkCardInfor(m_networkCardInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
@@ -263,4 +271,20 @@ void HardwareInfor::ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStatic
     batteryStaticDataManager.GetBatteryDesignedCapacity(0, batteryStaticInfor.DesignedCapacity);
     batteryFullCapacityManager.GetBatteryFullChargedCapacity(0, batteryStaticInfor.FullChargedCapacity);
     batteryManager.GetBatteryDesignVoltage(0, batteryStaticInfor.DesignedVoltage);
+}
+
+void HardwareInfor::ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor)
+{
+    networkCardInfor.Count = 0;
+
+    LWMI::LNetworkAdapterManager networkCardManager;
+    
+    networkCardInfor.Count = (unsigned long)networkCardManager.GetNetworkCardCount();
+
+    for (int i = 0; i < networkCardManager.GetNetworkCardCount(); i++)
+    {
+        networkCardManager.GetNetworkCardName(i, networkCardInfor.Name[i]);
+        networkCardManager.GetNetworkCardManufacturer(i, networkCardInfor.Manufacturer[i]);
+        networkCardManager.GetNetworkCardMACAddress(i, networkCardInfor.MACAddress[i]);
+    }
 }

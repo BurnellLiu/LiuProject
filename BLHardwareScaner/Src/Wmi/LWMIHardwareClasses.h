@@ -455,6 +455,42 @@ namespace LWMI
         LBatteryFullCapacityManager& operator = (const LBatteryFullCapacityManager&);
     };
 
+    /// @brief 物理网卡管理者类
+    class LNetworkAdapterManager
+    {
+    public:
+        LNetworkAdapterManager();
+        ~LNetworkAdapterManager();
+
+        /// @brief  获取网卡数量
+        /// @return 网卡数量
+        int GetNetworkCardCount();
+
+        /// @brief 获取网卡名称
+        /// @param[in] index 网卡索引
+        /// @param[out] name 存储网卡名称
+        /// @return 成功返回true, 失败返回false
+        bool GetNetworkCardName(IN int index, OUT wstring& name);
+
+        /// @brief 获取网卡制造商
+        /// @param[in] idex 网卡索引
+        /// @param[out] manufacturer 存储网卡制造商
+        /// @return 成功返回true, 失败返回false
+        bool GetNetworkCardManufacturer(IN int index, OUT wstring& manufacturer);
+
+        /// @brief 获取网卡MAC地址
+        /// @param[in] index 网卡索引
+        /// @param[out] mac 存储MAC地址
+        /// @return 成功返回true, 失败返回false
+        bool GetNetworkCardMACAddress(IN int index, OUT wstring& mac);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+    private:
+        LNetworkAdapterManager(const LNetworkAdapterManager&);
+        LNetworkAdapterManager& operator = (const LNetworkAdapterManager&);
+    };
+
 }
 
 #endif

@@ -154,6 +154,18 @@ struct BatteryStaticInfor
     unsigned long DesignedVoltage; ///< 设计电压, 单位mV
 };
 
+/// @brief 最大网卡数量
+#define MAX_NETWORKCARD_NUMBER 16
+
+/// @brief 网卡信息组
+struct NetworkCardInforArray
+{
+    unsigned long Count; ///< 网卡数量
+    wstring Name[MAX_NETWORKCARD_NUMBER]; ///< 网卡名称
+    wstring Manufacturer[MAX_NETWORKCARD_NUMBER]; ///< 网卡制造商
+    wstring MACAddress[MAX_NETWORKCARD_NUMBER]; ///< MAC地址
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -200,6 +212,10 @@ public:
     /// @return 电池静态信息
     const BatteryStaticInfor& GetBatteryStaticInfor();
 
+    /// @brief 获取网卡信息
+    /// @return 网卡信息
+    const NetworkCardInforArray& GetNetworkCardInfor();
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -243,6 +259,10 @@ private:
     /// @param[out] batteryStaticInfor 存储电池静态信息
     void ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStaticInfor);
 
+    /// @brief 扫描网卡信息
+    /// @param[out] networkCardInfor 存储网卡信息
+    void ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -257,6 +277,7 @@ private:
     DiskInforArray m_diskInfor; ///< 磁盘信息
     MonitorInforArray m_monitorInfor; ////< 显示器信息
     BatteryStaticInfor m_batteryStaticInfor; ///< 电池静态信息
+    NetworkCardInforArray m_networkCardInfor; ///< 网卡信息
 };
 
 #endif

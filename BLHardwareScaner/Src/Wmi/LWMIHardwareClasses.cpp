@@ -579,5 +579,39 @@ SAFE_EXIT:
 
         return bRet;
     }
+
+    LNetworkAdapterManager::LNetworkAdapterManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_CIMV2);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM Win32_NetworkAdapter Where PhysicalAdapter = true");
+    }
+
+    LNetworkAdapterManager::~LNetworkAdapterManager()
+    {
+        delete m_pWMICoreManager;
+        m_pWMICoreManager = 0;
+    }
+
+    int LNetworkAdapterManager::GetNetworkCardCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LNetworkAdapterManager::GetNetworkCardName(IN int index, OUT wstring& name)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"Name", name);
+    }
+
+    bool LNetworkAdapterManager::GetNetworkCardManufacturer(IN int index, OUT wstring& manufacturer)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"Manufacturer", manufacturer);
+    }
+
+    bool LNetworkAdapterManager::GetNetworkCardMACAddress(IN int index, OUT wstring& mac)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"MACAddress", mac);
+    }
     
 }
