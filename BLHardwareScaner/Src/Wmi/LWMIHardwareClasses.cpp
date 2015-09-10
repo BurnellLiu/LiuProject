@@ -466,5 +466,118 @@ SAFE_EXIT:
         return bRet;
     }
 
+
+    LBatteryManager::LBatteryManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_CIMV2);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM Win32_Battery");
+    }
+
+    LBatteryManager::~LBatteryManager()
+    {
+        delete m_pWMICoreManager;
+        m_pWMICoreManager = 0;
+    }
+
+    int LBatteryManager::GetBatteryCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LBatteryManager::GetBatteryName(IN int index, OUT wstring& name)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"Name", name);
+    }
+
+    bool LBatteryManager::GetBatteryDeviceID(IN int index, OUT wstring& deviceID)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"DeviceID", deviceID);
+    }
+
+    bool LBatteryManager::GetBatteryDesignVoltage(IN int index, OUT unsigned long& voltage)
+    {
+        LUINT64 uiVoltage;
+        bool bRet = m_pWMICoreManager->GetUINT64Property(index, L"DesignVoltage", uiVoltage);
+        if (bRet)
+        {
+            voltage = (unsigned long)uiVoltage;
+        }
+
+        return bRet;
+    }
+
+    LBatteryStaticDataManager::LBatteryStaticDataManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM BatteryStaticData");
+    }
+
+    LBatteryStaticDataManager::~LBatteryStaticDataManager()
+    {
+        delete m_pWMICoreManager;
+        m_pWMICoreManager = 0;
+    }
+
+    int LBatteryStaticDataManager::GetBatteryCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LBatteryStaticDataManager::GetBatteryManufacturerName(IN int index, OUT wstring& manufacturer)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"ManufactureName", manufacturer);
+    }
+
+    bool LBatteryStaticDataManager::GetBatteryUniqueID(IN int index, OUT wstring& uniqueID)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"UniqueID", uniqueID);
+    }
+
+    bool LBatteryStaticDataManager::GetBatterySerialNumber(IN int index, OUT wstring& serialNumber)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"SerialNumber", serialNumber);
+    }
+
+    bool LBatteryStaticDataManager::GetBatteryDesignedCapacity(IN int index, OUT unsigned long& capacity)
+    {
+        LUINT uiCapacity;
+        bool bRet = m_pWMICoreManager->GetUINT32Property(index, L"DesignedCapacity", uiCapacity);
+        if (bRet)
+        {
+            capacity = (unsigned long)uiCapacity;
+        }
+
+        return bRet;
+    }
+
+    LBatteryFullCapacityManager::LBatteryFullCapacityManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM BatteryFullChargedCapacity");
+    }
+
+    LBatteryFullCapacityManager::~LBatteryFullCapacityManager()
+    {
+        delete m_pWMICoreManager;
+        m_pWMICoreManager = 0;
+    }
+
+    bool LBatteryFullCapacityManager::GetBatteryFullChargedCapacity(IN int index, OUT unsigned long& capacity)
+    {
+        LUINT uiCapacity;
+        bool bRet = m_pWMICoreManager->GetUINT32Property(index, L"FullChargedCapacity", uiCapacity);
+        if (bRet)
+        {
+            capacity = (unsigned long)uiCapacity;
+        }
+
+        return bRet;
+    }
     
 }

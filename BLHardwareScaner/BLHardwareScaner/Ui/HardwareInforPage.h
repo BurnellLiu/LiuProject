@@ -127,7 +127,7 @@ public:
     virtual void LoadHWInfor();
 };
 
-/// @brief 显卡信息
+/// @brief 显卡项信息
 class VideoCardItemInfor : public HWItemInfor
 {
 public:
@@ -135,8 +135,16 @@ public:
     virtual void LoadHWInfor();
 };
 
-/// @brief 显示器信息
+/// @brief 显示器项信息
 class MonitorItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief 电池项信息
+class BatteryItemInfor : public HWItemInfor
 {
 public:
     /// @brief 加载硬件信息

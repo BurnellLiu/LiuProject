@@ -100,4 +100,69 @@ namespace LWMI
     {
         return m_pWMICoreManager->GetStringProperty(index, L"SystemDrive", drive);
     }
+
+    LMS_SystemInformationManager::LMS_SystemInformationManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM MS_SystemInformation");
+    }
+
+    LMS_SystemInformationManager::~LMS_SystemInformationManager()
+    {
+        delete m_pWMICoreManager;
+    }
+
+    int LMS_SystemInformationManager::GetSystemInforCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LMS_SystemInformationManager::GetBaseBoardManufacturer(IN int index, OUT wstring& manufacturer)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"BaseBoardManufacturer", manufacturer);
+    }
+
+    bool LMS_SystemInformationManager::GetBaseBoardProductName(IN int index, OUT wstring& product)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"BaseBoardProduct", product);
+    }
+
+    bool LMS_SystemInformationManager::GetBIOSReleaseDate(IN int index, OUT wstring& releaseDate)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"BIOSReleaseDate", releaseDate);
+    }
+
+    bool LMS_SystemInformationManager::GetBIOSVendor(IN int index, OUT wstring& vendor)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"BIOSVendor", vendor);
+    }
+
+    bool LMS_SystemInformationManager::GetBIOSVersion(IN int index, OUT wstring& version)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"BIOSVersion", version);
+    }
+
+    bool LMS_SystemInformationManager::GetSystemFamily(IN int index, OUT wstring& family)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"SystemFamily", family);
+    }
+
+    bool LMS_SystemInformationManager::GetSystemManufacturer(IN int index, OUT wstring& manufacturer)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"SystemManufacturer", manufacturer);
+    }
+
+    bool LMS_SystemInformationManager::GetSystemProductName(IN int index, OUT wstring& productName)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"SystemProductName", productName);
+    }
+
+    bool LMS_SystemInformationManager::GetSystemSKU(IN int index, OUT wstring& sku)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"SystemSKU", sku);
+    }
+
 }
+

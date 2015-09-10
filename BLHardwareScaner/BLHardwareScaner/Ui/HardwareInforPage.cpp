@@ -11,9 +11,8 @@
 /// @return 新的制造商名称
 static QString ConvertManufacturer(IN const QString& manufacturer)
 {
-    QString oldStr = manufacturer;
-    oldStr = oldStr.toUpper();
-    QString newStr = oldStr;
+    QString oldStr = manufacturer.toUpper();
+    QString newStr = manufacturer;
 
     if (oldStr.indexOf("ASUSTEK") != -1)
     {
@@ -40,13 +39,17 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     HWItemInfor* pComputerItem = new ComputerItemInfor();
     m_hwItemVec.push_back(pComputerItem);
 
+    ui.listWidgetHWItem->addItem(tr("MotherBoard"));
+    HWItemInfor* pMotherBoardItem = new MotherBoardItemInfor();
+    m_hwItemVec.push_back(pMotherBoardItem);
+
     ui.listWidgetHWItem->addItem(tr("Processor"));
     HWItemInfor* pProcessorItem = new ProcessorItemInfor();
     m_hwItemVec.push_back(pProcessorItem);
 
-    ui.listWidgetHWItem->addItem(tr("MotherBoard"));
-    HWItemInfor* pMotherBoardItem = new MotherBoardItemInfor();
-    m_hwItemVec.push_back(pMotherBoardItem);
+    ui.listWidgetHWItem->addItem(tr("VideoCard"));
+    HWItemInfor* pVideoCardItem = new VideoCardItemInfor();
+    m_hwItemVec.push_back(pVideoCardItem);
 
     ui.listWidgetHWItem->addItem(tr("Memory"));
     HWItemInfor* pMemoryItem = new MemoryItemInfor();
@@ -57,13 +60,17 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     HWItemInfor* pDiskItem = new DiskItemInfor();
     m_hwItemVec.push_back(pDiskItem);
 
-    ui.listWidgetHWItem->addItem(tr("VideoCard"));
-    HWItemInfor* pVideoCardItem = new VideoCardItemInfor();
-    m_hwItemVec.push_back(pVideoCardItem);
-
     ui.listWidgetHWItem->addItem(tr("Monitor"));
     HWItemInfor* pMonitorItem = new MonitorItemInfor();
     m_hwItemVec.push_back(pMonitorItem);
+
+    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
+    if (batteryStaticInfor.Exist)
+    {
+        ui.listWidgetHWItem->addItem(tr("Battery"));
+        HWItemInfor* pBatteryItem = new BatteryItemInfor();
+        m_hwItemVec.push_back(pBatteryItem);
+    }
 
     for (int i = 0; i < m_hwItemVec.size(); i++)
     {
@@ -158,6 +165,8 @@ void ComputerItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
 
+    this->SetTitle(QObject::tr("Computer"));
+
 
      // 获取计算机系统信息
     
@@ -184,7 +193,7 @@ void ComputerItemInfor::LoadHWInfor()
         break;
     }
 
-    this->SetTitle(strPCSystemInfor);
+    
     this->ContentAddItem(QObject::tr("Computer Model"), strPCSystemInfor);
 
     // 填充操作系统信息
@@ -201,14 +210,14 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddBlankLine();
 
     // 填写主板信息
-    const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
-    QString baseBoardDesc = QString::fromStdWString(baseBoardInfor.Description);
-    baseBoardDesc = baseBoardDesc.trimmed();
-    QString baseBoardManufacturer = QString::fromStdWString(baseBoardInfor.Manufacturer);
-    QString strBaseBoardInfor = ConvertManufacturer(baseBoardManufacturer);
-    strBaseBoardInfor += "  ";
-    strBaseBoardInfor += baseBoardDesc;
-    this->ContentAddItem(QObject::tr("Mother Board"), strBaseBoardInfor);
+    const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
+    QString motherBoardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
+    QString motherBoardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
+    motherBoardManufacturer = ConvertManufacturer(motherBoardManufacturer);
+    QString motherBoardDesc = motherBoardManufacturer;
+    motherBoardDesc += "  ";
+    motherBoardDesc += motherBoardProductName;
+    this->ContentAddItem(QObject::tr("Mother Board"), motherBoardDesc);
 
     // 填写处理器信息
     const ProcessorInfor& processorInfor = HardwareInfor::GetInstance().GetProcessorInfor();
@@ -268,16 +277,32 @@ void ComputerItemInfor::LoadHWInfor()
         monitorInfor += QString::fromStdWString(L"%1  ").arg(monitorInforArray.Name[i].c_str());
         this->ContentAddItem(QObject::tr("Monitor"), monitorInfor);
     }
+
+    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
+    if (batteryStaticInfor.Exist)
+    {
+        QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer);
+        batteryManufacturer = ConvertManufacturer(batteryManufacturer);
+
+        QString batteryName = QString::fromStdWString(batteryStaticInfor.Name);
+
+        QString batteryInfor = batteryManufacturer;
+        batteryInfor += "  ";
+        batteryInfor += batteryName;
+
+        this->ContentAddItem(QObject::tr("Battery"), batteryInfor);
+    }
 }
 
 void ProcessorItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
 
+    this->SetTitle(QObject::tr("Processor"));
+
     const ProcessorInfor& processprInfor = HardwareInfor::GetInstance().GetProcessorInfor();
 
     QString name = QString::fromStdWString(processprInfor.Name);
-    this->SetTitle(name);
     this->ContentAddItem(QObject::tr("Name"), name);
 
     QString description = QString::fromStdWString(processprInfor.Description);
@@ -300,26 +325,31 @@ void MotherBoardItemInfor::LoadHWInfor()
 
     this->SetTitle(QObject::tr("Mother Board"));
 
-    const BaseBoardInfor& baseBoardInfor = HardwareInfor::GetInstance().GetBaseBoardInfor();
-    QString baseBoardDesc = QString::fromStdWString(baseBoardInfor.Description);
-    baseBoardDesc = baseBoardDesc.trimmed();
-    QString baseBoardManufacturer = QString::fromStdWString(baseBoardInfor.Manufacturer);
-    QString strBaseBoardInfor = ConvertManufacturer(baseBoardManufacturer);
-    strBaseBoardInfor += "  ";
-    strBaseBoardInfor += baseBoardDesc;
+    const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
+    QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
+    this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
 
+    QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
+    boardManufacturer = ConvertManufacturer(boardManufacturer);
+    this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
     
 
-    this->ContentAddItem(QObject::tr("Mother Board"), strBaseBoardInfor);
-
-    QString boardSN = QString::fromStdWString(baseBoardInfor.SerialNumber);
+    QString boardSN = QString::fromStdWString(motherBoardInfor.SerialNumber);
     this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
 
-    QString biosSN = QString::fromStdWString(baseBoardInfor.BiosSerialNumber);
+    this->ContentAddBlankLine();
+
+    QString biosSN = QString::fromStdWString(motherBoardInfor.BiosSerialNumber);
     this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
 
-    QString biosVersion = QString::fromStdWString(baseBoardInfor.BiosVersion);
+    QString biosVersion = QString::fromStdWString(motherBoardInfor.BiosVersion);
     this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
+
+    QString biosReleaseDate = QString::fromStdWString(motherBoardInfor.BiosReleaseDate).trimmed();
+    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
+
+    QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
+    this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
 }
 
 void MemoryItemInfor::LoadHWInfor()
@@ -428,4 +458,32 @@ void MonitorItemInfor::LoadHWInfor()
 
         this->ContentAddBlankLine();
     }
+}
+
+void BatteryItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Battery");
+
+    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
+
+    QString batteryName = QString::fromStdWString(batteryStaticInfor.Name).trimmed();
+    this->ContentAddItem(QObject::tr("Name"), batteryName);
+
+    QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer).trimmed();
+    this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(batteryManufacturer));
+
+    QString batterySerialNumber = QString::fromStdWString(batteryStaticInfor.SerialNumber).trimmed();
+    this->ContentAddItem(QObject::tr("Serial Number"), batterySerialNumber);
+
+    QString designedCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.DesignedCapacity);
+    this->ContentAddItem(QObject::tr("Designed Capacity"), designedCapacity);
+
+    QString fullCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.FullChargedCapacity);
+    this->ContentAddItem(QObject::tr("Full Capacity"), fullCapacity);
+
+    QString designedVoltage = QString::fromStdString("%1 mV").arg(batteryStaticInfor.DesignedVoltage);
+    this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
+
 }

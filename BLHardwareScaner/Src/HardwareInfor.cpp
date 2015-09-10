@@ -44,9 +44,9 @@ const OperatingSystemInfor& HardwareInfor::GetOperatingSystemInfor() const
     return m_operatingSystemInfor;
 }
 
-const BaseBoardInfor& HardwareInfor::GetBaseBoardInfor() const
+const MotherBoardInfor& HardwareInfor::GetMotherBoardInfor() const
 {
-    return m_baseBoardInfor;
+    return m_motherBoardInfor;
 }
 
 const ProcessorInfor& HardwareInfor::GetProcessorInfor() const
@@ -84,15 +84,24 @@ const MonitorInforArray& HardwareInfor::GetMonitorInfor()
     return m_monitorInfor;
 }
 
+const BatteryStaticInfor& HardwareInfor::GetBatteryStaticInfor()
+{
+    this->ScanBatteryStaticInfor(m_batteryStaticInfor);
+
+    return m_batteryStaticInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
     this->ScanOperatingSystemInfor(m_operatingSystemInfor);
-    this->ScanBaseBoardInfor(m_baseBoardInfor);
+    this->ScanMotherBoardInfor(m_motherBoardInfor);
     this->ScanProcessorInfor(m_processorInfor);
     this->ScanVideoCardInfor(m_videoCardInfor);
     this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
     this->ScanDiskInfor(m_diskInfor);
+    this->ScanMonitorInfor(m_monitorInfor);
+    this->ScanBatteryStaticInfor(m_batteryStaticInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
@@ -116,16 +125,20 @@ void HardwareInfor::ScanOperatingSystemInfor(OUT OperatingSystemInfor& operating
     operatingSystemManager.GetOSSystemDrive(0, operatingSystemInfor.SystemDrive);
 }
 
-void HardwareInfor::ScanBaseBoardInfor(OUT BaseBoardInfor& baseBoardInfor)
+void HardwareInfor::ScanMotherBoardInfor(OUT MotherBoardInfor& motherBoardInfor)
 {
     LWMI::LBaseBoardManager baseBoardManager;
-    baseBoardManager.GetBaseBoardDescription(0, baseBoardInfor.Description);
-    baseBoardManager.GetBaseBoardManufacturer(0, baseBoardInfor.Manufacturer);
-    baseBoardManager.GetBaseBoardSerialNumber(0, baseBoardInfor.SerialNumber);
+    baseBoardManager.GetBaseBoardManufacturer(0, motherBoardInfor.Manufacturer);
+    baseBoardManager.GetBaseBoardSerialNumber(0, motherBoardInfor.SerialNumber);
 
     LWMI::LBIOSManager biosManager;
-    biosManager.GetBIOSSerialNumber(0, baseBoardInfor.BiosSerialNumber);
-    biosManager.GetSMBIOSBIOSVersion(0, baseBoardInfor.BiosVersion);
+    biosManager.GetBIOSSerialNumber(0, motherBoardInfor.BiosSerialNumber);
+    biosManager.GetSMBIOSBIOSVersion(0, motherBoardInfor.BiosVersion);
+    biosManager.GetBIOSManufacturer(0, motherBoardInfor.BiosVendor);
+
+    LWMI::LMS_SystemInformationManager systemInforManager;
+    systemInforManager.GetBaseBoardProductName(0, motherBoardInfor.ProductName);
+    systemInforManager.GetBIOSReleaseDate(0, motherBoardInfor.BiosReleaseDate);
 }
 
 void HardwareInfor::ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
@@ -228,4 +241,26 @@ void HardwareInfor::ScanMonitorInfor(OUT MonitorInforArray& monitorInfor)
         monitorInfor.Name[i] = extendInfor.Name;
         monitorInfor.Date[i] = extendInfor.Date;
     }
+}
+
+void HardwareInfor::ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStaticInfor)
+{
+    LWMI::LBatteryManager batteryManager;
+    LWMI::LBatteryStaticDataManager batteryStaticDataManager;
+    LWMI::LBatteryFullCapacityManager batteryFullCapacityManager;
+
+    if (batteryManager.GetBatteryCount() < 1)
+    {
+        batteryStaticInfor.Exist = false;
+    }
+
+    batteryStaticInfor.Exist = true;
+
+    batteryManager.GetBatteryName(0, batteryStaticInfor.Name);
+    batteryStaticDataManager.GetBatteryManufacturerName(0, batteryStaticInfor.Manufacturer);
+    batteryStaticDataManager.GetBatterySerialNumber(0, batteryStaticInfor.SerialNumber);
+
+    batteryStaticDataManager.GetBatteryDesignedCapacity(0, batteryStaticInfor.DesignedCapacity);
+    batteryFullCapacityManager.GetBatteryFullChargedCapacity(0, batteryStaticInfor.FullChargedCapacity);
+    batteryManager.GetBatteryDesignVoltage(0, batteryStaticInfor.DesignedVoltage);
 }

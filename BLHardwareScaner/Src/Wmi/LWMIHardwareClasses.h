@@ -353,6 +353,108 @@ namespace LWMI
         LDiskDriveManager& operator = (const  LDiskDriveManager&);
     };
 
+    /// @brief 电池管理者类
+    class LBatteryManager
+    {
+    public:
+        LBatteryManager();
+        ~LBatteryManager();
+
+        /// @brief 获取电池数量
+        /// @return 电池数量
+        int GetBatteryCount();
+
+        /// @brief 获取电池名称
+        /// @param[in] index
+        /// @param[out] name 存储名称
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryName(IN int index, OUT wstring& name);
+
+        /// @brief 获取电池设备ID
+        /// @param[in] index
+        /// @param[out] deviceID 存储设备ID
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryDeviceID(IN int index, OUT wstring& deviceID);
+
+        /// @brief 获取电池设计电压
+        /// @param[in] index 
+        /// @param[out] voltage 存储设计电压(单位mV)
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryDesignVoltage(IN int index, OUT unsigned long& voltage);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+    private:
+        LBatteryManager(const LBatteryManager&);
+        LBatteryManager& operator = (const LBatteryManager&);
+    };
+
+    /// @brief 电池静态数据管理者类
+    class LBatteryStaticDataManager
+    {
+    public:
+        LBatteryStaticDataManager();
+        ~LBatteryStaticDataManager();
+
+        /// @brief 获取电池数目
+        /// @return 电池数目
+        int GetBatteryCount();
+
+        /// @brief 获取电池制造商名称
+        /// @param[in] index
+        /// @param[in] manufacturer 存储制造商名称
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryManufacturerName(IN int index, OUT wstring& manufacturer);
+
+        /// @brief 获取电池唯一ID
+        /// @param[in] index
+        /// @param[out] uniqueID 存储唯一ID
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryUniqueID(IN int index, OUT wstring& uniqueID);
+
+        /// @brief 获取电池序列号
+        /// @param[in] index 
+        /// @param[out] serialNumber 存储序列号
+        /// @return 成功返回true, 失败返回false
+        bool GetBatterySerialNumber(IN int index, OUT wstring& serialNumber);
+
+        /// @brief 获取电池设计电量
+        /// @param[in] index
+        /// @param[out] capacity 存储电量值, 单位mWh
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryDesignedCapacity(IN int index, OUT unsigned long& capacity);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+    private:
+        LBatteryStaticDataManager(const LBatteryStaticDataManager&);
+        LBatteryStaticDataManager& operator = (const LBatteryStaticDataManager&);
+    };
+
+    /// @brief 电池满电量管理者类
+    class LBatteryFullCapacityManager
+    {
+    public:
+        LBatteryFullCapacityManager();
+        ~LBatteryFullCapacityManager();
+
+        /// @brief 获取电池数量
+        /// @return 电池数量
+        int GetBatteryCount();
+
+        /// @brief 获取电池满电量容量
+        /// @param[in] index
+        /// @param[out] capacity 容量, 单位mWh
+        /// @return 成功返回true, 失败返回false
+        bool GetBatteryFullChargedCapacity(IN int index, OUT unsigned long& capacity);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+    private:
+        LBatteryFullCapacityManager(const LBatteryFullCapacityManager&);
+        LBatteryFullCapacityManager& operator = (const LBatteryFullCapacityManager&);
+    };
+
 }
 
 #endif

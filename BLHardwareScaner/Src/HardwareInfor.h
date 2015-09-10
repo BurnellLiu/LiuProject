@@ -46,14 +46,16 @@ struct OperatingSystemInfor
 };
 
 /// @brief 主板信息结构
-struct BaseBoardInfor
+struct MotherBoardInfor
 {
-    wstring Description; ///< 描述
+    wstring ProductName; ///< 产品名
     wstring Manufacturer; ///< 制造商
     wstring SerialNumber; ///< 序列号
 
     wstring BiosSerialNumber; ///< Bios序列号
     wstring BiosVersion; ///< Bios版本
+    wstring BiosReleaseDate; ///< Bios发布日期
+    wstring BiosVendor; ///< Bios厂商
 };
 
 /// @brief 处理器信息
@@ -139,6 +141,19 @@ struct MonitorInforArray
     string Date[MAX_MONITOR_NUMBER]; ////< 显示器生产日期
 };
 
+/// @brief 电磁静态信息
+struct BatteryStaticInfor
+{
+    bool Exist; ///< 标识是否存在电池
+    wstring Name; ///< 电池名
+    wstring Manufacturer; ///< 电池制造商
+    wstring SerialNumber; ///< 电池序列号
+
+    unsigned long DesignedCapacity; ///< 设计容量, 单位mWh
+    unsigned long FullChargedCapacity; ///< 充满电容量. 单位mWh
+    unsigned long DesignedVoltage; ///< 设计电压, 单位mV
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -159,7 +174,7 @@ public:
 
     /// @brief 获取主板信息
     /// @return 主板信息
-    const BaseBoardInfor& GetBaseBoardInfor() const;
+    const MotherBoardInfor& GetMotherBoardInfor() const;
 
     /// @brief 获取处理器信息
     /// @return 处理器信息
@@ -181,6 +196,10 @@ public:
     /// @return 显示器信息
     const MonitorInforArray& GetMonitorInfor();
 
+    /// @brief 获取电池静态信息
+    /// @return 电池静态信息
+    const BatteryStaticInfor& GetBatteryStaticInfor();
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -197,8 +216,8 @@ private:
     void ScanOperatingSystemInfor(OUT OperatingSystemInfor& operatingSystemInfor);
 
     /// @brief 扫描主板信息
-    /// @param[out] baseBoardInfor 主板信息
-    void ScanBaseBoardInfor(OUT BaseBoardInfor& baseBoardInfor);
+    /// @param[out] motherBoardInfor 主板信息
+    void ScanMotherBoardInfor(OUT MotherBoardInfor& baseBoardInfor);
 
     /// @brief 扫描处理器信息
     /// @param[out] processorInfor 存储处理器信息
@@ -220,6 +239,10 @@ private:
     /// @param[out] monitorInfor 存储显示器信息
     void ScanMonitorInfor(OUT MonitorInforArray& monitorInfor);
 
+    /// @brief 扫描电池静态信息
+    /// @param[out] batteryStaticInfor 存储电池静态信息
+    void ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStaticInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -227,12 +250,13 @@ private:
 private:
     ComputerSystemInfor m_computerSystemInfor; ///< 计算机系统信息
     OperatingSystemInfor m_operatingSystemInfor; ///< 操作系统信息
-    BaseBoardInfor m_baseBoardInfor; ///< 主板信息
+    MotherBoardInfor m_motherBoardInfor; ///< 主板信息
     ProcessorInfor m_processorInfor; ///< 处理器信息
     VideoCardInforArray m_videoCardInfor; ///< 显卡信息
     PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
     DiskInforArray m_diskInfor; ///< 磁盘信息
     MonitorInforArray m_monitorInfor; ////< 显示器信息
+    BatteryStaticInfor m_batteryStaticInfor; ///< 电池静态信息
 };
 
 #endif

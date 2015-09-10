@@ -61,6 +61,8 @@ namespace LWMI
         bool GetComputerSystemPCType(IN int index, OUT LCOMPUTER_SYSTEM_TYPE& type);
 
         /// @brief 获取计算机系统类型
+        ///
+        /// 如: "x64-based PC"
         /// @param[in] index 索引
         /// @param[out] type 存储类型
         /// @return 成功返回true, 失败返回false
@@ -68,6 +70,9 @@ namespace LWMI
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+    private:
+        LComputerSystemManager(const LComputerSystemManager&);
+        LComputerSystemManager& operator = (const LComputerSystemManager&);
     };
 
     /// @brief 操作系统管理者类
@@ -107,6 +112,85 @@ namespace LWMI
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        LOperatingSystemManager(const LOperatingSystemManager&);
+        LOperatingSystemManager& operator = (const LOperatingSystemManager&);
+    };
+
+    /// @brief 系统信息管理者类
+    class LMS_SystemInformationManager
+    {
+    public:
+        LMS_SystemInformationManager();
+        ~LMS_SystemInformationManager();
+
+        /// @brief 获取系统信息数量
+        /// @return 系统信息数量(应该为1)
+        int GetSystemInforCount();
+
+        /// @brief 获取主板制造商
+        /// @param[in] index
+        /// @param[out] manufacturer 存储制造商信息
+        /// @return 成功返回true, 失败返回false
+        bool GetBaseBoardManufacturer(IN int index, OUT wstring& manufacturer);
+
+        /// @brief 获取主板产品名称
+        /// @param[in] index
+        /// @param[out] product 存储产品名称
+        /// @return 成功返回true, 失败返回false
+        bool GetBaseBoardProductName(IN int index, OUT wstring& product);
+
+        /// @brief 获取BIOS发布日期
+        /// @param[in] index
+        /// @param[out] releaseDate 存储发布日期
+        /// @return 成功返回true, 失败返回false
+        bool GetBIOSReleaseDate(IN int index, OUT wstring& releaseDate);
+
+        /// @brief 获取BIOS厂商信息
+        /// @param[in] index
+        /// @param[out] vendor 存储厂商信息 
+        /// @return 成功返回true, 失败返回false
+        bool GetBIOSVendor(IN int index, OUT wstring& vendor);
+
+        /// @brief 获取BIOS版本
+        /// @param[in] index 
+        /// @param[out] version 存储BIOS版本
+        /// @return 成功返回true, 失败返回false
+        bool GetBIOSVersion(IN int index, OUT wstring& version);
+
+        /// @brief 获取系统家族
+        /// @param[in] index
+        /// @param[out] family 存储系统家族
+        /// @return 成功返回true, 失败返回false
+        bool GetSystemFamily(IN int index, OUT wstring& family);
+
+        /// @brief 获取系统制造商信息
+        /// @param[in] index
+        /// @param[in] manufacturer 存储制造商信息
+        /// @return 成功返回true, 失败返回false
+        bool GetSystemManufacturer(IN int index, OUT wstring& manufacturer);
+
+        /// @brief 获取系统产品名称
+        /// @param[in] index
+        /// @param[out] productName 存储产品名称
+        /// @return 成功返回true, 失败返回false
+        bool GetSystemProductName(IN int index, OUT wstring& productName);
+
+        /// @brief 获取系统SKU信息
+        ///
+        /// 如: ASUS-NotebookSKU
+        /// @param[in] index
+        /// @param[in] sku 存储SKU信息
+        /// @return 成功返回true, 失败返回false
+        bool GetSystemSKU(IN int index, OUT wstring& sku);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        LMS_SystemInformationManager(const LMS_SystemInformationManager&);
+        LMS_SystemInformationManager& operator = (const LMS_SystemInformationManager&);
     };
 }
 
