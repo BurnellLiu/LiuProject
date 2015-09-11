@@ -1,10 +1,26 @@
 
 #include "HardwareInfor.h"
 
+#include <algorithm>
+using std::transform;
+
 #include "Wmi/LWMISystemClasses.h"
 #include "Wmi/LWMIHardwareClasses.h"
 
 #include "SetupApi/LSetupAPI.h"
+
+
+/// @brief 将字符串的小写字母转换为大写
+///  
+/// 不要尝试将非uicode字符串转换大小写, 因为在中文在多字节编码中使用两个字节表示
+/// @param[in] str 原始字符串
+/// @return 转换后的大写字符串
+static wstring WStringToUpper(IN const wstring& str)
+{
+    wstring newStr = str;
+    transform(newStr.begin(), newStr.end(), newStr.begin(), toupper);
+    return newStr;
+}
 
 
 
@@ -286,5 +302,15 @@ void HardwareInfor::ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardI
         networkCardManager.GetNetworkCardName(i, networkCardInfor.Name[i]);
         networkCardManager.GetNetworkCardManufacturer(i, networkCardInfor.Manufacturer[i]);
         networkCardManager.GetNetworkCardMACAddress(i, networkCardInfor.MACAddress[i]);
+        wstring connectionID;
+        networkCardManager.GetNetworkCardConnectionID(i, connectionID);
+
+        wstring connectionIDUpper = WStringToUpper(connectionID);
+        if (connectionIDUpper.find(L"WI-FI") != wstring::npos)
+            networkCardInfor.Type[i] = WIFI_NETCARD;
+        else if (connectionIDUpper.find(L"ETHERNET") != wstring::npos)
+            networkCardInfor.Type[i] = ETHERNET_NETCARD;
+        else
+            networkCardInfor.Type[i] = UNKNOWN_NETCARD; 
     }
 }

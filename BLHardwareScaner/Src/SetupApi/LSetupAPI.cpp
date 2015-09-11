@@ -101,32 +101,31 @@ public:
 
     DWORD Disable(IN int index);
 
-    DWORD GetDevDesc(IN int index, OUT string& devDesc);
+    DWORD GetDevDesc(IN int index, OUT wstring& devDesc);
 
-    DWORD GetHardwareId(IN int index, OUT string& devHardwareId);
+    DWORD GetHardwareId(IN int index, OUT wstring& devHardwareId);
 
-    DWORD GetFriendlyName(IN int index, OUT string& devFrindName);
+    DWORD GetFriendlyName(IN int index, OUT wstring& devFrindName);
 
-    DWORD GetLoctionInfo(IN int index, OUT string& devLocationInfo);
+    DWORD GetLoctionInfo(IN int index, OUT wstring& devLocationInfo);
 
-    DWORD GetInstanceID(IN int index, OUT string& devInstanceID);
     DWORD GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
-    DWORD GetParentInstanceId(IN int index, OUT string& devInstanceID);
+    DWORD GetParentInstanceId(IN int index, OUT wstring& devInstanceID);
 
     DWORD GetChildrenNumber(IN int index, OUT int& number);
 
-    DWORD GetChildrenInstanceIdList(IN int index, IN int listSize,OUT string* devInstanceIDList);
+    DWORD GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList);
 
-    DWORD GetDriverKeyName(IN int index, OUT string& driverKeyName);
+    DWORD GetDriverKeyName(IN int index, OUT wstring& driverKeyName);
 
-    DWORD GetClass(IN int index, OUT string& strClass);
+    DWORD GetClass(IN int index, OUT wstring& strClass);
 
-    DWORD GetClassGuid(IN int index, OUT string& strClassGuid);
+    DWORD GetClassGuid(IN int index, OUT wstring& strClassGuid);
 
     DWORD GetBusNumber(IN int index, OUT unsigned int& busNumber);
 
-    DWORD GetManufacturer(IN int index, OUT string& manufacturer);
+    DWORD GetManufacturer(IN int index, OUT wstring& manufacturer);
 
 protected:
     /// <SUMMARY>
@@ -144,7 +143,7 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT string& strProperty);
+    DWORD GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty);
 
     /// <SUMMARY>
     /// 获取设备注册表属性(无符号整形)
@@ -178,7 +177,7 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT string& strProperty);
+    DWORD GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty);
 
     /// <SUMMARY>
     /// 获取设备属性(字符串列表)
@@ -195,7 +194,7 @@ protected:
     /// <RETURNS>
     /// 成功返回0, 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<string>& strPropertyList);
+    DWORD GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList);
 
     /// <SUMMARY>
     /// 改变设备状态
@@ -315,77 +314,25 @@ DWORD CSADevObject::Disable(IN int index)
     return this->ChangeState(index, DICS_DISABLE);
 }
 
-DWORD CSADevObject::GetDevDesc(IN int index, OUT string& devDesc)
+DWORD CSADevObject::GetDevDesc(IN int index, OUT wstring& devDesc)
 {
 	return this->GetRegistryPropertyStr(index, SPDRP_DEVICEDESC, devDesc);
 }
 
-DWORD CSADevObject::GetHardwareId(IN int index, OUT string& devHardwareId)
+DWORD CSADevObject::GetHardwareId(IN int index, OUT wstring& devHardwareId)
 {
 	return this->GetRegistryPropertyStr(index, SPDRP_HARDWAREID, devHardwareId);
 }
 
 
-DWORD CSADevObject::GetFriendlyName(IN int index, OUT string& devFrindName)
+DWORD CSADevObject::GetFriendlyName(IN int index, OUT wstring& devFrindName)
 {
     return this->GetRegistryPropertyStr(index, SPDRP_FRIENDLYNAME, devFrindName);
 }
 
-DWORD CSADevObject::GetLoctionInfo(IN int index, OUT string& devLocationInfo)
+DWORD CSADevObject::GetLoctionInfo(IN int index, OUT wstring& devLocationInfo)
 {
     return this->GetRegistryPropertyStr(index, SPDRP_LOCATION_INFORMATION, devLocationInfo);
-}
-
-DWORD CSADevObject::GetInstanceID(IN int index, OUT string& devInstanceID)
-{
-    DWORD bufferSize = 0;
-    PSTR pBuffer = NULL;
-
-    DWORD returnCode = 0;
-    while (true)
-    {
-        BOOL bRet = SetupDiGetDeviceInstanceIdA(m_hDevInfoSet,
-            &m_pDevInfoList[index],
-            pBuffer,
-            bufferSize,
-            &bufferSize);
-        if (bRet == TRUE)
-        {
-            break;
-        }
-
-        if (bRet == FALSE)
-        {
-            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-            {
-                if (pBuffer)
-                {
-                    LocalFree(pBuffer);
-                    pBuffer = NULL;
-                }
-                pBuffer = (LPSTR)LocalAlloc(LPTR, bufferSize);
-            }
-            else
-            {
-                returnCode = GetLastError();
-                break;
-            }
-        }
-    }
-
-    if (returnCode == 0)
-    {
-        devInstanceID.clear();
-        devInstanceID.append(pBuffer);
-    }
-
-    if (pBuffer)
-    {
-        LocalFree(pBuffer);
-        pBuffer = NULL;
-    }
-
-    return returnCode;
 }
 
 DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
@@ -412,11 +359,10 @@ DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
             {
                 if (pBuffer)
                 {
-                    delete[] pBuffer;
+                    LocalFree(pBuffer);
                     pBuffer = NULL;
                 }
-                pBuffer = (LPWSTR)new wchar_t[bufferSize];
-                ZeroMemory(pBuffer, bufferSize * sizeof(wchar_t));
+                pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
             }
             else
             {
@@ -429,19 +375,19 @@ DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
     if (returnCode == 0)
     {
         devInstanceID.clear();
-        devInstanceID = pBuffer;
+        devInstanceID.append(pBuffer);
     }
 
     if (pBuffer)
     {
-        delete[] pBuffer;
+        LocalFree(pBuffer);
         pBuffer = NULL;
     }
 
     return returnCode;
 }
 
-DWORD CSADevObject::GetParentInstanceId(IN int index, OUT string& devInstanceID)
+DWORD CSADevObject::GetParentInstanceId(IN int index, OUT wstring& devInstanceID)
 {
     DWORD dwRet = this->GetPropertyStr(index, &DEVPKEY_Device_Parent, devInstanceID);
     return dwRet;
@@ -449,15 +395,15 @@ DWORD CSADevObject::GetParentInstanceId(IN int index, OUT string& devInstanceID)
 
 DWORD CSADevObject::GetChildrenNumber(IN int index, OUT int& number)
 {
-    vector<string> propertyList;
+    vector<wstring> propertyList;
     DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
     number = propertyList.size();
     return returnCode;
 }
 
-DWORD CSADevObject::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT string* devInstanceIDList)
+DWORD CSADevObject::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList)
 {
-    vector<string> propertyList;
+    vector<wstring> propertyList;
     DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
     if (returnCode != 0)
         return returnCode;
@@ -476,17 +422,17 @@ DWORD CSADevObject::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT 
     return returnCode;
 }
 
-DWORD CSADevObject::GetDriverKeyName(IN int index, OUT string& driverKeyName)
+DWORD CSADevObject::GetDriverKeyName(IN int index, OUT wstring& driverKeyName)
 {
     return this->GetRegistryPropertyStr(index, SPDRP_DRIVER, driverKeyName);
 }
 
-DWORD CSADevObject::GetClass(IN int index, OUT string& strClass)
+DWORD CSADevObject::GetClass(IN int index, OUT wstring& strClass)
 {
     return this->GetRegistryPropertyStr(index, SPDRP_CLASS, strClass);
 }
 
-DWORD CSADevObject::GetClassGuid(IN int index, OUT string& strClassGuid)
+DWORD CSADevObject::GetClassGuid(IN int index, OUT wstring& strClassGuid)
 {
     return this->GetRegistryPropertyStr(index, SPDRP_CLASSGUID, strClassGuid);
 }
@@ -496,22 +442,22 @@ DWORD CSADevObject::GetBusNumber(IN int index, OUT unsigned int& busNumber)
     return this->GetRegistryPropertyUInt(index, SPDRP_BUSNUMBER, busNumber);
 }
 
-DWORD CSADevObject::GetManufacturer(IN int index, OUT string& manufacturer)
+DWORD CSADevObject::GetManufacturer(IN int index, OUT wstring& manufacturer)
 {
     return this->GetPropertyStr(index, &DEVPKEY_Device_Manufacturer, manufacturer);
 }
 
 
-DWORD CSADevObject::GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT string& strProperty)
+DWORD CSADevObject::GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty)
 {
 	DWORD bufferSize = 0;
-	LPSTR pBuffer = NULL;
+	LPWSTR pBuffer = NULL;
 	DWORD dataType;
 
 	DWORD returnCode = 0;
 	while (true)
 	{
-		BOOL bRet = SetupDiGetDeviceRegistryPropertyA(m_hDevInfoSet,
+		BOOL bRet = SetupDiGetDeviceRegistryPropertyW(m_hDevInfoSet,
 			&m_pDevInfoList[index],
 			dwProperty,
 			&dataType,
@@ -532,7 +478,7 @@ DWORD CSADevObject::GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OU
 					LocalFree(pBuffer);
 					pBuffer = NULL;
 				}
-				pBuffer = (LPSTR)LocalAlloc(LPTR, bufferSize);
+				pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
 			}
 			else
 			{
@@ -611,7 +557,7 @@ DWORD CSADevObject::GetRegistryPropertyUInt(IN int index, IN DWORD dwProperty, O
 	return returnCode;
 }
 
-DWORD CSADevObject::GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT string& strProperty)
+DWORD CSADevObject::GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty)
 {
 	DWORD bufferSize = 0;
 	LPWSTR pBuffer = NULL;
@@ -654,9 +600,7 @@ DWORD CSADevObject::GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKe
 
 	if (returnCode == 0)
 	{
-		wstring wstrProperty;
-		wstrProperty.append(pBuffer);
-		WStringToString(wstrProperty, strProperty);
+		strProperty.append(pBuffer);
 	}
 
 	if (pBuffer)
@@ -668,7 +612,7 @@ DWORD CSADevObject::GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKe
 	return returnCode;
 }
 
-DWORD CSADevObject::GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<string>& strPropertyList)
+DWORD CSADevObject::GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList)
 {
 	DWORD bufferSize = 0;
 	LPWSTR pBuffer = NULL;
@@ -711,8 +655,7 @@ DWORD CSADevObject::GetPropertyStrList(IN int index, IN const DEVPROPKEY* proper
 
 	if (returnCode == 0)
 	{
-		wstring wstrProperty;
-		string strProperty;
+		wstring strProperty;
 		WCHAR lastWChar = L'\0';
 		for (unsigned int i = 0; i < bufferSize/sizeof(WCHAR); i++)
 		{
@@ -720,8 +663,7 @@ DWORD CSADevObject::GetPropertyStrList(IN int index, IN const DEVPROPKEY* proper
 			{
 				if (pBuffer[i] != L'\0')
 				{
-					wstrProperty = pBuffer + i;
-					WStringToString(wstrProperty, strProperty);
+					strProperty = pBuffer + i;
 					strPropertyList.push_back(strProperty);
 				}
 			}
@@ -813,29 +755,24 @@ DWORD LSetupDev::Disable(IN int index)
     return m_pSADevObject->Disable(index);
 }
 
-DWORD LSetupDev::GetDevDesc(IN int index, OUT string& devDesc)
+DWORD LSetupDev::GetDevDesc(IN int index, OUT wstring& devDesc)
 {
     return m_pSADevObject->GetDevDesc(index, devDesc);
 }
 
-DWORD LSetupDev::GetHardwareId(IN int index, OUT string& devHardwareId)
+DWORD LSetupDev::GetHardwareId(IN int index, OUT wstring& devHardwareId)
 {
     return m_pSADevObject->GetHardwareId(index, devHardwareId);
 }
 
-DWORD LSetupDev::GetFriendlyName(IN int index, OUT string& devFrindName)
+DWORD LSetupDev::GetFriendlyName(IN int index, OUT wstring& devFrindName)
 {
     return m_pSADevObject->GetFriendlyName(index, devFrindName);
 }
 
-DWORD LSetupDev::GetLoctionInfo(IN int index, OUT string& devLocationInfo)
+DWORD LSetupDev::GetLoctionInfo(IN int index, OUT wstring& devLocationInfo)
 {
     return m_pSADevObject->GetLoctionInfo(index, devLocationInfo);
-}
-
-DWORD LSetupDev::GetInstanceID(IN int index, OUT string& devInstanceID)
-{
-    return m_pSADevObject->GetInstanceID(index, devInstanceID);
 }
 
 DWORD LSetupDev::GetInstanceID(IN int index, OUT wstring& devInstanceID)
@@ -843,7 +780,8 @@ DWORD LSetupDev::GetInstanceID(IN int index, OUT wstring& devInstanceID)
     return m_pSADevObject->GetInstanceID(index, devInstanceID);
 }
 
-DWORD LSetupDev::GetParentInstanceId(IN int index, OUT string& devInstanceID)
+
+DWORD LSetupDev::GetParentInstanceId(IN int index, OUT wstring& devInstanceID)
 {
     return m_pSADevObject->GetParentInstanceId(index, devInstanceID);
 }
@@ -853,22 +791,22 @@ DWORD LSetupDev::GetChildrenNumber(IN int index, OUT int& number)
     return m_pSADevObject->GetChildrenNumber(index, number);
 }
 
-DWORD LSetupDev::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT string* devInstanceIDList)
+DWORD LSetupDev::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList)
 {
     return m_pSADevObject->GetChildrenInstanceIdList(index, listSize, devInstanceIDList);
 }
 
-DWORD LSetupDev::GetDriverKeyName(IN int index, OUT string& driverKeyName)
+DWORD LSetupDev::GetDriverKeyName(IN int index, OUT wstring& driverKeyName)
 {
     return m_pSADevObject->GetDriverKeyName(index, driverKeyName);
 }
 
-DWORD LSetupDev::GetClass(IN int index, OUT string& strClass)
+DWORD LSetupDev::GetClass(IN int index, OUT wstring& strClass)
 {
     return m_pSADevObject->GetClass(index, strClass);
 }
 
-DWORD LSetupDev::GetClassGuid(IN int index, OUT string& strClassGuid)
+DWORD LSetupDev::GetClassGuid(IN int index, OUT wstring& strClassGuid)
 {
     return m_pSADevObject->GetClassGuid(index, strClassGuid);
 }
@@ -878,7 +816,7 @@ DWORD LSetupDev::GetBusNumber(IN int index, OUT unsigned int& busNumber)
     return m_pSADevObject->GetBusNumber(index, busNumber);
 }
 
-DWORD LSetupDev::GetManufacturer(IN int index, OUT string& manufacturer)
+DWORD LSetupDev::GetManufacturer(IN int index, OUT wstring& manufacturer)
 {
     return m_pSADevObject->GetManufacturer(index, manufacturer);
 }
@@ -935,12 +873,12 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
         return false;
 
     // 从硬件ID中获取显示器名称
-    string hardwareID;
+    wstring hardwareID;
     if (this->GetHardwareId(index, hardwareID) != 0)
         return false;
 
-    int loc = hardwareID.find('\\');
-    if (loc == string::npos)
+    int loc = hardwareID.find(L'\\');
+    if (loc == wstring::npos)
         return false;
 
     extendInfor.Name = hardwareID.substr(loc + 1);
@@ -960,16 +898,17 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
     extendInfor.VendorID.push_back(threeChar);
 
     // 获取显示器产品ID
-    char productID[5] = {0};
-    sprintf_s(productID, "%02X%02X", edid.ProductID[1], edid.ProductID[0]);
+    wchar_t productID[5] = {0};
+
+    wsprintfW(productID, L"%02X%02X", edid.ProductID[1], edid.ProductID[0]);
 
     extendInfor.ProductID = productID;
 
     // 获取显示器生产日期, 没有严格计算
     int moon = (int)((float)edid.Date[0]/4.35f) + 1;
     int year = (int)edid.Date[1] + 1990;
-    char date[16] = {0};
-    sprintf_s(date, "%d.%d", year, moon);
+    wchar_t date[16] = {0};
+    wsprintfW(date, L"%d.%d", year, moon);
     extendInfor.Date = date;
 
 
@@ -985,20 +924,20 @@ bool LSetupMonitor::GetEDID(IN int index, OUT LMonitorEDID& edid)
     bool bRet = false;
     HKEY hMonitorKey = NULL;
     LSTATUS lRet;
-    string monitorKeyName;
+    wstring monitorKeyName;
 
-    string instanceID;
+    wstring instanceID;
     if (0 != this->GetInstanceID(index, instanceID))
     {
         bRet = false;
         goto SAFE_EXIT;
     }
 
-    monitorKeyName = "SYSTEM\\CurrentControlSet\\Enum\\";
+    monitorKeyName = L"SYSTEM\\CurrentControlSet\\Enum\\";
     monitorKeyName += instanceID;
-    monitorKeyName += "\\Device Parameters";
+    monitorKeyName += L"\\Device Parameters";
 
-    lRet = RegOpenKeyExA(HKEY_LOCAL_MACHINE, monitorKeyName.c_str(), 0, KEY_READ, &hMonitorKey);
+    lRet = RegOpenKeyExW(HKEY_LOCAL_MACHINE, monitorKeyName.c_str(), 0, KEY_READ, &hMonitorKey);
     if (ERROR_SUCCESS != lRet)
     {
         bRet = false;
@@ -1007,7 +946,7 @@ bool LSetupMonitor::GetEDID(IN int index, OUT LMonitorEDID& edid)
 
     DWORD dataType = REG_BINARY;
     DWORD dataLen = sizeof(LMonitorEDID);
-    lRet = RegQueryValueExA(hMonitorKey, "EDID", 0, &dataType, (BYTE*)&edid, &dataLen);
+    lRet = RegQueryValueExW(hMonitorKey, L"EDID", 0, &dataType, (BYTE*)&edid, &dataLen);
     if (ERROR_SUCCESS != lRet)
     {
         bRet = false;

@@ -137,8 +137,8 @@ struct DiskInforArray
 struct MonitorInforArray
 {
     unsigned long Count; ///< 显示器数量
-    string Name[MAX_MONITOR_NUMBER]; ///< 显示器名称
-    string Date[MAX_MONITOR_NUMBER]; ////< 显示器生产日期
+    wstring Name[MAX_MONITOR_NUMBER]; ///< 显示器名称
+    wstring Date[MAX_MONITOR_NUMBER]; ////< 显示器生产日期
 };
 
 /// @brief 电磁静态信息
@@ -157,10 +157,19 @@ struct BatteryStaticInfor
 /// @brief 最大网卡数量
 #define MAX_NETWORKCARD_NUMBER 16
 
+/// @brief 网卡类型
+enum NETWORKCARD_TYPE
+{
+    UNKNOWN_NETCARD = 0, ///< 未知网卡
+    WIFI_NETCARD = 1, ///< 无线网卡
+    ETHERNET_NETCARD = 2 ///< 网卡
+};
+
 /// @brief 网卡信息组
 struct NetworkCardInforArray
 {
     unsigned long Count; ///< 网卡数量
+    NETWORKCARD_TYPE Type[MAX_NETWORKCARD_NUMBER]; ///< 网卡类型
     wstring Name[MAX_NETWORKCARD_NUMBER]; ///< 网卡名称
     wstring Manufacturer[MAX_NETWORKCARD_NUMBER]; ///< 网卡制造商
     wstring MACAddress[MAX_NETWORKCARD_NUMBER]; ///< MAC地址

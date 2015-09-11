@@ -8,18 +8,24 @@
 int main()
 {
 
-    LSetupMonitor monitor;
+    LSetupDisplayCard displayCard;
     
-    for (int i = 0; i < monitor.GetDevNum(); i++)
+    for (int i = 0; i < displayCard.GetDevNum(); i++)
     {
-        LMonitorExtendInfor extendInfor;
-        monitor.GetExtendInfor(i, extendInfor);
-        printf("Monitor %d:\n", i + 1);
-        printf("Name: %s\n", extendInfor.Name.c_str());
-        printf("VID: %s\n", extendInfor.VendorID.c_str());
-        printf("PID: %s\n", extendInfor.ProductID.c_str());
-        printf("Date: %s\n", extendInfor.Date.c_str());
-        printf("\n");
+        wstring desc;
+        displayCard.GetDevDesc(i, desc);
+        wprintf(L"Desc\t%s\n", desc.c_str());
+        
+        wstring parentInstanceId;
+        displayCard.GetParentInstanceId(i, parentInstanceId);
+        wprintf(L"ParentInstanceID\t%s\n", parentInstanceId.c_str());
+
+        wstring friendName;
+        displayCard.GetFriendlyName(i, friendName);
+        wprintf(L"FriendlyName\t%s\n", friendName.c_str());
+
+
+        wprintf(L"\n");
     }
 
     system("pause");

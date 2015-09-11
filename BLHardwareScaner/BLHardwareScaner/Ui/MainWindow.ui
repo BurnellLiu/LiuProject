@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(115, 176, 255);</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">
@@ -41,31 +44,40 @@
          <number>20</number>
         </property>
         <item>
-         <widget class="QToolButton" name="toolButton">
+         <widget class="QToolButton" name="toolButtonHardware">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>80</width>
             <height>70</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei UI</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QToolButton#toolButtonHardware
+{
+	border-style: none;
+}
+QToolButton#toolButtonHardware:hover
+{
+    background-color: rgb(167, 205, 255)
+}</string>
+          </property>
           <property name="text">
-           <string>硬件信息</string>
+           <string>HardWare</string>
           </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextUnderIcon</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="toolButton_2">
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>70</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>硬件信息</string>
+          <property name="popupMode">
+           <enum>QToolButton::DelayedPopup</enum>
           </property>
           <property name="toolButtonStyle">
            <enum>Qt::ToolButtonTextUnderIcon</enum>

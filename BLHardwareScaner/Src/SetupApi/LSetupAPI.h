@@ -2,7 +2,6 @@
 #define _LSETUPAPI_H_
 
 #include <string>
-using std::string;
 using std::wstring;
 
 #ifndef IN
@@ -71,7 +70,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetDevDesc(IN int index, OUT string& devDesc);
+    unsigned long GetDevDesc(IN int index, OUT wstring& devDesc);
 
     /// <SUMMARY>
     /// 获取设备硬件ID
@@ -85,7 +84,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetHardwareId(IN int index, OUT string& devHardwareId);
+    unsigned long GetHardwareId(IN int index, OUT wstring& devHardwareId);
 
     /// <SUMMARY>
     /// 获取设备友好名称
@@ -99,7 +98,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetFriendlyName(IN int index, OUT string& devFrindName);
+    unsigned long GetFriendlyName(IN int index, OUT wstring& devFrindName);
 
     /// <SUMMARY>
     /// 获取设备位置信息
@@ -113,7 +112,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetLoctionInfo(IN int index, OUT string& devLocationInfo);
+    unsigned long GetLoctionInfo(IN int index, OUT wstring& devLocationInfo);
 
     /// <SUMMARY>
     /// 获取设备实例ID
@@ -127,7 +126,6 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetInstanceID(IN int index, OUT string& devInstanceID);
     unsigned long GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
@@ -142,7 +140,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetParentInstanceId(IN int index, OUT string& devInstanceID);
+    unsigned long GetParentInstanceId(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
     /// 获取子代设备数目
@@ -173,7 +171,7 @@ public:
     /// <RETURNS>
     /// 成功返回0, 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetChildrenInstanceIdList(IN int index, IN int listSize,OUT string* devInstanceIDList);
+    unsigned long GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList);
 
     /// <SUMMARY>
     /// 获取设备驱动键名称
@@ -187,7 +185,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetDriverKeyName(IN int index, OUT string& driverKeyName);
+    unsigned long GetDriverKeyName(IN int index, OUT wstring& driverKeyName);
 
     /// <SUMMARY>
     /// 获取设备类别字符串
@@ -201,7 +199,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetClass(IN int index, OUT string& strClass);
+    unsigned long GetClass(IN int index, OUT wstring& strClass);
 
     /// <SUMMARY>
     /// 获取设备类别GUID字符串
@@ -215,7 +213,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetClassGuid(IN int index, OUT string& strClassGuid);
+    unsigned long GetClassGuid(IN int index, OUT wstring& strClassGuid);
 
     /// <SUMMARY>
     /// 获取设备总线号
@@ -243,7 +241,7 @@ public:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
-    unsigned long GetManufacturer(IN int index, OUT string& manufacturer);
+    unsigned long GetManufacturer(IN int index, OUT wstring& manufacturer);
 protected:
     LSetupDev();
 
@@ -266,10 +264,10 @@ public:
 /// </SUMMARY>
 struct LMonitorExtendInfor
 {
-    string Name; ///< 名称
-    string VendorID; ///< 厂商ID
-    string ProductID; ///< 产品ID
-    string Date; ///< 制造日期 (年.月)
+    wstring Name; ///< 名称
+    wstring VendorID; ///< 厂商ID
+    wstring ProductID; ///< 产品ID
+    wstring Date; ///< 制造日期 (年.月)
 };
 
 struct LMonitorEDID;

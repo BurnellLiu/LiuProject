@@ -112,12 +112,12 @@ void HardwareInforPage::CurrentItemChanged()
     if (currentRow >= m_hwItemVec.size())
     {
         ui.labelHWTitle->setText("");
-        ui.textEditHWIinfor->setText("");
+        ui.textEditHWInfor->setText("");
         return;
     }
 
     ui.labelHWTitle->setText(m_hwItemVec[currentRow]->GetTitle());
-    ui.textEditHWIinfor->setText(m_hwItemVec[currentRow]->GetContent());
+    ui.textEditHWInfor->setText(m_hwItemVec[currentRow]->GetContent());
 }
 
 HWItemInfor::HWItemInfor()
@@ -296,7 +296,7 @@ void ComputerItemInfor::LoadHWInfor()
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
         QString monitorInfor;
-        monitorInfor += QString::fromStdWString(L"%1  ").arg(monitorInforArray.Name[i].c_str());
+        monitorInfor += QString::fromStdWString(monitorInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("Monitor"), monitorInfor);
     }
 
@@ -472,10 +472,10 @@ void MonitorItemInfor::LoadHWInfor()
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
         
-        QString monitorName = QString::fromStdString(monitorInforArray.Name[i]);
+        QString monitorName = QString::fromStdWString(monitorInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("Model"), monitorName);
 
-        QString date = QString::fromStdString(monitorInforArray.Date[i]);
+        QString date = QString::fromStdWString(monitorInforArray.Date[i]);
         this->ContentAddItem(QObject::tr("Product Date"), date);
 
         this->ContentAddBlankLine();
@@ -522,6 +522,16 @@ void NetworkCardItemInfor::LoadHWInfor()
     {
         QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("Name"), name);
+
+        QString type;
+        if (networkCardInforArray.Type[i] == ETHERNET_NETCARD)
+            type = "Ethernet";
+        else if (networkCardInforArray.Type[i] == WIFI_NETCARD)
+            type = "Wi-Fi";
+        else
+            type = "Unknown";
+
+        this->ContentAddItem(QObject::tr("Type"), type);
 
         QString manufacturer = ConvertManufacturer(QString::fromStdWString(networkCardInforArray.Manufacturer[i]));
         this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);

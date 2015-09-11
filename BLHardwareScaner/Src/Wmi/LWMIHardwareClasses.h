@@ -484,6 +484,14 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetNetworkCardMACAddress(IN int index, OUT wstring& mac);
 
+        /// @brief 获取网卡连接ID
+        ///
+        /// 如Wi-Fi, Ethernet
+        /// @param[in] index 网卡索引
+        /// @param[out] connectionID 连接ID
+        /// @return 成功返回true, 失败返回false
+        bool GetNetworkCardConnectionID(IN int index, OUT wstring& connectionID);
+
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
     private:

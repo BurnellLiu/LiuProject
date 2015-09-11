@@ -613,5 +613,10 @@ SAFE_EXIT:
     {
         return m_pWMICoreManager->GetStringProperty(index, L"MACAddress", mac);
     }
+
+    bool LNetworkAdapterManager::GetNetworkCardConnectionID(IN int index, OUT wstring& connectionID)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"NetConnectionID", connectionID);
+    }
     
 }
