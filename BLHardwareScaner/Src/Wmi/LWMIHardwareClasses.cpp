@@ -440,7 +440,8 @@ namespace LWMI
             default:
                 if (interfaceType.find(L"USB") != wstring::npos)
                     type = EXTERNAL_USB_DISK;
-                else if (interfaceType.find(L"IDE") != wstring::npos)
+                else if (interfaceType.find(L"IDE") != wstring::npos ||
+                    interfaceType.find(L"SCSI") != wstring::npos)
                     type = FIXED_IDE_DISK;
                 else
                     type = UNKNOWN_DISK;

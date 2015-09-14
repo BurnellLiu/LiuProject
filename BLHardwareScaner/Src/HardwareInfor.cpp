@@ -313,8 +313,9 @@ void HardwareInfor::ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardI
         networkCardManager.GetNetworkCardGUID(i, cardGUID);
         cardGUID = WStringToUpper(cardGUID);
 
-        if (wcsncmp(pnpDeviceID.c_str(), L"PCI", 3) == 0 ||
-            wcsncmp(pnpDeviceID.c_str(), L"USB", 3) == 0)
+        if (wcsncmp(pnpDeviceID.c_str(), L"PCI\\", 4) == 0 ||
+            wcsncmp(pnpDeviceID.c_str(), L"USB\\", 4) == 0 ||
+            wcsncmp(pnpDeviceID.c_str(), L"SD\\", 3) == 0)
         {
             if (cardGUID.compare(wlanGUID) == 0)
                 networkCardInfor.Type[networkCardInfor.Count] = WIFI_NETCARD;
