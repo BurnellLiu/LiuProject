@@ -528,6 +528,8 @@ void NetworkCardItemInfor::LoadHWInfor()
             type = "Ethernet";
         else if (networkCardInforArray.Type[i] == WIFI_NETCARD)
             type = "Wi-Fi";
+        else if (networkCardInforArray.Type[i] == BLUETOOTH_NETCARD)
+            type = "Bluetooth";
         else
             type = "Unknown";
 

@@ -28,6 +28,9 @@
     <Filter Include="Src\SetupApi">
       <UniqueIdentifier>{fe006d18-dd04-410c-a8d4-8def10243f0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\WifiNetwork">
+      <UniqueIdentifier>{e15020f5-8730-4a0e-9b01-d02c1587c51c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -62,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp">
       <Filter>Src\SetupApi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp">
+      <Filter>Src\WifiNetwork</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +111,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h">
       <Filter>Src\SetupApi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h">
+      <Filter>Src\WifiNetwork</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

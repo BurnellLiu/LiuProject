@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TemperatureProbe", "Tempera
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestSetupAPI", "TestSetupAPI\TestSetupAPI.vcxproj", "{E4D7F9BE-C57E-473B-882D-FB278CCB72DE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWifiNetwork", "TestWifiNetwork\TestWifiNetwork.vcxproj", "{E986032C-0263-4AB2-8C73-5B2D174D4DD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{E4D7F9BE-C57E-473B-882D-FB278CCB72DE}.Debug|Win32.Build.0 = Debug|Win32
 		{E4D7F9BE-C57E-473B-882D-FB278CCB72DE}.Release|Win32.ActiveCfg = Release|Win32
 		{E4D7F9BE-C57E-473B-882D-FB278CCB72DE}.Release|Win32.Build.0 = Release|Win32
+		{E986032C-0263-4AB2-8C73-5B2D174D4DD2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E986032C-0263-4AB2-8C73-5B2D174D4DD2}.Debug|Win32.Build.0 = Debug|Win32
+		{E986032C-0263-4AB2-8C73-5B2D174D4DD2}.Release|Win32.ActiveCfg = Release|Win32
+		{E986032C-0263-4AB2-8C73-5B2D174D4DD2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

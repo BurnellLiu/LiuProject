@@ -141,7 +141,7 @@ struct MonitorInforArray
     wstring Date[MAX_MONITOR_NUMBER]; ////< 显示器生产日期
 };
 
-/// @brief 电磁静态信息
+/// @brief 电池静态信息
 struct BatteryStaticInfor
 {
     bool Exist; ///< 标识是否存在电池
@@ -162,7 +162,8 @@ enum NETWORKCARD_TYPE
 {
     UNKNOWN_NETCARD = 0, ///< 未知网卡
     WIFI_NETCARD = 1, ///< 无线网卡
-    ETHERNET_NETCARD = 2 ///< 网卡
+    ETHERNET_NETCARD = 2, ///< 网卡
+    BLUETOOTH_NETCARD = 3 ///< 蓝牙卡 
 };
 
 /// @brief 网卡信息组

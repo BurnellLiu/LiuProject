@@ -9,6 +9,8 @@ using std::transform;
 
 #include "SetupApi/LSetupAPI.h"
 
+#include "WifiNetwork/LWifiNetwork.h"
+
 
 /// @brief 将字符串的小写字母转换为大写
 ///  
@@ -291,26 +293,47 @@ void HardwareInfor::ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStatic
 
 void HardwareInfor::ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor)
 {
-    networkCardInfor.Count = 0;
+    // 获取无线网卡GUID
+    LWifiNetwork wifiNetwork;
+    wstring wlanGUID;
+    wifiNetwork.GetWLANGUID(wlanGUID);
+    wlanGUID = WStringToUpper(wlanGUID);
+
 
     LWMI::LNetworkAdapterManager networkCardManager;
-    
-    networkCardInfor.Count = (unsigned long)networkCardManager.GetNetworkCardCount();
+    networkCardInfor.Count = 0;
 
-    for (int i = 0; i < networkCardManager.GetNetworkCardCount(); i++)
+    for (int i = 0; i < networkCardManager.GetNetworkCardCount() && i < MAX_NETWORKCARD_NUMBER; i++)
     {
-        networkCardManager.GetNetworkCardName(i, networkCardInfor.Name[i]);
-        networkCardManager.GetNetworkCardManufacturer(i, networkCardInfor.Manufacturer[i]);
-        networkCardManager.GetNetworkCardMACAddress(i, networkCardInfor.MACAddress[i]);
-        wstring connectionID;
-        networkCardManager.GetNetworkCardConnectionID(i, connectionID);
+        wstring pnpDeviceID;
+        networkCardManager.GetNetworkCardPNPDeviceID(i, pnpDeviceID);
+        pnpDeviceID = WStringToUpper(pnpDeviceID);
 
-        wstring connectionIDUpper = WStringToUpper(connectionID);
-        if (connectionIDUpper.find(L"WI-FI") != wstring::npos)
-            networkCardInfor.Type[i] = WIFI_NETCARD;
-        else if (connectionIDUpper.find(L"ETHERNET") != wstring::npos)
-            networkCardInfor.Type[i] = ETHERNET_NETCARD;
+        wstring cardGUID;
+        networkCardManager.GetNetworkCardGUID(i, cardGUID);
+        cardGUID = WStringToUpper(cardGUID);
+
+        if (wcsncmp(pnpDeviceID.c_str(), L"PCI", 3) == 0 ||
+            wcsncmp(pnpDeviceID.c_str(), L"USB", 3) == 0)
+        {
+            if (cardGUID.compare(wlanGUID) == 0)
+                networkCardInfor.Type[networkCardInfor.Count] = WIFI_NETCARD;
+            else
+                networkCardInfor.Type[networkCardInfor.Count] = ETHERNET_NETCARD;
+        }
+        else if (wcsncmp(pnpDeviceID.c_str(), L"BTH", 3) == 0)
+        {
+            networkCardInfor.Type[networkCardInfor.Count] = BLUETOOTH_NETCARD;
+        }
         else
-            networkCardInfor.Type[i] = UNKNOWN_NETCARD; 
+        {
+            continue;
+        }
+
+        networkCardManager.GetNetworkCardName(networkCardInfor.Count, networkCardInfor.Name[i]);
+        networkCardManager.GetNetworkCardManufacturer(networkCardInfor.Count, networkCardInfor.Manufacturer[i]);
+        networkCardManager.GetNetworkCardMACAddress(networkCardInfor.Count, networkCardInfor.MACAddress[i]);
+
+        networkCardInfor.Count++;
     }
 }

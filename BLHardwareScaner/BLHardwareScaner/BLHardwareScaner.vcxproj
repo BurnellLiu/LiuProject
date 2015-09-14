@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="..\Src\HardwareInfor.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
+    <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp" />
@@ -123,6 +124,7 @@
   <ItemGroup>
     <ClInclude Include="..\Src\HardwareInfor.h" />
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
+    <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h" />

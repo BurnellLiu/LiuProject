@@ -618,5 +618,15 @@ SAFE_EXIT:
     {
         return m_pWMICoreManager->GetStringProperty(index, L"NetConnectionID", connectionID);
     }
+
+    bool LNetworkAdapterManager::GetNetworkCardGUID(IN int index, OUT wstring& guid)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"GUID", guid);
+    }
+
+    bool LNetworkAdapterManager::GetNetworkCardPNPDeviceID(IN int index, OUT wstring& pnpDeviceID)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"PNPDeviceID", pnpDeviceID);
+    }
     
 }

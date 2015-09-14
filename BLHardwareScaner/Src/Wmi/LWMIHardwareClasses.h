@@ -485,12 +485,23 @@ namespace LWMI
         bool GetNetworkCardMACAddress(IN int index, OUT wstring& mac);
 
         /// @brief 获取网卡连接ID
-        ///
         /// 如Wi-Fi, Ethernet
         /// @param[in] index 网卡索引
         /// @param[out] connectionID 连接ID
         /// @return 成功返回true, 失败返回false
         bool GetNetworkCardConnectionID(IN int index, OUT wstring& connectionID);
+
+        /// @brief 获取网卡GUID
+        /// @param[in] index 网卡索引
+        /// @param[out] guid 存储网卡GUID
+        /// @return 成功返回true, 失败返回false
+        bool GetNetworkCardGUID(IN int index, OUT wstring& guid);
+
+        /// @brief 获取网卡PNP设备ID
+        /// @param[in] index 网卡索引
+        /// @param[in] OUT wstring & pnpDeviceID
+        /// @return
+        bool GetNetworkCardPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
