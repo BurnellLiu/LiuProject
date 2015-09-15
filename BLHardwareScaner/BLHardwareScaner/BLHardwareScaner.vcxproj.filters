@@ -31,6 +31,9 @@
     <Filter Include="Src\WifiNetwork">
       <UniqueIdentifier>{e15020f5-8730-4a0e-9b01-d02c1587c51c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\DiskController">
+      <UniqueIdentifier>{78eaff19-833a-4ffd-a322-da54c7fb75b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -68,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp">
       <Filter>Src\WifiNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\DiskController\LDiskController.cpp">
+      <Filter>Src\DiskController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h">
       <Filter>Src\WifiNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\DiskController\LDiskController.h">
+      <Filter>Src\DiskController</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

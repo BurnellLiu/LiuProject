@@ -128,6 +128,7 @@ struct DiskInforArray
     wstring PNPDeviceID[MAX_DISK_NUMBER]; ///< 磁盘设备实例路径
     wstring InterfaceType[MAX_DISK_NUMBER]; ///< 磁盘接口类型(SCSI, HDC, IDE, USB 1394)
     DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< 磁盘类型
+    unsigned long RotationRate[MAX_DISK_NUMBER]; ///< 磁盘转速(只有IDE(SATA)接口的磁盘有该值, 如果值为1表示为固态硬盘(SSD))
 };
 
 /// @brief 最大显示器数量

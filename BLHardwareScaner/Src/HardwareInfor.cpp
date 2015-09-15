@@ -11,6 +11,8 @@ using std::transform;
 
 #include "WifiNetwork/LWifiNetwork.h"
 
+#include "DiskController/LDiskController.h"
+
 
 /// @brief 将字符串的小写字母转换为大写
 ///  
@@ -252,6 +254,19 @@ void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
         LWMI::LDiskDriveManager::LDISK_TYPE diskType;
         diskDriveManager.GetDiskType(i, diskType);
         diskInfor.DiskType[i] = (DISK_TYPE )diskType;
+        diskDriveManager.GetDiskInterfaceType(i, diskInfor.InterfaceType[i]);
+
+        if (diskInfor.InterfaceType[i].compare(L"IDE"))
+        {
+            LIDEDiskController ideDiskController(diskInfor.DeviceID[i]);
+            diskInfor.RotationRate[i] = ideDiskController.GetRotationRate();
+        }
+        else
+        {
+            diskInfor.RotationRate[i] = 0;
+        }
+
+
     }
 }
 
