@@ -89,7 +89,8 @@ struct SATA8IdentifyData
         USHORT Reserved0:1; // bit 0: 保留
         USHORT SATAGen1:1; // bit1: 1=支持SATA Gen1(1.5Gb/s)
         USHORT SATAGen2:1; // bit2: 1=支持SATA Gen2(3.0Gb/s)
-        USHORT Reserved3:13; // bit3-15: 保留
+        USHORT SATAGen3:1; // bit3: 1=支持SATA Gen3(6.0Gb/s)
+        USHORT Reserved4:12; // bit4-15: 保留
     }SATACapabilities; // WORD 76: SATA能力
     USHORT Reserved77; // WORD 77: 保留
     struct
@@ -1238,7 +1239,7 @@ bool CIDEDiskController::ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyDat
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA ; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1404,4 +1405,34 @@ unsigned long LIDEDiskController::GetRotationRate()
     }
 
     return identifyData.NominalMediaRotationRate;
+}
+
+unsigned long LIDEDiskController::GetSATAType()
+{
+    SATA8IdentifyData identifyData;
+    bool bRet = this->m_pIDEDiskController->ATACmdIdentifyDevice(identifyData);
+    if (!bRet)
+    {
+        return 0;
+    }
+
+    /*
+    高版本的包含低版本的值所以需要从高到低判断
+    */
+    if (identifyData.SATACapabilities.SATAGen3)
+    {
+        return 3;
+    }
+
+    if (identifyData.SATACapabilities.SATAGen2)
+    {
+        return 2;
+    }
+
+    if (identifyData.SATACapabilities.SATAGen1)
+    {
+        return 1;
+    }
+
+    return 0;
 }

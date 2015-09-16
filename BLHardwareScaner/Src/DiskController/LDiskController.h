@@ -39,6 +39,10 @@ public:
     /// @return 标定转速(单位RPM), 发生错误返回0, 返回值为1表示硬盘为SSD
     unsigned long GetRotationRate();
 
+    /// @brief 获取SATA类型
+    /// @return SATA接口类型, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(获取失败)
+    unsigned long GetSATAType();
+
 private:
     CIDEDiskController* m_pIDEDiskController; ///< IDE磁盘控制器实现对象
 };

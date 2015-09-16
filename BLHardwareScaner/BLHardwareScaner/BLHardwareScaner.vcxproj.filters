@@ -34,6 +34,9 @@
     <Filter Include="Src\DiskController">
       <UniqueIdentifier>{78eaff19-833a-4ffd-a322-da54c7fb75b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\SMARTParser">
+      <UniqueIdentifier>{2c6a6440-c714-467f-9979-740a76a2d43e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp">
       <Filter>Src\DiskController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp">
+      <Filter>Src\SMARTParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +129,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\DiskController\LDiskController.h">
       <Filter>Src\DiskController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h">
+      <Filter>Src\SMARTParser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

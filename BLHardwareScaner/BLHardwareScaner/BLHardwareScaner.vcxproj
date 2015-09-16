@@ -83,6 +83,7 @@
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
     <ClCompile Include="..\Src\HardwareInfor.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
+    <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
     <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\Src\DiskController\LDiskController.h" />
     <ClInclude Include="..\Src\HardwareInfor.h" />
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
+    <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
     <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />

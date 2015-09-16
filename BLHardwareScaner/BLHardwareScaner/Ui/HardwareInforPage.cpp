@@ -422,23 +422,27 @@ void DiskItemInfor::LoadHWInfor()
         QString size = QString::fromStdString("%1G").arg(diskInforArray.TotalSize[i]);
         this->ContentAddItem(QObject::tr("Size"), size);
 
-        if (diskInforArray.RotationRate[i] > 1)
-        {
-            QString rotationRate = QString::fromStdWString(L"%1 RPM").arg(diskInforArray.RotationRate[i]);
-             this->ContentAddItem(QObject::tr("RotationRate"), rotationRate);
-        }
-
-        if (diskInforArray.RotationRate[i] == 1)
-        {
-            this->ContentAddItem(QObject::tr("RotationRate"), "SSD");
-        }
-
-
         QString serialNumber = QString::fromStdWString(diskInforArray.SerialNumber[i]);
         this->ContentAddItem(QObject::tr("Serial Number"), serialNumber);
 
         QString interfaceType = QString::fromStdWString(diskInforArray.InterfaceType[i]);
         this->ContentAddItem(QObject::tr("Interface Type"), interfaceType);
+
+        if (diskInforArray.IsATA[i])
+        {
+            QString rotationRate;
+            if (diskInforArray.ATAInfor[i].RotationRate != 1)
+                rotationRate = QString::fromStdWString(L"%1 RPM").arg(diskInforArray.ATAInfor[i].RotationRate);
+
+            if (diskInforArray.ATAInfor[i].RotationRate == 1)
+                rotationRate = "SSD";
+
+            this->ContentAddItem(QObject::tr("RotationRate"), rotationRate);
+
+            QString sataType = QString::fromStdWString(L"SATA-%1").arg(diskInforArray.ATAInfor[i].SATAType);
+
+            this->ContentAddItem(QObject::tr("SATA Type"), sataType);
+        }
 
         this->ContentAddBlankLine();
     }

@@ -124,11 +124,15 @@ struct DiskInforArray
     wstring Model[MAX_DISK_NUMBER]; ///< 磁盘型号
     wstring SerialNumber[MAX_DISK_NUMBER]; ///< 磁盘序列号
     unsigned long TotalSize[MAX_DISK_NUMBER]; ///< 磁盘总大小, 单位(G)
-    wstring DeviceID[MAX_DISK_NUMBER]; ///< 磁盘设备ID
-    wstring PNPDeviceID[MAX_DISK_NUMBER]; ///< 磁盘设备实例路径
     wstring InterfaceType[MAX_DISK_NUMBER]; ///< 磁盘接口类型(SCSI, HDC, IDE, USB 1394)
     DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< 磁盘类型
-    unsigned long RotationRate[MAX_DISK_NUMBER]; ///< 磁盘转速(只有IDE(SATA)接口的磁盘有该值, 如果值为1表示为固态硬盘(SSD))
+
+    bool IsATA[MAX_DISK_NUMBER]; ///< 标识是否为ATA接口硬盘
+    struct  
+    {
+        unsigned long RotationRate; ///< 磁盘转速, 如果值为1表示为固态硬盘(SSD), 0表示获取失败
+        unsigned long SATAType; ///< SATA接口类型, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(获取失败)
+    }ATAInfor[MAX_DISK_NUMBER]; ///< 只有IDE(ATA)接口的硬盘才应该使用该结构中的值
 };
 
 /// @brief 最大显示器数量

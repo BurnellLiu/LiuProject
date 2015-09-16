@@ -249,21 +249,26 @@ void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
         diskDriveManager.GetDiskModel(i, diskInfor.Model[i]);
         diskDriveManager.GetDiskSerialNumber(i, diskInfor.SerialNumber[i]);
         diskDriveManager.GetDiskSize(i, diskInfor.TotalSize[i]);
-        diskDriveManager.GetDiskDeviceID(i, diskInfor.DeviceID[i]);
-        diskDriveManager.GetDiskPNPDeviceID(i, diskInfor.PNPDeviceID[i]);
+        
         LWMI::LDiskDriveManager::LDISK_TYPE diskType;
         diskDriveManager.GetDiskType(i, diskType);
         diskInfor.DiskType[i] = (DISK_TYPE )diskType;
         diskDriveManager.GetDiskInterfaceType(i, diskInfor.InterfaceType[i]);
 
-        if (diskInfor.InterfaceType[i].compare(L"IDE"))
+        if (diskInfor.InterfaceType[i].compare(L"IDE") == 0)
         {
-            LIDEDiskController ideDiskController(diskInfor.DeviceID[i]);
-            diskInfor.RotationRate[i] = ideDiskController.GetRotationRate();
+            diskInfor.IsATA[i] = true;
+            wstring deviceID;
+            diskDriveManager.GetDiskDeviceID(i, deviceID);
+            LIDEDiskController ideDiskController(deviceID);
+            diskInfor.ATAInfor[i].RotationRate = ideDiskController.GetRotationRate();
+            diskInfor.ATAInfor[i].SATAType = ideDiskController.GetSATAType();
         }
         else
         {
-            diskInfor.RotationRate[i] = 0;
+            diskInfor.IsATA[i] = false;
+            diskInfor.ATAInfor[i].RotationRate = 0;
+            diskInfor.ATAInfor[i].SATAType = 0;
         }
 
 
