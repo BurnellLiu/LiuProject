@@ -168,24 +168,6 @@ struct SATA8IdentifyData
     USHORT Reserved218[38]; // WORD 218-255 保留
 };
 
-/// @brief SMART每项属性结构
-struct SSMARTAttribute
-{
-    BYTE Id; // 属性ID
-    WORD StatusFlags; // 状态值
-    BYTE Current; // 当前值
-    BYTE Worst; // 最差值
-    BYTE RawValue[6]; // 真实值
-    BYTE Reserved; // 保留
-};
-
-/// @brief SMART数据结构
-struct SSMARTData
-{
-    WORD Version; // SMART版本
-    SSMARTAttribute AttributeArray[30]; // SMART属性数组, 最多30项
-};
-
 #pragma pack () // 恢复内存对齐
 
 /// @brief 通用存储控制器
@@ -326,7 +308,7 @@ public:
     /// SMART属性定义: http://en.wikipedia.org/wiki/S.M.A.R.T.
     /// @param[out] smartData 存储SMART数据
     /// @return 成功返回true, 失败返回false
-    bool ATACmdSMARTReadData(OUT SSMARTData& smartData);
+    bool ATACmdSMARTReadData(OUT unsigned char smartData[SMART_DATA_LENGTH]);
 private:
     /// @brief ATA命令
     enum ATA_COMMAND
@@ -695,7 +677,7 @@ bool CIDEDiskController::ATACmdCheckMediaCardType()
 
     
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -757,7 +739,7 @@ bool CIDEDiskController::ATACmdCheckPowerMode(OUT BYTE& mode)
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -822,7 +804,7 @@ bool CIDEDiskController::ATACmdIDLEImmediate()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -884,7 +866,7 @@ bool CIDEDiskController::ATACmdStandbyImmediate()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -946,7 +928,7 @@ bool CIDEDiskController::ATACmdSleep()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1008,7 +990,7 @@ bool CIDEDiskController::ATACmdDeviceReset()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1070,7 +1052,7 @@ bool CIDEDiskController::ATACmdExecuteDeviceDiagnostic(OUT BYTE& state)
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1141,7 +1123,7 @@ bool CIDEDiskController::ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN u
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA | ATA_FLAGS_48BIT_COMMAND; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_48BIT_COMMAND; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1239,7 +1221,7 @@ bool CIDEDiskController::ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyDat
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA ; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1283,7 +1265,7 @@ SAFE_EXIT:
     return bRet;
 }
 
-bool CIDEDiskController::ATACmdSMARTReadData(OUT SSMARTData& smartData)
+bool CIDEDiskController::ATACmdSMARTReadData(OUT unsigned char smartData[SMART_DATA_LENGTH])
 {
      BOOL nRet = FALSE; // 系统API返回值
     bool bRet = false; // 函数返回值
@@ -1304,7 +1286,7 @@ bool CIDEDiskController::ATACmdSMARTReadData(OUT SSMARTData& smartData)
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_USE_DMA; // 读取数据
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // 读取数据
     pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // 数据缓冲区的偏移值
     pATACmd->DataTransferLength = DATA_BUFFER_LEN; // 数据缓冲区的长度
     pATACmd->TimeOutValue = 3; // 命令执行的超时时间(秒)
@@ -1365,7 +1347,7 @@ bool CIDEDiskController::ATACmdSMARTReadData(OUT SSMARTData& smartData)
     }
 
     // 返回的数据中, 前362个数据为SMART属性数据
-    memcpy(&smartData, paramBuffer + sizeof(ATA_PASS_THROUGH_EX), sizeof(SSMARTData));
+    memcpy(smartData, paramBuffer + sizeof(ATA_PASS_THROUGH_EX), SMART_DATA_LENGTH);
 
     bRet = true;
 
@@ -1435,4 +1417,9 @@ unsigned long LIDEDiskController::GetSATAType()
     }
 
     return 0;
+}
+
+bool LIDEDiskController::GetSMARTData(OUT unsigned char smartData[SMART_DATA_LENGTH])
+{
+    return m_pIDEDiskController->ATACmdSMARTReadData(smartData);
 }

@@ -13,6 +13,8 @@ using std::transform;
 
 #include "DiskController/LDiskController.h"
 
+#include "SMARTPaser/LSMARTPaser.h"
+
 
 /// @brief 将字符串的小写字母转换为大写
 ///  
@@ -263,12 +265,19 @@ void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
             LIDEDiskController ideDiskController(deviceID);
             diskInfor.ATAInfor[i].RotationRate = ideDiskController.GetRotationRate();
             diskInfor.ATAInfor[i].SATAType = ideDiskController.GetSATAType();
+
+            unsigned char smartData[SMART_DATA_LENGTH] = {0}; // 存储SMART数据
+            ideDiskController.GetSMARTData(smartData);
+            LSMARTParser smartParser(smartData);
+            diskInfor.ATAInfor[i].PowerOnHours = 0;
+            smartParser.GetPowerOnHours(diskInfor.ATAInfor[i].PowerOnHours);
         }
         else
         {
             diskInfor.IsATA[i] = false;
             diskInfor.ATAInfor[i].RotationRate = 0;
             diskInfor.ATAInfor[i].SATAType = 0;
+            diskInfor.ATAInfor[i].PowerOnHours = 0;
         }
 
 

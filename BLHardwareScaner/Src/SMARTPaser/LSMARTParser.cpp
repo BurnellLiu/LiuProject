@@ -39,7 +39,7 @@ struct SSMARTData
 class CSMARTParser
 {
 public:
-    CSMARTParser(IN unsigned short smartData[SMART_DATA_LENGTH]);
+    CSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH]);
     ~CSMARTParser();
 
     /// @brief 获取温度值, 单位摄氏度
@@ -57,7 +57,7 @@ private:
     SSMARTData m_smartData; ///< 存储SMART数据
 };
 
-CSMARTParser::CSMARTParser(IN unsigned short smartData[SMART_DATA_LENGTH])
+CSMARTParser::CSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH])
 {
     memcpy(&m_smartData, smartData, SMART_DATA_LENGTH);
 }
@@ -82,4 +82,42 @@ bool CSMARTParser::GetTemperature(OUT int& temp)
     }
 
     return bRet;
+}
+
+bool CSMARTParser::GetPowerOnHours(OUT unsigned long& hours)
+{
+    bool bRet = false;
+
+    for (int i = 0; i < MAX_SMART_ATTRIBUTES; i++)
+    {
+        if (m_smartData.AttributeArray[i].Id == POWN_ON_HOURS)
+        {
+            bRet = true;
+            hours = *((unsigned long*)(m_smartData.AttributeArray[i].RawValue));
+            break;
+        }
+    }
+
+    return bRet;
+
+}
+
+LSMARTParser::LSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH])
+{
+    m_pSMARTParser = new CSMARTParser(smartData);
+}
+
+LSMARTParser::~LSMARTParser()
+{
+    if (m_pSMARTParser != 0)
+    {
+        delete m_pSMARTParser;
+        m_pSMARTParser = 0;
+    }
+   
+}
+
+bool LSMARTParser::GetPowerOnHours(OUT unsigned long& hours)
+{
+    return m_pSMARTParser->GetPowerOnHours(hours);
 }

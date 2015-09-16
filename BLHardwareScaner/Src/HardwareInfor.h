@@ -132,6 +132,7 @@ struct DiskInforArray
     {
         unsigned long RotationRate; ///< 磁盘转速, 如果值为1表示为固态硬盘(SSD), 0表示获取失败
         unsigned long SATAType; ///< SATA接口类型, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(获取失败)
+        unsigned long PowerOnHours; ///< 通电总时间, 单位hours(小时)
     }ATAInfor[MAX_DISK_NUMBER]; ///< 只有IDE(ATA)接口的硬盘才应该使用该结构中的值
 };
 

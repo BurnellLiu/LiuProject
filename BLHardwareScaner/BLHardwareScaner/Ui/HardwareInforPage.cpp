@@ -440,8 +440,10 @@ void DiskItemInfor::LoadHWInfor()
             this->ContentAddItem(QObject::tr("RotationRate"), rotationRate);
 
             QString sataType = QString::fromStdWString(L"SATA-%1").arg(diskInforArray.ATAInfor[i].SATAType);
-
             this->ContentAddItem(QObject::tr("SATA Type"), sataType);
+
+            QString powerOnHours = QString::fromStdWString(L"%1 Hours").arg(diskInforArray.ATAInfor[i].PowerOnHours);
+            this->ContentAddItem(QObject::tr("Power On Hours"), powerOnHours);
         }
 
         this->ContentAddBlankLine();

@@ -16,7 +16,9 @@
 #endif
 
 /// @brief SMART数据长度
+#ifndef SMART_DATA_LENGTH
 #define SMART_DATA_LENGTH 362
+#endif
 
 
 
@@ -28,7 +30,7 @@ class LSMARTParser
 public:
     /// @brief 构造函数
     /// @param[in] smartData[362] 要求输入362个字节的SMART数据
-    LSMARTParser(IN unsigned short smartData[SMART_DATA_LENGTH]);
+    LSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH]);
     ~LSMARTParser();
 
     /// @brief 获取温度值, 单位摄氏度
@@ -38,7 +40,7 @@ public:
 
     /// @brief 获取通电时间, 单位小时
     ///  
-    /// @param[out] hours 存储通电时间
+    /// @param[out] hours 存储通电时间, 单位小时(hours)
     /// @return 成功返回true, 失败返回false
     bool GetPowerOnHours(OUT unsigned long& hours);
 
