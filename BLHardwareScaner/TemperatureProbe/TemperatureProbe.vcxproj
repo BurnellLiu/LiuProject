@@ -62,12 +62,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Cpu\LCpuTemperature.h" />
+    <ClInclude Include="..\Src\DiskController\LDiskController.h" />
     <ClInclude Include="..\Src\Gpu\Gpu.h" />
+    <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
     <ClInclude Include="..\Src\TemperatureProbe.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Cpu\LCpuTemperature.cpp" />
+    <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
     <ClCompile Include="..\Src\Gpu\Gpu.cpp" />
+    <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
     <ClCompile Include="..\Src\TemperatureProbe.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

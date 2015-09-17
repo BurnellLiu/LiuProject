@@ -45,7 +45,7 @@ public:
     /// @brief 获取温度值, 单位摄氏度
     /// @param[out] temp 存储温度值
     /// @return 成功返回true, 失败返回false
-    bool GetTemperature(OUT int& temp);
+    bool GetTemperature(OUT unsigned int& temp);
 
     /// @brief 获取通电时间, 单位小时
     ///  
@@ -67,7 +67,7 @@ CSMARTParser::~CSMARTParser()
 
 }
 
-bool CSMARTParser::GetTemperature(OUT int& temp)
+bool CSMARTParser::GetTemperature(OUT unsigned int& temp)
 {
     bool bRet = false;
 
@@ -76,7 +76,7 @@ bool CSMARTParser::GetTemperature(OUT int& temp)
         if (m_smartData.AttributeArray[i].Id == TEMPERATURE)
         {
             bRet = true;
-            temp = m_smartData.AttributeArray[i].RawValue[5];
+            temp = m_smartData.AttributeArray[i].RawValue[0];
             break;
         }
     }
@@ -120,4 +120,9 @@ LSMARTParser::~LSMARTParser()
 bool LSMARTParser::GetPowerOnHours(OUT unsigned long& hours)
 {
     return m_pSMARTParser->GetPowerOnHours(hours);
+}
+
+bool LSMARTParser::GetTemperature(OUT unsigned int& temp)
+{
+    return m_pSMARTParser->GetTemperature(temp);
 }

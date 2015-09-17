@@ -36,7 +36,7 @@ public:
     /// @brief 获取温度值, 单位摄氏度
     /// @param[out] temp 存储温度值
     /// @return 成功返回true, 失败返回false
-    bool GetTemperature(OUT int& temp);
+    bool GetTemperature(OUT unsigned int& temp);
 
     /// @brief 获取通电时间, 单位小时
     ///  

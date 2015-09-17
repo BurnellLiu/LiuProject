@@ -629,5 +629,29 @@ SAFE_EXIT:
     {
         return m_pWMICoreManager->GetStringProperty(index, L"PNPDeviceID", pnpDeviceID);
     }
+
+    LCDRomDriveManager::LCDRomDriveManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_CIMV2);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM Win32_CDROMDrive");
+    }
+
+    LCDRomDriveManager::~LCDRomDriveManager()
+    {
+        delete m_pWMICoreManager;
+        m_pWMICoreManager = 0;
+    }
+
+    int LCDRomDriveManager::GetCDRomDriveCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LCDRomDriveManager::GetCDRomDriveName(IN int index, OUT wstring& name)
+    {
+        return m_pWMICoreManager->GetStringProperty(index, L"Name", name);
+    }
     
 }

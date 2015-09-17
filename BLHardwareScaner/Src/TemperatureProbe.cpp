@@ -5,26 +5,24 @@
 #include "Cpu\\LCpuTemperature.h"
 #include "Gpu\\Gpu.h"
 
+#include "DiskController\\LDiskController.h"
+#include "SMARTPaser\\LSMARTPaser.h"
+
 
 TemperatureProbe::TemperatureProbe()
 {
-    m_pCpuTemperature = new LIntelCpuTemperature();
+
 }
 
 TemperatureProbe::~TemperatureProbe()
 {
-    delete m_pCpuTemperature;
+
 }
 
-unsigned int TemperatureProbe::GetCpuTemp()
+bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
 {
-    unsigned long temp[MAX_PROCESSOR_CORE_NUMBER] = {0};
-    bool bRet = m_pCpuTemperature->Get(temp);
-
-    if (bRet)
-        return temp[0];
-    else
-        return 0;
+    LCpuTemperature cpuTemperature;
+    return cpuTemperature.Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
 }
 
 unsigned int TemperatureProbe::GetGpuTemp()
@@ -41,4 +39,40 @@ unsigned int TemperatureProbe::GetGpuTemp()
         return temp;
 
     return 0;
+}
+
+void TemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
+{
+    diskTemp.Count = 0;
+
+    for (int i = 0; i < 25; i++)
+    {
+        wchar_t diskDriveID[256] = {0};
+        wsprintfW(diskDriveID, L"\\\\.\\PhysicalDrive%d", i);
+
+        // 打开磁盘控制器
+        LIDEDiskController diskController(diskDriveID);
+        if (!diskController.DeviceExist())
+            continue;
+
+        // 获取SMART数据
+        unsigned char smartData[362] = {0};
+        if (!diskController.GetSMARTData(smartData))
+            continue;
+
+        // 解析SMART数据
+        LSMARTParser smartParser(smartData);
+        unsigned int temp = 0;
+        if (!smartParser.GetTemperature(temp))
+            continue;
+
+        diskTemp.Temp[diskTemp.Count] = temp;
+        diskTemp.DiskDriveID[diskTemp.Count] = diskDriveID;
+
+        diskTemp.Count += 1;
+        if(diskTemp.Count >= MAX_DISKTEMP_NUMBER)
+            break;
+
+    }
+
 }

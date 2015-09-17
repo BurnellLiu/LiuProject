@@ -120,6 +120,13 @@ const NetworkCardInforArray& HardwareInfor::GetNetworkCardInfor()
     return m_networkCardInfor;
 }
 
+const CDRomDriveInforArray& HardwareInfor::GetCDRomDriveInfor()
+{
+    this->ScanCDRomDriveInfor(m_cdRomDriveInfor);
+
+    return m_cdRomDriveInfor;
+}
+
 void HardwareInfor::Scan()
 {
     this->ScanComputerSystemInfor(m_computerSystemInfor);
@@ -128,10 +135,6 @@ void HardwareInfor::Scan()
     this->ScanProcessorInfor(m_processorInfor);
     this->ScanVideoCardInfor(m_videoCardInfor);
     this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
-    this->ScanDiskInfor(m_diskInfor);
-    this->ScanMonitorInfor(m_monitorInfor);
-    this->ScanBatteryStaticInfor(m_batteryStaticInfor);
-    this->ScanNetworkCardInfor(m_networkCardInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
@@ -365,5 +368,16 @@ void HardwareInfor::ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardI
         networkCardManager.GetNetworkCardMACAddress(networkCardInfor.Count, networkCardInfor.MACAddress[i]);
 
         networkCardInfor.Count++;
+    }
+}
+
+void HardwareInfor::ScanCDRomDriveInfor(OUT CDRomDriveInforArray& cdRomDriveInfor)
+{
+    LWMI::LCDRomDriveManager cdRomDriveManager;
+    cdRomDriveInfor.Count = (unsigned long)cdRomDriveManager.GetCDRomDriveCount();
+
+    for (int i = 0; i < cdRomDriveManager.GetCDRomDriveCount(); i++)
+    {
+        cdRomDriveManager.GetCDRomDriveName(i, cdRomDriveInfor.Name[i]);
     }
 }

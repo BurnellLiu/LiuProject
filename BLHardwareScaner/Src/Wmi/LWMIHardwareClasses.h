@@ -499,8 +499,8 @@ namespace LWMI
 
         /// @brief 获取网卡PNP设备ID
         /// @param[in] index 网卡索引
-        /// @param[in] OUT wstring & pnpDeviceID
-        /// @return
+        /// @param[out] pnpDeviceID
+        /// @return 成功返回true, 失败返回false
         bool GetNetworkCardPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
 
     private:
@@ -508,6 +508,31 @@ namespace LWMI
     private:
         LNetworkAdapterManager(const LNetworkAdapterManager&);
         LNetworkAdapterManager& operator = (const LNetworkAdapterManager&);
+    };
+
+    /// @brief 光驱管理者类
+    class LCDRomDriveManager
+    {
+    public:
+        LCDRomDriveManager();
+        ~LCDRomDriveManager();
+
+        /// @brief 获取光驱数量
+        /// @return 光驱数量
+        int GetCDRomDriveCount();
+
+        /// @brief 获取光驱名称
+        /// @param[in] index 光驱索引
+        /// @param[out] name 存储光驱名称
+        /// @return 成功返回true, 失败返回false
+        bool GetCDRomDriveName(IN int index, OUT wstring& name);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        LCDRomDriveManager(const LCDRomDriveManager&);
+        LCDRomDriveManager& operator = (const LCDRomDriveManager&);
     };
 
 }

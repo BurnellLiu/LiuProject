@@ -9,7 +9,25 @@
 
 #pragma comment(lib, "WinRing0.lib")
 
-bool LCpuTemperature::GetProcessorCoreNumber(unsigned long& physicalCoreNumber, unsigned long& logicalProcessorNumber)
+/// @brief CPU温度实现接口
+class CCpuTemperature
+{
+public:
+    /// @brief 获取CPU温度
+    /// @param[out] coreNum 存储CPU物理核心数
+    /// @param[out] temp 存储温度
+    /// @return 成功返回true, 失败返回false
+    virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]) = 0;
+
+protected:
+    /// @brief 获取处理器核心数
+    /// @param[out] physicalCoreNumber 物理核心数
+    /// @param[out] logicalProcessorNumber 逻辑处理器数量
+    /// @return 成功返回true, 失败返回false
+    bool GetProcessorCoreNumber(unsigned long& physicalCoreNumber, unsigned long& logicalProcessorNumber);
+};
+
+bool CCpuTemperature::GetProcessorCoreNumber(unsigned long& physicalCoreNumber, unsigned long& logicalProcessorNumber)
 {
     bool bRet = false;
     PSYSTEM_LOGICAL_PROCESSOR_INFORMATION processorInforList = NULL;
@@ -44,7 +62,7 @@ bool LCpuTemperature::GetProcessorCoreNumber(unsigned long& physicalCoreNumber, 
     }
 
     // 获取逻辑处理器数量
-    
+
     GetNativeSystemInfo(&systemInfo);
     logicalProcessorNumber = systemInfo.dwNumberOfProcessors;
 
@@ -59,8 +77,27 @@ SAFE_EXIT:
     return bRet;
 }
 
+/// @brief IntelCPU温度类
+class CIntelCpuTemperature : public CCpuTemperature
+{
+public:
+    CIntelCpuTemperature();
+    ~CIntelCpuTemperature();
 
-LIntelCpuTemperature::LIntelCpuTemperature()
+    /// @brief 获取CPU温度
+    /// @param[out] coreNum 存储CPU物理核心数
+    /// @param[out] temp 存储温度
+    /// @return 成功返回true, 失败返回false
+    virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]);
+
+private:
+    bool m_bInitWinRing0Success; ///< 标识是否初始化WinRing0成功
+};
+
+
+
+
+CIntelCpuTemperature::CIntelCpuTemperature()
 {
     m_bInitWinRing0Success = false;
 
@@ -69,18 +106,18 @@ LIntelCpuTemperature::LIntelCpuTemperature()
         m_bInitWinRing0Success = true;
 }
 
-LIntelCpuTemperature::~LIntelCpuTemperature()
+CIntelCpuTemperature::~CIntelCpuTemperature()
 {
     if (m_bInitWinRing0Success)
         DeinitializeOls();
 }
 
-bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
+bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
 {
     if (!m_bInitWinRing0Success)
         return false;
 
-    ZeroMemory(temp, sizeof(unsigned long) * MAX_PROCESSOR_CORE_NUMBER);
+    ZeroMemory(temp, sizeof(unsigned int) * MAX_PROCESSOR_PHYSICAL_CORE_NUM);
 
     /*
     DTS( Digital Thermal Senser)方式获取CPU温度，通过读取MSR来实现
@@ -135,6 +172,8 @@ bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
 
     DWORD step =  logicalProcessorNum/processorCoreNum;
 
+    coreNum = processorCoreNum;
+
     // 使用0x19c执行rdmsr指令, eax的16:23位表示当前DTS值
     // 分别获取每个逻辑处理器的温度
     for (DWORD processorIndex = 0; processorIndex < logicalProcessorNum; processorIndex += step)
@@ -155,4 +194,23 @@ bool LIntelCpuTemperature::Get(unsigned long temp[MAX_PROCESSOR_CORE_NUMBER])
     }
 
     return true;
+}
+
+LCpuTemperature::LCpuTemperature()
+{
+    m_pCpuTemperature = new CIntelCpuTemperature();
+}
+
+LCpuTemperature::~LCpuTemperature()
+{
+    if (m_pCpuTemperature != 0)
+    {
+        delete m_pCpuTemperature;
+        m_pCpuTemperature = 0;
+    }
+}
+
+bool LCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
+{
+    return m_pCpuTemperature->Get(coreNum, temp);
 }

@@ -182,6 +182,16 @@ struct NetworkCardInforArray
     wstring MACAddress[MAX_NETWORKCARD_NUMBER]; ///< MAC地址
 };
 
+/// @brief 最大网卡数量
+#define MAX_CDROMDRIVE_NUMBER 8
+
+/// @brief 光驱信息组
+struct CDRomDriveInforArray
+{
+    unsigned long Count; ///< 光驱数量
+    wstring Name[MAX_CDROMDRIVE_NUMBER]; ///< 光驱名称
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -232,6 +242,10 @@ public:
     /// @return 网卡信息
     const NetworkCardInforArray& GetNetworkCardInfor();
 
+    /// @brief 获取光驱信息
+    /// @return 光驱信息
+    const CDRomDriveInforArray& GetCDRomDriveInfor();
+
     /// @brief 析构函数
     ~HardwareInfor();
 
@@ -279,6 +293,10 @@ private:
     /// @param[out] networkCardInfor 存储网卡信息
     void ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor);
 
+    /// @brief 扫描光驱信息
+    /// @param[out] cdRomDrive 存储光驱信息
+    void ScanCDRomDriveInfor(OUT CDRomDriveInforArray& cdRomDriveInfor);
+
     HardwareInfor(); // 禁止构造
     HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
     HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
@@ -294,6 +312,7 @@ private:
     MonitorInforArray m_monitorInfor; ////< 显示器信息
     BatteryStaticInfor m_batteryStaticInfor; ///< 电池静态信息
     NetworkCardInforArray m_networkCardInfor; ///< 网卡信息
+    CDRomDriveInforArray m_cdRomDriveInfor; ///< 光驱信息
 };
 
 #endif

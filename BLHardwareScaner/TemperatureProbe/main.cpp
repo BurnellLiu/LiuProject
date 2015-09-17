@@ -8,9 +8,13 @@
 int main()
 {
     TemperatureProbe tempProbe;
+    DiskTempInforArray diskTemp;
+    CpuTempInfor cpuTemp;
     while (true)
     {
-        printf("Cpu Temp: %u  Gpu Temp: %u\r", tempProbe.GetCpuTemp(), tempProbe.GetGpuTemp());
+        tempProbe.GetDiskTemp(diskTemp);
+        tempProbe.GetCpuTemp(cpuTemp);
+        printf("Cpu Temp: %u  Gpu Temp: %u Disk Temp: %u\r", cpuTemp.CoreTemp[0], tempProbe.GetGpuTemp(), diskTemp.Temp[0]);
         Sleep(1000);
     }
     return 0;

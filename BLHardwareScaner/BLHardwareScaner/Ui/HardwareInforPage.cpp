@@ -300,6 +300,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Monitor"), monitorInfor);
     }
 
+    // 填写电池信息
     const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
     if (batteryStaticInfor.Exist)
     {
@@ -313,6 +314,14 @@ void ComputerItemInfor::LoadHWInfor()
         batteryInfor += batteryName;
 
         this->ContentAddItem(QObject::tr("Battery"), batteryInfor);
+    }
+
+    // 填写光驱信息
+    const CDRomDriveInforArray& cdRomDriveInforArray = HardwareInfor::GetInstance().GetCDRomDriveInfor();
+    for (unsigned int i = 0; i < cdRomDriveInforArray.Count; i++)
+    {
+        QString cdRomName = QString::fromStdWString(cdRomDriveInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("CD ROM Drive"), cdRomName);
     }
 }
 
