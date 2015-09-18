@@ -34,6 +34,8 @@ public:
         return s_diskTempInforArray;
     }
 
+private:
+
     void SetCpuTemp(IN const CpuTempInfor& cpuTempInfor)
     {
         s_cpuTempInfor = cpuTempInfor;
@@ -53,12 +55,57 @@ private:
     static CpuTempInfor s_cpuTempInfor; ///< CPU温度信息
     static unsigned int s_gpuTemp; ///< GPU温度信息
     static DiskTempInforArray s_diskTempInforArray; ///< 磁盘温度信息
+
+    friend class ScanTempThread;
 };
 
 CpuTempInfor TempHouse::s_cpuTempInfor = {0};
 unsigned int TempHouse::s_gpuTemp = 0;
 DiskTempInforArray TempHouse::s_diskTempInforArray = {0};
 
+
+ScanTempThread::ScanTempThread()
+{
+    m_bStopThread = false;
+}
+
+ScanTempThread::~ScanTempThread()
+{
+
+}
+
+void ScanTempThread::Stop()
+{
+    m_bStopThread = true;
+}
+
+void ScanTempThread::run()
+{
+    m_bStopThread = false;
+
+    TemperatureProbe tempProbe;
+
+    CpuTempInfor cpuTempInfor = {0};
+    unsigned int gpuTemp = 0;
+    DiskTempInforArray diskTempInforArray = {0};
+
+    TempHouse tempHouse;
+
+    while (!m_bStopThread)
+    {
+        tempProbe.GetCpuTemp(cpuTempInfor);
+        gpuTemp = tempProbe.GetGpuTemp();
+        tempProbe.GetDiskTemp(diskTempInforArray);
+
+        tempHouse.SetCpuTemp(cpuTempInfor);
+        tempHouse.SetGpuTemp(gpuTemp);
+        tempHouse.SetDiskTemp(diskTempInforArray);
+
+        this->msleep(1000);
+    }
+
+
+}
 
 TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     : QWidget(parent, flags)
@@ -73,6 +120,10 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     m_tempLabelList.append(ui.label_temp6);
     m_tempLabelList.append(ui.label_temp7);
     m_tempLabelList.append(ui.label_temp8);
+    for (int i = 0; i < m_tempLabelList.size(); i++)
+    {
+        m_tempLabelList[i]->setText("");
+    }
 
     m_pTempRefreshTimer = new QTimer();
     m_pTempRefreshTimer->setInterval(1000);
@@ -156,45 +207,3 @@ void TempManagementPage::RefreshTemperature()
         
 }
 
-ScanTempThread::ScanTempThread()
-{
-    m_bStopThread = false;
-}
-
-ScanTempThread::~ScanTempThread()
-{
-
-}
-
-void ScanTempThread::Stop()
-{
-    m_bStopThread = true;
-}
-
-void ScanTempThread::run()
-{
-    m_bStopThread = false;
-
-    TemperatureProbe tempProbe;
-
-    CpuTempInfor cpuTempInfor = {0};
-    unsigned int gpuTemp = 0;
-    DiskTempInforArray diskTempInforArray = {0};
-
-    TempHouse tempHouse;
-
-    while (!m_bStopThread)
-    {
-        tempProbe.GetCpuTemp(cpuTempInfor);
-        gpuTemp = tempProbe.GetGpuTemp();
-        tempProbe.GetDiskTemp(diskTempInforArray);
-
-        tempHouse.SetCpuTemp(cpuTempInfor);
-        tempHouse.SetGpuTemp(gpuTemp);
-        tempHouse.SetDiskTemp(diskTempInforArray);
-
-        sleep(1000);
-    }
- 
-
-}
