@@ -37,6 +37,12 @@
     <Filter Include="Src\SMARTParser">
       <UniqueIdentifier>{2c6a6440-c714-467f-9979-740a76a2d43e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Cpu">
+      <UniqueIdentifier>{5eeddbc5-4d05-40b8-94f7-3d5e66e71655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Gpu">
+      <UniqueIdentifier>{0a281d05-ecf5-4a5b-a1b0-9837c995caa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -81,6 +87,21 @@
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp">
       <Filter>Src\SMARTParser</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\TempManagementPage.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_TempManagementPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\TemperatureProbe.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Cpu\LCpuTemperature.cpp">
+      <Filter>Src\Cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Gpu\Gpu.cpp">
+      <Filter>Src\Gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\MainWindow.h">
@@ -97,6 +118,12 @@
     </CustomBuild>
     <CustomBuild Include="Ui\HardwareInfor.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TempManagement.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TempManagementPage.h">
+      <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +159,18 @@
     </ClInclude>
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h">
       <Filter>Src\SMARTParser</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_TempManagement.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\TemperatureProbe.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Cpu\LCpuTemperature.h">
+      <Filter>Src\Cpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Gpu\Gpu.h">
+      <Filter>Src\Gpu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

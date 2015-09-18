@@ -85,6 +85,41 @@ QToolButton#toolButtonHardware:hover
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="toolButtonTempManagement">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>70</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei UI</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QToolButton#toolButtonTempManagement
+{
+	border-style: none;
+}
+QToolButton#toolButtonTempManagement:hover
+{
+    background-color: rgb(167, 205, 255)
+}</string>
+          </property>
+          <property name="text">
+           <string>Temperature</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

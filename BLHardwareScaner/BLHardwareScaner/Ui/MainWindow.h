@@ -4,6 +4,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_MainWindow.h"
 
+class HardwareInforPage;
+class TempManagementPage;
 
 class MainWindow : public QMainWindow
 {
@@ -13,8 +15,19 @@ public:
     MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainWindow();
 
+protected:
+    void showEvent(QShowEvent* e);
+
+private slots:
+    void HardwareInforClicked();
+    void TemperatureClicked();
+
+
 private:
     Ui::MainWindowForm ui;
+
+    HardwareInforPage* m_pHardwareInforPage;
+    TempManagementPage* m_pTempManagementPage;
 };
 
 #endif // MAINWINDOW_H
