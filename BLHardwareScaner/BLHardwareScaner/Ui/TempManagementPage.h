@@ -30,7 +30,7 @@ public:
 
 protected:
     void showEvent(QShowEvent* e);
-    void closeEvent(QCloseEvent* e);
+    void hideEvent(QHideEvent* e);
 
 private slots:
     void TempRefreshTimerTimeout();

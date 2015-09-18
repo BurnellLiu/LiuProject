@@ -4,6 +4,8 @@
 
 #include "..\\Src\\TemperatureProbe.h"
 
+#include <QtGui/QMessageBox>
+
 
 TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     : QWidget(parent, flags)
@@ -39,7 +41,7 @@ void TempManagementPage::showEvent(QShowEvent* e)
     m_pTempRefreshTimer->start();
 }
 
-void TempManagementPage::closeEvent(QCloseEvent* e)
+void TempManagementPage::hideEvent(QHideEvent* e)
 {
     m_pTempRefreshTimer->stop();
 }
