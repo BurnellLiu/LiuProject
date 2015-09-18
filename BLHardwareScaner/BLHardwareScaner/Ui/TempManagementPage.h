@@ -6,6 +6,7 @@
 
 #include <QVector>
 #include <QTimer>
+#include <QThread>
 
 #ifndef IN
 #define IN
@@ -18,6 +19,25 @@
 #ifndef OUT
 #define OUT
 #endif
+
+/// @brief 扫描温度线程类
+class ScanTempThread : public QThread
+{
+    Q_OBJECT
+public:
+    ScanTempThread();
+    ~ScanTempThread();
+
+    /// @brief 停止线程
+    void Stop();
+
+protected:
+    virtual void run();
+
+private:
+    bool m_bStopThread; ///< 标记是否停止线程
+
+};
 
 
 class TempManagementPage : public QWidget
@@ -43,6 +63,11 @@ private:
     QTimer* m_pTempRefreshTimer;
 
     QVector<QLabel*> m_tempLabelList;
+    ScanTempThread m_scanTempThread;
 };
+
+
+
+
 
 #endif

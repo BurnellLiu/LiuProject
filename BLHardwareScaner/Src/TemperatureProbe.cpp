@@ -21,6 +21,8 @@ TemperatureProbe::~TemperatureProbe()
 
 bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
 {
+    cpuTemp.CoreNum = 0;
+
     LCpuTemperature cpuTemperature;
     return cpuTemperature.Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
 }

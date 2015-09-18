@@ -6,6 +6,59 @@
 
 #include <QtGui/QMessageBox>
 
+/// @brief 温度仓库类
+class TempHouse
+{
+public:
+    TempHouse()
+    {
+
+    }
+    ~TempHouse()
+    {
+
+    }
+
+    const CpuTempInfor& GetCpuTemp() const
+    {
+        return s_cpuTempInfor;
+    }
+
+    unsigned int GetGpuTemp() const
+    {
+        return s_gpuTemp;
+    }
+
+    const DiskTempInforArray& GetDiskTemp() const
+    {
+        return s_diskTempInforArray;
+    }
+
+    void SetCpuTemp(IN const CpuTempInfor& cpuTempInfor)
+    {
+        s_cpuTempInfor = cpuTempInfor;
+    }
+
+    void SetGpuTemp(IN unsigned int gpuTemp)
+    {
+        s_gpuTemp = gpuTemp;
+    }
+
+    void SetDiskTemp(IN const DiskTempInforArray& diskTempInforArray)
+    {
+        s_diskTempInforArray = diskTempInforArray;
+    }
+
+private:
+    static CpuTempInfor s_cpuTempInfor; ///< CPU温度信息
+    static unsigned int s_gpuTemp; ///< GPU温度信息
+    static DiskTempInforArray s_diskTempInforArray; ///< 磁盘温度信息
+};
+
+CpuTempInfor TempHouse::s_cpuTempInfor = {0};
+unsigned int TempHouse::s_gpuTemp = 0;
+DiskTempInforArray TempHouse::s_diskTempInforArray = {0};
+
 
 TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     : QWidget(parent, flags)
@@ -38,12 +91,15 @@ TempManagementPage::~TempManagementPage()
 
 void TempManagementPage::showEvent(QShowEvent* e)
 {
+    m_scanTempThread.start();
+
     m_pTempRefreshTimer->start();
 }
 
 void TempManagementPage::hideEvent(QHideEvent* e)
 {
     m_pTempRefreshTimer->stop();
+    m_scanTempThread.Stop();
 }
 
 void TempManagementPage::TempRefreshTimerTimeout()
@@ -60,17 +116,17 @@ void TempManagementPage::RefreshTemperature()
 
     int currentLabelIndex = 0;
 
-    TemperatureProbe tempProbe;
-    CpuTempInfor cpuTempInfor;
-    bool bRet = tempProbe.GetCpuTemp(cpuTempInfor);
-    if (bRet)
+    TempHouse tempHouse;
+
+    CpuTempInfor cpuTempInfor = tempHouse.GetCpuTemp();
+    if (cpuTempInfor.CoreNum > 0)
     {
         QString strCpuTempInfor = QString::fromStdWString(L"CPU: %1 C").arg(cpuTempInfor.CoreTemp[0]);
         m_tempLabelList[currentLabelIndex]->setText(strCpuTempInfor);
         currentLabelIndex++;
     }
 
-    unsigned int gpuTemp = tempProbe.GetGpuTemp();
+    unsigned int gpuTemp = tempHouse.GetGpuTemp();
     if (0 != gpuTemp)
     {
         QString strGpuTempInfor = QString::fromStdWString(L"GPU: %1 C").arg(gpuTemp);
@@ -78,8 +134,7 @@ void TempManagementPage::RefreshTemperature()
         currentLabelIndex++;
     }
 
-    DiskTempInforArray diskTempInforArray;
-    tempProbe.GetDiskTemp(diskTempInforArray);
+    DiskTempInforArray diskTempInforArray = tempHouse.GetDiskTemp();
     if (1 == diskTempInforArray.Count)
     {
         QString strDiskTempInfor = QString::fromStdWString(L"Disk: %1 C").arg(diskTempInforArray.Temp[0]);
@@ -99,4 +154,47 @@ void TempManagementPage::RefreshTemperature()
         }
     }
         
+}
+
+ScanTempThread::ScanTempThread()
+{
+    m_bStopThread = false;
+}
+
+ScanTempThread::~ScanTempThread()
+{
+
+}
+
+void ScanTempThread::Stop()
+{
+    m_bStopThread = true;
+}
+
+void ScanTempThread::run()
+{
+    m_bStopThread = false;
+
+    TemperatureProbe tempProbe;
+
+    CpuTempInfor cpuTempInfor = {0};
+    unsigned int gpuTemp = 0;
+    DiskTempInforArray diskTempInforArray = {0};
+
+    TempHouse tempHouse;
+
+    while (!m_bStopThread)
+    {
+        tempProbe.GetCpuTemp(cpuTempInfor);
+        gpuTemp = tempProbe.GetGpuTemp();
+        tempProbe.GetDiskTemp(diskTempInforArray);
+
+        tempHouse.SetCpuTemp(cpuTempInfor);
+        tempHouse.SetGpuTemp(gpuTemp);
+        tempHouse.SetDiskTemp(diskTempInforArray);
+
+        sleep(1000);
+    }
+ 
+
 }
