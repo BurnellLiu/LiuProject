@@ -164,5 +164,37 @@ namespace LWMI
         return m_pWMICoreManager->GetStringProperty(index, L"SystemSKU", sku);
     }
 
+    LPerfRawData_PerfOS_MemoryManager::LPerfRawData_PerfOS_MemoryManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM Win32_PerfRawData_PerfOS_Memory");
+    }
+
+    LPerfRawData_PerfOS_MemoryManager::~LPerfRawData_PerfOS_MemoryManager()
+    {
+        if (m_pWMICoreManager != 0)
+        {
+            delete m_pWMICoreManager;
+            m_pWMICoreManager = 0;
+        }
+    }
+
+    int LPerfRawData_PerfOS_MemoryManager::GetMemoryPerfDataCount()
+    {
+        m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LPerfRawData_PerfOS_MemoryManager::GetMemoryAvailableMBytes(IN int index, OUT unsigned long& availableBytes)
+    {
+        LUINT64 temp;
+        bool bRet = m_pWMICoreManager->GetUINT64Property(index, L"AvailableMBytes", temp);
+        if (bRet)
+            availableBytes = temp;
+
+        return bRet;
+    }
+
 }
 

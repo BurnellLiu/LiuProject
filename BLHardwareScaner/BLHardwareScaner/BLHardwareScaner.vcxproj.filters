@@ -102,6 +102,9 @@
     <ClCompile Include="..\Src\Gpu\Gpu.cpp">
       <Filter>Src\Gpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\PerfoemanceCounter.cpp">
+      <Filter>Src\Wmi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\MainWindow.h">
@@ -171,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\Gpu\Gpu.h">
       <Filter>Src\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\PerformanceCounter.h">
+      <Filter>Src\Wmi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

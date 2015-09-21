@@ -192,6 +192,31 @@ namespace LWMI
         LMS_SystemInformationManager(const LMS_SystemInformationManager&);
         LMS_SystemInformationManager& operator = (const LMS_SystemInformationManager&);
     };
+
+    /// @brief 系统信息管理者类
+    class LPerfRawData_PerfOS_MemoryManager
+    {
+    public:
+        LPerfRawData_PerfOS_MemoryManager();
+        ~LPerfRawData_PerfOS_MemoryManager();
+
+        /// @brief 获取内存性能数据数量
+        /// @return 内存性能数据数量(应该为1)
+        int GetMemoryPerfDataCount();
+
+        /// @brief 获取内存可用大小
+        /// @param[in] index 索引
+        /// @param[out] availableBytes 可用内存大小, 单位M
+        /// @return 成功返回true, 失败返回false
+        bool GetMemoryAvailableMBytes(IN int index, OUT unsigned long& availableBytes);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        LPerfRawData_PerfOS_MemoryManager(const LPerfRawData_PerfOS_MemoryManager&);
+        LPerfRawData_PerfOS_MemoryManager& operator = (const LPerfRawData_PerfOS_MemoryManager&);
+    };
 }
 
 #endif

@@ -158,6 +158,16 @@ namespace LWMI
         return bRet;
     }
 
+    bool LProcessorManager::GetProcessorLoadPercentage(IN int index, OUT unsigned long& percentage)
+    {
+        LUINT16 temp;
+        bool bRet = m_pWMICoreManager->GetUINT16Property(index, L"LoadPercentage", temp);
+        if (bRet)
+            percentage = (unsigned long)temp;
+
+        return bRet;
+    }
+
     LPhysicalMemoryManager::LPhysicalMemoryManager()
     {
         m_pWMICoreManager = 0;

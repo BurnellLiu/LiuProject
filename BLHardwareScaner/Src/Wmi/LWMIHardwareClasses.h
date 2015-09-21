@@ -181,6 +181,14 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetProcessorLogicalProcessorNumber(IN int index, OUT unsigned long& logicalProcessorsNumber);
 
+        /// @brief 获取处理器的使用率
+        ///
+        /// 在多核处理器上, 该方法返回的是多个核心的平均使用率
+        /// @param[in] index 处理器索引
+        /// @param[out] percentage 处理器使用率(百分比)
+        /// @return 成功返回true, 失败返回false
+        bool GetProcessorLoadPercentage(IN int index, OUT unsigned long& percentage);
+
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
 
