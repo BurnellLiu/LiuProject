@@ -183,7 +183,7 @@ namespace LWMI
 
     int LPerfRawData_PerfOS_MemoryManager::GetMemoryPerfDataCount()
     {
-        m_pWMICoreManager->GetObjectsCount();
+        return m_pWMICoreManager->GetObjectsCount();
     }
 
     bool LPerfRawData_PerfOS_MemoryManager::GetMemoryAvailableMBytes(IN int index, OUT unsigned long& availableBytes)
