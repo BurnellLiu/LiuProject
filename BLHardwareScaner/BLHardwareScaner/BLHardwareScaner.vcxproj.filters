@@ -103,7 +103,7 @@
       <Filter>Src\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\PerfoemanceCounter.cpp">
-      <Filter>Src\Wmi</Filter>
+      <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +176,7 @@
       <Filter>Src\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\PerformanceCounter.h">
-      <Filter>Src\Wmi</Filter>
+      <Filter>Src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

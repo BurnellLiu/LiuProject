@@ -39,6 +39,25 @@ private:
 
 };
 
+/// @brief 扫描性能线程类
+class ScanPerformanceThread : public QThread
+{
+    Q_OBJECT
+public:
+    ScanPerformanceThread();
+    ~ScanPerformanceThread();
+
+    /// @brief 停止线程
+    void Stop();
+
+protected:
+    virtual void run();
+
+private:
+    bool m_bStopThread; ///< 标记是否停止线程
+
+};
+
 
 class TempManagementPage : public QWidget
 {
@@ -64,6 +83,7 @@ private:
 
     QVector<QLabel*> m_tempLabelList;
     ScanTempThread m_scanTempThread;
+    ScanPerformanceThread m_scanPerformanceThred;
 };
 
 

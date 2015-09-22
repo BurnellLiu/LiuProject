@@ -168,7 +168,7 @@ namespace LWMI
     {
         m_pWMICoreManager = 0;
         m_pWMICoreManager = new LWMICoreManager();
-        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_CIMV2);
         bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM Win32_PerfRawData_PerfOS_Memory");
     }
 

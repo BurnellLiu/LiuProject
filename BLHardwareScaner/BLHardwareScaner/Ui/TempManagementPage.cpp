@@ -3,6 +3,7 @@
 #include "TempManagementPage.h"
 
 #include "..\\Src\\TemperatureProbe.h"
+#include "..\\Src\\PerformanceCounter.h"
 
 #include <QtGui/QMessageBox>
 
@@ -63,6 +64,51 @@ CpuTempInfor TempHouse::s_cpuTempInfor = {0};
 unsigned int TempHouse::s_gpuTemp = 0;
 DiskTempInforArray TempHouse::s_diskTempInforArray = {0};
 
+/// @brief 性能仓库类
+class PerformanceHouse
+{
+public:
+    PerformanceHouse()
+    {
+
+    }
+
+    ~PerformanceHouse()
+    {
+
+    }
+
+    const MemoryPerformance& GetMemoryPerformance() const
+    {
+        return s_memoryPerformance;
+    }
+
+    const ProcessorPerformance& GetProcessorPerformance() const
+    {
+        return s_processorPerformance;
+    }
+
+private:
+
+    void SetMemoryPerformance(IN MemoryPerformance& memoryPerf)
+    {
+        s_memoryPerformance = memoryPerf;
+    }
+
+    void SetProcessorPerformance(IN ProcessorPerformance& processorPerf)
+    {
+        s_processorPerformance = processorPerf;
+    }
+
+private:
+    static MemoryPerformance s_memoryPerformance; ///< 内存性能
+    static ProcessorPerformance s_processorPerformance; ///< 处理器性能
+
+    friend class ScanPerformanceThread;
+};
+
+MemoryPerformance PerformanceHouse::s_memoryPerformance = {0};
+ProcessorPerformance PerformanceHouse::s_processorPerformance = {0};
 
 ScanTempThread::ScanTempThread()
 {
@@ -107,6 +153,43 @@ void ScanTempThread::run()
 
 }
 
+ScanPerformanceThread::ScanPerformanceThread()
+{
+    m_bStopThread = false;
+}
+
+ScanPerformanceThread::~ScanPerformanceThread()
+{
+
+}
+
+void ScanPerformanceThread::Stop()
+{
+    m_bStopThread = true;
+}
+
+void ScanPerformanceThread::run()
+{
+    m_bStopThread = false;
+
+    PerformanceCounter perfCounter;
+    MemoryPerformance memoryPerf = {0};
+    ProcessorPerformance processorPerf = {0};
+
+    PerformanceHouse perfHouse;
+
+    while (!m_bStopThread)
+    {
+        perfCounter.GetMemoryPerformance(memoryPerf);
+        perfCounter.GetProcessorPerformance(processorPerf);
+
+        perfHouse.SetMemoryPerformance(memoryPerf);
+        perfHouse.SetProcessorPerformance(processorPerf);
+
+        this->msleep(1000);
+    }
+}
+
 TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     : QWidget(parent, flags)
 {
@@ -143,6 +226,7 @@ TempManagementPage::~TempManagementPage()
 void TempManagementPage::showEvent(QShowEvent* e)
 {
     m_scanTempThread.start();
+    m_scanPerformanceThred.start();
 
     m_pTempRefreshTimer->start();
 }
@@ -150,7 +234,9 @@ void TempManagementPage::showEvent(QShowEvent* e)
 void TempManagementPage::hideEvent(QHideEvent* e)
 {
     m_pTempRefreshTimer->stop();
+
     m_scanTempThread.Stop();
+    m_scanPerformanceThred.Stop();
 }
 
 void TempManagementPage::TempRefreshTimerTimeout()
@@ -204,6 +290,22 @@ void TempManagementPage::RefreshTemperature()
             currentLabelIndex++;
         }
     }
+
+
+    PerformanceHouse perfHouse;
+    MemoryPerformance memoryPerf = perfHouse.GetMemoryPerformance();
+    ProcessorPerformance processorPerf = perfHouse.GetProcessorPerformance();
+
+    unsigned long memoryUsage = 0;
+    if (memoryPerf.TotalSize != 0)
+    {
+        memoryUsage = 100-memoryPerf.AvailableSize * 100/memoryPerf.TotalSize;
+    }
+    QString strMemoryPerf = QString::fromStdWString(L"Mem Usage: %1").arg(memoryUsage);
+    QString strProcessorPerf = QString::fromStdWString(L"Cpu Usage: %1").arg(processorPerf.LoadPercentage);
+
+    ui.label_1->setText(strMemoryPerf);
+    ui.label_2->setText(strProcessorPerf);
         
 }
 
