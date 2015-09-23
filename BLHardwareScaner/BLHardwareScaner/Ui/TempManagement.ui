@@ -84,12 +84,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>140</x>
      <y>160</y>
-     <width>171</width>
+     <width>311</width>
      <height>51</height>
     </rect>
    </property>
