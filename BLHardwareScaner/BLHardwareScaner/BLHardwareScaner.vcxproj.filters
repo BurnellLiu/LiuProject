@@ -43,6 +43,9 @@
     <Filter Include="Src\Gpu">
       <UniqueIdentifier>{0a281d05-ecf5-4a5b-a1b0-9837c995caa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Log">
+      <UniqueIdentifier>{22d7634c-09e4-4114-8aec-63728a622413}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\PerfoemanceCounter.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Log\LLog.cpp">
+      <Filter>Src\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\PerformanceCounter.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Log\LLog.h">
+      <Filter>Src\Log</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

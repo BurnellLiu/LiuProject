@@ -13,8 +13,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWifiNetwork", "TestWifi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDiskController", "TestDiskController\TestDiskController.vcxproj", "{54CC8006-6AF7-43C1-9EAE-145709B19F23}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCpuId", "TestCpuId\TestCpuId.vcxproj", "{7EEB432B-7A7F-4680-BC44-044EFB620C94}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestLog", "TestLog\TestLog.vcxproj", "{FB6CD221-55DD-4D3D-B08B-861677296B71}"
 EndProject
 Global
@@ -47,10 +45,6 @@ Global
 		{54CC8006-6AF7-43C1-9EAE-145709B19F23}.Debug|Win32.Build.0 = Debug|Win32
 		{54CC8006-6AF7-43C1-9EAE-145709B19F23}.Release|Win32.ActiveCfg = Release|Win32
 		{54CC8006-6AF7-43C1-9EAE-145709B19F23}.Release|Win32.Build.0 = Release|Win32
-		{7EEB432B-7A7F-4680-BC44-044EFB620C94}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7EEB432B-7A7F-4680-BC44-044EFB620C94}.Debug|Win32.Build.0 = Debug|Win32
-		{7EEB432B-7A7F-4680-BC44-044EFB620C94}.Release|Win32.ActiveCfg = Release|Win32
-		{7EEB432B-7A7F-4680-BC44-044EFB620C94}.Release|Win32.Build.0 = Release|Win32
 		{FB6CD221-55DD-4D3D-B08B-861677296B71}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FB6CD221-55DD-4D3D-B08B-861677296B71}.Debug|Win32.Build.0 = Debug|Win32
 		{FB6CD221-55DD-4D3D-B08B-861677296B71}.Release|Win32.ActiveCfg = Release|Win32

@@ -15,22 +15,29 @@
 #define OUT
 #endif
 
+#include <string>
+using std::wstring;
+using std::string;
+
 /// @brief LOG类
 class LLog
 {
 public:
     /// @brief 打开LOG档, 如果不存在则创建, 如果已经存在那么原始内容将被销毁
+    /// @param[in] strFileName LOG档文件名
     /// @return 成功返回true, 失败返回false
-    static bool Open(IN const char* szFileName);
+    static bool Open(IN const string& strFileName);
 
     /// @brief 关闭LOG档
     static void Close();
 
     /// @brief 写一行LOG, 自动换行
-    /// @param[in] szFormart 需要写入LOG的格式化字符串
-    static void WriteLine(IN char* szFormat, ...);
+    /// @param[in] strFormart 需要写入LOG的格式化字符串
+    static void WriteLine(IN const string& strFormat, ...);
 
-    static void WriteLineW(IN wchar_t* szFormat, ...);
+    /// @brief 写一行LOG, 自动换行
+    /// @param[in] strFormat 需要写入LOG的格式化字符串
+    static void WriteLineW(IN const wstring& strFormat, ...);
 };
 
 #endif

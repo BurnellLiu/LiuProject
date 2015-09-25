@@ -7,7 +7,7 @@
 
 static FILE* s_pLogFile = 0; ///< ÎÄ¼þÖ¸Õë
 
-bool LLog::Open(IN const char* szFileName)
+bool LLog::Open(IN const string& strFileName)
 {
     if (s_pLogFile != 0)
     {
@@ -15,7 +15,7 @@ bool LLog::Open(IN const char* szFileName)
         s_pLogFile = 0;
     }
 
-    errno_t ret = fopen_s(&s_pLogFile, szFileName, "w");
+    errno_t ret = fopen_s(&s_pLogFile, strFileName.c_str(), "w");
     if (ret == 0 && s_pLogFile != 0)
         return true;
 
@@ -31,10 +31,12 @@ void LLog::Close()
     }
 }
 
-void LLog::WriteLine(IN char* szFormat, ...)
+void LLog::WriteLine(IN const string& strFormat, ...)
 {
     if (s_pLogFile == 0)
         return;
+
+    const char* szFormat = strFormat.c_str();
 
     va_list args;
     va_start(args, szFormat);
@@ -47,10 +49,12 @@ void LLog::WriteLine(IN char* szFormat, ...)
     fflush(s_pLogFile);
 }
 
-void LLog::WriteLineW(IN wchar_t* szFormat, ...)
+void LLog::WriteLineW(IN const wstring& strFormat, ...)
 {
     if (s_pLogFile == 0)
         return;
+
+    const wchar_t* szFormat = strFormat.c_str();
 
     va_list args;
     va_start(args, szFormat);
