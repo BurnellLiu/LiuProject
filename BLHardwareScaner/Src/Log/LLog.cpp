@@ -3,20 +3,54 @@
 
 #include <cstdio>
 #include <cstdlib>
- #include <stdarg.h>
+#include <stdarg.h>
+#include <ctime>
+#include <cstring>
 
-static FILE* s_pLogFile = 0; ///< 文件指针
+#include <Windows.h>
 
-bool LLog::Open(IN const string& strFileName)
+/// @brief LOG属性结构
+struct SLogProperty 
 {
-    if (s_pLogFile != 0)
+    FILE* LogFile; ///< 文件指针
+};
+
+static SLogProperty s_logProperty = 
+{
+    0
+};
+
+/// @brief 在LOG中增加辅助信息
+static void AddAssistInforToLog()
+{
+    if (s_logProperty.LogFile == 0)
+        return;
+
+    DWORD dwId = GetCurrentThreadId();
+    char threadId[64] = {0};
+    sprintf_s(threadId, "[Thread %u]", dwId);
+    fprintf_s(s_logProperty.LogFile, threadId);
+
+    time_t t = time(0);
+    char szTime[64] = {0}; 
+    tm tmTemp;
+    localtime_s(&tmTemp, &t);
+    strftime(szTime, sizeof(szTime), "[%H:%M:%S]",&tmTemp );
+    fprintf_s(s_logProperty.LogFile, szTime);
+
+
+}
+
+bool LLog::Open(IN const char* szFileName)
+{
+    if (s_logProperty.LogFile != 0)
     {
-        fclose(s_pLogFile);
-        s_pLogFile = 0;
+        fclose(s_logProperty.LogFile);
+        s_logProperty.LogFile = 0;
     }
 
-    errno_t ret = fopen_s(&s_pLogFile, strFileName.c_str(), "w");
-    if (ret == 0 && s_pLogFile != 0)
+    errno_t ret = fopen_s(&s_logProperty.LogFile, szFileName, "w");
+    if (ret == 0 && s_logProperty.LogFile != 0)
         return true;
 
     return false;
@@ -24,37 +58,19 @@ bool LLog::Open(IN const string& strFileName)
 
 void LLog::Close()
 {
-    if (s_pLogFile != 0)
+    if (s_logProperty.LogFile != 0)
     {
-        fclose(s_pLogFile);
-        s_pLogFile = 0;
+        fclose(s_logProperty.LogFile);
+        s_logProperty.LogFile = 0;
     }
 }
 
-void LLog::WriteLine(IN const string& strFormat, ...)
+void LLog::WriteLineW(IN const wchar_t* szFormat, ...)
 {
-    if (s_pLogFile == 0)
+    if (s_logProperty.LogFile == 0)
         return;
 
-    const char* szFormat = strFormat.c_str();
-
-    va_list args;
-    va_start(args, szFormat);
-    char printfBuffer[1024] = {0};
-    vsprintf_s(printfBuffer, szFormat, args);
-    va_end(args);
-
-    fprintf_s(s_pLogFile, printfBuffer);
-    fprintf_s(s_pLogFile, "\n");
-    fflush(s_pLogFile);
-}
-
-void LLog::WriteLineW(IN const wstring& strFormat, ...)
-{
-    if (s_pLogFile == 0)
-        return;
-
-    const wchar_t* szFormat = strFormat.c_str();
+    AddAssistInforToLog();
 
     va_list args;
     va_start(args, szFormat);
@@ -62,7 +78,25 @@ void LLog::WriteLineW(IN const wstring& strFormat, ...)
     vswprintf_s(printfBuffer, szFormat, args);
     va_end(args);
 
-    fwprintf_s(s_pLogFile, printfBuffer);
-    fwprintf_s(s_pLogFile, L"\n");
-    fflush(s_pLogFile);
+    fwprintf_s(s_logProperty.LogFile, printfBuffer);
+    fwprintf_s(s_logProperty.LogFile, L"\n");
+    fflush(s_logProperty.LogFile);
+}
+
+void LLog::WriteLineA(IN const char* szFormat, ...)
+{
+    if (s_logProperty.LogFile == 0)
+        return;
+
+    AddAssistInforToLog();
+
+    va_list args;
+    va_start(args, szFormat);
+    char printfBuffer[1024] = {0};
+    vsprintf_s(printfBuffer, szFormat, args);
+    va_end(args);
+
+    fprintf_s(s_logProperty.LogFile, printfBuffer);
+    fprintf_s(s_logProperty.LogFile, "\n");
+    fflush(s_logProperty.LogFile);
 }

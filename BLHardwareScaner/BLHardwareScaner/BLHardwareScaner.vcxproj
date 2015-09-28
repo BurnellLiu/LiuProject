@@ -85,7 +85,9 @@
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
     <ClCompile Include="..\Src\Gpu\Gpu.cpp" />
     <ClCompile Include="..\Src\HardwareInfor.cpp" />
-    <ClCompile Include="..\Src\Log\LLog.cpp" />
+    <ClCompile Include="..\Src\Log\LLog.cpp">
+      <TreatWChar_tAsBuiltInType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
     <ClCompile Include="..\Src\PerfoemanceCounter.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
@@ -160,7 +162,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_DLL "-I." "-I.\BLHardwareScaner\Ui" "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I." "-I." "-I."</Command>
     </CustomBuild>
-    <ClInclude Include="Ui\UiDefines.h" />
     <CustomBuild Include="Ui\HardwareInforPage.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing HardwareInforPage.h...</Message>

@@ -110,7 +110,7 @@ struct PhysicalMemoryInforArray
 enum DISK_TYPE
 {
     UNKNOWN_DISK = 0, // 未知类型
-    FIXED_IDE_DISK = 1, // 固定磁盘(如本地硬盘)
+    FIXED_DISK = 1, // 固定磁盘(如本地硬盘)
     EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
     VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
     USB_FLASH_DISK = 4, // U盘
@@ -204,27 +204,27 @@ public:
 
     /// @brief 获取计算机系统信息
     /// @return 计算机系统信息
-    const ComputerSystemInfor& GetComputerSystemInfor() const; 
+    const ComputerSystemInfor& GetComputerSystemInfor(); 
 
     /// @brief 获取操作系统信息
     /// @return 操作系统信息
-    const OperatingSystemInfor& GetOperatingSystemInfor() const;
+    const OperatingSystemInfor& GetOperatingSystemInfor();
 
     /// @brief 获取主板信息
     /// @return 主板信息
-    const MotherBoardInfor& GetMotherBoardInfor() const;
+    const MotherBoardInfor& GetMotherBoardInfor();
 
     /// @brief 获取处理器信息
     /// @return 处理器信息
-    const ProcessorInfor& GetProcessorInfor() const;
+    const ProcessorInfor& GetProcessorInfor();
 
     /// @brief 获取显卡信息
     /// @return 显卡信息
-    const VideoCardInforArray& GetVideoCardInfor() const;
+    const VideoCardInforArray& GetVideoCardInfor();
 
     /// @brief 获取物理内存信息
     /// @return 物理内存信息
-    const PhysicalMemoryInforArray& GetPhysicalMemoryInfor() const;
+    const PhysicalMemoryInforArray& GetPhysicalMemoryInfor();
 
     /// @brief 获取磁盘信息
     /// @return 磁盘信息
@@ -250,9 +250,6 @@ public:
     ~HardwareInfor();
 
 private:
-    /// @brief 扫描硬件信息
-    void Scan();
-    
     /// @brief 扫描计算机系统信息
     /// @param[out] computerSystemInfor 存储计算机系统信息
     void ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor);

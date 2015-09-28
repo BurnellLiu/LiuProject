@@ -30,12 +30,16 @@ public:
     HardwareInforPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~HardwareInforPage();
 
+protected:
+    void showEvent(QShowEvent* e);
+
 private slots:
     /// @brief 当前所选项改变槽函数
     void CurrentItemChanged();
 
 private:
-   
+    /// @brief 初始化硬件信息
+    void InitHardwareInfor();
 
 private:
     Ui::HardwareInforForm ui;

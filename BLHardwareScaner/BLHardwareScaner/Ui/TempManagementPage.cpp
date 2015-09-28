@@ -2,10 +2,13 @@
 
 #include "TempManagementPage.h"
 
+#include <QtGui/QMessageBox>
+
 #include "..\\Src\\TemperatureProbe.h"
 #include "..\\Src\\PerformanceCounter.h"
+#include "..\\Src\\Log\\LLog.h"
 
-#include <QtGui/QMessageBox>
+
 
 /// @brief Œ¬∂»≤÷ø‚¿‡
 class TempHouse
@@ -140,8 +143,23 @@ void ScanTempThread::run()
     while (!m_bStopThread)
     {
         tempProbe.GetCpuTemp(cpuTempInfor);
+        PrintLogW(L"Cpu Cores(Temperature): %u", cpuTempInfor.CoreNum);
+        for (unsigned int i = 0; i < cpuTempInfor.CoreNum; i++)
+        {
+            PrintLogW(L"Cpu Cores: %u, Temp: %u", i, cpuTempInfor.CoreTemp[i]);
+        }
+
         gpuTemp = tempProbe.GetGpuTemp();
+        PrintLogW(L"Gpu Temp: %u", gpuTemp);
+
         tempProbe.GetDiskTemp(diskTempInforArray);
+        PrintLogW(L"Disk Count(Temperature): %u", diskTempInforArray.Count);
+        for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
+        {
+            PrintLogW(L"Disk:%s, Temp: %u", diskTempInforArray.DiskDriveID[i].c_str(), diskTempInforArray.Temp[i]);
+        }
+
+        PrintLogW(L"");
 
         tempHouse.SetCpuTemp(cpuTempInfor);
         tempHouse.SetGpuTemp(gpuTemp);

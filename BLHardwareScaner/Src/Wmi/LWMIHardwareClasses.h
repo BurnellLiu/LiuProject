@@ -298,7 +298,7 @@ namespace LWMI
         enum LDISK_TYPE
         {
             UNKNOWN_DISK = 0, // 未知类型
-            FIXED_IDE_DISK = 1, // 固定磁盘(如本地硬盘)
+            FIXED_DISK = 1, // 固定磁盘(如本地硬盘)
             EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
             VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
             USB_FLASH_DISK = 4, // U盘

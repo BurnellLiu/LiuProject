@@ -28,6 +28,8 @@ private:
 
     HardwareInforPage* m_pHardwareInforPage;
     TempManagementPage* m_pTempManagementPage;
+
+    float m_uiRatio; ///< UI需要调整的比例
 };
 
 #endif // MAINWINDOW_H

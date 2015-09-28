@@ -2,7 +2,9 @@
 #include "HardwareInforPage.h"
 
 #include <QtCore/QString>
+
 #include "..\\Src\\HardwareInfor.h"
+#include "..\\Src\\Log\\LLog.h"
 
 /// @brief 转换制造商名称
 ///  
@@ -40,6 +42,54 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
     ui.setupUi(this);
+
+    QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));    
+}
+
+HardwareInforPage::~HardwareInforPage()
+{
+    for (int i = 0; i < m_hwItemVec.size(); i++)
+    {
+        delete m_hwItemVec[i];
+        m_hwItemVec[i] = 0;
+    }
+}
+
+void HardwareInforPage::showEvent(QShowEvent* e)
+{
+    static bool s_initDone = false;
+    if (!s_initDone)
+    {
+        this->InitHardwareInfor();
+        ui.listWidgetHWItem->setCurrentRow(0);
+        s_initDone = true;
+    }
+}
+
+void HardwareInforPage::CurrentItemChanged()
+{
+    int currentRow = ui.listWidgetHWItem->currentRow();
+    if (currentRow >= m_hwItemVec.size())
+    {
+        ui.labelHWTitle->setText("");
+        ui.textEditHWInfor->setText("");
+        return;
+    }
+
+    ui.labelHWTitle->setText(m_hwItemVec[currentRow]->GetTitle());
+    ui.textEditHWInfor->setText(m_hwItemVec[currentRow]->GetContent());
+}
+
+void HardwareInforPage::InitHardwareInfor()
+{
+    ui.listWidgetHWItem->clear();
+    for (int i = 0; i < m_hwItemVec.size(); i++)
+    {
+        delete m_hwItemVec[i];
+        m_hwItemVec[i] = 0;
+    }
+    m_hwItemVec.clear();
+
 
     ui.listWidgetHWItem->addItem(tr("Computer"));
     HWItemInfor* pComputerItem = new ComputerItemInfor();
@@ -90,34 +140,6 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     {
         m_hwItemVec[i]->LoadHWInfor();
     }
-
-
-    QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));
-    ui.listWidgetHWItem->setCurrentRow(0);
-
-}
-
-HardwareInforPage::~HardwareInforPage()
-{
-    for (int i = 0; i < m_hwItemVec.size(); i++)
-    {
-        delete m_hwItemVec[i];
-        m_hwItemVec[i] = 0;
-    }
-}
-
-void HardwareInforPage::CurrentItemChanged()
-{
-    int currentRow = ui.listWidgetHWItem->currentRow();
-    if (currentRow >= m_hwItemVec.size())
-    {
-        ui.labelHWTitle->setText("");
-        ui.textEditHWInfor->setText("");
-        return;
-    }
-
-    ui.labelHWTitle->setText(m_hwItemVec[currentRow]->GetTitle());
-    ui.textEditHWInfor->setText(m_hwItemVec[currentRow]->GetContent());
 }
 
 HWItemInfor::HWItemInfor()
@@ -271,7 +293,7 @@ void ComputerItemInfor::LoadHWInfor()
     
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
     {
-        if (diskInforArray.DiskType[i] != FIXED_IDE_DISK)
+        if (diskInforArray.DiskType[i] != FIXED_DISK)
             continue;
 
         QString diskInfor;
@@ -330,23 +352,29 @@ void ProcessorItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle(QObject::tr("Processor"));
+    PrintLogW(L"Processor Information:");
 
     const ProcessorInfor& processprInfor = HardwareInfor::GetInstance().GetProcessorInfor();
 
     QString name = QString::fromStdWString(processprInfor.Name);
     this->ContentAddItem(QObject::tr("Name"), name);
+    PrintLogW(L"\tName: %s", processprInfor.Name.c_str());
 
     QString description = QString::fromStdWString(processprInfor.Description);
     this->ContentAddItem(QObject::tr("Description"), description);
+    PrintLogW(L"\tDescription: %s", processprInfor.Description.c_str());
 
     QString manufacturer = QString::fromStdWString(processprInfor.Manufacturer);
     this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(manufacturer));
+    PrintLogW(L"\tManufacturer: %s", processprInfor.Manufacturer.c_str());
 
     QString coresNumber = QString::fromStdString("Cores: %1    Logical Processors: %2").arg(processprInfor.CoresNumber).arg(processprInfor.LogicalProcessorNumber);
     this->ContentAddItem(QObject::tr("Cores Number"), coresNumber);
+    PrintLogW(L"\tPhysical Cores: %u, Logical Cores: %u", processprInfor.CoresNumber, processprInfor.LogicalProcessorNumber);
 
     QString speed = QString::fromStdString("%1MHz").arg(processprInfor.MaxClockSpeed);
-    this->ContentAddItem(QObject::tr("Speed"), speed);
+    this->ContentAddItem(QObject::tr("Max Speed"), speed);
+    PrintLogW(L"\tMax Speed: %uMHz", processprInfor.MaxClockSpeed);
 
 }
 
@@ -355,32 +383,40 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle(QObject::tr("Mother Board"));
+    PrintLogW(L"Mother Board Information:");
 
     const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
     QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
     this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
+    PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
 
     QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
     boardManufacturer = ConvertManufacturer(boardManufacturer);
     this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
+    PrintLogW(L"\tManufacturer: %s", motherBoardInfor.Manufacturer.c_str());
     
 
     QString boardSN = QString::fromStdWString(motherBoardInfor.SerialNumber);
     this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
+    PrintLogW(L"\tSerial Number: %s", motherBoardInfor.SerialNumber.c_str());
 
     this->ContentAddBlankLine();
 
     QString biosSN = QString::fromStdWString(motherBoardInfor.BiosSerialNumber);
     this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
+    PrintLogW(L"\tBIOS SerialNumber: %s", motherBoardInfor.BiosSerialNumber.c_str());
 
     QString biosVersion = QString::fromStdWString(motherBoardInfor.BiosVersion);
     this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
+    PrintLogW(L"\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
 
     QString biosReleaseDate = QString::fromStdWString(motherBoardInfor.BiosReleaseDate).trimmed();
     this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
+    PrintLogW(L"\tBIOS Release Date: %s", motherBoardInfor.BiosReleaseDate.c_str());
 
     QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
     this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
+    PrintLogW(L"\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
 }
 
 void MemoryItemInfor::LoadHWInfor()
@@ -388,25 +424,33 @@ void MemoryItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle("Memory");
+    PrintLogW(L"Memory Information");
 
     // 填写内存信息
     const PhysicalMemoryInforArray& physicalMemoryInforArray = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInforArray.Count; i++)
     {
+        PrintLogW(L"\tMemory : %u", i);
+
         QString memoryModel = QString::fromStdWString(physicalMemoryInforArray.PartNumbe[i]);
         this->ContentAddItem(QObject::tr("Model Name"), memoryModel);
+        PrintLogW(L"\tModel Name", memoryModel.toStdWString().c_str());
 
         QString memoryManufacturer = QString::fromStdWString(physicalMemoryInforArray.Manufacturer[i]);
         this->ContentAddItem(QObject::tr("Manufacturer"), memoryManufacturer);
+        PrintLogW(L"\tManufacturer: %s", memoryManufacturer.toStdWString().c_str());
 
         QString memorySerialNumber = QString::fromStdWString(physicalMemoryInforArray.SerialNumber[i]);
         this->ContentAddItem(QObject::tr("Serial Number"), memorySerialNumber);
+        PrintLogW(L"\tSerial Number: %s", memorySerialNumber.toStdWString().c_str());
 
         QString memorySize = QString::fromStdWString(L"%1M").arg(physicalMemoryInforArray.Capacity[i]);
         this->ContentAddItem(QObject::tr("Size"), memorySize);
+        PrintLogW(L"\tSize: %s", memorySize.toStdWString().c_str());
 
         QString memorySpeed = QString::fromStdWString(L"%1MHz").arg(physicalMemoryInforArray.Speed[i]);
         this->ContentAddItem(QObject::tr("Speed"), memorySpeed);
+        PrintLogW(L"\tSpeed: %s", memorySpeed.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
@@ -418,25 +462,33 @@ void DiskItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle("Disk");
+    PrintLogW(L"Disk Information:");
 
     const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
     {
-        if (diskInforArray.DiskType[i] != FIXED_IDE_DISK)
+        if (diskInforArray.DiskType[i] != FIXED_DISK)
             continue;
+
+        PrintLogW(L"\tFixed Disk Index: %u", i);
 
         QString model = QString::fromStdWString(diskInforArray.Model[i]);
         this->ContentAddItem(QObject::tr("Model"), model);
+        PrintLogW(L"\tModel: %s", model.toStdWString().c_str());
 
         QString size = QString::fromStdString("%1G").arg(diskInforArray.TotalSize[i]);
         this->ContentAddItem(QObject::tr("Size"), size);
+        PrintLogW(L"\tSize: %s", size.toStdWString().c_str());
 
         QString serialNumber = QString::fromStdWString(diskInforArray.SerialNumber[i]);
         this->ContentAddItem(QObject::tr("Serial Number"), serialNumber);
+        PrintLogW(L"\tSerial Number: %s", serialNumber.toStdWString().c_str());
 
         QString interfaceType = QString::fromStdWString(diskInforArray.InterfaceType[i]);
         this->ContentAddItem(QObject::tr("Interface Type"), interfaceType);
+        PrintLogW(L"\tInterface Type: %s", interfaceType.toStdWString().c_str());
 
+        PrintLogW(L"\tATA Disk: %s", diskInforArray.IsATA[i] ? L"Yes" : L"No");
         if (diskInforArray.IsATA[i])
         {
             QString rotationRate;
@@ -447,12 +499,15 @@ void DiskItemInfor::LoadHWInfor()
                 rotationRate = "SSD";
 
             this->ContentAddItem(QObject::tr("RotationRate"), rotationRate);
+            PrintLogW(L"\tRotationRate: %s", rotationRate.toStdWString().c_str());
 
             QString sataType = QString::fromStdWString(L"SATA-%1").arg(diskInforArray.ATAInfor[i].SATAType);
             this->ContentAddItem(QObject::tr("SATA Type"), sataType);
+            PrintLogW(L"\tSATA Type: %s", sataType.toStdWString().c_str());
 
             QString powerOnHours = QString::fromStdWString(L"%1 Hours").arg(diskInforArray.ATAInfor[i].PowerOnHours);
             this->ContentAddItem(QObject::tr("Power On Hours"), powerOnHours);
+            PrintLogW(L"\tPower On Hours: %s", powerOnHours.toStdWString().c_str());
         }
 
         this->ContentAddBlankLine();

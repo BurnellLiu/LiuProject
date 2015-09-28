@@ -145,9 +145,6 @@
     <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ui\UiDefines.h">
-      <Filter>Ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h">
       <Filter>Src\Wmi</Filter>
     </ClInclude>

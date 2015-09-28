@@ -33,14 +33,6 @@ static wstring WStringToUpper(IN const wstring& str)
 HardwareInfor& HardwareInfor::GetInstance()
 {
     static HardwareInfor s_instance;
-    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
-
-    if (!s_bScanDone)
-    {
-        s_instance.Scan();
-        s_bScanDone = true;
-    }
-
     return s_instance;
 }
 
@@ -56,33 +48,75 @@ HardwareInfor::~HardwareInfor()
 
 }
 
-const ComputerSystemInfor& HardwareInfor::GetComputerSystemInfor() const
+const ComputerSystemInfor& HardwareInfor::GetComputerSystemInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanComputerSystemInfor(m_computerSystemInfor);
+        s_bScanDone = true;
+    }
+
     return m_computerSystemInfor;
 }
 
-const OperatingSystemInfor& HardwareInfor::GetOperatingSystemInfor() const
+const OperatingSystemInfor& HardwareInfor::GetOperatingSystemInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanOperatingSystemInfor(m_operatingSystemInfor);
+        s_bScanDone = true;
+    }
+
     return m_operatingSystemInfor;
 }
 
-const MotherBoardInfor& HardwareInfor::GetMotherBoardInfor() const
+const MotherBoardInfor& HardwareInfor::GetMotherBoardInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanMotherBoardInfor(m_motherBoardInfor);
+        s_bScanDone = true;
+    }
+
     return m_motherBoardInfor;
 }
 
-const ProcessorInfor& HardwareInfor::GetProcessorInfor() const
+const ProcessorInfor& HardwareInfor::GetProcessorInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanProcessorInfor(m_processorInfor);
+        s_bScanDone = true;
+    }
+
     return m_processorInfor;
 }
 
-const VideoCardInforArray& HardwareInfor::GetVideoCardInfor() const
+const VideoCardInforArray& HardwareInfor::GetVideoCardInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanVideoCardInfor(m_videoCardInfor);
+        s_bScanDone = true;
+    }
+
     return m_videoCardInfor;
 }
 
-const PhysicalMemoryInforArray& HardwareInfor::GetPhysicalMemoryInfor() const
+const PhysicalMemoryInforArray& HardwareInfor::GetPhysicalMemoryInfor()
 {
+    static bool s_bScanDone = false; // 标识是否完成扫描硬件信息
+    if (!s_bScanDone)
+    {
+        this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
+        s_bScanDone = true;
+    }
+
     return m_physicalMemoryInfor;
 }
 
@@ -125,16 +159,6 @@ const CDRomDriveInforArray& HardwareInfor::GetCDRomDriveInfor()
     this->ScanCDRomDriveInfor(m_cdRomDriveInfor);
 
     return m_cdRomDriveInfor;
-}
-
-void HardwareInfor::Scan()
-{
-    this->ScanComputerSystemInfor(m_computerSystemInfor);
-    this->ScanOperatingSystemInfor(m_operatingSystemInfor);
-    this->ScanMotherBoardInfor(m_motherBoardInfor);
-    this->ScanProcessorInfor(m_processorInfor);
-    this->ScanVideoCardInfor(m_videoCardInfor);
-    this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
 }
 
 void HardwareInfor::ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)

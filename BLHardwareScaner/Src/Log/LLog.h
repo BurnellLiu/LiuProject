@@ -16,28 +16,48 @@
 #endif
 
 #include <string>
-using std::wstring;
 using std::string;
+using std::wstring;
 
 /// @brief LOG类
 class LLog
 {
 public:
     /// @brief 打开LOG档, 如果不存在则创建, 如果已经存在那么原始内容将被销毁
-    /// @param[in] strFileName LOG档文件名
+    /// @param[in] szFileName LOG档文件名
     /// @return 成功返回true, 失败返回false
-    static bool Open(IN const string& strFileName);
+    static bool Open(IN const char* szFileName);
 
     /// @brief 关闭LOG档
     static void Close();
 
-    /// @brief 写一行LOG, 自动换行
-    /// @param[in] strFormart 需要写入LOG的格式化字符串
-    static void WriteLine(IN const string& strFormat, ...);
+    /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
+    /// @param[in] szFormat 需要写入LOG的格式化字符串
+    static void WriteLineW(IN const wchar_t* szFormat, ...);
 
-    /// @brief 写一行LOG, 自动换行
-    /// @param[in] strFormat 需要写入LOG的格式化字符串
-    static void WriteLineW(IN const wstring& strFormat, ...);
+    /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
+    /// @param[in] szFormat 需要写入LOG的格式化字符串
+    static void WriteLineA(IN const char* szFormat, ...);
 };
+
+/// @brief 打开LOG文件
+#ifndef OpenLog
+#define OpenLog(name) LLog::Open(name)
+#endif
+
+/// @brief 关闭LOG文件
+#ifndef CloseLog
+#define CloseLog() LLog::Close()
+#endif
+
+/// @brief 打印LOG宏
+#ifndef PrintLogA
+#define PrintLogA(format, ...) LLog::WriteLineA(format, __VA_ARGS__)
+#endif
+
+/// @brief 打印LOG宏
+#ifndef PrintLogW
+#define PrintLogW(format, ...) LLog::WriteLineW(format, __VA_ARGS__)
+#endif
 
 #endif
