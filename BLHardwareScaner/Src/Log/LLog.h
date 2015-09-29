@@ -31,6 +31,23 @@ public:
     /// @brief 关闭LOG档
     static void Close();
 
+    /// @brief 每行LOG前显示线程Id
+    /// 默认不增加线程Id
+    /// @param[in] bFlag 标识是否在每行LOG前显示线程Id
+    static void ShowThreadId(IN bool bFlag);
+
+    /// @brief 每行LOG前显示当前时间
+    /// 默认不增加当前时间
+    /// @param[in] bFlag 标识是否在每行LOG前显示当前时间
+    static void ShowTime(IN bool bFlag);
+
+    /// @brief 设置是否延迟写(写缓存)
+    /// 默认为延迟写
+    /// 延迟写在程序崩溃时存在LOG没写入文件的情况
+    /// 直接写性能不佳
+    /// @param[in] bFlag 标识是否延迟写, true(延迟写), false(直接写)
+    static void SetDelayedWrite(IN bool bFlag);
+
     /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
     /// @param[in] szFormat 需要写入LOG的格式化字符串
     static void WriteLineW(IN const wchar_t* szFormat, ...);
@@ -39,16 +56,6 @@ public:
     /// @param[in] szFormat 需要写入LOG的格式化字符串
     static void WriteLineA(IN const char* szFormat, ...);
 };
-
-/// @brief 打开LOG文件
-#ifndef OpenLog
-#define OpenLog(name) LLog::Open(name)
-#endif
-
-/// @brief 关闭LOG文件
-#ifndef CloseLog
-#define CloseLog() LLog::Close()
-#endif
 
 /// @brief 打印LOG宏
 #ifndef PrintLogA

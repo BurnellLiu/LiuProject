@@ -72,16 +72,15 @@ protected:
     void hideEvent(QHideEvent* e);
 
 private slots:
-    void TempRefreshTimerTimeout();
+    void UiRefreshTimerTimeout();
 
 private:
-    void RefreshTemperature();
+    void RefreshUi();
 
 private:
     Ui::TempManagementForm ui;
     QTimer* m_pTempRefreshTimer;
 
-    QVector<QLabel*> m_tempLabelList;
     ScanTempThread m_scanTempThread;
     ScanPerformanceThread m_scanPerformanceThred;
 };

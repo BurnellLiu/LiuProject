@@ -140,19 +140,31 @@ void ScanTempThread::run()
 
     TempHouse tempHouse;
 
+    int refreshCount = -1;
     while (!m_bStopThread)
     {
+        refreshCount++;
+
         tempProbe.GetCpuTemp(cpuTempInfor);
+        gpuTemp = tempProbe.GetGpuTemp();
+        tempProbe.GetDiskTemp(diskTempInforArray);
+       
+        tempHouse.SetCpuTemp(cpuTempInfor);
+        tempHouse.SetGpuTemp(gpuTemp);
+        tempHouse.SetDiskTemp(diskTempInforArray);
+
+        this->msleep(1000);
+
+        // 每刷新10次写一次LOG
+        if (refreshCount%10 != 0)
+            continue;
+
         PrintLogW(L"Cpu Cores(Temperature): %u", cpuTempInfor.CoreNum);
         for (unsigned int i = 0; i < cpuTempInfor.CoreNum; i++)
         {
             PrintLogW(L"Cpu Cores: %u, Temp: %u", i, cpuTempInfor.CoreTemp[i]);
         }
-
-        gpuTemp = tempProbe.GetGpuTemp();
         PrintLogW(L"Gpu Temp: %u", gpuTemp);
-
-        tempProbe.GetDiskTemp(diskTempInforArray);
         PrintLogW(L"Disk Count(Temperature): %u", diskTempInforArray.Count);
         for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
         {
@@ -160,12 +172,7 @@ void ScanTempThread::run()
         }
 
         PrintLogW(L"");
-
-        tempHouse.SetCpuTemp(cpuTempInfor);
-        tempHouse.SetGpuTemp(gpuTemp);
-        tempHouse.SetDiskTemp(diskTempInforArray);
-
-        this->msleep(1000);
+        
     }
 
 
@@ -213,22 +220,9 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
 {
     ui.setupUi(this);
 
-    m_tempLabelList.append(ui.label_temp1);
-    m_tempLabelList.append(ui.label_temp2);
-    m_tempLabelList.append(ui.label_temp3);
-    m_tempLabelList.append(ui.label_temp4);
-    m_tempLabelList.append(ui.label_temp5);
-    m_tempLabelList.append(ui.label_temp6);
-    m_tempLabelList.append(ui.label_temp7);
-    m_tempLabelList.append(ui.label_temp8);
-    for (int i = 0; i < m_tempLabelList.size(); i++)
-    {
-        m_tempLabelList[i]->setText("");
-    }
-
     m_pTempRefreshTimer = new QTimer();
     m_pTempRefreshTimer->setInterval(1000);
-    QObject::connect(m_pTempRefreshTimer, SIGNAL(timeout()), this, SLOT(TempRefreshTimerTimeout()));
+    QObject::connect(m_pTempRefreshTimer, SIGNAL(timeout()), this, SLOT(UiRefreshTimerTimeout()));
 
 }
 
@@ -257,58 +251,30 @@ void TempManagementPage::hideEvent(QHideEvent* e)
     m_scanPerformanceThred.Stop();
 }
 
-void TempManagementPage::TempRefreshTimerTimeout()
+void TempManagementPage::UiRefreshTimerTimeout()
 {
-    this->RefreshTemperature();
+    this->RefreshUi();
 }
 
-void TempManagementPage::RefreshTemperature()
+void TempManagementPage::RefreshUi()
 {
-    for (int i = 0; i < m_tempLabelList.size(); i++)
-    {
-        m_tempLabelList[i]->setText("");
-    }
-
-    int currentLabelIndex = 0;
-
     TempHouse tempHouse;
 
     CpuTempInfor cpuTempInfor = tempHouse.GetCpuTemp();
-    if (cpuTempInfor.CoreNum > 0)
-    {
-        QString strCpuTempInfor = QString::fromStdWString(L"CPU: %1 C").arg(cpuTempInfor.CoreTemp[0]);
-        m_tempLabelList[currentLabelIndex]->setText(strCpuTempInfor);
-        currentLabelIndex++;
-    }
+    ui.progressBarCpuTemp->setValue(cpuTempInfor.CoreTemp[0]);
 
     unsigned int gpuTemp = tempHouse.GetGpuTemp();
-    if (0 != gpuTemp)
-    {
-        QString strGpuTempInfor = QString::fromStdWString(L"GPU: %1 C").arg(gpuTemp);
-        m_tempLabelList[currentLabelIndex]->setText(strGpuTempInfor);
-        currentLabelIndex++;
-    }
+    ui.progressBarGpuTemp->setValue(gpuTemp);
 
     DiskTempInforArray diskTempInforArray = tempHouse.GetDiskTemp();
-    if (1 == diskTempInforArray.Count)
+    for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
     {
-        QString strDiskTempInfor = QString::fromStdWString(L"Disk: %1 C").arg(diskTempInforArray.Temp[0]);
-        m_tempLabelList[currentLabelIndex]->setText(strDiskTempInfor);
-
-        currentLabelIndex++;
-    }
-
-    if (diskTempInforArray.Count > 1)
-    {
-        for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
+        if (diskTempInforArray.DiskDriveID[i].find(L"0") != wstring::npos)
         {
-            QString strDiskTempInfor = QString::fromStdWString(L"Disk%1: %2 C").arg(i + 1).arg(diskTempInforArray.Temp[0]);
-            m_tempLabelList[currentLabelIndex]->setText(strDiskTempInfor);
-
-            currentLabelIndex++;
+            ui.progressBarDiskTemp->setValue(diskTempInforArray.Temp[i]);
+            break;
         }
     }
-
 
     PerformanceHouse perfHouse;
     MemoryPerformance memoryPerf = perfHouse.GetMemoryPerformance();
@@ -319,11 +285,9 @@ void TempManagementPage::RefreshTemperature()
     {
         memoryUsage = 100-memoryPerf.AvailableSize * 100/memoryPerf.TotalSize;
     }
-    QString strMemoryPerf = QString::fromStdWString(L"Mem Usage: %1").arg(memoryUsage);
-    QString strProcessorPerf = QString::fromStdWString(L"Cpu Usage: %1").arg(processorPerf.LoadPercentage);
 
-    ui.label_1->setText(strMemoryPerf);
-    ui.label_2->setText(strProcessorPerf);
+    ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
+    ui.progressBarMemUsage->setValue(memoryUsage);
         
 }
 

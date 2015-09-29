@@ -512,8 +512,6 @@ void DiskItemInfor::LoadHWInfor()
 
         this->ContentAddBlankLine();
     }
-
-
 }
 
 void VideoCardItemInfor::LoadHWInfor()

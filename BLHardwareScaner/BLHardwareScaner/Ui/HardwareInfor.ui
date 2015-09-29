@@ -38,6 +38,7 @@
       <widget class="QListWidget" name="listWidgetHWItem">
        <property name="font">
         <font>
+         <family>Microsoft YaHei UI</family>
          <pointsize>10</pointsize>
         </font>
        </property>
