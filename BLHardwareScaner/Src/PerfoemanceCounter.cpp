@@ -31,6 +31,9 @@ bool PerformanceCounter::GetMemoryPerformance(OUT MemoryPerformance& memoryPerfo
     if (!perfMemoryManager.GetMemoryAvailableMBytes(0, memoryPerformance.AvailableSize))
         return false;
 
+    if (!perfMemoryManager.GetMemoryUnusedMBytes(0, memoryPerformance.UnusedSize))
+        return false;
+
     return true;
 
 }

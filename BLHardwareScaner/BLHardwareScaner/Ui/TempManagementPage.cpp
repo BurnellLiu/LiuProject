@@ -153,7 +153,7 @@ void ScanTempThread::run()
         tempHouse.SetGpuTemp(gpuTemp);
         tempHouse.SetDiskTemp(diskTempInforArray);
 
-        this->msleep(1000);
+        this->msleep(500);
 
         // 每刷新10次写一次LOG
         if (refreshCount%10 != 0)
@@ -203,15 +203,29 @@ void ScanPerformanceThread::run()
 
     PerformanceHouse perfHouse;
 
+    int refreshCount = -1;
     while (!m_bStopThread)
     {
+        refreshCount++;
+
         perfCounter.GetMemoryPerformance(memoryPerf);
         perfCounter.GetProcessorPerformance(processorPerf);
 
         perfHouse.SetMemoryPerformance(memoryPerf);
         perfHouse.SetProcessorPerformance(processorPerf);
 
-        this->msleep(1000);
+        this->msleep(500);
+
+        // 每刷新10次写一次LOG
+        if (refreshCount%10 != 0)
+            continue;
+
+        PrintLogW(L"Cpu Usage: %uP", processorPerf.LoadPercentage);
+        PrintLogW(L"Memory Total Size: %u", memoryPerf.TotalSize);
+        PrintLogW(L"Memory Available Size: %u", memoryPerf.AvailableSize);
+        PrintLogW(L"Memory Unused Size: %u", memoryPerf.UnusedSize);
+
+        PrintLogW(L"");
     }
 }
 
@@ -220,18 +234,18 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
 {
     ui.setupUi(this);
 
-    m_pTempRefreshTimer = new QTimer();
-    m_pTempRefreshTimer->setInterval(1000);
-    QObject::connect(m_pTempRefreshTimer, SIGNAL(timeout()), this, SLOT(UiRefreshTimerTimeout()));
+    m_pUiRefreshTimer = new QTimer();
+    m_pUiRefreshTimer->setInterval(500);
+    QObject::connect(m_pUiRefreshTimer, SIGNAL(timeout()), this, SLOT(UiRefreshTimerTimeout()));
 
 }
 
 TempManagementPage::~TempManagementPage()
 {
-    if (m_pTempRefreshTimer != NULL)
+    if (m_pUiRefreshTimer != NULL)
     {
-        delete m_pTempRefreshTimer;
-        m_pTempRefreshTimer = NULL;
+        delete m_pUiRefreshTimer;
+        m_pUiRefreshTimer = NULL;
     }
 }
 
@@ -240,12 +254,12 @@ void TempManagementPage::showEvent(QShowEvent* e)
     m_scanTempThread.start();
     m_scanPerformanceThred.start();
 
-    m_pTempRefreshTimer->start();
+    m_pUiRefreshTimer->start();
 }
 
 void TempManagementPage::hideEvent(QHideEvent* e)
 {
-    m_pTempRefreshTimer->stop();
+    m_pUiRefreshTimer->stop();
 
     m_scanTempThread.Stop();
     m_scanPerformanceThred.Stop();
@@ -283,7 +297,7 @@ void TempManagementPage::RefreshUi()
     unsigned long memoryUsage = 0;
     if (memoryPerf.TotalSize != 0)
     {
-        memoryUsage = 100-memoryPerf.AvailableSize * 100/memoryPerf.TotalSize;
+        memoryUsage = 100 - (memoryPerf.AvailableSize + memoryPerf.UnusedSize) * 100/memoryPerf.TotalSize;
     }
 
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);

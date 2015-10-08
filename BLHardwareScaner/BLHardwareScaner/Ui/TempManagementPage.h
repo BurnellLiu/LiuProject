@@ -79,7 +79,7 @@ private:
 
 private:
     Ui::TempManagementForm ui;
-    QTimer* m_pTempRefreshTimer;
+    QTimer* m_pUiRefreshTimer;
 
     ScanTempThread m_scanTempThread;
     ScanPerformanceThread m_scanPerformanceThred;

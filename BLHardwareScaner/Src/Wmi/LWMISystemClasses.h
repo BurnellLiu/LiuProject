@@ -210,6 +210,12 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetMemoryAvailableMBytes(IN int index, OUT unsigned long& availableBytes);
 
+        /// @brief 获取内存未使用大小
+        /// @param[in] index 索引
+        /// @param[out] unusedBytes 可用内存大小, 单位M
+        /// @return 成功返回true, 失败返回false
+        bool GetMemoryUnusedMBytes(IN int index, OUT unsigned long& unusedBytes);
+
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
 

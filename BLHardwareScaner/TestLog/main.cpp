@@ -10,7 +10,9 @@ int main()
 {
 
     LLog::Open("TestLog");
-    LLog::WriteLineW(L"Test %d    %s", 32, L"svb");
-    //LLog::WriteLineStr("Test22 %s", "ad");
+    LLog::WriteLineA("%%Test %d    %s", 32, L"svb");
+    LLog::Close();
+    printf("%%ss");
+    system("pause");
     return 0;
 }

@@ -196,5 +196,17 @@ namespace LWMI
         return bRet;
     }
 
+    bool LPerfRawData_PerfOS_MemoryManager::GetMemoryUnusedMBytes(IN int index, OUT unsigned long& unusedBytes)
+    {
+        LUINT64 temp;
+        bool bRet = m_pWMICoreManager->GetUINT64Property(index, L"FreeAndZeroPageListBytes", temp);
+        if (bRet)
+        {
+            unusedBytes = temp/1024/1024;
+        }
+
+        return bRet;
+    }
+
 }
 
