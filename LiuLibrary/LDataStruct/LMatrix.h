@@ -46,6 +46,13 @@ public:
     /// @return 结果矩阵
     static LMatrix<Type> DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B);
 
+    /// @brief 矩阵数乘
+    /// @param[in] A 被乘数
+    /// @param[in] B 乘数
+    /// @param[out] C 结果矩阵
+    /// @return 返回true
+    static bool SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C);
+
     /// @brief 矩阵点除
     /// 要求矩阵A的大小等于矩阵B的大小
     /// @param[in] A 被除数
@@ -53,6 +60,22 @@ public:
     /// @param[out] C 结果矩阵
     /// @return 参数错误返回false
     static bool DOTDIV(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵减法
+    /// 要求矩阵A的大小等于矩阵B的大小
+    /// @param[in] A 被减数
+    /// @param[in] B 减数
+    /// @param[out] C 结果矩阵
+    /// @return 参数错误返回false
+    static bool SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵加法
+    /// 要求矩阵A的大小等于矩阵B的大小
+    /// @param[in] A 被加数
+    /// @param[in] B 加数
+    /// @param[out] C 结果矩阵
+    /// @return 参数错误返回false
+    static bool ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
 
     /// @brief 矩阵转置
     /// @param[in] A 需要转置的矩阵
@@ -79,11 +102,22 @@ public:
     LMatrix<Type>& operator = (const LMatrix<Type>& rhs);
 
     /// @brief 矩阵乘法
-    /// 要求矩阵A的列数等于矩阵B的行数
-    /// @param[in] A 被乘数
+    /// 要求自身矩阵的列数等于矩阵B的行数
     /// @param[in] B 乘数
     /// @return 结果矩阵
     LMatrix<Type> operator * (IN const LMatrix<Type>& B) const;
+
+    /// @brief 矩阵减法
+    /// 要求自身矩阵大小等于矩阵B的大小
+    /// @param[in] B 减数
+    /// @return 结果矩阵
+    LMatrix<Type> operator - (IN const LMatrix<Type>& B) const;
+
+    /// @brief 矩阵加法
+    /// 要求自身矩阵大小等于矩阵B的大小
+    /// @param[in] B 加数
+    /// @return 结果矩阵
+    LMatrix<Type> operator + (IN const LMatrix<Type>& B) const;
 
     /// @brief []操作符
     ///
@@ -100,6 +134,11 @@ public:
     /// @brief 矩阵转置
     /// @return 转置后的结果矩阵
     LMatrix<Type> T() const;
+
+    /// @brief 矩阵数乘
+    /// @param[in] B 乘数
+    /// @return 结果矩阵
+    LMatrix<Type> ScalarMul(IN const Type& B) const;
 
     /// @brief 获取矩阵中的一行数据
     /// @param[in] row 行索引
@@ -240,6 +279,30 @@ LMatrix<Type> LMatrix<Type>::operator * (IN const LMatrix<Type>& B) const
 }
 
 LTEMPLATE
+LMatrix<Type> LMatrix<Type>::operator - (IN const LMatrix<Type>& B) const
+{
+    LMatrix<Type> C;
+    SUB(*this, B, C);
+    return C;
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::operator + (IN const LMatrix<Type>& B) const
+{
+    LMatrix<Type> C;
+    ADD(*this, B, C);
+    return C;
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::ScalarMul(IN const Type& B) const
+{
+    LMatrix<Type> C;
+    SCALARMUL(*this, B, C);
+    return C;
+}
+
+LTEMPLATE
 Type*& LMatrix<Type>::operator[](unsigned int row)
 {
     return this->Data[row];
@@ -363,6 +426,59 @@ LMatrix<Type> LMatrix<Type>::DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<
     LMatrix<Type> C;
     DOTMUL(A, B, C);
     return C;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C)
+{
+    C.Reset(A.RowLen, A.ColumnLen);
+    for (unsigned int row = 0; row < A.RowLen; row++)
+    {
+        for (unsigned int col = 0; col < A.ColumnLen; col++)
+        {
+            C.Data[row][col] = A.Data[row][col] * B;
+        }
+    }
+
+    return true;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
+{
+    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
+        return false;
+
+    C.Reset(A.RowLen, A.ColumnLen);
+
+    for (unsigned int i = 0; i < C.RowLen; i++)
+    {
+        for (unsigned int j = 0; j < C.ColumnLen; j++)
+        {
+            C.Data[i][j] = A.Data[i][j] - B.Data[i][j];
+        }
+    }
+
+    return true;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
+{
+    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
+        return false;
+
+    C.Reset(A.RowLen, A.ColumnLen);
+
+    for (unsigned int i = 0; i < C.RowLen; i++)
+    {
+        for (unsigned int j = 0; j < C.ColumnLen; j++)
+        {
+            C.Data[i][j] = A.Data[i][j] + B.Data[i][j];
+        }
+    }
+
+    return true;
 }
 
 LTEMPLATE

@@ -3,15 +3,9 @@
 
 #include <cmath>
 
-LLinearRegression::LLinearRegression(IN const LRTrainingSet& trainingSet, IN LRType learningRate)
-    : m_trainingSet(trainingSet), m_learningRate(learningRate)
+LLinearRegression::LLinearRegression()
 {
-    m_paramList.Reset(m_trainingSet[0].FeatureList.Length + 1);
 
-    for (int i = 0; i < m_paramList.Length; i++)
-    {
-        m_paramList[i] = 0.0f;
-    }
 }
 
 LLinearRegression::~LLinearRegression()
@@ -19,175 +13,81 @@ LLinearRegression::~LLinearRegression()
 
 }
 
-LRType LLinearRegression::BatchDescend()
+bool LLinearRegression::TrainModel(
+    IN const LRegressionProblem& problem, 
+    IN float learningRate, 
+    IN unsigned int trainTimes)
 {
-    /*
-    θi = θi - α * ∑((h(x) - y) * xi)
-    */
-    LRType ERROR_RET = -1.0f;
+    // 检查参数
+    if (problem.XMatrix.RowLen < 2)
+        return false;
+    if (problem.XMatrix.ColumnLen < 1)
+        return false;
+    if (problem.YVector.ColumnLen != 1)
+        return false;
+    if (problem.YVector.RowLen != problem.XMatrix.RowLen)
+        return false;
+    if (learningRate <= 0.0f)
+        return false;
 
-    if (m_trainingSet.Length <= 0)
-        return ERROR_RET;
-    if (m_learningRate <= 0)
-        return ERROR_RET;
-
-    LRType ret = ERROR_RET;
-    for (int i = 0; i < m_paramList.Length; i++)
+    // 每个样本中最后一项增加常数项的特征值:1.0
+    m_xMatrix.Reset(problem.XMatrix.RowLen, problem.XMatrix.ColumnLen + 1);
+    for (unsigned int row = 0; row < m_xMatrix.RowLen; row++)
     {
-        float derivative = 0.0f; // 参数的导数
-        for (int m = 0; m < m_trainingSet.Length; m++)
+        for (unsigned int col = 0; col < m_xMatrix.ColumnLen; col++)
         {
-            float actValue = 0.0f; // 实际值
-            for (int n = 0; n < m_trainingSet[0].FeatureList.Length; n++)
-            {
-                actValue += m_trainingSet[m].FeatureList[n] * m_paramList[n];
-            }
-
-            actValue += m_paramList[m_paramList.Length-1] * 1;
-
-            float difValue = actValue-m_trainingSet[m].Target;
-
-            if ( i == m_trainingSet[0].FeatureList.Length)
-                derivative += difValue;
-            else
-                derivative += difValue * m_trainingSet[m].FeatureList[i];
+            m_xMatrix[row][col] = problem.XMatrix[row][col];
         }
-        m_paramList[i] = m_paramList[i] - m_learningRate * derivative;
+        m_xMatrix[row][m_xMatrix.ColumnLen-1] = 1.0f;
     }
 
-    return ret;
+    m_yVector = problem.YVector;
+
+    // 初始化权重向量
+    m_wVector.Reset(m_xMatrix.ColumnLen, 1);
+    for (unsigned int i = 0; i < m_wVector.RowLen; i++)
+    {
+        m_wVector[i][0] = 0.0f;
+    }
+
+    const LRegressionMatrix& X = m_xMatrix;
+    const LRegressionMatrix& Y = m_yVector;
+    LRegressionMatrix& W = m_wVector;
+    float A = learningRate;
+
+    LRegressionMatrix XT = X.T();
+
+    LRegressionMatrix XW;
+    LRegressionMatrix O;
+
+    for (unsigned int i = 0; i < trainTimes; i++)
+    {
+        XW = X * W;
+        O = XT * (XW - Y);
+        W = W - O.ScalarMul(A);
+    }
+
+    return true;
 }
 
-LRType LLinearRegression::ForeCast(IN const LRFeatureList& featureList)
+bool LLinearRegression::GetWeightVector(OUT LRegressionMatrix& weightVector)
 {
-    LRType expectedValue = 0.0f; // 预期值
+    if (m_wVector.RowLen < 1)
+        return false;
 
-    if (featureList.Length + 1 != m_paramList.Length)
-        return expectedValue;
+    weightVector = m_wVector;
 
-    for (int n = 0; n < featureList.Length; n++)
-    {
-        expectedValue += featureList[n] * m_paramList[n];
-    }
-
-    expectedValue += m_paramList[m_paramList.Length-1] * 1;
-
-    return expectedValue;
+    return true;
 }
 
-LRType LLinearRegression::GetSquareValue()
+float LLinearRegression::GetErrorValue()
 {
-    LRType squareValue = 0.0f;
-    for (int m = 0; m < m_trainingSet.Length; m++)
-    {
-        LRType difValue = 0.0f;
-        difValue = this->ForeCast(m_trainingSet[m].FeatureList) - m_trainingSet[m].Target;
-        difValue = difValue * difValue;
-        squareValue += difValue;
-    }
+    if (m_wVector.RowLen < 1)
+        return -1.0f;
 
+    LRegressionMatrix dif = m_xMatrix * m_wVector - m_yVector;
+    LRegressionMatrix square = dif.T() * dif;
+    float squareValue = square[0][0];
+    squareValue = sqrt(squareValue);
     return squareValue;
 }
-
-void LLinearRegression::GetFeatureParam(OUT LRFeatureParamList& paramList)
-{
-    paramList = m_paramList;
-}
-
-LLogisticRegression::LLogisticRegression(IN const LRTrainingSet& trainingSet, IN LRType learningRate)
-    : m_trainingSet(trainingSet), m_learningRate(learningRate)
-{
-    m_paramList.Reset(m_trainingSet[0].FeatureList.Length + 1);
-
-    for (int i = 0; i < m_paramList.Length; i++)
-    {
-        m_paramList[i] = 0.0f;
-    }
-}
-
-LLogisticRegression::~LLogisticRegression()
-{
-
-}
-
-void LLogisticRegression::BatchAscend()
-{
-    /*
-    θi = θi + α * ∑((y - h(x)) * xi)
-    */
-    if (m_trainingSet.Length <= 0)
-        return;
-    if (m_learningRate <= 0)
-        return;
-
-    for (int i = 0; i < m_paramList.Length; i++)
-    {
-        float derivative = 0.0f; // 参数的导数
-        for (int m = 0; m < m_trainingSet.Length; m++)
-        {
-            float actValue = 0.0f; // 实际值
-            for (int n = 0; n < m_trainingSet[0].FeatureList.Length; n++)
-            {
-                actValue += m_trainingSet[m].FeatureList[n] * m_paramList[n];
-            }
-            actValue += m_paramList[m_paramList.Length-1] * 1;
-
-            actValue = 1/(1 + exp(actValue * -1.0f));
-
-            float difValue = m_trainingSet[m].Target - actValue;
-
-            if ( i == m_trainingSet[0].FeatureList.Length)
-                derivative += difValue * 1;
-            else
-                derivative += difValue * m_trainingSet[m].FeatureList[i];
-        }
-        m_paramList[i] = m_paramList[i] + m_learningRate * derivative;
-    }
-
-}
-
-LRType LLogisticRegression::ForeCast(IN const LRFeatureList& featureList, IN LRBINARY_CLASS bClass)
-{
-    const LRType ERROR_RET = -1.0f;
-
-    if (featureList.Length + 1 != m_paramList.Length)
-        return ERROR_RET;
-
-    float prob = 0.0f; // 概率值
-    for (int n = 0; n < featureList.Length; n++)
-    {
-        prob += featureList[n] * m_paramList[n];
-    }
-    prob += m_paramList[m_paramList.Length-1] * 1;
-
-    prob = 1/(1 + exp(prob * -1.0f));
-
-    if (bClass == ONE)
-        return prob;
-
-    if (bClass == ZERO)
-        return 1-prob;
-
-    return ERROR_RET;
-}
-
-LRType LLogisticRegression::GetLikelihood()
-{
-    LRType likelihood = 1.0f;
-    for (int m = 0; m < m_trainingSet.Length; m++)
-    {
-        if (m_trainingSet[m].Target == ONE)
-            likelihood *= this->ForeCast(m_trainingSet[m].FeatureList, ONE);
-        if (m_trainingSet[m].Target == ZERO)
-            likelihood *= this->ForeCast(m_trainingSet[m].FeatureList, ZERO);
-    }
-
-    return likelihood;
-}
-
-
-void LLogisticRegression::GetFeatureParam(OUT LRFeatureParamList& paramList)
-{
-    paramList = m_paramList;
-}
-

@@ -1,116 +1,69 @@
-
-/// Author:Burnell_Liu Email:674288799@qq.com Date: 2015/03/03
-/// Description: 回归分析
+/// @file LRegression.h
+/// @brief 回归分析
 /// 
-/// 线性回归分析
-/// 逻辑回归分析(分类)
-/// Others: 
-/// Function List: 
-///
-/// History: 
-///  1. Date, Author 
-///  Modification
-///
+/// Detail:
+/// @author Burnell_Liu Email:burnell_liu@qq.com
+/// @version   
+/// @date 10:10:2015
 
 #ifndef _LREGRESSION_H_
 #define _LREGRESSION_H_
 
-#include "LDataStruct/LArray.h"
 
-typedef float LRType;
+#include "LDataStruct/LMatrix.h"
 
-typedef LArray<LRType> LRFeatureList; ///< 特征列表(输入变量列表)
+typedef LMatrix<float> LRegressionMatrix;
 
-/// @brief 训练样本
-struct LRTrainingSample
+/// @brief 回归原始问题结构
+struct LRegressionProblem
 {
-    LRFeatureList FeatureList; ///< 特征列表(输入变量列表)
-    LRType Target; ///< 目标(输出变量)
+    /// @brief 构造函数
+    /// @param[in] sampleMatrix 样本矩阵, 每一行为一个样本, 每行中的值为样本的特征值, 至少需要两个样本
+    /// @param[in] targetVector 目标向量(列向量), 行数为样本矩阵的行数, 列数为1, 每行的值代表样本矩阵中每个样本的目标(输出)
+    LRegressionProblem(IN const LRegressionMatrix& sampleMatrix, IN const LRegressionMatrix& targetVector)
+        : XMatrix(sampleMatrix), YVector(targetVector)
+    {
+    }
+
+    const LRegressionMatrix& XMatrix; ///< 样本矩阵
+    const LRegressionMatrix& YVector; ///< 目标向量(列向量)
 };
-
-typedef LArray<LRTrainingSample> LRTrainingSet; ///< 训练集合
-
-typedef LArray<LRType> LRFeatureParamList; ///< 特征参数列表(输入变量参数列表)
 
 /// @brief 线性回归类
 ///
-/// Detailed: 线性函数为 h(x)  =  θ0 * x0 + θ1 * x1 + θ2 * x2 + θ3 * x3 + ... = θ * X
+/// Detailed: 线性函数为 h(x)  =  θ0 * x0 + θ1 * x1 + θ2 * x2 + θ3 * x3 + ... =  X * θ
 /// 其中xi为第i个特征变量, θi为第i个特征参数, x0为1
 /// θ为特征参数的列向量, X为特征的行向量
 class LLinearRegression
 {
 public:
-    /// @brief 构造函数
-    /// @param[in] trainingSet 训练集合, 要求训练集合中的所有训练样本的特征数目相同
-    /// @param[in ] learningRate 学习速度, 学习速度要求为大于0的数
-    LLinearRegression(IN const LRTrainingSet& trainingSet, IN LRType learningRate);
+    LLinearRegression();
     ~LLinearRegression();
 
-    /// @brief 批梯度下降一次
-    /// @return 各个训练样本误差的平方的总和, 发生错误返回-1.0
-    LRType BatchDescend();
+    /// @brief 训练模型
+    /// @param[in] problem 原始问题
+    /// @param[in] learningRate 学习速度, 学习速度必须大于0
+    /// @param[in] trainTimes 训练次数
+    /// @return 成功返回true, 失败返回false(参数错误的情况下会返回失败)
+    bool TrainModel(
+        IN const LRegressionProblem& problem,
+        IN float learningRate,
+        IN unsigned int trainTimes);
 
-    /// @brief 进行预测
-    /// @param[in] featureList 需要预测的特征值列表
-    /// @return 预测出的结果
-    LRType ForeCast(IN const LRFeatureList& featureList);
+    /// @brief 获取权重向量(列向量)
+    ///  权重向量的最后一项为常数项
+    /// @param[out] weightVector
+    /// @return 模型未训练返回false, 否则返回true
+    bool GetWeightVector(OUT LRegressionMatrix& weightVector);
 
-    /// @brief 获取当前特征参数的二乘值
-    /// @return 二乘值, 二乘值为大于0的数, 二乘值越小表示特征参数越准确
-    LRType GetSquareValue();
-
-    /// @brief 获取特征的参数
-    /// @param[out] paramList 特征参数列表, 参数列表的长度为训练样本特征的长度加1(特征参数列表的最后一项为常数项的值)
-    void GetFeatureParam(OUT LRFeatureParamList& paramList);
-
-private:
-    const LRTrainingSet& m_trainingSet; ///< 训练集合
-    LRType m_learningRate; ///< 学习速度 
-    LRFeatureParamList m_paramList; ///< 特征参数列表
-};
-
-/// @brief 逻辑回归(分类)
-///
-/// Detailed: 逻辑函数为 h(x)  =  1/(1 + e**(-θ * X)) = 1/(1 + e**(-θ0 * x0 - θ1 * x1 - θ2 * x2 - θ3 * x3 - ...))
-/// 其中xi为第i个特征变量, θi为第i个特征参数, x0为1
-/// θ为特征参数的列向量, X为特征的行向量
-class LLogisticRegression
-{
-public:
-    /// @brief 二元分类
-    enum LRBINARY_CLASS
-    {
-        ZERO = 0, ///< 0
-        ONE ///< 1
-    };
-    /// @brief 构造函数
-    /// @param[in] trainingSet 训练集合, 要求训练集合中的所有训练样本的特征数目相同, 切训练样本的Target值只能为LRBINARY_CLASS(二元分类)的值
-    /// @param[in ] learningRate 学习速度, 学习速度要求为大于0的数
-    LLogisticRegression(IN const LRTrainingSet& trainingSet, IN LRType learningRate);
-    ~LLogisticRegression();
-
-    /// @brief 批梯度上升一次
-    void BatchAscend();
-
-    /// @brief 进行预测
-    /// @param[in] featureList 需要预测的特征值列表
-    /// @param[in] bClass 指定的结果
-    /// @return 指定发生结果的概率, 范围(0~1), 发生错误返回-1.0f
-    LRType ForeCast(IN const LRFeatureList& featureList, IN LRBINARY_CLASS bClass);
-
-    /// @brief 获取当前特征参数的似然值
-    /// @return 似然值, 范围(0~1), 似然值越大表示特征参数越准确
-    LRType GetLikelihood();
-
-    /// @brief 获取特征的参数
-    /// @param[out] paramList 特征参数列表, 参数列表的长度为训练样本特征的长度加1(特征参数列表的最后一项为常数项的值)
-    void GetFeatureParam(OUT LRFeatureParamList& paramList);
+    /// @brief 获取误差值(二乘值)
+    /// @return 模型未训练返回-1.0f, 否则返回误差值
+    float GetErrorValue();
 
 private:
-    const LRTrainingSet& m_trainingSet; ///< 训练集合
-    LRType m_learningRate; ///< 学习速度 
-    LRFeatureParamList m_paramList; ///< 特征参数列表
+    LRegressionMatrix m_xMatrix; ///< 样本矩阵
+    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
+    LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
 };
 
 #endif
-
