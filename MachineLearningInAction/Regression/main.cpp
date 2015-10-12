@@ -14,15 +14,15 @@ int main()
 
     LMatrix<float> y(3, 1);
     y[0][0] = 1.0f;
-    y[1][0] = 1.0f;
-    y[2][0] = 2.0f;
+    y[1][0] = 0.0f;
+    y[2][0] = 0.0f;
 
     LRegressionProblem problem(x, y);
-    LLinearRegression linear;
-    linear.TrainModel(problem, 0.1f, 1000);
-    printf("%f\n",linear.GetErrorValue());
+    LLogisticRegression logistic;
+    logistic.TrainModel(problem, 1.0f, 500);
+    printf("%f\n",logistic.GetLikelihood());
     LRegressionMatrix weight;
-    linear.GetWeightVector(weight);
+    logistic.GetWeightVector(weight);
     for (unsigned int i = 0; i < weight.RowLen; i++)
     {
         printf("%f  ", weight[i][0]);
