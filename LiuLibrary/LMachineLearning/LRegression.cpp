@@ -150,7 +150,10 @@ bool LLogisticRegression::TrainModel(IN const LRegressionProblem& problem, IN fl
     LRegressionMatrix XT = X.T();
 
     /*
+    h(x)  =  1/(1 + e^(X * W)) 则
     wj = wj - α * ∑((y - h(x)) * xj)
+    如果h(x)  =  1/(1 + e^(-1 * X * W)) 则
+    wj = wj + α * ∑((y - h(x)) * xj)
     */
 
     LRegressionMatrix XW(X.RowLen, 1);
