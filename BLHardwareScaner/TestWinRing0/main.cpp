@@ -3,6 +3,7 @@
 #include "..\\Src\\WinRing0\\LWinRing0.h"
 
 #include <cstdio>
+#include <cstring>
 
 #include <Windows.h>
 
@@ -19,9 +20,6 @@ int main()
         printf("fail\n");
     }
 
-//     wchar_t dir[256] = {0};
-//     GetCurrentDirectoryW(256, dir);
-//     wprintf(L"%s\n", dir);
 // 
 //     wstring strDir = dir;
 //     strDir.append(L"\\..\\Bin");

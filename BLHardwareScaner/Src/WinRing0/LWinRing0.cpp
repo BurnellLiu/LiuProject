@@ -17,16 +17,6 @@ namespace LWinRing0
     bool InitializeWinRing0(const wstring& filePath)
     {
         bool bRet = false;
-        wstring oldWorkPath;
-
-        // 获取当前工作路径
-        wchar_t* pBuffer = NULL;
-        DWORD bufferLen = GetCurrentDirectoryW(0, 0);
-        pBuffer = new wchar_t[bufferLen];
-        GetCurrentDirectoryW(bufferLen, pBuffer);
-        oldWorkPath = pBuffer;
-        delete[] pBuffer;
-        pBuffer = NULL;
 
         if (s_hModule != NULL)
         {
@@ -51,31 +41,10 @@ namespace LWinRing0
             goto SAFE_EXIT;
         }
 
-        // 初始化前需要改变当前工作路径, 不然初始化会失败(dll和exe不在同一目录下)
-        do 
-        {
-            wstring::size_type loc = filePath.find_last_of(L"\\");
-            if (loc == wstring::npos)
-                break;
-
-            wstring path = filePath.substr(0, loc);
-            wstring newWorkPath = oldWorkPath;
-            newWorkPath.append(L"\\");
-            newWorkPath.append(path);
-            SetCurrentDirectoryW(newWorkPath.c_str());
-
-            wchar_t dir[256] = {0};
-            GetCurrentDirectoryW(256, dir);
-            wprintf(L"%s\n", dir);
-        } while (0);
-        
-        
         if (InitializeOls() == TRUE)
             bRet = true;
         else
             bRet = false;
-
-        SetCurrentDirectoryW(oldWorkPath.c_str());
 
 SAFE_EXIT:
         if (!bRet)
