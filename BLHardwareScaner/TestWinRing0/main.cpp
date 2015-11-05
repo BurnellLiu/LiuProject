@@ -20,6 +20,8 @@ int main()
         printf("fail\n");
     }
 
+    LWinRing0::DeinitializeWinRing0();
+
 // 
 //     wstring strDir = dir;
 //     strDir.append(L"\\..\\Bin");

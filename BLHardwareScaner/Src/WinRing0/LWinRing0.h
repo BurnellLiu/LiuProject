@@ -21,7 +21,7 @@ using std::wstring;
 namespace LWinRing0
 {
     /// @brief 初始化WinRing0
-    /// @param[in] filePath DLL文件路径, 只接受相对路径
+    /// @param[in] filePath DLL文件路径
     /// @return 成功返回true, 失败返回false
     bool InitializeWinRing0(IN const wstring& filePath);
 
