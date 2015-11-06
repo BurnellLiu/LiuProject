@@ -28,9 +28,9 @@ public:
         return s_cpuTempInfor;
     }
 
-    unsigned int GetGpuTemp() const
+    const GpuTempInfor& GetGpuTemp() const
     {
-        return s_gpuTemp;
+        return s_gpuTempInfor;
     }
 
     const DiskTempInforArray& GetDiskTemp() const
@@ -45,9 +45,9 @@ private:
         s_cpuTempInfor = cpuTempInfor;
     }
 
-    void SetGpuTemp(IN unsigned int gpuTemp)
+    void SetGpuTemp(IN const GpuTempInfor& gpuTempInfor)
     {
-        s_gpuTemp = gpuTemp;
+        s_gpuTempInfor = gpuTempInfor;
     }
 
     void SetDiskTemp(IN const DiskTempInforArray& diskTempInforArray)
@@ -57,14 +57,14 @@ private:
 
 private:
     static CpuTempInfor s_cpuTempInfor; ///< CPU温度信息
-    static unsigned int s_gpuTemp; ///< GPU温度信息
+    static GpuTempInfor s_gpuTempInfor; ///< GPU温度信息
     static DiskTempInforArray s_diskTempInforArray; ///< 磁盘温度信息
 
     friend class ScanTempThread;
 };
 
 CpuTempInfor TempHouse::s_cpuTempInfor = {0};
-unsigned int TempHouse::s_gpuTemp = 0;
+GpuTempInfor TempHouse::s_gpuTempInfor = {0};
 DiskTempInforArray TempHouse::s_diskTempInforArray = {0};
 
 /// @brief 性能仓库类
@@ -135,7 +135,7 @@ void ScanTempThread::run()
     TemperatureProbe tempProbe;
 
     CpuTempInfor cpuTempInfor = {0};
-    unsigned int gpuTemp = 0;
+    GpuTempInfor gpuTempInfor = {0};
     DiskTempInforArray diskTempInforArray = {0};
 
     TempHouse tempHouse;
@@ -146,11 +146,11 @@ void ScanTempThread::run()
         refreshCount++;
 
         tempProbe.GetCpuTemp(cpuTempInfor);
-        gpuTemp = tempProbe.GetGpuTemp();
+        tempProbe.GetGpuTemp(gpuTempInfor);
         tempProbe.GetDiskTemp(diskTempInforArray);
        
         tempHouse.SetCpuTemp(cpuTempInfor);
-        tempHouse.SetGpuTemp(gpuTemp);
+        tempHouse.SetGpuTemp(gpuTempInfor);
         tempHouse.SetDiskTemp(diskTempInforArray);
 
         this->msleep(500);
@@ -164,7 +164,7 @@ void ScanTempThread::run()
         {
             PrintLogW(L"Cpu Cores: %u, Temp: %u", i, cpuTempInfor.CoreTemp[i]);
         }
-        PrintLogW(L"Gpu Temp: %u", gpuTemp);
+        PrintLogW(L"Gpu Temp: %u", gpuTempInfor.Temp[0]);
         PrintLogW(L"Disk Count(Temperature): %u", diskTempInforArray.Count);
         for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
         {
@@ -291,8 +291,8 @@ void TempManagementPage::RefreshUi()
 
     ui.progressBarCpuTemp->setValue(cpuTemp);
 
-    unsigned int gpuTemp = tempHouse.GetGpuTemp();
-    ui.progressBarGpuTemp->setValue(gpuTemp);
+    GpuTempInfor gpuTempInfor = tempHouse.GetGpuTemp();
+    ui.progressBarGpuTemp->setValue(gpuTempInfor.Temp[0]);
 
     DiskTempInforArray diskTempInforArray = tempHouse.GetDiskTemp();
     for (unsigned int i = 0; i < diskTempInforArray.Count; i++)

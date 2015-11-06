@@ -26,7 +26,9 @@ using std::wstring;
 #endif
 
 /// @brief 最大获取磁盘温度数量
+#ifndef MAX_DISKTEMP_NUMBER
 #define MAX_DISKTEMP_NUMBER 8
+#endif
 
 /// @brief 磁盘温度信息组
 struct DiskTempInforArray
@@ -48,6 +50,18 @@ struct CpuTempInfor
     unsigned int CoreTemp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]; ///< CPU核心温度
 };
 
+/// @brief 最大GPU温度传感器数量
+#ifndef MAX_GPU_SENSORS_NUMBER
+#define MAX_GPU_SENSORS_NUMBER 15
+#endif
+
+/// @brief GPU温度信息
+struct GpuTempInfor
+{
+    unsigned int SensorsNum; ///< 温度传感器数量
+    unsigned int Temp[MAX_GPU_SENSORS_NUMBER];
+};
+
 class LCpuTemperature;
 
 /// @brief 温度探测类
@@ -63,8 +77,9 @@ public:
     bool GetCpuTemp(OUT CpuTempInfor& cpuTemp);
 
     /// @brief 获取GPU温度
-    /// @return GPU温度, 0(获取失败)
-    unsigned int GetGpuTemp();
+    /// @param[out] OUT gpuTemp 存储GPU温度信息
+    /// @return 成功返回true, 失败返回false
+    bool GetGpuTemp(OUT GpuTempInfor& gpuTemp);
 
     /// @brief 获取磁盘温度
     /// @param[out] diskTemp 存储磁盘温度

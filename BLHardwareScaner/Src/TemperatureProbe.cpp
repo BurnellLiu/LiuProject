@@ -2,6 +2,8 @@
 
 #include "TemperatureProbe.h"
 
+#include <Windows.h>
+
 #include "Cpu\\LCpuTemperature.h"
 #include "Gpu\\Gpu.h"
 
@@ -35,20 +37,10 @@ bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
     return m_pCpuTemperature->Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
 }
 
-unsigned int TemperatureProbe::GetGpuTemp()
+bool TemperatureProbe::GetGpuTemp(OUT GpuTempInfor& gpuTemp)
 {
-    static LNvGpu nvGpu;
-    static LAMDGpu amdGpu;
-
-    unsigned int temp = nvGpu.GetTemperature();
-    if (temp != 0)
-        return temp;
-
-    temp = amdGpu.GetTemperature();
-    if (temp != 0)
-        return temp;
-
-    return 0;
+    LGpu gpu;
+    return gpu.GetTemperature(gpuTemp.SensorsNum, gpuTemp.Temp);
 }
 
 void TemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)

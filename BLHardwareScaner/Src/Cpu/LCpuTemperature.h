@@ -36,7 +36,7 @@ public:
     LCpuTemperature();
     ~LCpuTemperature();
 
-    /// @brief 获取CPU温度
+    /// @brief 获取GPU温度
     /// @param[out] coreNum 存储CPU物理核心数
     /// @param[out] temp 存储温度
     /// @return 成功返回true, 失败返回false
