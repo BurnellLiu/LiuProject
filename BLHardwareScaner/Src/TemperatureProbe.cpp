@@ -11,20 +11,28 @@
 
 TemperatureProbe::TemperatureProbe()
 {
-
+    m_pCpuTemperature = 0;
 }
 
 TemperatureProbe::~TemperatureProbe()
 {
-
+    if (m_pCpuTemperature != 0)
+    {
+        delete m_pCpuTemperature;
+        m_pCpuTemperature = 0;
+    }
 }
 
 bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
 {
     cpuTemp.CoreNum = 0;
 
-    LCpuTemperature cpuTemperature;
-    return cpuTemperature.Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
+    if (m_pCpuTemperature == 0)
+    {
+        m_pCpuTemperature = new LCpuTemperature();
+    }
+
+    return m_pCpuTemperature->Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
 }
 
 unsigned int TemperatureProbe::GetGpuTemp()

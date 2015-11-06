@@ -74,12 +74,11 @@
               <property name="styleSheet">
                <string notr="true">QProgressBar#progressBarCpuUsage 
 {
-     border: 2px solid grey;
-     border-radius: 5px;
+     border: 1px solid grey;
  }
 QProgressBar#progressBarCpuUsage::chunk 
 {
-     background-color: green;
+     background-color: rgb(100, 160, 255);
  }</string>
               </property>
               <property name="value">
@@ -166,12 +165,11 @@ QProgressBar#progressBarCpuUsage::chunk
               <property name="styleSheet">
                <string notr="true">QProgressBar#progressBarMemUsage 
 {
-     border: 2px solid grey;
-     border-radius: 5px;
+     border: 1px solid grey;
  }
 QProgressBar#progressBarMemUsage::chunk 
 {
-     background-color: green;
+     background-color: rgb(100, 160, 255);
  }</string>
               </property>
               <property name="value">
@@ -277,12 +275,11 @@ QProgressBar#progressBarMemUsage::chunk
               <property name="styleSheet">
                <string notr="true">QProgressBar#progressBarCpuTemp
 {
-     border: 2px solid grey;
-     border-radius: 5px;
+     border: 1px solid grey;
  }
 QProgressBar#progressBarCpuTemp::chunk 
 {
-     background-color: green;
+     background-color: rgb(100, 160, 255);
  }</string>
               </property>
               <property name="value">
@@ -372,12 +369,11 @@ QProgressBar#progressBarCpuTemp::chunk
               <property name="styleSheet">
                <string notr="true">QProgressBar#progressBarGpuTemp
 {
-     border: 2px solid grey;
-     border-radius: 5px;
+     border: 1px solid grey;
  }
 QProgressBar#progressBarGpuTemp::chunk 
 {
-     background-color: green;
+     background-color: rgb(100, 160, 255);
  }</string>
               </property>
               <property name="value">
@@ -467,12 +463,11 @@ QProgressBar#progressBarGpuTemp::chunk
               <property name="styleSheet">
                <string notr="true">QProgressBar#progressBarDiskTemp
 {
-     border: 2px solid grey;
-     border-radius: 5px;
+     border: 1px solid grey;
  }
 QProgressBar#progressBarDiskTemp::chunk 
 {
-     background-color: green;
+     background-color: rgb(100, 160, 255);
  }</string>
               </property>
               <property name="value">

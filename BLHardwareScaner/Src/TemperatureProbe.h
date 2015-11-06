@@ -48,6 +48,8 @@ struct CpuTempInfor
     unsigned int CoreTemp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]; ///< CPU核心温度
 };
 
+class LCpuTemperature;
+
 /// @brief 温度探测类
 class TemperatureProbe
 {
@@ -67,6 +69,8 @@ public:
     /// @brief 获取磁盘温度
     /// @param[out] diskTemp 存储磁盘温度
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
+private:
+    LCpuTemperature* m_pCpuTemperature; ///< CPU温度获取类对象
 };
 
 

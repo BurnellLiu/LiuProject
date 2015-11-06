@@ -207,12 +207,13 @@ void ScanPerformanceThread::run()
     while (!m_bStopThread)
     {
         refreshCount++;
-
+       
         perfCounter.GetMemoryPerformance(memoryPerf);
         perfCounter.GetProcessorPerformance(processorPerf);
 
         perfHouse.SetMemoryPerformance(memoryPerf);
         perfHouse.SetProcessorPerformance(processorPerf);
+        
 
         this->msleep(500);
 
@@ -237,6 +238,12 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     m_pUiRefreshTimer = new QTimer();
     m_pUiRefreshTimer->setInterval(500);
     QObject::connect(m_pUiRefreshTimer, SIGNAL(timeout()), this, SLOT(UiRefreshTimerTimeout()));
+
+    ui.progressBarCpuUsage->setValue(0);
+    ui.progressBarMemUsage->setValue(0);
+    ui.progressBarCpuTemp->setValue(0);
+    ui.progressBarGpuTemp->setValue(0);
+    ui.progressBarDiskTemp->setValue(0);
 
 }
 
@@ -275,7 +282,14 @@ void TempManagementPage::RefreshUi()
     TempHouse tempHouse;
 
     CpuTempInfor cpuTempInfor = tempHouse.GetCpuTemp();
-    ui.progressBarCpuTemp->setValue(cpuTempInfor.CoreTemp[0]);
+    unsigned int cpuTemp = 0;
+    for (unsigned int coreIndex = 0; coreIndex < cpuTempInfor.CoreNum; coreIndex++)
+        cpuTemp += cpuTempInfor.CoreTemp[coreIndex];
+
+    if (cpuTempInfor.CoreNum != 0)
+        cpuTemp = cpuTemp/cpuTempInfor.CoreNum;
+
+    ui.progressBarCpuTemp->setValue(cpuTemp);
 
     unsigned int gpuTemp = tempHouse.GetGpuTemp();
     ui.progressBarGpuTemp->setValue(gpuTemp);

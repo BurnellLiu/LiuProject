@@ -30,6 +30,8 @@ struct ProcessorPerformance
     unsigned long LoadPercentage; ///< CPU使用率, 范围(1-100)
 };
 
+class CPerformanceCounter;
+
 /// @brief 性能计数器类
 class PerformanceCounter
 {
@@ -48,6 +50,8 @@ public:
     /// @return 成功返回true, 失败返回false
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance);
 
+private:
+    CPerformanceCounter* m_pCPerformanceCounter; ///< 性能计数器实现对象
 };
 
 
