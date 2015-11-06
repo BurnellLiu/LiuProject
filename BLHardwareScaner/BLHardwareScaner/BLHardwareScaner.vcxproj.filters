@@ -46,6 +46,9 @@
     <Filter Include="Src\Log">
       <UniqueIdentifier>{22d7634c-09e4-4114-8aec-63728a622413}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\WinRing0">
+      <UniqueIdentifier>{63fe233a-c944-423c-8c20-0e74be8d39c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ui\main.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <Filter>Src\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\WinRing0\LWinRing0.cpp">
+      <Filter>Src\WinRing0</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\Log\LLog.h">
       <Filter>Src\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\WinRing0\LWinRing0.h">
+      <Filter>Src\WinRing0</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

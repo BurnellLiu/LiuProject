@@ -30,6 +30,9 @@
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Src\WinRing0\LWinRing0.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\TemperatureProbe.cpp">
@@ -48,6 +51,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\WinRing0\LWinRing0.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

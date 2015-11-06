@@ -4,10 +4,7 @@
 
 #include <Windows.h>
 
-#include "..\\WinRing0\\OlsApi.h"
-#include "..\\WinRing0\\OlsDef.h"
-
-#pragma comment(lib, "WinRing0.lib")
+#include "..\\WinRing0\\LWinRing0.h"
 
 /// @brief CPU温度实现接口
 class CCpuTemperature
@@ -101,15 +98,15 @@ CIntelCpuTemperature::CIntelCpuTemperature()
 {
     m_bInitWinRing0Success = false;
 
-    DWORD dwRet = InitializeOls();
-    if (TRUE == dwRet)
+    bool bRet = LWinRing0::InitializeWinRing0(L".\\WinRing0\\WinRing0.dll");
+    if (bRet)
         m_bInitWinRing0Success = true;
 }
 
 CIntelCpuTemperature::~CIntelCpuTemperature()
 {
     if (m_bInitWinRing0Success)
-        DeinitializeOls();
+        LWinRing0::DeinitializeWinRing0();
 }
 
 bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
@@ -136,7 +133,7 @@ bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[
     DWORD ecx = 0;
     DWORD edx = 0;
 
-    Cpuid(0, &eax, &ebx, &ecx, &edx);
+    LWinRing0::Cpuid(0, &eax, &ebx, &ecx, &edx);
 
     DWORD maxCmdNum = eax;
     if (maxCmdNum < 6)
@@ -149,7 +146,7 @@ bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[
     ecx = 0;
     edx = 0;
 
-    Cpuid(6, &eax, &ebx, &ecx, &edx);
+    LWinRing0::Cpuid(6, &eax, &ebx, &ecx, &edx);
 
     if (0 == (eax & 1))
         return false;
@@ -158,7 +155,7 @@ bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[
     eax = 0;
     edx = 0;
 
-    Rdmsr(0xee, &eax, &edx);
+    LWinRing0::Rdmsr(0xee, &eax, &edx);
     DWORD tjunction = 0;
     if (1 == (eax&0x20000000))
         tjunction = 85;
@@ -186,7 +183,7 @@ bool CIntelCpuTemperature::Get(OUT unsigned int& coreNum, OUT unsigned int temp[
 
         eax = 0;
         edx = 0;
-        Rdmsr(0x19c, &eax, &edx);
+        LWinRing0::Rdmsr(0x19c, &eax, &edx);
         DWORD delta = (eax&0x007f0000) >> 16;
         temp[processorIndex/step] = tjunction - delta;
 

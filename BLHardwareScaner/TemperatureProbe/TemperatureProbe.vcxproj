@@ -66,6 +66,7 @@
     <ClInclude Include="..\Src\Gpu\Gpu.h" />
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
     <ClInclude Include="..\Src\TemperatureProbe.h" />
+    <ClInclude Include="..\Src\WinRing0\LWinRing0.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Cpu\LCpuTemperature.cpp" />
@@ -73,6 +74,7 @@
     <ClCompile Include="..\Src\Gpu\Gpu.cpp" />
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
     <ClCompile Include="..\Src\TemperatureProbe.cpp" />
+    <ClCompile Include="..\Src\WinRing0\LWinRing0.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

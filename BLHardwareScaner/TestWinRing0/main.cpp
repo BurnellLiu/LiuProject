@@ -22,12 +22,6 @@ int main()
 
     LWinRing0::DeinitializeWinRing0();
 
-// 
-//     wstring strDir = dir;
-//     strDir.append(L"\\..\\Bin");
-//     SetCurrentDirectoryW(strDir.c_str());
-//     GetCurrentDirectoryW(256, dir);
-//     wprintf(L"%s\n", dir);
     system("pause");
     return 0;
 }

@@ -18,10 +18,10 @@ typedef BOOL (WINAPI *_IsMsr) ();
 typedef BOOL (WINAPI *_IsTsc) ();
 
 typedef BOOL  (WINAPI *_Hlt) ();
-typedef DWORD (WINAPI *_Rdmsr) (DWORD index, PDWORD eax, PDWORD edx);
+typedef BOOL (WINAPI *_Rdmsr) (DWORD index, PDWORD eax, PDWORD edx);
 typedef DWORD (WINAPI *_Wrmsr) (DWORD index, DWORD eax, DWORD edx);
 typedef DWORD (WINAPI *_Rdpmc) (DWORD index, PDWORD eax, PDWORD edx);
-typedef DWORD (WINAPI *_Cpuid) (DWORD index, PDWORD eax, PDWORD ebx, PDWORD ecx, PDWORD edx);
+typedef BOOL (WINAPI *_Cpuid) (DWORD index, PDWORD eax, PDWORD ebx, PDWORD ecx, PDWORD edx);
 typedef DWORD (WINAPI *_Rdtsc) (PDWORD eax, PDWORD edx);
 
 typedef BOOL  (WINAPI *_HltTx) (DWORD_PTR threadAffinityMask);
@@ -96,10 +96,10 @@ namespace LWinRing0
     _IsTsc IsTsc = NULL;
 
     _Hlt Hlt = NULL;
-    _Rdmsr Rdmsr = NULL;
+    static _Rdmsr RdmsrFun = NULL;
     _Wrmsr Wrmsr = NULL;
     _Rdpmc Rdpmc = NULL;
-    _Cpuid Cpuid = NULL;
+    static _Cpuid CpuidFun = NULL;
     _Rdtsc Rdtsc = NULL;
 
     _HltTx HltTx = NULL;
@@ -183,10 +183,10 @@ namespace LWinRing0
         IsMsr =					(_IsMsr)				GetProcAddress (s_hModule, "IsMsr");
         IsTsc =					(_IsTsc)				GetProcAddress (s_hModule, "IsTsc");
         Hlt =					(_Hlt)					GetProcAddress (s_hModule, "Hlt");
-        Rdmsr =					(_Rdmsr)				GetProcAddress (s_hModule, "Rdmsr");
+        RdmsrFun =					(_Rdmsr)				GetProcAddress (s_hModule, "Rdmsr");
         Wrmsr =					(_Wrmsr)				GetProcAddress (s_hModule, "Wrmsr");
         Rdpmc =					(_Rdpmc)				GetProcAddress (s_hModule, "Rdpmc");
-        Cpuid =					(_Cpuid)				GetProcAddress (s_hModule, "Cpuid");
+        CpuidFun =					(_Cpuid)				GetProcAddress (s_hModule, "Cpuid");
         Rdtsc =					(_Rdtsc)				GetProcAddress (s_hModule, "Rdtsc");
         HltTx =					(_HltTx)				GetProcAddress (s_hModule, "HltTx");
         RdmsrTx =				(_RdmsrTx)				GetProcAddress (s_hModule, "RdmsrTx");
@@ -256,7 +256,7 @@ namespace LWinRing0
             &&	Hlt
             &&	HltTx
             &&	HltPx
-            &&	Rdmsr
+            &&	RdmsrFun
             &&	RdmsrTx
             &&	RdmsrPx
             &&	Wrmsr
@@ -265,7 +265,7 @@ namespace LWinRing0
             &&	Rdpmc
             &&	RdpmcTx
             &&	RdpmcPx
-            &&	Cpuid
+            &&	CpuidFun
             &&	CpuidTx
             &&	CpuidPx
             &&	Rdtsc
@@ -340,10 +340,10 @@ SAFE_EXIT:
         IsMsr =					                             NULL;
         IsTsc =					                             NULL;
         Hlt =				                                     NULL;
-        Rdmsr =				                             NULL;
+        RdmsrFun =				                         NULL;
         Wrmsr =				                             NULL;
         Rdpmc =				                             NULL;
-        Cpuid =					                             NULL;
+        CpuidFun =					                     NULL;
         Rdtsc =					                             NULL;
         HltTx =					                             NULL;
         RdmsrTx =				                             NULL;
@@ -396,5 +396,21 @@ SAFE_EXIT:
             FreeLibrary(s_hModule);
             s_hModule = NULL;
         }
+    }
+
+    int Cpuid(unsigned long index, unsigned long* eax, unsigned long* ebx, unsigned long* ecx, unsigned long* edx)
+    {
+        if (CpuidFun == NULL)
+            return 0;
+
+        return CpuidFun(index, eax, ebx, ecx, edx);
+    }
+
+    int Rdmsr(IN unsigned long index, OUT unsigned long* eax, OUT unsigned long* edx)
+    {
+        if (RdmsrFun == NULL)
+            return 0;
+
+        return RdmsrFun(index, eax, edx);
     }
 }
