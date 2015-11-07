@@ -62,7 +62,7 @@ struct GpuTempInfor
     unsigned int Temp[MAX_GPU_SENSORS_NUMBER];
 };
 
-class LCpuTemperature;
+class CTemperatureProbe;
 
 /// @brief 温度探测类
 class TemperatureProbe
@@ -85,7 +85,7 @@ public:
     /// @param[out] diskTemp 存储磁盘温度
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
 private:
-    LCpuTemperature* m_pCpuTemperature; ///< CPU温度获取类对象
+    CTemperatureProbe* m_pTemperatureProbe; ///< 温度探测实现类对象
 };
 
 

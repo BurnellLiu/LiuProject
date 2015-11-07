@@ -10,13 +10,39 @@
 #include "DiskController\\LDiskController.h"
 #include "SMARTPaser\\LSMARTPaser.h"
 
-
-TemperatureProbe::TemperatureProbe()
+/// @brief 温度探测类
+class CTemperatureProbe
 {
-    m_pCpuTemperature = 0;
+public:
+    CTemperatureProbe();
+    ~CTemperatureProbe();
+
+    /// @brief 获取CPU温度
+    /// @param[out] OUT cpuTemp 存储CPU温度信息
+    /// @return 成功返回true, 失败返回false
+    bool GetCpuTemp(OUT CpuTempInfor& cpuTemp);
+
+    /// @brief 获取GPU温度
+    /// @param[out] OUT gpuTemp 存储GPU温度信息
+    /// @return 成功返回true, 失败返回false
+    bool GetGpuTemp(OUT GpuTempInfor& gpuTemp);
+
+    /// @brief 获取磁盘温度
+    /// @param[out] diskTemp 存储磁盘温度
+    void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
+private:
+    LCpuTemperature* m_pCpuTemperature; ///< CPU温度获取类对象
+    LGpu* m_pGpu; ///< GPU操作类对象
+};
+
+
+CTemperatureProbe::CTemperatureProbe()
+{
+    m_pCpuTemperature = new LCpuTemperature();
+    m_pGpu = new LGpu();
 }
 
-TemperatureProbe::~TemperatureProbe()
+CTemperatureProbe::~CTemperatureProbe()
 {
     if (m_pCpuTemperature != 0)
     {
@@ -25,7 +51,7 @@ TemperatureProbe::~TemperatureProbe()
     }
 }
 
-bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
+bool CTemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
 {
     cpuTemp.CoreNum = 0;
 
@@ -37,13 +63,18 @@ bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
     return m_pCpuTemperature->Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
 }
 
-bool TemperatureProbe::GetGpuTemp(OUT GpuTempInfor& gpuTemp)
+bool CTemperatureProbe::GetGpuTemp(OUT GpuTempInfor& gpuTemp)
 {
-    LGpu gpu;
-    return gpu.GetTemperature(gpuTemp.SensorsNum, gpuTemp.Temp);
+    gpuTemp.SensorsNum = 0;
+    if (m_pGpu == 0)
+    {
+        m_pGpu = new LGpu();
+    }
+
+    return m_pGpu->GetTemperature(gpuTemp.SensorsNum, gpuTemp.Temp);
 }
 
-void TemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
+void CTemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
 {
     diskTemp.Count = 0;
 
@@ -77,4 +108,33 @@ void TemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
 
     }
 
+}
+
+TemperatureProbe::TemperatureProbe()
+{
+    m_pTemperatureProbe = new CTemperatureProbe();
+}
+
+TemperatureProbe::~TemperatureProbe()
+{
+    if (m_pTemperatureProbe != 0)
+    {
+        delete m_pTemperatureProbe;
+        m_pTemperatureProbe = 0;
+    }
+}
+
+bool TemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
+{
+    return m_pTemperatureProbe->GetCpuTemp(cpuTemp);
+}
+
+bool TemperatureProbe::GetGpuTemp(OUT GpuTempInfor& gpuTemp)
+{
+    return m_pTemperatureProbe->GetGpuTemp(gpuTemp);
+}
+
+void TemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
+{
+    m_pTemperatureProbe->GetDiskTemp(diskTemp);
 }

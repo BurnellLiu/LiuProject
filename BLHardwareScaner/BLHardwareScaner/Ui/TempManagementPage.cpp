@@ -311,7 +311,7 @@ void TempManagementPage::RefreshUi()
     unsigned long memoryUsage = 0;
     if (memoryPerf.TotalSize != 0)
     {
-        memoryUsage = 100 - (memoryPerf.AvailableSize + memoryPerf.UnusedSize) * 100/memoryPerf.TotalSize;
+        memoryUsage = 100 - memoryPerf.AvailableSize * 100/memoryPerf.TotalSize;
     }
 
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
