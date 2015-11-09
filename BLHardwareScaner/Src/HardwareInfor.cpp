@@ -220,9 +220,9 @@ void HardwareInfor::ScanVideoCardInfor(OUT VideoCardInforArray& videoCardInfor)
 
     videoCardInfor.Count = (unsigned long)cardCount;
 
-    for (int i = 0; i < cardCount && i < MAX_DISPLAYCARD_NUMBER; i++)
+    for (int i = 0; i < cardCount && i < MAX_VIDEOCARD_NUMBER; i++)
     {
-        videoCardInfor.Type[i] = DISPLAY_CARD_UNKNOWN;
+        videoCardInfor.Type[i] = VIDEO_CARD_UNKNOWN;
 
         wstring instanceID;
         unsigned long dwRet = displayCard.GetInstanceID(i, instanceID);
@@ -237,9 +237,9 @@ void HardwareInfor::ScanVideoCardInfor(OUT VideoCardInforArray& videoCardInfor)
         // 独立显卡挂在PCI插槽口上所以总线号不为0
         // 集成显卡挂在PCI上总线好为0
         if (0 == busNumber)
-            videoCardInfor.Type[i] = DISPLAY_CARD_INTERNAL;
+            videoCardInfor.Type[i] = VIDEO_CARD_INTERNAL;
         else
-            videoCardInfor.Type[i] = DISPLAY_CARD_EXTERNAL;
+            videoCardInfor.Type[i] = VIDEO_CARD_EXTERNAL;
 
 
         LWMI::LVideoControllerManager videoControllerManager(instanceID);

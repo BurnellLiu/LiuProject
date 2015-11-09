@@ -268,9 +268,9 @@ void ComputerItemInfor::LoadHWInfor()
     {
         QString displayCardName = QString::fromStdWString(videoCardInfor.Description[i]);
         displayCardName = displayCardName.trimmed();
-        if (videoCardInfor.Type[i] == DISPLAY_CARD_INTERNAL)
+        if (videoCardInfor.Type[i] == VIDEO_CARD_INTERNAL)
             displayCardName += QString::fromStdWString(L"  (Integrated)");
-        else if(videoCardInfor.Type[i] == DISPLAY_CARD_EXTERNAL)
+        else if(videoCardInfor.Type[i] == VIDEO_CARD_EXTERNAL)
             displayCardName += QString::fromStdWString(L"  (Independent)");
         else
             displayCardName += QString::fromStdWString(L"  (Unknown)");
@@ -528,9 +528,9 @@ void VideoCardItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Model"), videoCardName);
 
         QString videoCardType;
-        if (videoCardInforArray.Type[i] == DISPLAY_CARD_INTERNAL)
+        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
             videoCardType = QString::fromStdWString(L"Integrated");
-        else if(videoCardInforArray.Type[i] == DISPLAY_CARD_EXTERNAL)
+        else if(videoCardInforArray.Type[i] == VIDEO_CARD_EXTERNAL)
             videoCardType = QString::fromStdWString(L"Independent");
         else
             videoCardType = QString::fromStdWString(L"Unknown");

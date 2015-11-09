@@ -72,17 +72,21 @@ protected:
     void hideEvent(QHideEvent* e);
 
 private slots:
+    /// @brief UI刷新计算器超时回调函数
     void UiRefreshTimerTimeout();
 
 private:
+    /// @brief 刷新UI
     void RefreshUi();
 
 private:
     Ui::TempManagementForm ui;
-    QTimer* m_pUiRefreshTimer;
+    QTimer* m_pUiRefreshTimer; ///< 刷新UI定时器
 
-    ScanTempThread m_scanTempThread;
-    ScanPerformanceThread m_scanPerformanceThred;
+    ScanTempThread m_scanTempThread; ///< 扫描温度线程
+    ScanPerformanceThread m_scanPerformanceThred; ///< 扫描性你呢线程
+    
+    bool m_bExternalVideoCardExist; ///< 标识是否存在独立显卡
 };
 
 

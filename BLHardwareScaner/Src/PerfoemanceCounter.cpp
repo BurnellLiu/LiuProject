@@ -4,6 +4,8 @@
 #include "Wmi\\LWMISystemClasses.h"
 #include "Wmi\\LWMIHardwareClasses.h"
 
+#include "Memory\\LMemory.h"
+
 /// @brief 性能计数器实现类
 class CPerformanceCounter
 {
@@ -23,7 +25,6 @@ public:
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance);
 
 private:
-    LWMI::LProcessorManager m_processorManager;
     LWMI::LPhysicalMemoryManager m_memoryManager;
     LWMI::LPerfRawData_PerfOS_MemoryManager m_perfMemoryManager;
 };
@@ -39,9 +40,29 @@ CPerformanceCounter::~CPerformanceCounter()
 }
 
 bool CPerformanceCounter::GetMemoryPerformance(OUT MemoryPerformance& memoryPerformance)
-{  
+{ 
+    LMemory memory;
+    int loadPercent = memory.GetLoadPercent();
+    if (loadPercent == -1)
+        return false;
+
+    memoryPerformance.LoadPercentage = (unsigned long)loadPercent;
+
+    int totalSize = memory.GetTotalSize();
+    if (totalSize == -1)
+        return false;
+
+    memoryPerformance.TotalSize = (unsigned long)totalSize;
+
+    int availSize = memory.GetAvailableSize();
+    if (availSize == -1)
+        return false;
+
+    memoryPerformance.AvailableSize = (unsigned long)availSize;
+
+    return true;
+    /*
     memoryPerformance.TotalSize = 0;
-    
     for (int i = 0; i < m_memoryManager.GetPhysicalMemoryCount(); i++)
     {
         unsigned long memorySize = 0;
@@ -54,19 +75,22 @@ bool CPerformanceCounter::GetMemoryPerformance(OUT MemoryPerformance& memoryPerf
     
     if (!m_perfMemoryManager.GetMemoryAvailableMBytes(0, memoryPerformance.AvailableSize))
         return false;
-
-    if (!m_perfMemoryManager.GetMemoryUnusedMBytes(0, memoryPerformance.UnusedSize))
-        return false;
+        
 
     return true;
+    */
 
 }
 
 bool CPerformanceCounter::GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance)
-{
+{   
+    /*
+    这里使用局部变量二不使用成员变量是因为, 成员变量时数据不会刷新
+    */
     LWMI::LProcessorManager processorManager;
     if (!processorManager.GetProcessorLoadPercentage(0, processorPerformance.LoadPercentage))
         return false;
+        
 
     return true;
 }

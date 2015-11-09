@@ -70,23 +70,23 @@ struct ProcessorInfor
 };
 
 /// @brief 显卡类型
-enum DISPLAY_CARD_TYPE
+enum VIDEO_CARD_TYPE
 {
-    DISPLAY_CARD_UNKNOWN = 0, ///< 未知
-    DISPLAY_CARD_INTERNAL, ///< 集成显卡
-    DISPLAY_CARD_EXTERNAL ///< 独立显卡
+    VIDEO_CARD_UNKNOWN = 0, ///< 未知
+    VIDEO_CARD_INTERNAL, ///< 集成显卡
+    VIDEO_CARD_EXTERNAL ///< 独立显卡
 };
 
 /// @brief 最大显卡数量
-#define MAX_DISPLAYCARD_NUMBER 4
+#define MAX_VIDEOCARD_NUMBER 4
 
 /// @brief 显卡信息组
 struct VideoCardInforArray
 {
     unsigned long Count; ///< 显卡数量
-    wstring Description[MAX_DISPLAYCARD_NUMBER]; ///< 显卡描述
-    DISPLAY_CARD_TYPE Type[MAX_DISPLAYCARD_NUMBER]; ///< 显卡类型
-    unsigned long RAMSize[MAX_DISPLAYCARD_NUMBER]; ///< 显存大小, 单位(M)
+    wstring Description[MAX_VIDEOCARD_NUMBER]; ///< 显卡描述
+    VIDEO_CARD_TYPE Type[MAX_VIDEOCARD_NUMBER]; ///< 显卡类型
+    unsigned long RAMSize[MAX_VIDEOCARD_NUMBER]; ///< 显存大小, 单位(M)
 };
 
 /// @brief 最大物理内存数量

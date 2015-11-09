@@ -21,7 +21,7 @@ struct MemoryPerformance
 {
     unsigned long TotalSize; ///< 总内存大小, 单位M
     unsigned long AvailableSize; ///< 可用内存大小, 单位M
-    unsigned long UnusedSize; ///< 未使用内存大小, 单位M
+    unsigned long LoadPercentage; ///< 内存使用率, 范围(1-100)
 };
 
 /// @brief 处理器性能性能

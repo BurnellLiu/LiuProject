@@ -3,6 +3,7 @@
 
 #include <QtGui/QPaintDevice>
 #include <QtGui/QPainter>
+#include <QtGui/QDesktopWidget>
 
 #include "HardwareInforPage.h"
 #include "TempManagementPage.h"
@@ -26,10 +27,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
   
     ui.setupUi(this);
 
-    // 根据比例重新调整主UI大小
+    // 根据比例重新调整主UI大小, 并居中显示
     int width = this->geometry().width() * m_uiRatio;
     int height = this->geometry().height() * m_uiRatio;
     this->setFixedSize(width, height);
+    QDesktopWidget* pDesk = QApplication::desktop();
+    this->move((pDesk->width() - width) / 2, (pDesk->height() - height) / 2);
 
 
     QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));

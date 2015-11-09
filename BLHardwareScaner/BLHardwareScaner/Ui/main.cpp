@@ -1,8 +1,8 @@
 
 #include <QtGui/QMessageBox>
 #include <QtGui/QApplication>
+#include <QtGui/QSplashScreen>
 #include <QtCore/QDir>
-
 
 #include "MainWindow.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -47,11 +47,17 @@ int main(int argc, char *argv[])
         PrintLogA("Command Argument%d: %s", i, argv[i]);
     }
    
-    QApplication a(argc, argv);
-    MainWindow w;
+    QApplication app(argc, argv);
+    MainWindow mainWindow;
 
-    w.show();
-    a.exec();
+    QPixmap splashMap(":/MyResource/Images/splash.png");
+    QSplashScreen splashScreen(splashMap);
+    splashScreen.show();
+    splashScreen.showMessage(QObject::tr("Getting Hardware Information..."), Qt::AlignLeft | Qt::AlignTop, Qt::red);
+    mainWindow.show();
+    splashScreen.finish(&mainWindow);
+
+    app.exec();
 
     PrintLogW(L"Log End");
 

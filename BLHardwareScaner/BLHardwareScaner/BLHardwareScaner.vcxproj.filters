@@ -46,8 +46,14 @@
     <Filter Include="Src\Log">
       <UniqueIdentifier>{22d7634c-09e4-4114-8aec-63728a622413}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\WinRing0">
-      <UniqueIdentifier>{63fe233a-c944-423c-8c20-0e74be8d39c4}</UniqueIdentifier>
+    <Filter Include="Src\Memory">
+      <UniqueIdentifier>{508a3cab-a4f8-4e52-bc40-9c18e97f8d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\BaseUnit">
+      <UniqueIdentifier>{689e736e-3cb3-4eb4-9533-e3bf404a726d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\BaseUnit\WinRing0">
+      <UniqueIdentifier>{c4bdba93-b1d2-4526-9420-109e2548a741}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -114,8 +120,11 @@
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <Filter>Src\Log</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\WinRing0\LWinRing0.cpp">
-      <Filter>Src\WinRing0</Filter>
+    <ClCompile Include="..\Src\Memory\LMemory.cpp">
+      <Filter>Src\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\BaseUnit\WinRing0\LWinRing0.cpp">
+      <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,8 +199,11 @@
     <ClInclude Include="..\Src\Log\LLog.h">
       <Filter>Src\Log</Filter>
     </ClInclude>
-    <ClInclude Include="..\Src\WinRing0\LWinRing0.h">
-      <Filter>Src\WinRing0</Filter>
+    <ClInclude Include="..\Src\Memory\LMemory.h">
+      <Filter>Src\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\BaseUnit\WinRing0\LWinRing0.h">
+      <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

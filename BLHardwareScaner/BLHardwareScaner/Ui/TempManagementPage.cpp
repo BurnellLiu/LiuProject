@@ -4,6 +4,7 @@
 
 #include <QtGui/QMessageBox>
 
+#include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\TemperatureProbe.h"
 #include "..\\Src\\PerformanceCounter.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -132,6 +133,7 @@ void ScanTempThread::run()
 {
     m_bStopThread = false;
 
+    bool bRet = false;
     TemperatureProbe tempProbe;
 
     CpuTempInfor cpuTempInfor = {0};
@@ -145,8 +147,16 @@ void ScanTempThread::run()
     {
         refreshCount++;
 
-        tempProbe.GetCpuTemp(cpuTempInfor);
-        tempProbe.GetGpuTemp(gpuTempInfor);
+        bRet = tempProbe.GetCpuTemp(cpuTempInfor);
+        if (!bRet)
+        {
+            PrintLogW(L"Warning: TemperatureProbe::GetCpuTemp Error");
+        }
+        bRet = tempProbe.GetGpuTemp(gpuTempInfor);
+        if (!bRet)
+        {
+            PrintLogW(L"Warning: TemperatureProbe::GetGpuTemp Error");
+        }
         tempProbe.GetDiskTemp(diskTempInforArray);
        
         tempHouse.SetCpuTemp(cpuTempInfor);
@@ -197,6 +207,7 @@ void ScanPerformanceThread::run()
 {
     m_bStopThread = false;
 
+    bool bRet = false;
     PerformanceCounter perfCounter;
     MemoryPerformance memoryPerf = {0};
     ProcessorPerformance processorPerf = {0};
@@ -208,8 +219,16 @@ void ScanPerformanceThread::run()
     {
         refreshCount++;
        
-        perfCounter.GetMemoryPerformance(memoryPerf);
+        bRet = perfCounter.GetMemoryPerformance(memoryPerf);
+        if (!bRet)
+        {
+            PrintLogW(L"Warning: PerformanceCounter::GetMemoryPerformance Error");
+        }
         perfCounter.GetProcessorPerformance(processorPerf);
+        if (!bRet)
+        {
+            PrintLogW(L"Warning: PerformanceCounter::GetProcessorPerformance Error");
+        }
 
         perfHouse.SetMemoryPerformance(memoryPerf);
         perfHouse.SetProcessorPerformance(processorPerf);
@@ -224,7 +243,6 @@ void ScanPerformanceThread::run()
         PrintLogW(L"Cpu Usage: %uP", processorPerf.LoadPercentage);
         PrintLogW(L"Memory Total Size: %u", memoryPerf.TotalSize);
         PrintLogW(L"Memory Available Size: %u", memoryPerf.AvailableSize);
-        PrintLogW(L"Memory Unused Size: %u", memoryPerf.UnusedSize);
 
         PrintLogW(L"");
     }
@@ -245,6 +263,18 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     ui.progressBarGpuTemp->setValue(0);
     ui.progressBarDiskTemp->setValue(0);
 
+    m_bExternalVideoCardExist = false;
+    const VideoCardInforArray& videoCardInfor = HardwareInfor::GetInstance().GetVideoCardInfor();
+    for (unsigned int i = 0; i < videoCardInfor.Count; i++)
+    {
+        if (videoCardInfor.Type[i] == VIDEO_CARD_EXTERNAL)
+        {
+            m_bExternalVideoCardExist = true;
+            break;
+        }
+    }
+
+
 }
 
 TempManagementPage::~TempManagementPage()
@@ -258,10 +288,9 @@ TempManagementPage::~TempManagementPage()
 
 void TempManagementPage::showEvent(QShowEvent* e)
 {
-    m_scanTempThread.start();
-    m_scanPerformanceThred.start();
-
     m_pUiRefreshTimer->start();
+    m_scanPerformanceThred.start();
+    m_scanTempThread.start();
 }
 
 void TempManagementPage::hideEvent(QHideEvent* e)
@@ -291,8 +320,18 @@ void TempManagementPage::RefreshUi()
 
     ui.progressBarCpuTemp->setValue(cpuTemp);
 
-    GpuTempInfor gpuTempInfor = tempHouse.GetGpuTemp();
-    ui.progressBarGpuTemp->setValue(gpuTempInfor.Temp[0]);
+    unsigned int gpuTemp = 0;
+    if (m_bExternalVideoCardExist)
+    {
+        GpuTempInfor gpuTempInfor = tempHouse.GetGpuTemp();
+        gpuTemp = gpuTempInfor.Temp[0];
+    }
+    else
+    {
+        gpuTemp = cpuTemp;
+    }
+    
+    ui.progressBarGpuTemp->setValue(gpuTemp);
 
     DiskTempInforArray diskTempInforArray = tempHouse.GetDiskTemp();
     for (unsigned int i = 0; i < diskTempInforArray.Count; i++)
@@ -308,14 +347,8 @@ void TempManagementPage::RefreshUi()
     MemoryPerformance memoryPerf = perfHouse.GetMemoryPerformance();
     ProcessorPerformance processorPerf = perfHouse.GetProcessorPerformance();
 
-    unsigned long memoryUsage = 0;
-    if (memoryPerf.TotalSize != 0)
-    {
-        memoryUsage = 100 - memoryPerf.AvailableSize * 100/memoryPerf.TotalSize;
-    }
-
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
-    ui.progressBarMemUsage->setValue(memoryUsage);
+    ui.progressBarMemUsage->setValue(memoryPerf.LoadPercentage);
         
 }
 

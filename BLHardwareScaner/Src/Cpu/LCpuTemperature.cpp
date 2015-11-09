@@ -4,7 +4,7 @@
 
 #include <Windows.h>
 
-#include "..\\WinRing0\\LWinRing0.h"
+#include "..\\BaseUnit\\WinRing0\\LWinRing0.h"
 
 /// @brief CPU温度实现接口
 class CCpuTemperature
