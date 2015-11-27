@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ratation", "Ratation\Ratati
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Camera", "Camera\Camera.vcxproj", "{476B47EC-9527-46E9-A491-3A477EBA7516}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mat", "Mat\Mat.vcxproj", "{C5CF60BC-F702-4561-8F85-103E6E4723E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -65,6 +67,14 @@ Global
 		{476B47EC-9527-46E9-A491-3A477EBA7516}.Release|Win32.Build.0 = Release|Win32
 		{476B47EC-9527-46E9-A491-3A477EBA7516}.Release|x64.ActiveCfg = Release|x64
 		{476B47EC-9527-46E9-A491-3A477EBA7516}.Release|x64.Build.0 = Release|x64
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Debug|Win32.Build.0 = Debug|Win32
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Debug|x64.ActiveCfg = Debug|x64
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Debug|x64.Build.0 = Debug|x64
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Release|Win32.ActiveCfg = Release|Win32
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Release|Win32.Build.0 = Release|Win32
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Release|x64.ActiveCfg = Release|x64
+		{C5CF60BC-F702-4561-8F85-103E6E4723E0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
