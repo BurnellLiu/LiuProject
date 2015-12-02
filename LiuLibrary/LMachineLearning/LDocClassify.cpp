@@ -175,6 +175,7 @@ float LDocClassifier::GetFeatureWeightedProbInCat(const string& feature, LDOC_CA
 
     int featureTotalCount = m_featureMap[feature].GetCategoryTotalCount();
    
+    // w = 0.5 + totalCount/(1 + totalCount) * (basicProb - 0.5)
     float weightedProb = ((1.0f * 0.5f) + (float)featureTotalCount * basicProb)/(1.0f + (float)featureTotalCount);
     return weightedProb;
 }
