@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Perceptron", "Perceptron\Pe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Regression", "Regression\Regression.vcxproj", "{4CBA4328-3DE0-42DF-8383-4CAD0939D242}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeBayes", "NativeBayes\NativeBayes.vcxproj", "{ECF27334-7028-4070-AC15-9F60E7BDF43A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{4CBA4328-3DE0-42DF-8383-4CAD0939D242}.Debug|Win32.Build.0 = Debug|Win32
 		{4CBA4328-3DE0-42DF-8383-4CAD0939D242}.Release|Win32.ActiveCfg = Release|Win32
 		{4CBA4328-3DE0-42DF-8383-4CAD0939D242}.Release|Win32.Build.0 = Release|Win32
+		{ECF27334-7028-4070-AC15-9F60E7BDF43A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ECF27334-7028-4070-AC15-9F60E7BDF43A}.Debug|Win32.Build.0 = Debug|Win32
+		{ECF27334-7028-4070-AC15-9F60E7BDF43A}.Release|Win32.ActiveCfg = Release|Win32
+		{ECF27334-7028-4070-AC15-9F60E7BDF43A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
