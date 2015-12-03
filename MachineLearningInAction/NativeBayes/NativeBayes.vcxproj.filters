@@ -21,9 +21,15 @@
     <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LDocClassify.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LBayesClassify.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LDocClassify.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LBayesClassify.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

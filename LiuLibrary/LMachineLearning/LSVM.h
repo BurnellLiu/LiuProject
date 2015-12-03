@@ -39,7 +39,7 @@ struct LSVMProblem
     }
 
     const LSVMMatrix& XMatrix; ///< 样本矩阵
-    const LSVMMatrix& YVector; ///< 标签向量(列向量)
+    const LSVMMatrix& YVector; ///< 类别向量(列向量)
 };
 
 /// @brief SVM参数结构

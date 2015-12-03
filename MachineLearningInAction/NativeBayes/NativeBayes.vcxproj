@@ -62,10 +62,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LBayesClassify.cpp" />
     <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LDocClassify.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LBayesClassify.h" />
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LDocClassify.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
