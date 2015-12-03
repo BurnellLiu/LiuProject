@@ -26,6 +26,7 @@ int main()
     sample[0][1] = 0;
 
     classify.Predict(sample, &classValue);
+    printf("%d\n", classValue);
     system("pause");
     return 0;
 }

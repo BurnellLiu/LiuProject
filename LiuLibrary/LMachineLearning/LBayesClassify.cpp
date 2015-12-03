@@ -6,6 +6,24 @@ using std::map;
 #include <vector>
 using std::vector;
 
+/// @brief 贝叶斯分类器虚基类
+class CBayesClassify
+{
+public:
+    /// @brief 训练模型
+    /// @param[in] problem 贝叶斯问题
+    /// @return 成功返回true, 失败返回false, 参数错误的情况下会返回false
+    virtual bool TrainModel(IN const LBayesProblem& problem) = 0;
+
+    /// @brief 使用训练好的模型进行预测
+    ///  
+    /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
+    /// @param[in] sample 需要预测的样本
+    /// @param[out] classType 存储预测结果
+    /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
+    virtual bool Predict(IN const LBayesMatrix& sample, OUT int* classValue) = 0;
+};
+
 /// @brief 特征类别计数类
 class CFeatureClassCount
 {
@@ -51,24 +69,24 @@ private:
     map<int, map<int, unsigned int>> m_featureClassMap; ///< 特征映射, <特征值, <类别值, 类别计数>>
 };
 
-/// @brief 贝叶斯分类器实现类
-class CBayesClassify
+/// @brief 贝叶斯分类器(离散)实现类
+class CBayesClassifyDiscrete : public CBayesClassify
 {
 public:
-    CBayesClassify();
-    ~CBayesClassify();
+    CBayesClassifyDiscrete();
+    ~CBayesClassifyDiscrete();
 
     /// @brief 训练模型
     /// @param[in] problem 贝叶斯问题
     /// @return 成功返回true, 失败返回false, 参数错误的情况下会返回false
-    bool TrainModel(IN const LBayesProblem& problem);
+    virtual bool TrainModel(IN const LBayesProblem& problem);
 
     /// @brief 使用训练好的模型进行预测
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本
     /// @param[out] pClassValue 存储预测结果
     /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
-    bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue);
+    virtual bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue);
 
 private:
     /// @brief 获取指定样本属于指定类别的概率值, Pr(class | sample)
@@ -84,18 +102,18 @@ private:
     unsigned int m_sampleCount; ///< 训练样本总数
 };
 
-CBayesClassify::CBayesClassify()
+CBayesClassifyDiscrete::CBayesClassifyDiscrete()
 {
     m_featureCount = 0;
     m_sampleCount = 0;
 }
 
-CBayesClassify::~CBayesClassify()
+CBayesClassifyDiscrete::~CBayesClassifyDiscrete()
 {
 
 }
 
-bool CBayesClassify::TrainModel(IN const LBayesProblem& problem)
+bool CBayesClassifyDiscrete::TrainModel(IN const LBayesProblem& problem)
 {
     // 进行参数检查
     if (problem.XMatrix.ColumnLen < 1)
@@ -132,7 +150,7 @@ bool CBayesClassify::TrainModel(IN const LBayesProblem& problem)
     return true;
 }
 
-bool CBayesClassify::Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
+bool CBayesClassifyDiscrete::Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
 {
     // 检查参数
     if (1 != sample.RowLen)
@@ -166,7 +184,7 @@ bool CBayesClassify::Predict(IN const LBayesMatrix& sample, OUT int* pClassValue
 }
 
 
-float CBayesClassify::GetProbSampleInClass(IN const LBayesMatrix& sample, IN int classValue)
+float CBayesClassifyDiscrete::GetProbSampleInClass(IN const LBayesMatrix& sample, IN int classValue)
 {
     // 贝叶斯公式:
     // P(y|x) = P(x|y) * P(y) / P(x)
@@ -197,10 +215,126 @@ float CBayesClassify::GetProbSampleInClass(IN const LBayesMatrix& sample, IN int
 }
 
 
+/// @brief 特征类别数据结构
+struct CFeatureClassData
+{
+    map<int, vector<int>> DataMap; ///< 类别数据映射, <类别值, 数据列表>
+};
+
+/// @brief 特征类别高斯分布结构
+struct CFeatureClassGauss
+{
+    /// @brief 高斯分布结构
+    struct CGauss
+    {
+        float Mean; ///< 均值
+        float Div; ///< 标准差
+    };
+
+    map<int, CGauss> GaussMap; ///< 类别高斯分布映射, <类别值, 高斯分布>
+};
+
+/// @brief 贝叶斯分类器(非离散)实现类
+class CBayesClassifyNoneDiscrete : public CBayesClassify
+{
+public:
+    CBayesClassifyNoneDiscrete();
+    ~CBayesClassifyNoneDiscrete();
+
+    /// @brief 训练模型
+    /// @param[in] problem 贝叶斯问题
+    /// @return 成功返回true, 失败返回false, 参数错误的情况下会返回false
+    virtual bool TrainModel(IN const LBayesProblem& problem);
+
+    /// @brief 使用训练好的模型进行预测
+    /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
+    /// @param[in] sample 需要预测的样本
+    /// @param[out] pClassValue 存储预测结果
+    /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
+    virtual bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue);
+
+private:
+    /// @brief 获取指定样本属于指定类别的概率值, Pr(class | sample)
+    /// @param[in] sample 样本
+    /// @param[in] classValue 类别值
+    /// @return 概率值
+    float GetProbSampleInClass(IN const LBayesMatrix& sample, IN int classValue);
+
+private:
+    vector<CFeatureClassData> m_featureClassDataList; ///< 特征类别数据列表
+    map<int, unsigned int> m_sampleClassCount; ///< 训练样本类别计数
+    unsigned int m_featureCount; ///< 样本特征数量
+    unsigned int m_sampleCount; ///< 训练样本总数
+};
+
+CBayesClassifyNoneDiscrete::CBayesClassifyNoneDiscrete()
+{
+    m_featureCount = 0;
+    m_sampleCount = 0;
+}
+
+bool CBayesClassifyNoneDiscrete::TrainModel(IN const LBayesProblem& problem)
+{
+    // 进行参数检查
+    if (problem.XMatrix.ColumnLen < 1)
+        return false;
+    if (problem.XMatrix.RowLen < 1)
+        return false;
+    if (problem.YVector.ColumnLen != 1)
+        return false;
+    if (problem.XMatrix.RowLen != problem.YVector.RowLen)
+        return false;
+
+    m_sampleClassCount.clear();
+    m_featureClassDataList.clear();
+    m_sampleCount = problem.XMatrix.RowLen;
+    m_featureCount = problem.XMatrix.ColumnLen;
+    for (unsigned int i = 0; i < m_featureCount; i++)
+    {
+        m_featureClassDataList.push_back(CFeatureClassData());
+    }
+
+    for (unsigned int row = 0; row < problem.XMatrix.RowLen; row++)
+    {
+        int classValue = problem.YVector[row][0];
+        m_sampleClassCount[classValue]++;
+
+        for (unsigned int col = 0; col < problem.XMatrix.ColumnLen; col++)
+        {
+            int featureValue = problem.XMatrix[row][col];
+            CFeatureClassData& featureClassData = m_featureClassDataList[col];
+            featureClassData.DataMap[classValue].push_back(featureValue);
+        }
+
+    }
+
+    // 数据点只有一个则返回false, 因为单一数据点无法使用高斯分布
+    for (unsigned int i = 0; i < m_featureClassDataList.size(); i++)
+    {
+        for (auto iter = m_sampleClassCount.begin(); iter != m_sampleClassCount.end(); iter++)
+        {
+            int classValue = iter->first;
+
+            CFeatureClassData& featureClassData = m_featureClassDataList[i];
+            if (featureClassData.DataMap[classValue].size() < 2)
+            {
+                m_featureCount = 0;
+                m_sampleCount = 0;
+                m_sampleClassCount.clear();
+                m_featureClassDataList.clear();
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+
 LBayesClassify::LBayesClassify()
 {
     m_pBayesClassify = 0;
-    m_pBayesClassify = new CBayesClassify();
+    m_pBayesClassify = new CBayesClassifyDiscrete();
 }
 
 LBayesClassify::~LBayesClassify()
