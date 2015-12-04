@@ -16,8 +16,8 @@ typedef LMatrix<int> LBayesMatrix;
 /// @brief 贝叶斯特征数据类型
 enum LBayesFeatureDataType
 {
-    BAYES_FEATURE_DISCRETE = 1, //< 离散
-    BAYES_FEATURE_NONE_DISCAETE = 2, ///< 非离散(连续)
+    BAYES_FEATURE_DISCRETE = 1, ///< 离散
+    BAYES_FEATURE_NONE_DISCRETE = 2, ///< 非离散(连续)
 };
 
 /// @brief 贝叶斯原始问题结构

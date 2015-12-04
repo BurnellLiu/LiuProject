@@ -1,6 +1,8 @@
 
 #include "LBayesClassify.h"
 
+#include <cmath>
+
 #include <map>
 using std::map;
 #include <vector>
@@ -24,54 +26,56 @@ public:
     virtual bool Predict(IN const LBayesMatrix& sample, OUT int* classValue) = 0;
 };
 
-/// @brief 特征类别计数类
-class CFeatureClassCount
-{
-public:
-    /// @brief 将指定特征的指定的类别计数加1
-    /// @param[in] featureValue 特征值
-    /// @param[in] classValue 类别值
-    void CountInc(IN int featureValue, IN int classValue)
-    {
-        m_featureClassMap[featureValue][classValue]++;
-    }
 
-    /// @brief 获取指定特征的指定类别的计数
-    /// @param[in] featureValue 特征值
-    /// @param[in] classValue 类别值
-    /// @return 类别的计数
-    unsigned int GetCount(IN int featureValue, IN int classValue)
-    {
-        return m_featureClassMap[featureValue][classValue];
-    }
-
-    /// @brief 获取指定特征的总计数
-    /// @param[in] featureValue 特征值
-    /// @return 特征值得总计数
-    unsigned int GetTotalCount(IN int featureValue)
-    {
-        auto classMap = m_featureClassMap[featureValue];
-        unsigned int totalCount = 0;
-        for (auto iter = classMap.begin(); iter != classMap.end(); iter++)
-        {
-            totalCount += iter->second;
-        }
-
-        return totalCount;
-    }
-
-    /// @brief 清除数据
-    void Clear()
-    {
-        m_featureClassMap.clear();
-    }
-private:
-    map<int, map<int, unsigned int>> m_featureClassMap; ///< 特征映射, <特征值, <类别值, 类别计数>>
-};
 
 /// @brief 贝叶斯分类器(离散)实现类
 class CBayesClassifyDiscrete : public CBayesClassify
 {
+public:
+    /// @brief 特征类别计数类
+    class CFeatureClassCount
+    {
+    public:
+        /// @brief 将指定特征的指定的类别计数加1
+        /// @param[in] featureValue 特征值
+        /// @param[in] classValue 类别值
+        void CountInc(IN int featureValue, IN int classValue)
+        {
+            m_featureClassMap[featureValue][classValue]++;
+        }
+
+        /// @brief 获取指定特征的指定类别的计数
+        /// @param[in] featureValue 特征值
+        /// @param[in] classValue 类别值
+        /// @return 类别的计数
+        unsigned int GetCount(IN int featureValue, IN int classValue)
+        {
+            return m_featureClassMap[featureValue][classValue];
+        }
+
+        /// @brief 获取指定特征的总计数
+        /// @param[in] featureValue 特征值
+        /// @return 特征值得总计数
+        unsigned int GetTotalCount(IN int featureValue)
+        {
+            auto classMap = m_featureClassMap[featureValue];
+            unsigned int totalCount = 0;
+            for (auto iter = classMap.begin(); iter != classMap.end(); iter++)
+            {
+                totalCount += iter->second;
+            }
+
+            return totalCount;
+        }
+
+        /// @brief 清除数据
+        void Clear()
+        {
+            m_featureClassMap.clear();
+        }
+    private:
+        map<int, map<int, unsigned int>> m_featureClassMap; ///< 特征映射, <特征值, <类别值, 类别计数>>
+    };
 public:
     CBayesClassifyDiscrete();
     ~CBayesClassifyDiscrete();
@@ -215,15 +219,18 @@ float CBayesClassifyDiscrete::GetProbSampleInClass(IN const LBayesMatrix& sample
 }
 
 
-/// @brief 特征类别数据结构
-struct CFeatureClassData
-{
-    map<int, vector<int>> DataMap; ///< 类别数据映射, <类别值, 数据列表>
-};
 
-/// @brief 特征类别高斯分布结构
-struct CFeatureClassGauss
+
+/// @brief 贝叶斯分类器(非离散)实现类
+class CBayesClassifyNoneDiscrete : public CBayesClassify
 {
+public:
+    /// @brief 特征类别数据结构
+    struct CFeatureClassData
+    {
+        map<int, vector<int>> DataMap; ///< 类别数据映射, <类别值, 数据列表>
+    };
+
     /// @brief 高斯分布结构
     struct CGauss
     {
@@ -231,12 +238,11 @@ struct CFeatureClassGauss
         float Div; ///< 标准差
     };
 
-    map<int, CGauss> GaussMap; ///< 类别高斯分布映射, <类别值, 高斯分布>
-};
-
-/// @brief 贝叶斯分类器(非离散)实现类
-class CBayesClassifyNoneDiscrete : public CBayesClassify
-{
+    /// @brief 特征类别高斯分布结构
+    struct CFeatureClassGauss
+    {
+        map<int, CGauss> GaussMap; ///< 类别高斯分布映射, <类别值, 高斯分布>
+    };
 public:
     CBayesClassifyNoneDiscrete();
     ~CBayesClassifyNoneDiscrete();
@@ -260,8 +266,14 @@ private:
     /// @return 概率值
     float GetProbSampleInClass(IN const LBayesMatrix& sample, IN int classValue);
 
+    /// @brief 计算数据的高斯分布
+    /// @param[in] dataList 数据列表
+    /// @return 高斯分布结构
+    CGauss CalculateGauss(IN const vector<int>& dataList);
+
 private:
-    vector<CFeatureClassData> m_featureClassDataList; ///< 特征类别数据列表
+
+    vector<CFeatureClassGauss> m_featureClassGaussList; ///< 特征类别高斯分布列表
     map<int, unsigned int> m_sampleClassCount; ///< 训练样本类别计数
     unsigned int m_featureCount; ///< 样本特征数量
     unsigned int m_sampleCount; ///< 训练样本总数
@@ -285,15 +297,19 @@ bool CBayesClassifyNoneDiscrete::TrainModel(IN const LBayesProblem& problem)
     if (problem.XMatrix.RowLen != problem.YVector.RowLen)
         return false;
 
+    vector<CFeatureClassData> featureClassDataList; ///< 特征类别数据列表
+
     m_sampleClassCount.clear();
-    m_featureClassDataList.clear();
+    m_featureClassGaussList.clear();
     m_sampleCount = problem.XMatrix.RowLen;
     m_featureCount = problem.XMatrix.ColumnLen;
     for (unsigned int i = 0; i < m_featureCount; i++)
     {
-        m_featureClassDataList.push_back(CFeatureClassData());
+        featureClassDataList.push_back(CFeatureClassData());
+        m_featureClassGaussList.push_back(CFeatureClassGauss());
     }
 
+    // 将每列特征值按类别归类
     for (unsigned int row = 0; row < problem.XMatrix.RowLen; row++)
     {
         int classValue = problem.YVector[row][0];
@@ -302,39 +318,133 @@ bool CBayesClassifyNoneDiscrete::TrainModel(IN const LBayesProblem& problem)
         for (unsigned int col = 0; col < problem.XMatrix.ColumnLen; col++)
         {
             int featureValue = problem.XMatrix[row][col];
-            CFeatureClassData& featureClassData = m_featureClassDataList[col];
+            CFeatureClassData& featureClassData = featureClassDataList[col];
             featureClassData.DataMap[classValue].push_back(featureValue);
         }
 
     }
 
-    // 数据点只有一个则返回false, 因为单一数据点无法使用高斯分布
-    for (unsigned int i = 0; i < m_featureClassDataList.size(); i++)
+    
+    // 计算数据的高斯分布
+    for (unsigned int i = 0; i < featureClassDataList.size(); i++)
     {
         for (auto iter = m_sampleClassCount.begin(); iter != m_sampleClassCount.end(); iter++)
         {
             int classValue = iter->first;
 
-            CFeatureClassData& featureClassData = m_featureClassDataList[i];
-            if (featureClassData.DataMap[classValue].size() < 2)
+            CFeatureClassData& featureClassData = featureClassDataList[i];
+            CGauss gauss = this->CalculateGauss(featureClassData.DataMap[classValue]);
+            if (gauss.Div == 0.0f)// 方差为0, 表示数据有问题, 无法使用高斯分布
             {
                 m_featureCount = 0;
                 m_sampleCount = 0;
                 m_sampleClassCount.clear();
-                m_featureClassDataList.clear();
+                m_featureClassGaussList.clear();
                 return false;
             }
+
+            m_featureClassGaussList[i].GaussMap[classValue] = gauss;
+
         }
     }
 
     return true;
 }
 
+bool CBayesClassifyNoneDiscrete::Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
+{
+    // 检查参数
+    if (1 != sample.RowLen)
+        return false;
+    if (m_featureCount != sample.ColumnLen)
+        return false;
+    if (0 == pClassValue)
+        return false;
+
+    if (m_sampleCount == 0)
+        return false;
+
+
+    float maxProb = 0;
+    int bestClassValue;
+
+    for (auto iter = m_sampleClassCount.begin(); iter != m_sampleClassCount.end(); iter++)
+    {
+        int classValue = iter->first;
+        float prob = this->GetProbSampleInClass(sample, classValue);
+        if (prob > maxProb)
+        {
+            maxProb = prob;
+            bestClassValue = classValue;
+        }
+    }
+
+    (*pClassValue) = bestClassValue;
+
+    return true;
+}
+
+float CBayesClassifyNoneDiscrete::GetProbSampleInClass(IN const LBayesMatrix& sample, IN int classValue)
+{
+    // 贝叶斯公式:
+    // P(y|x) = P(x|y) * P(y) / P(x)
+    // 对于每个样本来说P(x)值相同, 所以我们只需考察分母的值, 也就是P(x|y) * P(y)
+    // 因为各个特征独立所以
+    // P(x|y) * P(y) = P(a1|y) * P(a2|y) * ... * P(an|y) * P(y)
+
+    unsigned int classCount = m_sampleClassCount[classValue];
+
+    float prob = 1.0f;
+    for (unsigned int col = 0; col < sample.ColumnLen; col++)
+    {
+        int featureValue = sample[0][col];
+        const CGauss& gauss = m_featureClassGaussList[col].GaussMap[classValue];
+        float temp1 = 1.0f/ (sqrt(2.0f * 3.14159f) * gauss.Div);
+        float temp2 = (float)featureValue-gauss.Mean;
+        float temp3 = exp(-1.0f * temp2 * temp2 / (2.0f * gauss.Div * gauss.Div));
+        float gaussProb = temp1 * temp3;
+
+        prob *= gaussProb;
+    }
+
+    prob *= (float)classCount/(float)m_sampleCount;
+
+    return prob;
+}
+
+CBayesClassifyNoneDiscrete::CGauss CBayesClassifyNoneDiscrete::CalculateGauss(IN const vector<int>& dataList)
+{
+    CGauss gauss;
+    gauss.Mean = 0.0f;
+    gauss.Div = 0.0f;
+
+    if (dataList.size() < 1)
+        return gauss;
+
+    float total = 0.0f;
+    for (unsigned int i = 0; i < dataList.size(); i++)
+    {
+        total += (float)dataList[i];
+    }
+
+    gauss.Mean = total/dataList.size();
+
+    float div = 0.0f;
+    for (unsigned int i = 0; i < dataList.size(); i++)
+    {
+        float temp = (float)dataList[i]-gauss.Mean;
+        div += temp * temp;
+    }
+
+    gauss.Div = sqrt(div);
+
+    return gauss;
+    
+}
 
 LBayesClassify::LBayesClassify()
 {
     m_pBayesClassify = 0;
-    m_pBayesClassify = new CBayesClassifyDiscrete();
 }
 
 LBayesClassify::~LBayesClassify()
@@ -348,6 +458,20 @@ LBayesClassify::~LBayesClassify()
 
 bool LBayesClassify::TrainModel(IN const LBayesProblem& problem)
 {
+    if (0 != m_pBayesClassify)
+    {
+        delete m_pBayesClassify;
+        m_pBayesClassify = 0;
+    }
+
+    if (problem.FeatureDataType == BAYES_FEATURE_DISCRETE)
+        m_pBayesClassify = new CBayesClassifyDiscrete();
+    else if (problem.FeatureDataType == BAYES_FEATURE_NONE_DISCRETE)
+        m_pBayesClassify = new CBayesClassifyNoneDiscrete();
+    else
+        return false;
+
+
     return m_pBayesClassify->TrainModel(problem);
 }
 
