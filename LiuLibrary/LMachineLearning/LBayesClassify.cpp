@@ -433,8 +433,9 @@ CBayesClassifyNoneDiscrete::CGauss CBayesClassifyNoneDiscrete::CalculateGauss(IN
     for (unsigned int i = 0; i < dataList.size(); i++)
     {
         float temp = (float)dataList[i]-gauss.Mean;
-        div += temp * temp;
+        div += (temp * temp);
     }
+    div = div/dataList.size();
 
     gauss.Div = sqrt(div);
 
