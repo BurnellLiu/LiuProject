@@ -10,6 +10,9 @@
 class CCpuTemperature
 {
 public:
+    /// @brief 虚析构函数
+    virtual ~CCpuTemperature() = 0{}
+
     /// @brief 获取CPU温度
     /// @param[out] coreNum 存储CPU物理核心数
     /// @param[out] temp 存储温度

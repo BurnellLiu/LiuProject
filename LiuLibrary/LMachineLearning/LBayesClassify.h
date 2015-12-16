@@ -48,7 +48,10 @@ class CBayesClassify;
 class LBayesClassify
 {
 public:
+    /// @brief 构造函数
     LBayesClassify();
+
+    /// @brief 析构函数
     ~LBayesClassify();
 
     /// @brief 训练模型
