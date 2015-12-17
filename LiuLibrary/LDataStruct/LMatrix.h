@@ -85,15 +85,22 @@ public:
 
 public:
     /// @brief 默认构造函数
-    ///
     /// 默认矩阵长度为0, 即没有数据可被访问
     LMatrix();
+
+    /// @brief 析构函数
     ~LMatrix();
 
     /// @brief 构造函数
     /// @param[in] row 矩阵行大小
     /// @param[in] col 矩阵列大小
-    LMatrix(unsigned int row, unsigned int col);
+    LMatrix(IN unsigned int row, IN unsigned int col);
+
+    /// @brief 构造函数, 构造矩阵, 并使用数组数据初始化矩阵
+    /// @param[in] row 矩阵行大小
+    /// @param[in] col 矩阵列大小
+    /// @param[in] pDataList 矩阵数据
+    LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* pDataList);
 
     /// @brief 拷贝构造函数
     LMatrix(const LMatrix<Type>& rhs);
@@ -183,6 +190,29 @@ LMatrix<Type>::LMatrix(unsigned int row, unsigned int col)
     {
         this->Data[i] = &this->m_data[this->ColumnLen * i];
     }
+}
+
+LTEMPLATE
+LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* pDataList)
+: RowLen(row), ColumnLen(col), Data(0), m_data(0)
+{
+    if (0 == (this->RowLen * this->ColumnLen))
+        return;
+
+    this->Data = new Type*[this->RowLen];
+    this->m_data = new Type[this->RowLen * this->ColumnLen];
+
+    unsigned int totalSize = row * col;
+    for (unsigned int i = 0; i < totalSize; i++)
+    {
+        this->m_data[i] = pDataList[i];
+    }
+
+    for (unsigned int i = 0; i < this->RowLen; i++)
+    {
+        this->Data[i] = &this->m_data[this->ColumnLen * i];
+    }
+
 }
 
 LTEMPLATE
