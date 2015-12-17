@@ -24,9 +24,9 @@ public:
     ///  
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本
-    /// @param[out] classType 存储预测结果
+    /// @param[out] pClassValue 存储预测结果, 不能为0
     /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
-    virtual bool Predict(IN const LBayesMatrix& sample, OUT int* classValue) = 0;
+    virtual bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue) = 0;
 };
 
 /// @brief 特征类别计数类
@@ -135,7 +135,7 @@ public:
     /// @brief 使用训练好的模型进行预测
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本
-    /// @param[out] pClassValue 存储预测结果
+    /// @param[out] pClassValue 存储预测结果, 不能为0
     /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
     virtual bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
     {
@@ -322,7 +322,7 @@ public:
     /// @brief 使用训练好的模型进行预测
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本
-    /// @param[out] pClassValue 存储预测结果
+    /// @param[out] pClassValue 存储预测结果, 不能为0
     /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
     virtual bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
     {
@@ -463,7 +463,7 @@ bool LBayesClassifier::TrainModel(IN const LBayesProblem& problem)
     return m_pBayesClassifier->TrainModel(problem);
 }
 
-bool LBayesClassifier::Predict(IN const LBayesMatrix& sample, OUT int* classValue)
+bool LBayesClassifier::Predict(IN const LBayesMatrix& sample, OUT int* pClassValue)
 {
-    return m_pBayesClassifier->Predict(sample, classValue);
+    return m_pBayesClassifier->Predict(sample, pClassValue);
 }

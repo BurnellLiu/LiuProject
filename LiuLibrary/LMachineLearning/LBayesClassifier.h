@@ -117,9 +117,9 @@ public:
     /// @brief 使用训练好的模型进行预测
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本
-    /// @param[out] classType 存储预测结果
+    /// @param[out] pClassValue 存储预测结果, 不能为0
     /// @return 成功预测返回true, 失败返回false, 参数错误或模型未训练的情况下会返回false
-    bool Predict(IN const LBayesMatrix& sample, OUT int* classValue);
+    bool Predict(IN const LBayesMatrix& sample, OUT int* pClassValue);
 
 
 private:
