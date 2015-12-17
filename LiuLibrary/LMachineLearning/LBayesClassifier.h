@@ -3,6 +3,7 @@
 /// @brief 贝叶斯分类器
 /// 
 /// Detail:
+/// 贝叶斯分类器主要依据贝叶斯公式: P(Y|X) = P(Y, X)/P(X) = P(X, Y)/P(X) = P(X|Y) * P(Y)/P(X)
 /// @author Burnell Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 2015:12:17
@@ -54,15 +55,15 @@ classifier.Predict(newSample, &predictValue);
 
 */
 
-#ifndef _LBAYESCLASSIFY_H_
-#define _LBAYESCLASSIFY_H_
+#ifndef _LBAYESCLASSIFIER_H_
+#define _LBAYESCLASSIFIER_H_
 
 #include "LDataStruct/LMatrix.h"
 
 typedef LMatrix<int> LBayesMatrix; ///< 贝叶斯矩阵
 
-/// @brief 贝叶斯特征数据类型
-enum LBayesFeatureDataType
+/// @brief 贝叶斯特征值分布
+enum LBayesFeatureDistribution
 {
     BAYES_FEATURE_DISCRETE = 1, ///< 离散
     BAYES_FEATURE_CONTINUS = 2, ///< 连续
@@ -75,18 +76,18 @@ struct LBayesProblem
     /// @brief 构造函数
     /// @param[in] sampleMatrix 样本矩阵, 每一行为一个样本, 每行中的值为样本的特征值
     /// @param[in] classVector 类别向量(列向量), 行数为样本矩阵的行数, 列数为1
-    /// @param[in] dataType 特征数据类型
+    /// @param[in] dataType 特征值分布
     LBayesProblem(
         IN const LBayesMatrix& sampleMatrix, 
         IN const LBayesMatrix& classVector, 
-        IN LBayesFeatureDataType dataType)
-        : XMatrix(sampleMatrix), YVector(classVector), FeatureDataType(dataType)
+        IN LBayesFeatureDistribution distribution)
+        : XMatrix(sampleMatrix), YVector(classVector), FeatureDistribution(distribution)
     {
     }
 
     const LBayesMatrix& XMatrix; ///< 样本矩阵
     const LBayesMatrix& YVector; ///< 类别向量(列向量)
-    const LBayesFeatureDataType FeatureDataType; ///< 贝叶斯特征数据类型
+    const LBayesFeatureDistribution FeatureDistribution; ///< 贝叶斯特征值分布
 };
 
 

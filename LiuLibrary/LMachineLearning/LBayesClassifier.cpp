@@ -452,9 +452,9 @@ bool LBayesClassifier::TrainModel(IN const LBayesProblem& problem)
         m_pBayesClassifier = 0;
     }
 
-    if (problem.FeatureDataType == BAYES_FEATURE_DISCRETE)
+    if (problem.FeatureDistribution == BAYES_FEATURE_DISCRETE)
         m_pBayesClassifier = new CBayesClassifierDiscrete();
-    else if (problem.FeatureDataType == BAYES_FEATURE_CONTINUS)
+    else if (problem.FeatureDistribution == BAYES_FEATURE_CONTINUS)
         m_pBayesClassifier = new CBayesClassifierContinues();
     else
         return false;
