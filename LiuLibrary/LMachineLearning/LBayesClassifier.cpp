@@ -1,5 +1,5 @@
 
-#include "LBayesClassify.h"
+#include "LBayesClassifier.h"
 
 #include <cmath>
 
@@ -9,11 +9,11 @@ using std::map;
 using std::vector;
 
 /// @brief 贝叶斯分类器虚基类
-class CBayesClassify
+class CBayesClassifier
 {
 public:
     /// @brief 析构函数
-    virtual ~CBayesClassify() = 0{}
+    virtual ~CBayesClassifier() = 0{}
 
     /// @brief 训练模型
     /// @param[in] problem 贝叶斯问题
@@ -76,18 +76,18 @@ private:
 };
 
 /// @brief 贝叶斯分类器(离散)实现类
-class CBayesClassifyDiscrete : public CBayesClassify
+class CBayesClassifierDiscrete : public CBayesClassifier
 {    
 public:
     /// @brief 构造函数
-    CBayesClassifyDiscrete()
+    CBayesClassifierDiscrete()
     {
         m_featureCount = 0;
         m_sampleCount = 0;
     }
 
     /// @brief 析构函数
-    ~CBayesClassifyDiscrete()
+    ~CBayesClassifierDiscrete()
     {
 
     }
@@ -232,19 +232,19 @@ struct CFeatureClassGauss
     map<int, CGauss> GaussMap; ///< 类别高斯分布映射, <类别值, 高斯分布>
 };
 
-/// @brief 贝叶斯分类器(非离散)实现类
-class CBayesClassifyNoneDiscrete : public CBayesClassify
+/// @brief 贝叶斯分类器连续(非离散)实现类
+class CBayesClassifierContinues : public CBayesClassifier
 {   
 public:
     /// @brief 构造函数
-    CBayesClassifyNoneDiscrete()
+    CBayesClassifierContinues()
     {
         m_featureCount = 0;
         m_sampleCount = 0;
     }
 
     /// @brief 析构函数
-    ~CBayesClassifyNoneDiscrete()
+    ~CBayesClassifierContinues()
     {
         m_featureCount = 0;
         m_sampleCount = 0;
@@ -430,40 +430,40 @@ private:
     unsigned int m_sampleCount; ///< 训练样本总数
 };
 
-LBayesClassify::LBayesClassify()
+LBayesClassifier::LBayesClassifier()
 {
-    m_pBayesClassify = 0;
+    m_pBayesClassifier = 0;
 }
 
-LBayesClassify::~LBayesClassify()
+LBayesClassifier::~LBayesClassifier()
 {
-    if (0 != m_pBayesClassify)
+    if (0 != m_pBayesClassifier)
     {
-        delete m_pBayesClassify;
-        m_pBayesClassify = 0;
+        delete m_pBayesClassifier;
+        m_pBayesClassifier = 0;
     }
 }
 
-bool LBayesClassify::TrainModel(IN const LBayesProblem& problem)
+bool LBayesClassifier::TrainModel(IN const LBayesProblem& problem)
 {
-    if (0 != m_pBayesClassify)
+    if (0 != m_pBayesClassifier)
     {
-        delete m_pBayesClassify;
-        m_pBayesClassify = 0;
+        delete m_pBayesClassifier;
+        m_pBayesClassifier = 0;
     }
 
     if (problem.FeatureDataType == BAYES_FEATURE_DISCRETE)
-        m_pBayesClassify = new CBayesClassifyDiscrete();
-    else if (problem.FeatureDataType == BAYES_FEATURE_NONE_DISCRETE)
-        m_pBayesClassify = new CBayesClassifyNoneDiscrete();
+        m_pBayesClassifier = new CBayesClassifierDiscrete();
+    else if (problem.FeatureDataType == BAYES_FEATURE_CONTINUS)
+        m_pBayesClassifier = new CBayesClassifierContinues();
     else
         return false;
 
 
-    return m_pBayesClassify->TrainModel(problem);
+    return m_pBayesClassifier->TrainModel(problem);
 }
 
-bool LBayesClassify::Predict(IN const LBayesMatrix& sample, OUT int* classValue)
+bool LBayesClassifier::Predict(IN const LBayesMatrix& sample, OUT int* classValue)
 {
-    return m_pBayesClassify->Predict(sample, classValue);
+    return m_pBayesClassifier->Predict(sample, classValue);
 }
