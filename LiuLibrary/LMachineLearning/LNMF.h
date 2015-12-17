@@ -7,6 +7,28 @@
 /// @author Burnell Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 2015:12:17
+/// @sample
+
+/*  使用NMF的示例代码如下
+
+// 定义原始矩阵
+float dataList[4] = 
+{
+1.0f, 2.0f,
+3.0f, 4.0f
+};
+LNMFMatrix V(2, 2, dataList);
+
+// 定义原始问题, 设置R为2, 迭代次数为50
+LNMFProblem problem(V, 2, 50);
+
+// 进行因式分解
+LNMFMatrix W;
+LNMFMatrix H;
+
+LNMF nmf;
+nmf.Factoring(problem, &W, &H);
+*/
 
 #ifndef _LNMF_H_
 #define _LNMF_H_
@@ -49,75 +71,6 @@ public:
     /// @param[out] pH 存储分解后的系数矩阵, 不能为0
     /// @return 成功返回true, 失败返回false, 参数有误会失败
     bool Factoring(IN const LNMFProblem& problem, OUT LNMFMatrix* pW, OUT LNMFMatrix* pH);
-};
-
-/// @brief 非负矩阵因式分解
-class CNMF
-{
-public:
-    CNMF();
-    virtual ~CNMF();
-    
-    /// @brief 设置特征数量
-    /// @param[in] num 特征数量(要求大于0的整数)
-    /// @return 参数错误返回false
-    bool SetFeatureNum(int num);
-
-    /// @brief 设置原始矩阵
-    /// @param[in] matrix
-    /// @return true
-    bool SetPrimitiveMatrix(const LNMFMatrix& primitiveMatrix);
-
-    /// @brief 初始化
-    /// @return 未对参数进行正确设置错误返回false
-    bool Init();
-
-    /// @brief 因式分解一次
-    /// @return 未初始化返回false
-    bool FactoringOnce();
-
-    /// @brief 获取权重矩阵
-    /// @param[out] weightedMatrix
-    /// @return 未初始化返回false
-    bool GetWeightedMatrix( LNMFMatrix& weightedMatrix) const;
-
-    /// @brief 获取特征矩阵
-    /// @param[out] featureMatrix
-    /// @return 未初始化返回false
-    bool GetFeatureMatrix( LNMFMatrix& featureMatrix) const;
-
-private:
-    /// @brief 随机构造矩阵中的值(0~10之间的浮点数)
-    /// @param[inout] matrix
-    void RandMatrix(LNMFMatrix& matrix);
-
-    /// @brief 对矩阵列上的数据进行归一化
-    /// @param[in] matrix
-    void NomalMatrixC(LNMFMatrix& matrix);
-
-private:
-    bool m_bNeedInit; ///< 需要初始化
-    int m_featureNum; ///< 特征数目
-    LNMFMatrix m_primitiveMatrix; ///< 初始矩阵
-    LNMFMatrix m_weightedMatrix; ///< 权重矩阵
-    LNMFMatrix m_featureMatrix; ///< 特征矩阵
-
-    LNMFMatrix TF;
-    LNMFMatrix TW;
-    LNMFMatrix TWW;
-
-    LNMFMatrix FN;
-    LNMFMatrix FD;
-    LNMFMatrix FFN;
-
-    LNMFMatrix WN;
-    LNMFMatrix WD;
-    LNMFMatrix WF;
-    LNMFMatrix WWN;
-
-private:
-    CNMF(const CNMF&);
-    CNMF& operator = (const CNMF&);
 };
 
 #endif

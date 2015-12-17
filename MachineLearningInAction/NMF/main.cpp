@@ -26,9 +26,9 @@ int main()
         1.0f, 2.0f,
         3.0f, 4.0f
     };
-    LNMFMatrix matrix(2, 2, dataList);
+    LNMFMatrix V(2, 2, dataList);
 
-    LNMFProblem problem(matrix, 2, 100);
+    LNMFProblem problem(V, 2, 50);
 
     LNMF nmf;
 
