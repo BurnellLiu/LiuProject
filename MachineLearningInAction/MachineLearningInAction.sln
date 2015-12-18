@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeBayes", "NativeBayes\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NMF", "NMF\NMF.vcxproj", "{4805F066-4553-4C2F-A9FE-60BB27909D0F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ANN", "ANN\ANN.vcxproj", "{70D684E4-B34E-4F91-9152-9D6B480F98AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -55,6 +57,10 @@ Global
 		{4805F066-4553-4C2F-A9FE-60BB27909D0F}.Debug|Win32.Build.0 = Debug|Win32
 		{4805F066-4553-4C2F-A9FE-60BB27909D0F}.Release|Win32.ActiveCfg = Release|Win32
 		{4805F066-4553-4C2F-A9FE-60BB27909D0F}.Release|Win32.Build.0 = Release|Win32
+		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Debug|Win32.Build.0 = Debug|Win32
+		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Release|Win32.ActiveCfg = Release|Win32
+		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
