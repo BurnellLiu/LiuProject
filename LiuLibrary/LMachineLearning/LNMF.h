@@ -14,8 +14,8 @@
 // 定义原始矩阵
 float dataList[4] = 
 {
-1.0f, 2.0f,
-3.0f, 4.0f
+    1.0f, 2.0f,
+    3.0f, 4.0f
 };
 LNMFMatrix V(2, 2, dataList);
 

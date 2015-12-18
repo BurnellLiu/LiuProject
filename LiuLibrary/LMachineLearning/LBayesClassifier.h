@@ -2,7 +2,10 @@
 /// @file LBayesClassifier.h
 /// @brief 贝叶斯分类器
 /// 
-/// Detail:
+/// Detail: 
+/// 贝叶斯分类器为: 生成模型, 有监督分类, 多元分类
+/// 贝叶斯分类器的样本特征值数据可为连续型数据或离散型数据, 但不可混合使用, 即样本数据不可同时出现离散型数据和连续型数据
+/// 连续型数据如: 人的身高, 离散型数据如: 文本分类中的单词数量
 /// 贝叶斯分类器主要依据贝叶斯公式: P(Y|X) = P(Y, X)/P(X) = P(X, Y)/P(X) = P(X|Y) * P(Y)/P(X)
 /// @author Burnell Liu Email:burnell_liu@outlook.com
 /// @version   
@@ -44,7 +47,7 @@ int classList[8] =
 };
 LBayesMatrix classVector(8, 1, classList);
 
-// 定义贝叶斯原始问题
+// 定义贝叶斯原始问题, 指明样本数据为连续值
 LBayesProblem problem(sampleMatrix, classVector, BAYES_FEATURE_CONTINUS);
 
 // 定义贝叶斯分类器, 并且训练
