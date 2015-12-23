@@ -1,178 +1,11 @@
 
-#include <cmath>
-#include <cstdlib>
-#include <time.h>
-
 #include "LNeuralNetwork.h"
 
-#include <LDataStruct/LArray.h>
+#include <cmath>
+#include <cstdlib>
 
-#ifndef IN
-#define IN
-#endif
-
-#ifndef INOUT
-#define INOUT
-#endif
-
-#ifndef OUT
-#define OUT
-#endif
-
-typedef LArray<float> LNNWeightList; ///< 神经网络权重列表
-typedef LArray<float> LNNInputList; ///< 神经网络输入列表
-typedef LArray<float> LNNOutputList; ///< 神经网络输出列表
-typedef LArray<int> LNNSplitPointList; ///< 神经网络权重分割点列表
-
-
-/// @brief 神经网络
-class LNeuronNet
-{
-public:
-    LNeuronNet();
-    ~LNeuronNet();
-
-    /// @brief 初始化神经网络  
-    /// @param[in] inputNum 输入数目
-    /// @param[in] outputNum 输出数目
-    /// @param[in] hiddenLayerNum 隐藏层数目
-    /// @param[in] neuronNumPerHiddenLayer 每个隐藏层中的神经元数目
-    void Init(IN int inputNum, IN int outputNum, 
-        IN int hiddenLayerNum, IN int neuronNumPerHiddenLayer);
-
-    /// @brief 刺激神经网络
-    /// @param[in] inputData 输入数据列表
-    /// @param[inout] outputData 输出数据列表
-    void Active(IN LNNInputList& inputList, INOUT LNNOutputList& outputList);
-
-protected:
-    /// @brief S型函数
-    /// @param[in] inputA 激励值
-    /// @param[in] inputP 控制曲线变化快慢的参数
-    /// @return 输出值
-    float Sigmoid(IN float inputA, IN float inputP);
-
-    /// @brief 清理资源
-    void CleanUp();
-
-protected:
-    /// @brief 神经元结构
-    struct SNeuron
-    {
-        /// @brief 构造函数
-        /// @param[in] IN inputNum 输入个数
-        explicit SNeuron(IN int inputNum);
-        ~SNeuron();
-
-        int InputNum; ///< 输入个数
-        LNNWeightList WeightList; ///< 权重列表
-
-        // 以下属性在有监督神经网络反向传播中被使用
-        float Output; ///< 神经元的输出值
-        float Error; ///< 神经元的误差值
-        LNNWeightList PrevUpdate; ///< 前一次权重更新值
-    private:
-        // 禁止默认赋值操作符和拷贝构造函数
-        SNeuron(const SNeuron&);
-        SNeuron& operator = (const SNeuron&);
-    };
-    typedef LArray<SNeuron*> LNeuronList; ///< 神经元列表
-
-    /// @brief 神经元层
-    struct SNeuronLayer
-    {
-        /// @brief 构造函数
-        /// @param[in] neuronNum 神经元数目
-        /// @param[in] neuronInputNum 神经元输入个数
-        SNeuronLayer(IN int neuronNum, IN int neuronInputNum);
-
-        ~SNeuronLayer();
-
-        int NeuronNum; ///< 神经元数目
-        LNeuronList NeuronList; ///< 神经元列表
-        LNNInputList InputList; ///< 神经元输入列表
-        LNNOutputList OutputList; ///< 神经元输出列表
-    private:
-        // 禁止默认赋值操作符和拷贝构造函数
-        SNeuronLayer(const SNeuronLayer&);
-        SNeuronLayer& operator = (const SNeuronLayer&);
-    };
-    typedef LArray<SNeuronLayer*> LNeuronLayerList; ///< 神经元层列表
-
-protected:
-    int m_inputNum; ///< 输入数目(包含偏移值输入)
-    int m_outputNum; ///< 输出数目
-    int m_neuronNumPerHiddenLayer; ///< 每个隐藏层中的神经元数目
-
-    int m_weightNumTotal; ///< 权重总数目
-    float m_biasInput; ///< 偏移值输入
-    int m_layerNum; ///< 神经元层总数目(隐藏层和输出层)
-    LNeuronLayerList m_layerList; ///< 神经元层列表(隐藏层和输出层)
-
-private:
-    // 禁止默认赋值操作符和拷贝构造函数
-    LNeuronNet(const LNeuronNet&);
-    LNeuronNet& operator = (const LNeuronNet&);
-};
-
-/// @brief 无监督训练神经网络
-///
-/// 可使用遗传算法来更新神经网络权重
-class LUnSuperviseNN : public LNeuronNet
-{
-public:
-    /// @brief 获取整个神经网络的权重列表
-    /// @param[inout] weightListTotal 权重列表
-    void GetWeightTotal(INOUT LNNWeightList& weightList);
-
-    /// @brief 更新整个神经网络的权重列表
-    ///
-    /// 要求权重范围-1~1
-    /// @param[in] weightList 权重列表
-    void PutWeightTotal(IN LNNWeightList& weightList);
-
-    /// @brief 获取切割点列表
-    /// @param[inout] splitPointList 分割点列表 
-    void GetSplitPointList(INOUT LNNSplitPointList& splitPointList);
-};
-
-/// @brief 有监督训练神经网络
-class LSuperviseNN : public LNeuronNet
-{
-public:
-    LSuperviseNN();
-    ~LSuperviseNN();
-
-    /// @brief 设置神经网络的权重值为随机值
-    void SetRandomWeight();
-
-    /// @brief 训练神经网络
-    /// @param[in] inputList 输入数据
-    /// @param[in] targetOutputList 目标输出数据
-    /// @return 返回误差总值
-    float Train(IN LNNInputList& inputList, IN LNNOutputList& targetOutputList);
-
-private:
-    float m_momentum; ///< 动量
-    float m_learnRate; ///< 学习率
-};
-
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p) \
-do\
-{\
-    if ((p) != 0)\
-    {\
-        delete p;\
-        p = 0;\
-    }\
-}while(0)
-#endif
-
-void SRandTime()
-{
-    srand((int)time(0));
-}
+#include <vector>
+using std::vector;
 
 /// @brief 产生随机小数, 范围0~1
 /// @return 随机小数
@@ -188,351 +21,292 @@ static float RandClamped()
     return RandFloat() - RandFloat();
 }
 
-LNeuronNet::SNeuron::SNeuron(IN int inputNum)
-	: InputNum(inputNum), WeightList(0)
+/// @brief BP网络中的神经元
+/// 该类中的方法不会检查参数的有效性
+class CBPNeuron
 {
-	WeightList.Reset(InputNum);
-	PrevUpdate.Reset(InputNum);
-	for (int i = 0; i < InputNum; i++)
-	{
-		WeightList.Data[i] = 0.0f;
-		PrevUpdate.Data[i] = 0.0f;
-	}
+public:
+    /// @brief 构造函数
+    /// @param[in] inputNum 输入个数, 必须大于等于1
+    explicit CBPNeuron(IN unsigned int inputNum)
+    {
+        m_b = RandClamped();
 
-	Error = 0.0f;
-	Output = 0.0f;
-	
+        m_weightVector.Reset(inputNum, 1);
+        for (unsigned int row = 0; row < m_weightVector.RowLen; row++)
+        {
+            m_weightVector[row][0] = RandClamped();
+        }
+
+        m_activeMatrix.Reset(1, 1); 
+    }
+
+    /// @brief 析构函数
+    ~CBPNeuron()
+    {
+
+    }
+
+    /// @brief 激活神经元
+    /// @param[in] inputVector 输入向量(行向量), 向量长度必须等于神经元的输入个数
+    /// @return 激活值, 激活值范围0~1
+    float Active(IN const LNNMatrix& inputVector)
+    {
+        LNNMatrix::MUL(inputVector, m_weightVector, m_activeMatrix);
+
+        return this->Sigmoid(m_activeMatrix[0][0] + m_b);
+    }
+
+private:
+    /// @brief S型激活函数
+    /// @param[in] input 激励值
+    /// @return 激活值
+    float Sigmoid(IN float input)
+    {
+        return ( 1.0f / ( 1.0f + exp(-input)));
+    }
+
+
+
+private:
+    float m_b; ///< 偏移值
+    LNNMatrix m_weightVector; ///< 权重向量(列向量)
+    LNNMatrix m_activeMatrix; ///< 存储激励值的矩阵, 一行一列
+};
+
+/// @brief BP网络中的神经元层
+class CBPNeuronLayer
+{
+public:
+    /// @brief 构造函数
+    /// @param[in] neuronInputNum 神经元输入个数, 必须为大于等于1的数
+    /// @param[in] neuronNum 神经元个数, 必须为大于等于1的数
+    CBPNeuronLayer(IN unsigned int neuronInputNum, IN unsigned int neuronNum)
+    {
+        m_neuronInputNum = neuronInputNum;
+
+        for (unsigned int i = 0; i < neuronNum; i++)
+        {
+            CBPNeuron* pNeuron = new CBPNeuron(neuronInputNum);
+            m_neuronList.push_back(pNeuron);
+        }
+    }
+
+    ~CBPNeuronLayer()
+    {
+        for (unsigned int i = 0; i < m_neuronList.size(); i++)
+        {
+            if (m_neuronList[i] != 0)
+            {
+                delete m_neuronList[i];
+                m_neuronList[i] = 0;
+            }
+            
+        }
+    }
+
+    /// @brief 激活神经元层
+    /// @param[in] inputVector 输入向量(行向量), 向量长度必须等于神经元的输入个数
+    /// @param[out] pOutputVector 输出向量(行向量), 存储神经元层的输出, 输出向量的长度等于神经元的个数, 该值不能为0
+    /// @return 成功返回true, 失败返回false, 参数有误会失败
+    bool Active(IN const LNNMatrix& inputVector, OUT LNNMatrix* pOutputVector)
+    {
+        if (m_neuronInputNum < 1 || m_neuronList.size() < 1)
+            return false;
+
+        if (inputVector.ColumnLen != m_neuronInputNum)
+            return false;
+
+        if (0 == pOutputVector)
+            return false;
+
+        pOutputVector->Reset(1, m_neuronList.size());
+
+        for (unsigned int i = 0; i < m_neuronList.size(); i++)
+        {
+            (*pOutputVector)[0][i] = m_neuronList[i]->Active(inputVector);
+        }
+
+        return true;
+    }
+
+private:
+    unsigned int m_neuronInputNum; ///< 神经元输入个数
+    vector<CBPNeuron*> m_neuronList; ///< 神经元列表
+};
+
+/// @brief BP网络实现类
+class CBPNetwork
+{
+public:
+    /// @brief 构造函数
+    CBPNetwork()
+    {
+        m_networkPogology.InputNumber = 0;
+        m_networkPogology.OutputNumber = 0;
+        m_networkPogology.HiddenLayerNumber = 0;
+        m_networkPogology.NeuronsOfHiddenLayer = 0;
+
+        m_learnRate = 0.5f;
+
+        m_bInitDone = false;
+    }
+
+    /// @brief 析构函数
+    ~CBPNetwork()
+    {
+        this->CleanUp();
+    }
+
+    /// @brief 初始化BP网络
+    /// 详细解释见头文件LBPNetwork中的声明
+    bool Init(IN const LBPNetworkPogology& pogology)
+    {
+        if (pogology.InputNumber < 1 || pogology.OutputNumber < 1 ||
+            pogology.HiddenLayerNumber < 1 || pogology.NeuronsOfHiddenLayer < 1)
+            return false;
+
+        m_networkPogology = pogology;
+
+        this->CleanUp();
+
+        // 创建第一个隐藏层
+        CBPNeuronLayer* pFirstHiddenLayer = new CBPNeuronLayer(pogology.InputNumber, pogology.NeuronsOfHiddenLayer);
+        m_layerList.push_back(pFirstHiddenLayer);
+
+        // 创建剩余的隐藏层
+        for (unsigned int i = 1; i < pogology.HiddenLayerNumber; i++)
+        {
+            CBPNeuronLayer* pHiddenLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.NeuronsOfHiddenLayer);
+            m_layerList.push_back(pHiddenLayer);
+        }
+
+        // 创建输出层
+        CBPNeuronLayer* pOutputLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.OutputNumber);
+        m_layerList.push_back(pOutputLayer);
+
+
+        m_bInitDone = true;
+        return true;
+    }
+
+    /// @brief 设置学习速率
+    /// 详细解释见头文件LBPNetwork中的声明
+    bool SetLearnRate(IN float rate)
+    {
+        if (rate <= 0.0f)
+            return false;
+
+        m_learnRate = rate;
+
+        return true;
+    }
+
+    /// @brief 训练BP网络
+    /// 详细解释见头文件LBPNetwork中的声明
+    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix)
+    {
+        return true;
+    }
+
+    /// @brief 激活BP网络
+    /// 详细解释见头文件LBPNetwork中的声明
+    bool Active(IN const LNNMatrix& inputMatrix, OUT LNNMatrix* pOutputMatrix)
+    {
+        if (!m_bInitDone)
+            return false;
+
+        if (inputMatrix.RowLen < 1)
+            return false;
+
+        if (inputMatrix.ColumnLen != m_networkPogology.InputNumber)
+            return false;
+
+        if (0 == pOutputMatrix)
+            return false;
+
+        pOutputMatrix->Reset(inputMatrix.RowLen, m_networkPogology.OutputNumber);
+
+
+        vector<LNNMatrix> layerOutputList(m_layerList.size()); // 神经元层输出列表
+        LNNMatrix inputVector;
+
+        for (unsigned int row = 0; row < inputMatrix.RowLen; row++)
+        {
+            inputVector = inputMatrix.GetRow(row);
+
+            for (unsigned int i = 0; i < m_layerList.size(); i++)
+            {
+                if (0 == i)
+                    m_layerList[i]->Active(inputVector, &layerOutputList[i]);
+                else
+                    m_layerList[i]->Active(layerOutputList[i-1], &layerOutputList[i]);
+            }
+
+            for (unsigned int col = 0; col < pOutputMatrix->ColumnLen; col++)
+            {
+                (*pOutputMatrix)[row][col] = layerOutputList[layerOutputList.size()-1][0][col];
+            }
+        }
+
+        return true;
+    }
+
+private:
+    /// @brief 清理资源
+    void CleanUp()
+    {
+        m_bInitDone = false;
+        for (unsigned int i = 0; i < m_layerList.size(); i++)
+        {
+            if (0 != m_layerList[i])
+            {
+                delete m_layerList[i];
+                m_layerList[i] = 0;
+            }
+        }
+
+        m_layerList.clear();
+    }
+
+private:
+    bool m_bInitDone; ///< 标识是否初始化网络完成
+    float m_learnRate; ///< 学习速率
+    LBPNetworkPogology m_networkPogology; ///< 网络拓扑结构
+    vector<CBPNeuronLayer*> m_layerList; ///< 神经元层列表
+};
+
+LBPNetwork::LBPNetwork()
+{
+    m_pBPNetwork = 0;
+    m_pBPNetwork = new CBPNetwork();
 }
 
-LNeuronNet::SNeuron::~SNeuron()
+LBPNetwork::~LBPNetwork()
 {
-
+    if (0 != m_pBPNetwork)
+    {
+        delete m_pBPNetwork;
+        m_pBPNetwork = 0;
+    }
 }
 
-LNeuronNet::SNeuronLayer::SNeuronLayer(IN int neuronNum, IN int neuronInputNum)
-	: NeuronNum(neuronNum)
+bool LBPNetwork::Init(IN const LBPNetworkPogology& pogology)
 {
-	InputList.Reset(neuronInputNum);
-	// 要为偏移值也附加一个输出, 因此应将输出数目加1
-	OutputList.Reset(neuronNum + 1);
-	NeuronList.Reset(neuronNum);
-
-	for (int i = 0; i < neuronNum; i++)
-	{
-		NeuronList.Data[i] = new SNeuron(neuronInputNum);
-	}
+    return m_pBPNetwork->Init(pogology);
 }
 
-LNeuronNet::SNeuronLayer::~SNeuronLayer()
+bool LBPNetwork::SetLearnRate(IN float rate)
 {
-	for (int i = 0; i < NeuronNum; i++)
-	{
-		SAFE_DELETE(NeuronList.Data[i]);
-	}
+    return m_pBPNetwork->SetLearnRate(rate);
 }
 
-LNeuronNet::LNeuronNet()
+bool LBPNetwork::Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix)
 {
-	m_inputNum = 0;
-	m_outputNum = 0;
-	m_neuronNumPerHiddenLayer = 0;
-	m_weightNumTotal = 0;
-	m_layerNum = 0;
-	m_biasInput = -1.0f;
+    return m_pBPNetwork->Train(inputMatrix, outputMatrix);
 }
 
-LNeuronNet::~LNeuronNet()
+bool LBPNetwork::Active(IN const LNNMatrix& inputMatrix, OUT LNNMatrix* pOutputMatrix)
 {
-	this->CleanUp();
-}
-
-void LNeuronNet::Init(IN int inputNum, IN int outputNum, 
-	IN int hiddenLayerNum, IN int neuronNumPerHiddenLayer)
-{
-	if (inputNum <= 0 || outputNum <= 0 || neuronNumPerHiddenLayer <= 0 || hiddenLayerNum < 0)
-		return;
-
-	this->CleanUp();
-
-	// 要为偏移值也附加一个输入, 因此应将输入数目加1
-	m_inputNum = inputNum + 1;
-	m_outputNum = outputNum;
-	m_neuronNumPerHiddenLayer = neuronNumPerHiddenLayer;
-
-	m_layerNum = hiddenLayerNum + 1;
-	m_layerList.Reset(m_layerNum);
-	
-	// 只有输出层
-	if (hiddenLayerNum == 0)
-	{
-		m_layerList.Data[0] = new SNeuronLayer(m_outputNum, m_inputNum);
-		m_weightNumTotal = m_outputNum * m_inputNum;
-		return;
-	}
-
-	// 创建 第一个隐藏层
-	m_layerList.Data[0] = new SNeuronLayer(m_neuronNumPerHiddenLayer, m_inputNum);
-	m_weightNumTotal += m_neuronNumPerHiddenLayer * m_inputNum;
-	for (int i = 1; i <  hiddenLayerNum; i++)
-	{
-		m_layerList.Data[i] = new SNeuronLayer(m_neuronNumPerHiddenLayer, m_neuronNumPerHiddenLayer + 1);
-		m_weightNumTotal += m_neuronNumPerHiddenLayer * (m_neuronNumPerHiddenLayer + 1);
-	}
-
-	// 创建输出层
-	 m_layerList.Data[m_layerNum - 1] = new SNeuronLayer(m_outputNum, m_neuronNumPerHiddenLayer + 1);
-	 m_weightNumTotal += m_outputNum * (m_neuronNumPerHiddenLayer + 1);
-}
-
-void LNeuronNet::Active(IN LNNInputList& inputList, INOUT LNNOutputList& outputList)
-{
-	static LNNInputList inputListRevise; // 使用静态变量, 提高程序效率
-
-	if (inputList.Length != (m_inputNum - 1))
-		return;
-
-	// 将偏移输入值加入到输入列表中
-	inputListRevise.Reset(m_inputNum);
-	for (int i = 0; i < m_inputNum - 1; i++)
-	{
-		inputListRevise.Data[i] = inputList.Data[i];
-	}
-	inputListRevise.Data[m_inputNum - 1] = m_biasInput;
-
-	// 每一层
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		if (i == 0)
-			m_layerList.Data[i]->InputList = inputListRevise;
-		else
-			m_layerList.Data[i]->InputList = m_layerList.Data[i - 1]->OutputList;
-
-		LNNInputList& layerInputList = m_layerList.Data[i]->InputList;
-		SNeuronLayer& neuronLayer = (*m_layerList.Data[i]);
-
-		// 每个神经元
-		for (int j = 0; j < neuronLayer.NeuronNum; j++)
-		{
-			SNeuron& neuron = *(neuronLayer.NeuronList.Data[j]);
-			float neuronActivation = 0.0f; // 神经元激励值
-
-			//每个权重
-			for (int k = 0; k < neuron.InputNum; k++)
-			{
-				neuronActivation += neuron.WeightList.Data[k] * (layerInputList.Data[k]);
-			}
-
-			neuron.Output = this->Sigmoid(neuronActivation, 1);
-			neuronLayer.OutputList.Data[j] = neuron.Output;
-		}
-		neuronLayer.OutputList.Data[neuronLayer.NeuronNum] = m_biasInput;
-
-	}
-
-	if (m_layerNum >= 1)
-	{
-		outputList.Reset(m_outputNum);
-		for (int i = 0; i < m_outputNum; i++)
-		{
-			outputList.Data[i] = m_layerList.Data[m_layerNum - 1]->OutputList.Data[i];
-		}
-	}
-
-}
-
-float LNeuronNet::Sigmoid(IN float inputA, IN float inputP)
-{
-	return ( 1.0f / ( 1.0f + exp(-inputA/inputP)));
-}
-
-void LNeuronNet::CleanUp()
-{
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		SAFE_DELETE(m_layerList.Data[i]);
-	}
-}
-
-void LUnSuperviseNN::GetWeightTotal(INOUT LNNWeightList& weightList)
-{
-	if (weightList.Length != m_weightNumTotal)
-		weightList.Reset(m_weightNumTotal);
-
-	int index = 0;
-
-	//每一层
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		SNeuronLayer& neuronLayer = (*m_layerList.Data[i]);
-
-		// 每个神经元
-		for (int j = 0; j < neuronLayer.NeuronNum; j++)
-		{
-			SNeuron& neuron = *(neuronLayer.NeuronList.Data[j]);
-
-			// 每个权重
-			for (int k = 0; k < neuron.InputNum; k++)
-			{
-				weightList.Data[index++] = neuron.WeightList.Data[k];
-			}
-		}
-	}
-}
-
-void LUnSuperviseNN::PutWeightTotal(IN LNNWeightList& weightList)
-{
-	if (weightList.Length != m_weightNumTotal)
-		return;
-
-	int totalIndex = 0;
-
-	//每一层
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		SNeuronLayer& neuronLayer = (*m_layerList.Data[i]);
-
-		// 每个神经元
-		for (int j = 0; j < neuronLayer.NeuronNum; j++)
-		{
-			SNeuron& neuron = *(neuronLayer.NeuronList.Data[j]);
-
-			// 每个权重
-			for (int k = 0; k < neuron.InputNum; k++)
-			{
-				neuron.WeightList.Data[k] = weightList.Data[totalIndex++];
-			}
-		}
-	}
-}
-
-void LUnSuperviseNN::GetSplitPointList(INOUT LNNSplitPointList& splitPointList)
-{
-	int splitPointNum = m_neuronNumPerHiddenLayer * (m_layerNum - 1) + m_outputNum;
-
-	if (splitPointList.Length != splitPointNum)
-		splitPointList.Reset(splitPointNum);
-
-	int splitPointIndex = 0;
-	int weightCount = 0;
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		SNeuronLayer& neuronLayer = *(m_layerList.Data[i]);
-
-		for (int j = 0; j < neuronLayer.NeuronNum; j++)
-		{
-			SNeuron& neuron = *(neuronLayer.NeuronList.Data[j]);
-
-			for (int k = 0; k < neuron.InputNum; k++)
-				weightCount++;
-
-			splitPointList.Data[splitPointIndex++] = weightCount - 1;
-		}
-	}
-}
-
-LSuperviseNN::LSuperviseNN()
-{
-    SRandTime();
-	m_learnRate = 0.5f;
-	m_momentum = 0.9f;
-}
-
-LSuperviseNN::~LSuperviseNN()
-{
-
-}
-
-void LSuperviseNN::SetRandomWeight()
-{
-	for (int i = 0; i < m_layerNum; i++)
-	{
-		SNeuronLayer& neuronLayer = *m_layerList.Data[i];
-
-		for (int k = 0; k < neuronLayer.NeuronNum; k++)
-		{
-			SNeuron& neuron = *neuronLayer.NeuronList.Data[k];
-
-			for (int w = 0; w < neuron.InputNum; w++)
-			{
-				neuron.WeightList.Data[w] = RandClamped();
-			}
-		}
-	}
-}
-
-float LSuperviseNN::Train(IN LNNInputList& inputList, IN LNNOutputList& targetOutputList)
-{
-	static LNNOutputList outputList; // 使用静态变量, 提高程序效率
-
-	float errorSum = 0.0f; //误差总值
-
-	if (m_layerNum < 1)
-		return errorSum;
-	if (inputList.Length != (m_inputNum - 1))
-		return errorSum;
-	if (targetOutputList.Length != m_outputNum)
-		return errorSum;
-
-	
-	// 计算当前输出
-	this->Active(inputList, outputList);
-
-	SNeuronLayer* pOutputLayer = m_layerList.Data[m_layerNum - 1];
-	// 为每个输出神经细胞 计算误差并调整相应的权重
-	for (int i = 0; i < m_outputNum; i++)
-	{
-		// 计算误差值
-		float targetOutput = targetOutputList.Data[i];
-		float output = outputList.Data[i];
-		float err = targetOutput - output;
-		errorSum += err * err;
-		err *= output * (1 - output);
-
-		SNeuron* pNeuron = pOutputLayer->NeuronList.Data[i];
-		pNeuron->Error = err;
-
-		for (int j = 0; j < pOutputLayer->InputList.Length; j++)
-		{
-			float weightUpdate = m_learnRate * err * pOutputLayer->InputList.Data[j];
-			// 把动量加入到权重更新中
-			pNeuron->WeightList.Data[j] += weightUpdate + pNeuron->PrevUpdate.Data[j] * m_momentum;
-			pNeuron->PrevUpdate.Data[j] = weightUpdate;
-		}
-
-	}
-
-	// 对每个隐藏层
-	for (int i = m_layerNum - 2; i >= 0; i--)
-	{
-		SNeuronLayer* pHiddenLayer = m_layerList.Data[i];
-
-		// 对每个神经元
-		for(int j = 0; j < pHiddenLayer->NeuronNum; j++)
-		{
-			SNeuron* pHiddenNeuron = pHiddenLayer->NeuronList.Data[j];
-
-			// 计算误差值
-			float err = 0.0f;
-			SNeuronLayer* pNextLayer = m_layerList.Data[i + 1];
-			for (int k = 0; k < pNextLayer->NeuronNum; k++)
-			{
-				SNeuron* pNextLayerNeuron = pNextLayer->NeuronList.Data[k];
-				err += pNextLayerNeuron->WeightList.Data[j] * pNextLayerNeuron->Error;
-			}
-			err *= pHiddenNeuron->Output * (1 - pHiddenNeuron->Output);
-			pHiddenNeuron->Error = err;
-
-			for (int w = 0; w < pHiddenNeuron->InputNum; w++)
-			{
-				float weightUpdate = m_learnRate * err * pHiddenLayer->InputList.Data[w];
-				// 把动量加入到权重更新中
-				pHiddenNeuron->WeightList.Data[w] += weightUpdate + pHiddenNeuron->PrevUpdate.Data[w] * m_momentum;
-				pHiddenNeuron->PrevUpdate.Data[w] = weightUpdate;
-			}
-
-		}
-
-	}
-
-	return errorSum;
+    return m_pBPNetwork->Active(inputMatrix, pOutputMatrix);
 }

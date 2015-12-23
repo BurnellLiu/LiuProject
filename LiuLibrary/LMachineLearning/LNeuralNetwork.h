@@ -1,4 +1,13 @@
-
+/// @file LNeuralNetwork.h
+/// @brief 盖头文件中声明了一些神经网络
+/// 
+/// Detail:
+/// LBPNetwork(反向传播网络): 有监督学习, BP网络的输入数据最好归一化(即输入数据全部调整为0~1之间的值), BP网络的输出数据为0~1
+///                          训练BP网络所用的目标输出数据必须归一化
+/// 
+/// @author Burnell Liu Email:burnell_liu@outlook.com
+/// @version   
+/// @date 2015:12:23
 
 #ifndef _LNEURALNETWORK_H_
 #define _LNEURALNETWORK_H_
@@ -7,6 +16,19 @@
 
 typedef LMatrix<float> LNNMatrix; // 神经网络矩阵
 
+
+/// @brief BP网络的拓扑结构
+/// BP网络至少有一个输入, 一个输出, 一个隐藏层
+/// 隐藏层中至少有一个神经元
+struct LBPNetworkPogology
+{
+    unsigned int InputNumber; ///< 输入个数, 要求大于等于1的数
+    unsigned int OutputNumber; ///< 输出个数, 要求大于等于1的数
+    unsigned int HiddenLayerNumber; ///< 隐藏层层数, 要求大于等于1的数
+    unsigned int NeuronsOfHiddenLayer; ///< 单个隐藏层中的神经元个数, 要求大于等于1的数
+};
+
+class CBPNetwork;
 
 /// @brief 反向传播网络(BackPropagation)
 class LBPNetwork
@@ -18,27 +40,39 @@ public:
     /// @brief 析构函数
     ~LBPNetwork();
 
-    /// @brief 初始化BP网络  
-    /// @param[in] inputNum 输入数目, 大于0的值
-    /// @param[in] outputNum 输出数目, 大于0的值
-    /// @param[in] hiddenLayerNum 隐藏层数目, 大于0的值
-    /// @param[in] neuronNumPerHiddenLayer 每个隐藏层中的神经元数目, 大于0的值
-    bool Init(
-        IN unsigned int inputNum, 
-        IN unsigned int outputNum, 
-        IN unsigned int hiddenLayerNum, 
-        IN unsigned int neuronNumPerHiddenLayer);
+    /// @brief 初始化BP网络
+    /// @param[in] pogology BP网络拓扑结构
+    /// @return 成功返回true, 失败返回false, 参数有误会失败
+    bool Init(IN const LBPNetworkPogology& pogology);
 
-    /// @brief 刺激BP网络
-    /// @param[in] inputData 输入数据列表
-    /// @param[inout] outputData 输出数据列表
-    void Active(IN LNNInputList& inputList, INOUT LNNOutputList& outputList);
+    /// @brief 设置学习速率
+    /// @param[in] rate 学习速率为大于0的数, 默认值为0.5f
+    /// @return 成功返回true, 失败返回false, 参数错误会失败
+    bool SetLearnRate(IN float rate);
 
     /// @brief 训练BP网络
-    /// @param[in] inputList 输入数据
-    /// @param[in] targetOutputList 目标输出数据
-    /// @return 返回误差总值
-    float Train(IN LNNInputList& inputList, IN LNNOutputList& targetOutputList);
+    /// 
+    /// 输入数据最好归一化(即输入数据全部调整为0~1之间的值), 目标输出数据必须归一化
+    /// @param[in] inputMatrix 输入数据矩阵, 每一行为一个输入, 矩阵的列数必须等于BP网络的输入个数
+    /// @param[in] outputMatrix 目标输出数据矩阵, 每一行为一个目标输出, 输出矩阵的行数必须等于数据矩阵的行数, 输出矩阵的列数必须等于BP网络的输出个数
+    /// @return 成功训练返回true, , 失败返回false, 参数有误或者网络未初始化会失败
+    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix);
+
+    /// @brief 激活神经网络
+    /// 
+    /// 输入数据最好归一化(即输入数据全部调整为0~1之间的值), 输出数据为0~1之间的值
+    /// @param[in] inputMatrix 输入数据矩阵, 每一行为一个输入, 矩阵的列数必须等于BP网络的输入个数
+    /// @param[out] pOutputMatrix 存储输出数据矩阵, 每一行为一个输出, 该值不能为0
+    /// @return 成功返回true, 失败返回false, 参数有误或者网络未初始化会失败
+    bool Active(IN const LNNMatrix& inputMatrix, OUT LNNMatrix* pOutputMatrix);
+
+private:
+    CBPNetwork* m_pBPNetwork; ///< BP网络的实现对象
+
+private:
+    // 禁止拷贝构造函数和赋值操作符
+    LBPNetwork(const LBPNetwork&);
+    LBPNetwork& operator = (const LBPNetwork&);
 
 };
 
