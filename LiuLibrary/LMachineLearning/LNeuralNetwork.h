@@ -1,5 +1,5 @@
 /// @file LNeuralNetwork.h
-/// @brief 盖头文件中声明了一些神经网络
+/// @brief 改头文件中声明了一些神经网络
 /// 
 /// Detail:
 /// LBPNetwork(反向传播网络): 有监督学习, BP网络的输入数据最好归一化(即输入数据全部调整为0~1之间的值), BP网络的输出数据为0~1
@@ -8,6 +8,52 @@
 /// @author Burnell Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 2015:12:23
+/// @sample
+
+/* 使用BP网络解决XOR问题示例代码如下, XOR问题为非线性问题
+
+// 定义神经网络结构
+LBPNetworkPogology pogology;
+pogology.InputNumber = 2;
+pogology.HiddenLayerNumber = 1;
+pogology.OutputNumber = 1;
+pogology.NeuronsOfHiddenLayer = 2;
+
+// 初始化神经网络并且设置学习速率
+LBPNetwork bpNetwork;
+bpNetwork.Init(pogology);
+bpNetwork.SetLearnRate(2.1f);
+
+// 定义输入矩阵
+float inputList[8] = 
+{
+    1.0f, 0.0f,
+    0.0f, 1.0f,
+    0.0f, 0.0f,
+    1.0f, 1.0f,
+};
+
+LNNMatrix input(4, 2, inputList);
+
+// 定义目标输出矩阵
+LNNMatrix targetOutput(4, 1);
+targetOutput[0][0] = 1.0f;
+targetOutput[1][0] = 1.0f;
+targetOutput[2][0] = 0.0f;
+targetOutput[3][0] = 0.0f;
+
+// 训练1000次
+for (int i = 0; i < 1000; i++)
+{
+    bpNetwork.Train(input, targetOutput); 
+}
+
+// 观察训练后的结果
+LNNMatrix output;
+bpNetwork.Active(input, &output);
+
+// 示例代码最后结果为0.966, 0.966, 0.035, 0.036
+*/
 
 #ifndef _LNEURALNETWORK_H_
 #define _LNEURALNETWORK_H_

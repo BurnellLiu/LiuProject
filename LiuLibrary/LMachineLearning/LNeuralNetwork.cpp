@@ -30,15 +30,11 @@ public:
     /// @param[in] inputNum 输入个数, 必须大于等于1
     explicit CBPNeuron(IN unsigned int inputNum)
     {
-        m_b = RandClamped();
-
-        m_weightVector.Reset(inputNum, 1);
-        for (unsigned int row = 0; row < m_weightVector.RowLen; row++)
+        m_weightList.resize(inputNum + 1);
+        for (unsigned int i = 0; i < m_weightList.size(); i++)
         {
-            m_weightVector[row][0] = RandClamped();
+            m_weightList[i] = RandClamped();
         }
-
-        m_activeMatrix.Reset(1, 1); 
     }
 
     /// @brief 析构函数
@@ -52,9 +48,47 @@ public:
     /// @return 激活值, 激活值范围0~1
     float Active(IN const LNNMatrix& inputVector)
     {
-        LNNMatrix::MUL(inputVector, m_weightVector, m_activeMatrix);
+        float sum = 0.0f;
+        for (unsigned int i = 0; i < inputVector.ColumnLen; i++)
+        {
+            sum += inputVector[0][i] * m_weightList[i];
+        }
 
-        return this->Sigmoid(m_activeMatrix[0][0] + m_b);
+        sum += m_weightList[inputVector.ColumnLen] * 1.0f;
+
+        return this->Sigmoid(sum);
+    }
+
+    /// @brief 反向训练
+    /// @param[in] inputList 该神经元的输入列表
+    /// @param[in] error 该神经元的输出误差
+    /// @param[in] learnRate 学习速率
+    /// @param[out] pFrontErrorList 存储前层输出误差列表 , 不能为0
+    /// @return 成功返回true, 失败返回false, 参数有误会失败
+    bool BackTrain(
+        IN const vector<float>& inputList, 
+        IN float error, 
+        IN float learnRate,
+        OUT vector<float>* pFrontErrorList)
+    {
+        if (inputList.size() != (m_weightList.size()-1))
+            return false;
+
+        if (0 == pFrontErrorList)
+            return false;
+
+        pFrontErrorList->resize(inputList.size());
+
+        for (unsigned int i = 0; i < inputList.size(); i++)
+        {
+            m_weightList[i] += learnRate * inputList[i] * error;
+            (*pFrontErrorList)[i] = m_weightList[i] * error;
+        }
+
+        m_weightList[m_weightList.size()-1] += learnRate * 1.0f * error;
+
+        return true;
+
     }
 
 private:
@@ -66,12 +100,8 @@ private:
         return ( 1.0f / ( 1.0f + exp(-input)));
     }
 
-
-
 private:
-    float m_b; ///< 偏移值
-    LNNMatrix m_weightVector; ///< 权重向量(列向量)
-    LNNMatrix m_activeMatrix; ///< 存储激励值的矩阵, 一行一列
+    vector<float> m_weightList; ///< 权重列表, 权重值最后一项为偏移值
 };
 
 /// @brief BP网络中的神经元层
@@ -90,6 +120,8 @@ public:
             CBPNeuron* pNeuron = new CBPNeuron(neuronInputNum);
             m_neuronList.push_back(pNeuron);
         }
+
+        m_inputList.resize(neuronInputNum);
     }
 
     ~CBPNeuronLayer()
@@ -120,6 +152,11 @@ public:
         if (0 == pOutputVector)
             return false;
 
+        for (unsigned int i = 0; i < inputVector.ColumnLen; i++)
+        {
+            m_inputList[i] = inputVector[0][i];
+        }
+
         pOutputVector->Reset(1, m_neuronList.size());
 
         for (unsigned int i = 0; i < m_neuronList.size(); i++)
@@ -130,9 +167,53 @@ public:
         return true;
     }
 
+    /// @brief 反向训练
+    /// @param[in] opErrorList 本层的输出误差列表
+    /// @param[in] learnRate 学习速率
+    /// @param[out] pFrontOpErrorList 存储前一层的输出误差列表, 不能为0
+    /// @return 成功返回true, 失败返回false, 参数有误会失败
+    bool BackTrain(IN const vector<float>& opErrorList, IN float learnRate, OUT vector<float>* pFrontOpErrorList)
+    {
+        if (opErrorList.size() != m_neuronList.size())
+            return false;
+
+        if (0 == pFrontOpErrorList)
+            return false;
+
+        // 初始化前一层的输出误差列表
+        pFrontOpErrorList->resize(m_neuronInputNum);
+        for (unsigned int i = 0; i < pFrontOpErrorList->size(); i++)
+        {
+            (*pFrontOpErrorList)[i] = 0.0f; 
+        }
+
+        // 对每个神经元进行反向训练, 并获取每个神经元对前层输出的误差列表
+        vector<float> frontErrorList;
+        for (unsigned int i = 0; i < m_neuronList.size(); i++)
+        {
+            m_neuronList[i]->BackTrain(m_inputList, opErrorList[i], learnRate, &frontErrorList);
+
+            // 累加各个神经元的误差
+            for (unsigned int j = 0; j < pFrontOpErrorList->size(); j++)
+            {
+                (*pFrontOpErrorList)[j] += frontErrorList[j];
+            }
+        }
+
+        for (unsigned int i = 0; i < pFrontOpErrorList->size(); i++)
+        {
+            (*pFrontOpErrorList)[i] *= m_inputList[i] * (1.0f-m_inputList[i]);
+        }
+
+        return true;
+
+    }
+
 private:
     unsigned int m_neuronInputNum; ///< 神经元输入个数
     vector<CBPNeuron*> m_neuronList; ///< 神经元列表
+
+    vector<float> m_inputList; ///< 神经元的输入值列表, 每次调用Active函数被更
 };
 
 /// @brief BP网络实现类
@@ -206,6 +287,53 @@ public:
     /// 详细解释见头文件LBPNetwork中的声明
     bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix)
     {
+        if (!m_bInitDone)
+            return false;
+
+        // 检查参数
+        if (inputMatrix.RowLen < 1)
+            return false;
+
+        if (inputMatrix.ColumnLen != m_networkPogology.InputNumber)
+            return false;
+
+        if (outputMatrix.ColumnLen != m_networkPogology.OutputNumber)
+            return false;
+
+        if (outputMatrix.RowLen != inputMatrix.RowLen)
+            return false;
+
+        
+        LNNMatrix inputVector;
+        LNNMatrix outputVector;
+
+        vector<float> errorList;
+        vector<float> frontErrorList;
+
+        // 针对每个训练样本, 分别训练
+        for (unsigned int row = 0; row < inputMatrix.RowLen; row++)
+        {
+            inputVector = inputMatrix.GetRow(row);
+            this->Active(inputVector, &outputVector);
+
+            // 计算输出层误差
+            errorList.resize(outputVector.ColumnLen);
+            for (unsigned int i = 0; i < outputVector.ColumnLen; i++)
+            {
+                errorList[i] = outputMatrix[row][i]-outputVector[0][i];
+                errorList[i] *= outputVector[0][i] * (1.0f-outputVector[0][i]);
+            }
+
+            // 从后向前进行反向训练
+            for (int i = int(m_layerList.size()-1); i >= 0; i--)
+            {
+                m_layerList[i]->BackTrain(errorList, m_learnRate, &frontErrorList);
+                errorList = frontErrorList;
+            }
+
+        }
+
+        
         return true;
     }
 
