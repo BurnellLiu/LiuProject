@@ -77,8 +77,6 @@ public:
         if (0 == pFrontErrorList)
             return false;
 
-        pFrontErrorList->resize(inputList.size());
-
         for (unsigned int i = 0; i < inputList.size(); i++)
         {
             m_weightList[i] += learnRate * inputList[i] * error;
@@ -122,6 +120,7 @@ public:
         }
 
         m_inputList.resize(neuronInputNum);
+		m_frontErrorList.resize(neuronInputNum);
     }
 
     ~CBPNeuronLayer()
@@ -157,8 +156,6 @@ public:
             m_inputList[i] = inputVector[0][i];
         }
 
-        pOutputVector->Reset(1, m_neuronList.size());
-
         for (unsigned int i = 0; i < m_neuronList.size(); i++)
         {
             (*pOutputVector)[0][i] = m_neuronList[i]->Active(inputVector);
@@ -181,22 +178,20 @@ public:
             return false;
 
         // 初始化前一层的输出误差列表
-        pFrontOpErrorList->resize(m_neuronInputNum);
         for (unsigned int i = 0; i < pFrontOpErrorList->size(); i++)
         {
             (*pFrontOpErrorList)[i] = 0.0f; 
         }
 
         // 对每个神经元进行反向训练, 并获取每个神经元对前层输出的误差列表
-        vector<float> frontErrorList;
         for (unsigned int i = 0; i < m_neuronList.size(); i++)
         {
-            m_neuronList[i]->BackTrain(m_inputList, opErrorList[i], learnRate, &frontErrorList);
+            m_neuronList[i]->BackTrain(m_inputList, opErrorList[i], learnRate, &m_frontErrorList);
 
             // 累加各个神经元的误差
             for (unsigned int j = 0; j < pFrontOpErrorList->size(); j++)
             {
-                (*pFrontOpErrorList)[j] += frontErrorList[j];
+                (*pFrontOpErrorList)[j] += m_frontErrorList[j];
             }
         }
 
@@ -212,8 +207,8 @@ public:
 private:
     unsigned int m_neuronInputNum; ///< 神经元输入个数
     vector<CBPNeuron*> m_neuronList; ///< 神经元列表
-
-    vector<float> m_inputList; ///< 神经元的输入值列表, 每次调用Active函数被更
+    vector<float> m_inputList; ///< 神经元的输入值列表, 每次调用Active函数被更新
+	vector<float> m_frontErrorList; ///< 神经元前层输出误差
 };
 
 /// @brief BP网络实现类
@@ -251,20 +246,35 @@ public:
 
         this->CleanUp();
 
+		m_layerOutList.resize(pogology.HiddenLayerNumber + 1);
+		m_layerErrorList.resize(pogology.HiddenLayerNumber + 2);
+		m_inputVectorForTrain.Reset(1, pogology.InputNumber);
+		m_outputVectorForTrain.Reset(1, pogology.OutputNumber);
+		m_inputVectorForActive.Reset(1, pogology.InputNumber);
+
+		m_layerErrorList[0].resize(pogology.InputNumber);
+
+
         // 创建第一个隐藏层
         CBPNeuronLayer* pFirstHiddenLayer = new CBPNeuronLayer(pogology.InputNumber, pogology.NeuronsOfHiddenLayer);
         m_layerList.push_back(pFirstHiddenLayer);
+		m_layerOutList[0].Reset(1, pogology.NeuronsOfHiddenLayer);
+		m_layerErrorList[1].resize(pogology.NeuronsOfHiddenLayer);
 
         // 创建剩余的隐藏层
         for (unsigned int i = 1; i < pogology.HiddenLayerNumber; i++)
         {
             CBPNeuronLayer* pHiddenLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.NeuronsOfHiddenLayer);
             m_layerList.push_back(pHiddenLayer);
+			m_layerOutList[i].Reset(1, pogology.NeuronsOfHiddenLayer);
+			m_layerErrorList[i + 1].resize(pogology.NeuronsOfHiddenLayer);
         }
 
         // 创建输出层
         CBPNeuronLayer* pOutputLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.OutputNumber);
         m_layerList.push_back(pOutputLayer);
+		m_layerOutList[pogology.HiddenLayerNumber].Reset(1, pogology.OutputNumber);
+		m_layerErrorList[pogology.HiddenLayerNumber + 1].resize(pogology.OutputNumber);
 
 
         m_bInitDone = true;
@@ -303,32 +313,25 @@ public:
         if (outputMatrix.RowLen != inputMatrix.RowLen)
             return false;
 
-        
-        LNNMatrix inputVector;
-        LNNMatrix outputVector;
-
-        vector<float> errorList;
-        vector<float> frontErrorList;
 
         // 针对每个训练样本, 分别训练
         for (unsigned int row = 0; row < inputMatrix.RowLen; row++)
         {
-            inputVector = inputMatrix.GetRow(row);
-            this->Active(inputVector, &outputVector);
+            inputMatrix.GetRow(row, m_inputVectorForTrain);
+            this->Active(m_inputVectorForTrain, &m_outputVectorForTrain);
 
             // 计算输出层误差
-            errorList.resize(outputVector.ColumnLen);
-            for (unsigned int i = 0; i < outputVector.ColumnLen; i++)
+			vector<float>& errorList = m_layerErrorList[m_layerErrorList.size()-1];
+            for (unsigned int i = 0; i < m_outputVectorForTrain.ColumnLen; i++)
             {
-                errorList[i] = outputMatrix[row][i]-outputVector[0][i];
-                errorList[i] *= outputVector[0][i] * (1.0f-outputVector[0][i]);
+                errorList[i] = outputMatrix[row][i]-m_outputVectorForTrain[0][i];
+                errorList[i] *= m_outputVectorForTrain[0][i] * (1.0f-m_outputVectorForTrain[0][i]);
             }
 
             // 从后向前进行反向训练
             for (int i = int(m_layerList.size()-1); i >= 0; i--)
             {
-                m_layerList[i]->BackTrain(errorList, m_learnRate, &frontErrorList);
-                errorList = frontErrorList;
+                m_layerList[i]->BackTrain(m_layerErrorList[i + 1], m_learnRate, &m_layerErrorList[i]);
             }
 
         }
@@ -356,24 +359,21 @@ public:
         pOutputMatrix->Reset(inputMatrix.RowLen, m_networkPogology.OutputNumber);
 
 
-        vector<LNNMatrix> layerOutputList(m_layerList.size()); // 神经元层输出列表
-        LNNMatrix inputVector;
-
         for (unsigned int row = 0; row < inputMatrix.RowLen; row++)
         {
-            inputVector = inputMatrix.GetRow(row);
+            inputMatrix.GetRow(row, m_inputVectorForActive);
 
             for (unsigned int i = 0; i < m_layerList.size(); i++)
             {
                 if (0 == i)
-                    m_layerList[i]->Active(inputVector, &layerOutputList[i]);
+                    m_layerList[i]->Active(m_inputVectorForActive, &m_layerOutList[i]);
                 else
-                    m_layerList[i]->Active(layerOutputList[i-1], &layerOutputList[i]);
+                    m_layerList[i]->Active(m_layerOutList[i-1], &m_layerOutList[i]);
             }
 
             for (unsigned int col = 0; col < pOutputMatrix->ColumnLen; col++)
             {
-                (*pOutputMatrix)[row][col] = layerOutputList[layerOutputList.size()-1][0][col];
+                (*pOutputMatrix)[row][col] = m_layerOutList[m_layerOutList.size()-1][0][col];
             }
         }
 
@@ -395,6 +395,8 @@ private:
         }
 
         m_layerList.clear();
+		m_layerOutList.clear();
+		m_layerErrorList.clear();
     }
 
 private:
@@ -402,6 +404,15 @@ private:
     float m_learnRate; ///< 学习速率
     LBPNetworkPogology m_networkPogology; ///< 网络拓扑结构
     vector<CBPNeuronLayer*> m_layerList; ///< 神经元层列表
+
+	/*
+	以下成员变量为Train或Active所用, 为了在多次调用Train或Active函数时提高程序效率
+	*/
+	vector<LNNMatrix> m_layerOutList; ///< 神经元层输出列表
+	vector<vector<float>> m_layerErrorList; ///< 神经元层输出误差列表
+	LNNMatrix m_inputVectorForTrain; ///< 输入向量Train函数使用
+	LNNMatrix m_outputVectorForTrain; ///< 输出向量Train函数使用
+	LNNMatrix m_inputVectorForActive; ///< 输入向量Active函数使用
 };
 
 LBPNetwork::LBPNetwork()
