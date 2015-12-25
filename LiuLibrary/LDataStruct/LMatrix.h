@@ -103,10 +103,10 @@ public:
     LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* pDataList);
 
     /// @brief 拷贝构造函数
-    LMatrix(const LMatrix<Type>& rhs);
+    LMatrix(IN const LMatrix<Type>& rhs);
 
     /// @brief 赋值操作符
-    LMatrix<Type>& operator = (const LMatrix<Type>& rhs);
+    LMatrix<Type>& operator = (IN const LMatrix<Type>& rhs);
 
     /// @brief 矩阵乘法
     /// 要求自身矩阵的列数等于矩阵B的行数
@@ -130,13 +130,13 @@ public:
     ///
     /// 如果想使用高效率访问请直接使用Data
     /// @param[in] row 矩阵行
-    Type*& operator[](unsigned int row);
+    Type*& operator[](IN unsigned int row);
 
     /// @brief []操作符
     ///
     /// 如果想使用高效率访问请直接使用Data
     /// @param[in] row 矩阵行
-    const Type* operator[](unsigned int row) const;
+    const Type* operator[](IN unsigned int row) const;
 
     /// @brief 矩阵转置
     /// @return 转置后的结果矩阵
@@ -150,17 +150,27 @@ public:
     /// @brief 获取矩阵中的一行数据
     /// @param[in] row 行索引
     /// @return 行向量
-    LMatrix<Type> GetRow(unsigned int row) const;
+    LMatrix<Type> GetRow(IN unsigned int row) const;
+
+	/// @brief 获取矩阵中的一行数据
+	/// @param[in] row 行索引
+	/// @param[out] rowVector 存储行数据
+	void GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const;
 
     /// @brief 获取矩阵中的一列数据
     /// @param[in] col 列索引
     /// @return 列向量
-    LMatrix<Type> GetColumn(unsigned int col) const;
+    LMatrix<Type> GetColumn(IN unsigned int col) const;
+
+	/// @brief 获取矩阵中的一列数据
+	/// @param[in] col 列索引
+	/// @param[out] colVector 存储列数据
+	void GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const;
 
     /// @brief 重置矩阵
     /// @param[in] row 矩阵行大小
     /// @param[in] col 矩阵列大小
-    void Reset(unsigned int row, unsigned int col);
+    void Reset(IN unsigned int row, IN unsigned int col);
 
 public:
     unsigned int RowLen; ///< 行长度
@@ -178,7 +188,7 @@ LMatrix<Type>::LMatrix()
 }
 
 LTEMPLATE
-LMatrix<Type>::LMatrix(unsigned int row, unsigned int col)
+LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col)
 : RowLen(row), ColumnLen(col), Data(0), m_data(0)
 {
     if (0 == (this->RowLen * this->ColumnLen))
@@ -235,7 +245,7 @@ LMatrix<Type>::~LMatrix()
 }
 
 LTEMPLATE
-LMatrix<Type>::LMatrix(const LMatrix<Type>& rhs)
+LMatrix<Type>::LMatrix(IN const LMatrix<Type>& rhs)
 : RowLen(0), ColumnLen(0), Data(0), m_data(0)
 {
     unsigned int totalLen = rhs.RowLen * rhs.ColumnLen;
@@ -261,7 +271,7 @@ LMatrix<Type>::LMatrix(const LMatrix<Type>& rhs)
 }
 
 LTEMPLATE
-LMatrix<Type>& LMatrix<Type>::operator = (const LMatrix<Type>& rhs)
+LMatrix<Type>& LMatrix<Type>::operator = (IN const LMatrix<Type>& rhs)
 {
     if ((this->RowLen != rhs.RowLen) || (this->ColumnLen != rhs.ColumnLen))
     {
@@ -333,13 +343,13 @@ LMatrix<Type> LMatrix<Type>::ScalarMul(IN const Type& B) const
 }
 
 LTEMPLATE
-Type*& LMatrix<Type>::operator[](unsigned int row)
+Type*& LMatrix<Type>::operator[](IN unsigned int row)
 {
     return this->Data[row];
 }
 
 LTEMPLATE
-const Type* LMatrix<Type>::operator[](unsigned int row) const
+const Type* LMatrix<Type>::operator[](IN unsigned int row) const
 {
     return this->Data[row];
 }
@@ -353,31 +363,45 @@ LMatrix<Type> LMatrix<Type>::T() const
 }
 
 LTEMPLATE
-LMatrix<Type> LMatrix<Type>::GetRow(unsigned int row) const
+LMatrix<Type> LMatrix<Type>::GetRow(IN unsigned int row) const
 {
     LMatrix<Type> rowVector(1, this->ColumnLen);
-    for (unsigned int i = 0; i < this->ColumnLen; i++)
-    {
-        rowVector.Data[0][i] = this->Data[row][i];
-    }
+	this->GetRow(row, rowVector);
 
     return rowVector;
 }
 
 LTEMPLATE
-LMatrix<Type> LMatrix<Type>::GetColumn(unsigned int col) const
+void LMatrix<Type>::GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const
+{
+	rowVector.Reset(1, this->ColumnLen);
+	for (unsigned int i = 0; i < this->ColumnLen; i++)
+	{
+		rowVector.Data[0][i] = this->Data[row][i];
+	}
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::GetColumn(IN unsigned int col) const
 {
     LMatrix<Type> columnVector(this->RowLen, 1);
-    for (unsigned int i = 0; i < this->RowLen; i++)
-    {
-        columnVector.Data[i][0] = this->Data[i][col];
-    }
+	this->GetColumn(col, columnVector);
 
     return columnVector;
 }
 
 LTEMPLATE
-void LMatrix<Type>::Reset(unsigned int row, unsigned int col)
+void LMatrix<Type>::GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const
+{
+	colVector.Reset(this->RowLen, 1);
+	for (unsigned int i = 0; i < this->RowLen; i++)
+	{
+		colVector.Data[i][0] = this->Data[i][col];
+	}
+}
+
+LTEMPLATE
+void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col)
 {
     if ((this->RowLen != row) || this->ColumnLen != col)
     {
