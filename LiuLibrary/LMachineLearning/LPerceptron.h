@@ -12,10 +12,10 @@
 // 定义训练输入矩阵和输出矩阵
 float inputList[8] = 
 {
-1.0f, 1.0f,
-1.0f, 0.0f,
-0.0f, 1.0f,
-0.0f, 0.0f
+    1.0f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 1.0f,
+    0.0f, 0.0f
 };
 
 LPerceptronMatrix X(4, 2, inputList);
