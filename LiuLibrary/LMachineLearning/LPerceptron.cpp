@@ -138,3 +138,33 @@ private:
     float m_b; ///< 分割超平面的截距
     LPerceptronMatrix m_weightVector; ///< 权重向量(列向量), 列数为1, 行数为样本的特征数
 };
+
+LPerceptron::LPerceptron()
+{
+    m_pPerceptron = 0;
+    m_pPerceptron = new CPerceptron();
+}
+
+LPerceptron::~LPerceptron()
+{
+    if (0 != m_pPerceptron)
+    {
+        delete m_pPerceptron;
+        m_pPerceptron = 0;
+    }
+}
+
+bool LPerceptron::SetLearningRate(IN float rate)
+{
+    return m_pPerceptron->SetLearningRate(rate);
+}
+
+bool LPerceptron::TrainModel(IN const LPerceptronProblem& problem)
+{
+    return m_pPerceptron->TrainModel(problem);
+}
+
+float LPerceptron::Predict(IN const LPerceptronMatrix& sample)
+{
+    return m_pPerceptron->Predict(sample);
+}

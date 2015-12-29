@@ -9,31 +9,35 @@
 
 int main()
 {
-    LPerceptronMatrix X(3, 2);
-    X[0][0] = 3.0f;
-    X[0][1] = 3.0f;
+    // 定义训练输入矩阵和输出矩阵
+    float inputList[8] = 
+    {
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f
+    };
 
-    X[1][0] = 4.0f;
-    X[1][1] = 3.0f;
+    LPerceptronMatrix X(4, 2, inputList);
 
-    X[2][0] = 1.0f;
-    X[2][1] = 1.0f;
-
-    LPerceptronMatrix Y(3, 1);
+    LPerceptronMatrix Y(4, 1);
     Y[0][0] = LPERCEPTRON_SUN;
     Y[1][0] = LPERCEPTRON_SUN;
-    Y[2][0] = LPERCEPTRON_MOON;
+    Y[2][0] = LPERCEPTRON_SUN;
+    Y[3][0] = LPERCEPTRON_MOON;
 
     LPerceptronProblem problem(X, Y);
 
+    // 训练模型
     LPerceptron perceptron;
     perceptron.TrainModel(problem);
 
-    LPerceptronMatrix sample(1, 2);
-    sample[0][0] = 2.0f;
-    sample[0][1] = 2.0f;
+    // 使用测试样本测试
+    LPerceptronMatrix testSample(1, 2);
+    testSample[0][0] = 0.0f;
+    testSample[0][1] = 0.0f;
 
-    printf("Predict: %f\n", perceptron.Predict(sample));
+    printf("Predict: %f\n", perceptron.Predict(testSample));
 
     system("pause");
     return 0;

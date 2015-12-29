@@ -3,9 +3,43 @@
 /// @brief 感知机
 /// 
 /// Detail:感知机要求训练样本线性可分
-/// @author Burnell_Liu  
+/// @author Burnell_Liu  Email:burnell_liu@outlook.com
 /// @version   
 /// @date 30:7:2015
+
+/* 使用感知机解决OR问题示例代码如下, OR问题为线性问题
+
+// 定义训练输入矩阵和输出矩阵
+float inputList[8] = 
+{
+1.0f, 1.0f,
+1.0f, 0.0f,
+0.0f, 1.0f,
+0.0f, 0.0f
+};
+
+LPerceptronMatrix X(4, 2, inputList);
+
+LPerceptronMatrix Y(4, 1);
+Y[0][0] = LPERCEPTRON_SUN;
+Y[1][0] = LPERCEPTRON_SUN;
+Y[2][0] = LPERCEPTRON_SUN;
+Y[3][0] = LPERCEPTRON_MOON;
+
+LPerceptronProblem problem(X, Y);
+
+// 训练模型
+LPerceptron perceptron;
+perceptron.TrainModel(problem);
+
+// 使用测试样本测试
+LPerceptronMatrix testSample(1, 2);
+testSample[0][0] = 0.0f;
+testSample[0][1] = 0.0f;
+
+printf("Predict: %f\n", perceptron.Predict(testSample));
+
+*/
 
 #ifndef _LPERCEPTRON_H_
 #define _LPERCEPTRON_H_
