@@ -53,38 +53,36 @@ struct LPerceptronProblem
 };
 
 
+class CPerceptron;
+
 /// @brief 感知机
-///
 class LPerceptron
 {
 public:
+    /// @brief 构造函数
     LPerceptron();
+
+    /// @brief 析构函数
     ~LPerceptron();
 
     /// @brief 设置学习速率(默认值为1.0f)
-    ///   
-    /// @param[in] rate 学习速率, 0 < rate <=1.0f
-    /// @return 成功设置返回true, 设置失败返回false, rate超出范围会设置失败
+    /// @param[in] rate 学习速率, 学习速率为大于0的数
+    /// @return 成功设置返回true, 设置失败返回false, 参数有误会失败
     bool SetLearningRate(IN float rate);
 
     /// @brief 训练模型
-    ///  
     /// @param[in] problem 原始问题
     /// @return 返回true表示训练成功, 返回false表示参数数据错误
     bool TrainModel(IN const LPerceptronProblem& problem);
 
     /// @brief 使用训练好的模型进行预测(单样本预测)
-    ///  
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sample 需要预测的样本(行向量)
     /// @return 返回预测结果: LPERCEPTRON_SUN or LPERCEPTRON_MOON, 返回0.0表示出错(需要预测的样本出错或者模型没有训练好)
     float Predict(IN const LPerceptronMatrix& sample);
 
 private:
-
-    float m_learningRate; ///< 学习速率
-    float m_b; ///< 分割超平面的截距
-    LPerceptronMatrix m_weightVector; ///< 权重向量(列向量), 列数为1, 行数为样本的特征数
+    CPerceptron* m_pPerceptron; ///< 感知机实现对象
 };
 
 
