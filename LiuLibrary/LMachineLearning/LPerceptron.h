@@ -2,7 +2,8 @@
 /// @file LPerceptron.h
 /// @brief 感知机
 /// 
-/// Detail:感知机要求训练样本线性可分
+/// Detail:
+/// 感知机为: 判别模型, 有监督学习, 二元分类(要求训练样本线性可分)
 /// @author Burnell_Liu  Email:burnell_liu@outlook.com
 /// @version   
 /// @date 30:7:2015
