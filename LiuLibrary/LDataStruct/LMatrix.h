@@ -92,11 +92,20 @@ public:
     ~LMatrix();
 
     /// @brief 构造函数
+    /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
     /// @param[in] row 矩阵行大小
     /// @param[in] col 矩阵列大小
     LMatrix(IN unsigned int row, IN unsigned int col);
 
+    /// @brief 构造函数, 构造矩阵, 并使用指定数据初始化矩阵
+    /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
+    /// @param[in] row 矩阵行大小
+    /// @param[in] col 矩阵列大小
+    /// @param[in] initValue 初始化数据
+    LMatrix(IN unsigned int row, IN unsigned int col, IN const Type& initValue);
+
     /// @brief 构造函数, 构造矩阵, 并使用数组数据初始化矩阵
+    /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
     /// @param[in] row 矩阵行大小
     /// @param[in] col 矩阵列大小
     /// @param[in] pDataList 矩阵数据
@@ -168,9 +177,17 @@ public:
 	void GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const;
 
     /// @brief 重置矩阵
+    /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
     /// @param[in] row 矩阵行大小
     /// @param[in] col 矩阵列大小
     void Reset(IN unsigned int row, IN unsigned int col);
+
+    /// @brief 重置矩阵, 并使用initValue初始化矩阵中的所有值
+    /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
+    /// @param[in] row 矩阵行大小
+    /// @param[in] col 矩阵列大小
+    /// @param[in] initValue 初始化值
+    void Reset(IN unsigned int row, IN unsigned int col, IN const Type& initValue);
 
 public:
     unsigned int RowLen; ///< 行长度
@@ -189,38 +206,34 @@ LMatrix<Type>::LMatrix()
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col)
-: RowLen(row), ColumnLen(col), Data(0), m_data(0)
+: RowLen(0), ColumnLen(0), Data(0), m_data(0)
 {
-    if (0 == (this->RowLen * this->ColumnLen))
-        return;
+    this->Reset(row, col);
+}
 
-    this->Data = new Type*[this->RowLen];
-    this->m_data = new Type[this->RowLen * this->ColumnLen];
-    for (unsigned int i = 0; i < this->RowLen; i++)
+LTEMPLATE
+LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type& initValue)
+: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+{
+    his->Reset(row, col);
+
+    unsigned int size = row * col;
+    for (unsigned int i = 0; i < size; i++)
     {
-        this->Data[i] = &this->m_data[this->ColumnLen * i];
+        this->m_data[i] = initValue;
     }
 }
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* pDataList)
-: RowLen(row), ColumnLen(col), Data(0), m_data(0)
+: RowLen(0), ColumnLen(0), Data(0), m_data(0)
 {
-    if (0 == (this->RowLen * this->ColumnLen))
-        return;
+    this->Reset(row, col);
 
-    this->Data = new Type*[this->RowLen];
-    this->m_data = new Type[this->RowLen * this->ColumnLen];
-
-    unsigned int totalSize = row * col;
-    for (unsigned int i = 0; i < totalSize; i++)
+    unsigned int size = row * col;
+    for (unsigned int i = 0; i < size; i++)
     {
         this->m_data[i] = pDataList[i];
-    }
-
-    for (unsigned int i = 0; i < this->RowLen; i++)
-    {
-        this->Data[i] = &this->m_data[this->ColumnLen * i];
     }
 
 }
@@ -248,63 +261,25 @@ LTEMPLATE
 LMatrix<Type>::LMatrix(IN const LMatrix<Type>& rhs)
 : RowLen(0), ColumnLen(0), Data(0), m_data(0)
 {
-    unsigned int totalLen = rhs.RowLen * rhs.ColumnLen;
-    if (0 == totalLen)
-        return;
+    this->Reset(rhs.RowLen, rhs.ColumnLen);
 
-    this->RowLen = rhs.RowLen;
-    this->ColumnLen = rhs.ColumnLen;
-
-    this->m_data = new Type[totalLen];
-    this->Data = new Type*[this->RowLen];
-
-
-    for (unsigned int i = 0; i < this->RowLen; i++)
+    unsigned int size = rhs.RowLen * rhs.ColumnLen;
+    for (unsigned int i = 0; i < size; i++)
     {
-        this->Data[i] = &this->m_data[this->ColumnLen * i];
-
-        for (unsigned int j = 0; j < this->ColumnLen; j++)
-        {
-             this->m_data[i * this->ColumnLen + j] = rhs.m_data[i * this->ColumnLen + j];
-        }
+        this->m_data[i] = rhs.m_data[i];
     }
+
 }
 
 LTEMPLATE
 LMatrix<Type>& LMatrix<Type>::operator = (IN const LMatrix<Type>& rhs)
 {
-    if ((this->RowLen != rhs.RowLen) || (this->ColumnLen != rhs.ColumnLen))
+    this->Reset(rhs.RowLen, rhs.ColumnLen);
+
+    unsigned int size = rhs.RowLen * rhs.ColumnLen;
+    for (unsigned int i = 0; i < size; i++)
     {
-        if (this->m_data)
-        {
-            delete[] this->m_data;
-            this->m_data = 0;
-        }
-        if (this->Data)
-        {
-            delete[] this->Data;
-            this->Data = 0;
-        }
-        this->RowLen = 0;
-        this->ColumnLen = 0;
-
-        if (rhs.RowLen * rhs.ColumnLen > 0)
-        {
-            this->RowLen = rhs.RowLen;
-            this->ColumnLen = rhs.ColumnLen;
-            this->Data = new Type*[this->RowLen];
-            this->m_data = new Type[this->RowLen * this->ColumnLen];
-        }
-    }
-
-    for (unsigned int i = 0; i < this->RowLen; i++)
-    {
-         this->Data[i] = &this->m_data[this->ColumnLen * i];
-
-        for (unsigned int j = 0; j < this->ColumnLen; j++)
-        {
-            this->m_data[i * this->ColumnLen + j] = rhs.m_data[i * this->ColumnLen + j];
-        }
+        this->m_data[i] = rhs.m_data[i];
     }
 
     return *this;
@@ -417,11 +392,12 @@ void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col)
             this->m_data = 0;
         }
 
-        this->RowLen = row;
-        this->ColumnLen = col;
-
+        
         if (row * col > 0)
         {
+            this->RowLen = row;
+            this->ColumnLen = col;
+
             this->Data = new Type*[this->RowLen];
             this->m_data = new Type[this->RowLen * this->ColumnLen];
             for (unsigned int i = 0; i < this->RowLen; i++)
@@ -429,6 +405,23 @@ void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col)
                 this->Data[i] = &this->m_data[this->ColumnLen * i];
             }
         }
+        else
+        {
+            this->RowLen = 0;
+            this->ColumnLen = 0;
+        }
+    }
+}
+
+LTEMPLATE
+void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col, IN const Type& initValue)
+{
+    this->Reset(row, col);
+
+    unsigned int size = row * col;
+    for (unsigned int i = 0; i < size; i++)
+    {
+        this->m_data[i] = initValue;
     }
 }
 

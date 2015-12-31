@@ -2,6 +2,9 @@
 
 #include "LPerceptron.h"
 
+#include <vector>
+using std::vector;
+
 /// @brief 感知机 实现类
 class CPerceptron
 {
@@ -36,7 +39,7 @@ public:
     {
         const LPerceptronMatrix& X = problem.XMatrix;
         const LPerceptronMatrix& Y = problem.YVector;
-        LPerceptronMatrix& W = this->m_weightVector;
+        vector<float>& W = this->m_weightVector;
         float& B = this->m_b;
         const float Alpha = this->m_learningRate;
 
@@ -59,11 +62,7 @@ public:
 
 
         // 初始化权重向量和截距
-        W.Reset(X.ColumnLen, 1);
-        for (unsigned int i =0; i < W.RowLen; i++)
-        {
-            W[i][0] = 0.0f;
-        }
+        W.resize(X.ColumnLen, 0.0f);
         B = 0.0f;
 
 
@@ -74,9 +73,9 @@ public:
             for (unsigned int i = 0; i < X.RowLen; i++)
             {
                 float WXi = 0.0f;
-                for (unsigned int n = 0; n < W.RowLen; n++)
+                for (unsigned int n = 0; n < W.size(); n++)
                 {
-                    WXi += W[n][0] * X[i][n];
+                    WXi += W[n] * X[i][n];
                 }
 
                 // 误分类点
@@ -85,9 +84,9 @@ public:
                     bErrorClass = true;
 
                     // 更新W和B
-                    for (unsigned int n = 0; n < W.RowLen; n++)
+                    for (unsigned int n = 0; n < W.size(); n++)
                     {
-                        W[n][0] = W[n][0] + Alpha * Y[i][0] * X[i][n];
+                        W[n] = W[n] + Alpha * Y[i][0] * X[i][n];
                     }
                     B = B + Alpha * Y[i][0];
                 }
@@ -118,15 +117,21 @@ public:
         if (sample.RowLen != 1)
             return 0.0f;
 
-        if (this->m_weightVector.RowLen < 1)
+        if (this->m_weightVector.size() < 1)
             return 0.0f;
 
-        if (this->m_weightVector.RowLen != sample.ColumnLen)
+        if (this->m_weightVector.size() != sample.ColumnLen)
             return 0.0f;
 
-        LPerceptronMatrix WX = sample * this->m_weightVector;
+        float y = 0.0f;
+        for (unsigned int i = 0; i < sample.ColumnLen; i++)
+        {
+            y += sample[0][i] * m_weightVector[i];
+        }
 
-        if (WX[0][0] + this->m_b >= 0)
+        y += m_b;
+
+        if (y >= 0)
             return LPERCEPTRON_SUN;
         else
             return LPERCEPTRON_MOON;
@@ -136,7 +141,7 @@ private:
 
     float m_learningRate; ///< 学习速率
     float m_b; ///< 分割超平面的截距
-    LPerceptronMatrix m_weightVector; ///< 权重向量(列向量), 列数为1, 行数为样本的特征数
+    vector<float> m_weightVector; ///< 权重向量(列向量), 列数为1, 行数为样本的特征数
 };
 
 LPerceptron::LPerceptron()
