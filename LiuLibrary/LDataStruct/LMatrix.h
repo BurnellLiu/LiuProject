@@ -215,7 +215,7 @@ LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type& initValue)
 : RowLen(0), ColumnLen(0), Data(0), m_data(0)
 {
-    his->Reset(row, col);
+    this->Reset(row, col);
 
     unsigned int size = row * col;
     for (unsigned int i = 0; i < size; i++)
