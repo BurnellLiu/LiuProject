@@ -30,13 +30,6 @@ int main()
     labelVector[3][0] = LBOOST_MOON;
     labelVector[4][0] = LBOOST_SUN;
 
-    LBoostMatrix weightVector(5, 1);
-    weightVector[0][0] = 0.2f;
-    weightVector[1][0] = 0.2f;
-    weightVector[2][0] = 0.2f;
-    weightVector[3][0] = 0.2f;
-    weightVector[4][0] = 0.2f;
-
     LBoostTree boostTree;
     LBoostProblem problem(sampleMatrix, labelVector);
     boostTree.TrainModel(problem);

@@ -118,6 +118,11 @@ public:
 
 private:
     CPerceptron* m_pPerceptron; ///< 感知机实现对象
+
+private:
+    // 禁止拷贝构造函数和赋值操作符
+    LPerceptron(const LPerceptron&);
+    LPerceptron& operator = (const LPerceptron&);
 };
 
 
