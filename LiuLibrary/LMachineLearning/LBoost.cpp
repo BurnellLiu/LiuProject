@@ -8,39 +8,47 @@ using std::vector;
 
 #include "LBoost.h"
 
-/// @brief Boost分类规则
-enum LBOOST_CLASSIFY_RULE
+/// @brief 桩分类规则
+enum LSTUMP_CLASSIFY_RULE
 {
     LARGER_SUN = 1, ///< 大于则分类为BOOST_SUN, 小于等于则分类为BOOST_MOON
     LARGER_MOON ///< 大于则分类为BOOST_MOON, 小于等于则分类为BOOST_SUN
 };
 
-/// @brief Boost树桩分类器
+/// @brief 桩结构
+struct LStump
+{
+    unsigned int FeatureIndex; ///< 特征索引, 使用该特征索引对样本进行分类
+    float FeatureThreshold; ///< 特征阈值, 使用该特征阈值对样本进行分类
+    LSTUMP_CLASSIFY_RULE ClassifyRule; ///< 分类规则, 使用该分类规则对样本进行分类
+};
+
+/// @brief 树桩分类器
 /// 弱分类器
-class LBoostStump
+class CStumpClassifer
 {
 public:
     /// @brief 构造函数
-    LBoostStump()
+    CStumpClassifer()
     {
         m_bTrained = false;
     }
 
     /// @brief 析构函数
-    ~LBoostStump()
+    ~CStumpClassifer()
     {
 
     }
 
     /// @brief 训练
     /// @param[in] problem 原始问题
-    /// @param[inout] weightVec 训练样本的权重向量, 成功训练后保存更新后的权重向量
-    /// @param[out] pClassisVec 存储该分类桩的分类结果, 不能为0
+    /// @param[inout] weightVector 训练样本的权重向量, 成功训练后保存更新后的权重向量
+    /// @param[out] pResultVector 存储该分类桩的分类结果, 不能为0
     /// @return 成功返回true, 失败返回false, 参数有误返回false
     bool Train(
         IN const LBoostProblem& problem, 
-        INOUT vector<float>& weightVec, 
-        OUT LBoostMatrix* pClassisVec)
+        INOUT vector<float>& weightVector, 
+        OUT vector<float>* pResultVector)
     {
         // 检查参数
         if (problem.XMatrix.ColumnLen < 1)
@@ -51,35 +59,178 @@ public:
             return false;
         if (problem.YVector.RowLen != problem.XMatrix.RowLen)
             return false;
-        if (problem.YVector.RowLen != weightVec.size())
+        if (problem.YVector.RowLen != weightVector.size())
             return false;
-        if (0 == pClassisVec)
+        if (0 == pResultVector)
             return false;
 
+        for (unsigned int i = 0; i < problem.YVector.RowLen; i++)
+        {
+            if (problem.YVector[i][0] != LBOOST_SUN &&
+                problem.YVector[i][0] != LBOOST_MOON)
+                return false;
+        }
+
+        const LBoostMatrix& X = problem.XMatrix; // 样本矩阵
+        const LBoostMatrix& Y = problem.YVector; // 标签矩阵
+
+        const unsigned int M = X.RowLen; // 样本数量
+        const unsigned int N = X.ColumnLen; // 样本特征数量
+
+        const int StepNum = 10;
+
+        LStump stump; // 树桩临时变量
+        vector<float> classisVector(M);
+
+        LStump bestStump; // 最好的树桩
+        float minWeightError = 1.0f; // 最小权重错误率
+        vector<float> bestClassisVector(M); // 最好的分类结果向量
+        
+
+        // 对每一个特征
+        for (unsigned int n = 0; n < N; n++)
+        {
+            stump.FeatureIndex = n;
+
+            float rangeMin = X[0][n]; // 所有样本中列i(特征)中的最小值
+            float rangeMax = X[0][n]; // 所有样本中列i(特征)中的最大值
+            for (unsigned int m = 0; m < M; m++)
+            {
+                if (X[m][n] < rangeMin)
+                    rangeMin = X[m][n];
+                if (X[m][n] > rangeMax)
+                    rangeMax = X[m][n];
+            }
+
+            float stepSize = (rangeMax - rangeMin)/(float)StepNum;
+
+            for (int k = -1; k <= StepNum + 1; k++)
+            {
+                stump.FeatureThreshold = rangeMin + k * stepSize;
+                stump.ClassifyRule = LARGER_SUN;
+                this->Classify(X, stump, &classisVector);
+
+                float weightError = 0.0f;
+                for (unsigned int m = 0; m < M; m++)
+                {
+                    if (classisVector[m] != Y[m][0])
+                        weightError += weightVector[m];
+                }
+                if (weightError > 0.5f)
+                {
+                    stump.ClassifyRule = LARGER_MOON;
+                    weightError = 1.0f - weightError;
+                }
+
+                if (weightError < minWeightError)
+                {
+                    minWeightError = weightError;
+                    bestStump = stump;
+                    bestClassisVector = classisVector;
+                }
+
+            }
+        }
 
 
+        // 确保没有错误时, 不会发生除0溢出
+        if (minWeightError < 1e-16)
+            minWeightError = (float)1e-16;
 
+        m_featureNum = N;
+
+        m_alpha = 0.5f * log((1.0f-minWeightError)/minWeightError);
+
+        m_stump = bestStump;
+        (*pResultVector) = bestClassisVector;
+        for (auto iter = pResultVector->begin(); iter != pResultVector->end(); iter++)
+        {
+            (*iter) *= m_alpha; 
+        }
+
+        // 使用alpha更新权重向量
+        float sumWeight = 0.0f;
+        for (unsigned int m = 0; m < M; m++)
+        {
+            weightVector[m] = weightVector[m] * exp(-1 * m_alpha * bestClassisVector[m] * problem.YVector[m][0]);
+            sumWeight += weightVector[m];
+        }
+        for (unsigned int m = 0; m < M; m++)
+        {
+            weightVector[m] = weightVector[m]/sumWeight;
+        }
 
         m_bTrained = true;
         return true;
 
     }
 
-    bool Predict()
+    /// @brief 使用分类器进行预测
+    /// @param[in] sampleMatrix 样本矩阵
+    /// @param[out] pResultVector 存储结果向量, 不能为0
+    /// @return 成功返回true, 失败返回false, 参数有误或者分类器未训练会失败
+    bool Predict(IN const LBoostMatrix& sampleMatrix, OUT vector<float>* pResultVector)
     {
         if (!m_bTrained)
             return false;
 
+        if (sampleMatrix.ColumnLen != m_featureNum)
+            return false;
+
+        if (sampleMatrix.RowLen < 1)
+            return false;
+
+        if (0 == pResultVector)
+            return false;
+
+        vector<float> classisVector;
+        this->Classify(sampleMatrix, m_stump, &classisVector);
+        pResultVector->resize(classisVector.size());
+        for (unsigned int i = 0; i < classisVector.size(); i++)
+        {
+            (*pResultVector)[i] = classisVector[i] * m_alpha;
+        }
 
         return true;
     }
 
 private:
-    unsigned int m_featureIndex; ///< 特征索引, 使用该特征索引对样本进行分类
-    float m_featureThreshold; ///< 特征阈值, 使用该特征阈值对样本进行分类
-    LBOOST_CLASSIFY_RULE m_classifyRule; ///< 分类规则
-    float m_alpha; //< 该树桩的Alpha
+    /// @brief 分类
+    /// @param[in] ampleMatrix 样本矩阵
+    /// @param[in] stump 分类桩结构
+    /// @param[in] pClassisVector 存储分类结果向量
+    void Classify(
+        IN const LBoostMatrix& sampleMatrix,
+        IN const LStump& stump,
+        OUT vector<float>* pClassisVector)
+    {
+        pClassisVector->resize(sampleMatrix.RowLen);
+
+        for (unsigned int i = 0; i < sampleMatrix.RowLen; i++)
+        {
+            if (stump.ClassifyRule == LARGER_SUN)
+            {
+                if (sampleMatrix[i][stump.FeatureIndex] > stump.FeatureThreshold)
+                    (*pClassisVector)[i] = LBOOST_SUN;
+                else
+                    (*pClassisVector)[i] = LBOOST_MOON;
+            }
+
+            if (stump.ClassifyRule == LARGER_MOON)
+            {
+                if (sampleMatrix[i][stump.FeatureIndex] > stump.FeatureThreshold)
+                    (*pClassisVector)[i] = LBOOST_MOON;
+                else
+                    (*pClassisVector)[i] = LBOOST_SUN;
+            }
+        }
+    }
+
+private:
+    LStump m_stump; ///< 桩结构
+    float m_alpha; //< 树桩分类器的权重值, 
     bool m_bTrained; ///< 标识该决策桩是否已经被训练
+    unsigned int m_featureNum; ///< 分类器要求的样本特征数
 };
 
 /// @brief 提升树
@@ -91,20 +242,13 @@ public:
     /// @brief 构造函数
     CBoostTree()
     {
-        this->m_featureNumber = 0;
-        this->m_weakClassifierNum = 0;
-        this->m_pWeakClassifierList = 0;
         this->m_maxWeakClassifierNum = 40;
     }
 
     /// @brief 析构函数
     ~CBoostTree()
     {
-        if (this->m_pWeakClassifierList )
-        {
-            delete[] m_pWeakClassifierList;
-            m_pWeakClassifierList = 0;
-        }
+
     }
 
     /// @brief 设置最大弱分类器数量
@@ -133,81 +277,46 @@ public:
                 return false;
         }
 
-        this->m_featureNumber = problem.XMatrix.ColumnLen;
-
+        m_featureNum = problem.XMatrix.ColumnLen;
 
         // 构造并且初始化权重向量(列向量)
-        LBoostMatrix weightVector(problem.XMatrix.RowLen, 1);
-        for (unsigned int i =0; i < weightVector.RowLen; i++)
+        vector<float> weightVector(problem.XMatrix.RowLen);
+        for (unsigned int i =0; i < weightVector.size(); i++)
         {
-            weightVector[i][0] = 1.0f/(float)weightVector.RowLen;
+            weightVector[i] = 1.0f/(float)weightVector.size();
         }
 
         // 构造累加类别向量(列向量)并且初始化
-        LBoostMatrix sumClassisVector(problem.XMatrix.RowLen, 1);
-        for (unsigned int i = 0; i < sumClassisVector.RowLen; i++)
-        {
-            sumClassisVector[i][0] = 0.0f;
-        }
+        vector<float> sumClassisVector(problem.XMatrix.RowLen, 0.0f);
 
-        LBoostStump stump;
-        LBoostMatrix classisVector;
+        // 弱分类器分类的结果向量
+        vector<float> resultVector;
 
-        vector<LBoostStump> weakClassifierList;
+        m_weakClassifierList.clear();
 
+        CStumpClassifer stumpClassifer;
         for (unsigned int i = 0; i < m_maxWeakClassifierNum; i++)
         {
-
-            this->BuildStump(problem, weightVector, stump, classisVector);
-
-            weakClassifierList.push_back(stump);
-
-            // 使用alpha更新权重向量
-            float sumWeight = 0.0f;
-            for (unsigned int m = 0; m < weightVector.RowLen; m++)
-            {
-                weightVector[m][0] = weightVector[m][0] * exp(-1 * stump.Alpha * classisVector[m][0] * problem.YVector[m][0]);
-                sumWeight += weightVector[m][0];
-            }
-            for (unsigned int m = 0; m < weightVector.RowLen; m++)
-            {
-                weightVector[m][0] = weightVector[m][0]/sumWeight;
-            }
+            stumpClassifer.Train(problem, weightVector, &resultVector);
+            m_weakClassifierList.push_back(stumpClassifer);
 
             // 计算累加类别向量
-            for (unsigned int m = 0; m < sumClassisVector.RowLen; m++)
+            for (unsigned int m = 0; m < sumClassisVector.size(); m++)
             {
-                sumClassisVector[m][0] += stump.Alpha * classisVector[m][0];
+                sumClassisVector[m] += resultVector[m];
             }
 
             // 计算累加错误率
             int errorCount = 0; // 错误分类计数
-            for (unsigned int m = 0; m < sumClassisVector.RowLen; m++)
+            for (unsigned int m = 0; m < sumClassisVector.size(); m++)
             {
-                if (sumClassisVector[m][0] * problem.YVector[m][0] < 0)
+                if (sumClassisVector[m] * problem.YVector[m][0] < 0)
                     errorCount++;
             }
-            float sumError = (float)errorCount/(float)sumClassisVector.RowLen;
+            float sumError = (float)errorCount/(float)sumClassisVector.size();
             if (sumError == 0.0f)
                 break;
 
-        }
-
-        if (weakClassifierList.size() > 0)
-        {
-            if (this->m_pWeakClassifierList != 0)
-            {
-                delete[] this->m_pWeakClassifierList;
-                this->m_pWeakClassifierList = 0;
-            }
-
-            this->m_weakClassifierNum = weakClassifierList.size();
-            this->m_pWeakClassifierList = new LBoostStump[weakClassifierList.size()];
-
-            for (unsigned int i = 0; i < m_weakClassifierNum; i++)
-            {
-                this->m_pWeakClassifierList[i] = weakClassifierList[i];
-            }
         }
 
         return true;
@@ -224,7 +333,7 @@ public:
             return 0.0f;
 
         LBoostMatrix classisVector(1, 1);
-        bool bRet = this->Predict(sample, classisVector);
+        bool bRet = this->Predict(sample, &classisVector);
         if (!bRet)
             return 0.0f;
 
@@ -236,196 +345,47 @@ public:
     /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
     /// @param[in] sampleMatrix 需要预测的样本矩阵
     /// @return 返回true表示成功, 返回false表示出错(需要预测的样本出错或者模型没有训练好)
-    bool Predict(IN const LBoostMatrix& sampleMatrix, OUT LBoostMatrix& classisVector)
+    bool Predict(IN const LBoostMatrix& sampleMatrix, OUT LBoostMatrix* pClassisVector)
     {
-        if (this->m_weakClassifierNum < 1)
+        if (this->m_weakClassifierList.size() < 1)
             return false;
 
         if (sampleMatrix.RowLen < 1)
             return false;
 
-        if (sampleMatrix.ColumnLen != this->m_featureNumber)
+        if (sampleMatrix.ColumnLen != this->m_featureNum)
             return false;
 
-        LBoostMatrix classisVectorTemp(sampleMatrix.RowLen, 1);
-        LBoostMatrix sumClassisVector(sampleMatrix.RowLen, 1);
-        for (unsigned int m = 0; m < sumClassisVector.RowLen; m++)
-        {
-            sumClassisVector[m][0] = 0.0f;
-        }
+        if (0 == pClassisVector)
+            return false;
 
-        for (unsigned int i = 0; i < this->m_weakClassifierNum; i++)
+        pClassisVector->Reset(sampleMatrix.RowLen, 1);
+
+        vector<float> resultVector(sampleMatrix.RowLen);
+        vector<float> sumResultVector(sampleMatrix.RowLen, 0.0f);
+        for (unsigned int i = 0; i < this->m_weakClassifierList.size(); i++)
         {
-            LBoostStump& stump = this->m_pWeakClassifierList[i];
-            this->StumpClassify(sampleMatrix, stump, classisVectorTemp);
-            for (unsigned int m = 0; m < classisVectorTemp.RowLen; m++)
+            CStumpClassifer& stumpClassifer = m_weakClassifierList[i];
+            stumpClassifer.Predict(sampleMatrix, &resultVector);
+            for (unsigned int j = 0; j < resultVector.size(); j++)
             {
-                sumClassisVector[m][0] += stump.Alpha * classisVectorTemp[m][0];
+                sumResultVector[j] += resultVector[j];
             }
         }
 
-        classisVector.Reset(sampleMatrix.RowLen, 1);
-
-        for (unsigned int m = 0; m < sumClassisVector.RowLen; m++)
+        for (unsigned int m = 0; m < sumResultVector.size(); m++)
         {
-            if (sumClassisVector[m][0] >= 0.0f)
-                classisVector[m][0] = LBOOST_SUN;
+            if (sumResultVector[m] >= 0.0f)
+                (*pClassisVector)[m][0] = LBOOST_SUN;
             else
-                classisVector[m][0] = LBOOST_MOON;
+                (*pClassisVector)[m][0] = LBOOST_MOON;
         }
 
         return true;
     }
 
-public:
-    /// @brief 构造树桩
-    ///  
-    /// @param[in] problem 原始问题
-    /// @param[in] weightVector 权重向量(列向量), 行数为原始问题样本矩阵的行数, 列数为1
-    /// @param[out] stump 构造好的树桩
-    /// @param[out] classisVector 分类号的类别向量(列向量), 向量行数为样本矩阵的行数, 向量列数为1
-    /// @return
-    void BuildStump(
-        IN const LBoostProblem& problem, 
-        IN const LBoostMatrix& weightVector,
-        OUT LBoostStump& stump,
-        OUT LBoostMatrix& classisVector)
-    {
-        const float CLASSIFY_RIGHT = 0.0f; ///< 分类正确标记
-        const float CLASSIFY_ERROR = 1.0f; ///< 分类错误标记
-
-        const LBoostMatrix& X = problem.XMatrix; // 样本矩阵
-        const LBoostMatrix& Y = problem.YVector; // 标签矩阵
-
-        const unsigned int M = X.RowLen; // 样本数量
-        const unsigned int N = X.ColumnLen; // 样本特征数量
-
-        const  int StepNum = 10;
-
-        LBoostMatrix classisVectorTemp(M, 1); // 分类出的向量(列向量)
-        LBoostMatrix errorVector(M, 1); // 错误向量(列向量), 矩阵行数为样本数目, 矩阵列为1, 
-        //被正确分类的样本对应在错误向量中会被标记为0.0f, 被错误分类的样本对应在错误向量中会被标记为1.0f
-
-        LBoostStump stumpTemp; // 用于分类的树桩
-        LBoostMatrix weightErrorMatrix(1, 1);
-
-        float minWeightError = 1.0f; // 最小权重错误率
-        LBoostStump bestStump; // 最好的树桩
-        LBoostMatrix bestClassisVector(M, 1);  // 最好类别向量
-
-
-
-        // 对每一个特征
-        for (unsigned int n = 0; n < N; n++)
-        {
-            stumpTemp.FeatureIndex = n;
-
-            float rangeMin = X[0][n]; // 所有样本中列i(特征)中的最小值
-            float rangeMax = X[0][n]; // 所有样本中列i(特征)中的最大值
-            for (unsigned int m = 0; m < M; m++)
-            {
-                if (X[m][n] < rangeMin)
-                    rangeMin = X[m][n];
-                if (X[m][n] > rangeMax)
-                    rangeMax = X[m][n];
-            }
-
-            float stepSize = (rangeMax - rangeMin)/(float)StepNum;
-
-            for (int k = -1; k <= StepNum + 1; k++)
-            {
-                stumpTemp.FeatureThreshold = rangeMin + k * stepSize;
-                stumpTemp.ClassifyRule = LARGER_SUN;
-                this->StumpClassify(X, stumpTemp, classisVectorTemp);
-
-                for (unsigned int m = 0; m < M; m++)
-                {
-                    if (classisVectorTemp[m][0] == Y[m][0])
-                        errorVector[m][0] = CLASSIFY_RIGHT;
-                    else
-                        errorVector[m][0] = CLASSIFY_ERROR;
-                }
-
-                weightErrorMatrix = weightVector.T() * errorVector;
-                float weightError = weightErrorMatrix[0][0];
-                if (weightError < minWeightError)
-                {
-                    minWeightError = weightError;
-                    bestStump = stumpTemp;
-                    bestClassisVector = classisVectorTemp;
-                }
-
-                stumpTemp.ClassifyRule = LARGER_MOON;
-                this->StumpClassify(X, stumpTemp, classisVectorTemp);
-
-                for (unsigned int m = 0; m < M; m++)
-                {
-                    if (classisVectorTemp[m][0] == Y[m][0])
-                        errorVector[m][0] = CLASSIFY_RIGHT;
-                    else
-                        errorVector[m][0] = CLASSIFY_ERROR;
-                }
-
-                weightErrorMatrix = weightVector.T() * errorVector;
-                weightError = weightErrorMatrix[0][0];
-                if (weightError < minWeightError)
-                {
-                    minWeightError = weightError;
-                    bestStump = stumpTemp;
-                    bestClassisVector = classisVectorTemp;
-                }
-            }
-
-
-        }
-
-
-        // 确保没有错误时, 不会发生除0溢出
-        if (minWeightError < 1e-16)
-            minWeightError = (float)1e-16;
-
-        bestStump.Alpha = 0.5f * log((1.0f-minWeightError)/minWeightError);
-
-        stump = bestStump;
-        classisVector = bestClassisVector;
-    }
-
-    /// @brief 使用树桩对训练样本进行分类
-    ///  
-    /// @param[in] sampleMatrix 样本矩阵
-    /// @param[in] stump 进行分类的树桩
-    /// @param[out] classisVector 类别向量(列向量), 向量行数为样本矩阵的行数, 向量列数为1
-    /// @return
-    void StumpClassify(
-        IN const LBoostMatrix& sampleMatrix,
-        IN const LBoostStump& stump,
-        OUT LBoostMatrix& classisVector)
-    {
-        classisVector.Reset(sampleMatrix.RowLen, 1);
-
-        for (unsigned int i = 0; i < sampleMatrix.RowLen; i++)
-        {
-            if (stump.ClassifyRule == LARGER_SUN)
-            {
-                if (sampleMatrix[i][stump.FeatureIndex] > stump.FeatureThreshold)
-                    classisVector[i][0] = LBOOST_SUN;
-                else
-                    classisVector[i][0] = LBOOST_MOON;
-            }
-
-            if (stump.ClassifyRule == LARGER_MOON)
-            {
-                if (sampleMatrix[i][stump.FeatureIndex] > stump.FeatureThreshold)
-                    classisVector[i][0] = LBOOST_MOON;
-                else
-                    classisVector[i][0] = LBOOST_SUN;
-            }
-        }
-    }
-
 private:
-    LBoostStump* m_pWeakClassifierList; ///< 弱分类器列表
-    unsigned int m_weakClassifierNum; ///< 弱分类器数量
+    vector<CStumpClassifer> m_weakClassifierList; ///< 弱分类器列表
     unsigned int m_maxWeakClassifierNum; ///< 最大弱分类器数量
-    unsigned int m_featureNumber; ///< 样本的特征数量
+    unsigned int m_featureNum; ///< 分类器要求的样本特征数
 };
