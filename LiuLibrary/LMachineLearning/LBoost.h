@@ -2,8 +2,9 @@
 /// @brief 本头文件中声明了一些提升算法
 /// 
 /// Detail:
-/// 提升树: 有监督学习, 判别模型, 二元分类
-/// @author Burnell_Liu  
+/// 提升方法的核心思想是针对同一个训练集训练不同的分类器(弱分类器), 然后把这些弱分类器组合起来, 构成一个更强的最终分类器(强分类器)
+/// 提升树: 有监督学习, 判别模型, 二元分类, 提升树的弱分类器为决策桩
+/// @author Burnell_Liu  Email:burnell_liu@outlook.com
 /// @version   
 /// @date 22:7:2015
 
@@ -52,8 +53,9 @@ struct LBoostProblem
     const LBoostMatrix& YVector; ///< 标签向量(列向量)
 };
 
+class CBoostTree;
+
 /// @brief 提升树
-/// 以决策树为基函数的提升方法称为提升树
 class LBoostTree
 {
 public:
@@ -63,7 +65,7 @@ public:
     /// @brief 析构函数
     ~LBoostTree();
 
-    /// @brief 设置最大弱分类器数量
+    /// @brief 设置最大弱分类器数量, 默认值为40
     /// @param[in] num 弱分类器数量
     void SetMaxClassifierNum(IN unsigned int num);
 
@@ -84,6 +86,9 @@ public:
     /// @param[out] pClassisVector 存储预测结果的向量
     /// @return 返回true表示成功, 返回false表示出错(需要预测的样本出错或者模型没有训练好)
     bool Predict(IN const LBoostMatrix& sampleMatrix, OUT LBoostMatrix* pClassisVector);
+
+private:
+    CBoostTree* m_pBoostTree; ///< 提升树实现对象
 
 private:
     // 禁止拷贝构造函数和赋值操作符

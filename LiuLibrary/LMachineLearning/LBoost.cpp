@@ -116,10 +116,14 @@ public:
                     if (classisVector[m] != Y[m][0])
                         weightError += weightVector[m];
                 }
+
+                // 如果错误率大于0.5f则表示分类规则应该取反, 分类结果直接取反, 节省
                 if (weightError > 0.5f)
                 {
                     stump.ClassifyRule = LARGER_MOON;
                     weightError = 1.0f - weightError;
+                    for (unsigned int m = 0; m < M; m++)
+                        classisVector[m] *= LBOOST_MOON;
                 }
 
                 if (weightError < minWeightError)
@@ -227,10 +231,12 @@ private:
     }
 
 private:
-    LStump m_stump; ///< 桩结构
-    float m_alpha; //< 树桩分类器的权重值, 
     bool m_bTrained; ///< 标识该决策桩是否已经被训练
-    unsigned int m_featureNum; ///< 分类器要求的样本特征数
+    unsigned int m_featureNum; ///< 决策桩要求的样本特征数
+    
+
+    LStump m_stump; ///< 桩结构
+    float m_alpha; //< 决策桩的权重值
 };
 
 /// @brief 提升树
@@ -252,6 +258,7 @@ public:
     }
 
     /// @brief 设置最大弱分类器数量
+    /// 详细解释见头文件LBoostTree中的声明
     void SetMaxClassifierNum(IN unsigned int num)
     {
         m_maxWeakClassifierNum = num;
@@ -323,10 +330,7 @@ public:
     }
 
     /// @brief 使用训练好的模型进行预测(单样本预测)
-    ///  
-    /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
-    /// @param[in] sample 需要预测的样本
-    /// @return 返回预测结果: BOOST_SUN or BOOST_MOON, 返回0.0表示出错(需要预测的样本出错或者模型没有训练好)
+    /// 详细解释见头文件LBoostTree中的声明
     float Predict(IN const LBoostMatrix& sample)
     {
         if (sample.RowLen != 1)
@@ -341,10 +345,7 @@ public:
     }
 
     /// @brief 使用训练好的模型进行预测(多样本预测)
-    ///  
-    /// 请保证需要预测的样本的特征长度和训练样本的特征长度相同
-    /// @param[in] sampleMatrix 需要预测的样本矩阵
-    /// @return 返回true表示成功, 返回false表示出错(需要预测的样本出错或者模型没有训练好)
+    /// 详细解释见头文件LBoostTree中的声明
     bool Predict(IN const LBoostMatrix& sampleMatrix, OUT LBoostMatrix* pClassisVector)
     {
         if (this->m_weakClassifierList.size() < 1)
@@ -389,3 +390,39 @@ private:
     unsigned int m_maxWeakClassifierNum; ///< 最大弱分类器数量
     unsigned int m_featureNum; ///< 分类器要求的样本特征数
 };
+
+LBoostTree::LBoostTree()
+{
+    m_pBoostTree = 0;
+    m_pBoostTree = new CBoostTree();
+}
+
+LBoostTree::~LBoostTree()
+{
+    if (m_pBoostTree != 0)
+    {
+        delete m_pBoostTree;
+        m_pBoostTree = 0;
+    }
+}
+
+void LBoostTree::SetMaxClassifierNum(IN unsigned int num)
+{
+    m_pBoostTree->SetMaxClassifierNum(num);
+}
+
+bool LBoostTree::TrainModel(IN const LBoostProblem& problem)
+{
+    return m_pBoostTree->TrainModel(problem);
+}
+
+float LBoostTree::Predict(IN const LBoostMatrix& sample)
+{
+    return m_pBoostTree->Predict(sample);
+}
+
+bool LBoostTree::Predict(IN const LBoostMatrix& sampleMatrix, OUT LBoostMatrix* pClassisVector)
+{
+    return m_pBoostTree->Predict(sampleMatrix, pClassisVector);
+}
+
