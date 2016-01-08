@@ -44,12 +44,8 @@ bool LLinearRegression::TrainModel(
     m_yVector = problem.YVector;
 
     // 初始化权重向量
-    m_wVector.Reset(m_xMatrix.ColumnLen, 1);
-    for (unsigned int i = 0; i < m_wVector.RowLen; i++)
-    {
-        m_wVector[i][0] = 0.0f;
-    }
-
+    m_wVector.Reset(m_xMatrix.ColumnLen, 1, 0.0f);
+  
     const LRegressionMatrix& X = m_xMatrix;
     const LRegressionMatrix& Y = m_yVector;
     LRegressionMatrix& W = m_wVector;
@@ -137,11 +133,7 @@ bool LLogisticRegression::TrainModel(IN const LRegressionProblem& problem, IN fl
     m_yVector = problem.YVector;
 
     // 初始化权重向量
-    m_wVector.Reset(m_xMatrix.ColumnLen, 1);
-    for (unsigned int i = 0; i < m_wVector.RowLen; i++)
-    {
-        m_wVector[i][0] = 0.0f;
-    }
+    m_wVector.Reset(m_xMatrix.ColumnLen, 1, 0.0f);
 
     const LRegressionMatrix& X = m_xMatrix;
     const LRegressionMatrix& Y = m_yVector;

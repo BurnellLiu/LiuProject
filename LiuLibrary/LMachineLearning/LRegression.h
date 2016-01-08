@@ -1,8 +1,11 @@
 /// @file LRegression.h
-/// @brief 回归分析
+/// @brief 本文件中声明了一些回归算法
 /// 
 /// Detail:
-/// @author Burnell_Liu Email:burnell_liu@qq.com
+/// 线性回归
+/// 优点: 结果易于理解, 计算上不复杂
+/// 缺点: 对非线性数据拟合不好
+/// @author Burnell_Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 10:10:2015
 
@@ -32,13 +35,15 @@ struct LRegressionProblem
 };
 
 /// @brief 线性回归类
-///
-/// Detailed: 线性函数为 h(x)  =  X * W
+/// 线性函数为 h(x)  =  X * W
 /// W为特征权重的列向量, X为特征的行向量
 class LLinearRegression
 {
 public:
+    /// @brief 构造函数
     LLinearRegression();
+
+    /// @brief 析构函数
     ~LLinearRegression();
 
     /// @brief 训练模型
@@ -52,7 +57,7 @@ public:
         IN unsigned int trainTimes);
 
     /// @brief 获取权重向量(列向量)
-    ///  权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
+    /// 权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
     /// @param[out] weightVector
     /// @return 模型未训练返回false, 否则返回true
     bool GetWeightVector(OUT LRegressionMatrix& weightVector);
@@ -78,15 +83,17 @@ private:
 #endif
 
 /// @brief 逻辑回归(分类)
-///
-/// Detailed: 逻辑函数为 h(x)  =  1/(1 + e^(X * W)) 
+/// 逻辑函数为 h(x)  =  1/(1 + e^(X * W)) 
 /// W为特征权重的列向量, X为特征的行向量
 /// 原始问题中的目标向量中的值只能为0.0f或1.0f
 /// P(1) = h(x), P(0) = 1-h(x)
 class LLogisticRegression
 {
 public:
+    /// @brief 构造函数
     LLogisticRegression();
+
+    /// @brief 析构函数
     ~LLogisticRegression();
 
     /// @brief 训练模型
@@ -100,7 +107,7 @@ public:
         IN unsigned int trainTimes);
 
     /// @brief 获取权重向量(列向量)
-    ///  权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
+    /// 权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
     /// @param[out] weightVector
     /// @return 模型未训练返回false, 否则返回true
     bool GetWeightVector(OUT LRegressionMatrix& weightVector);
