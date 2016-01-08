@@ -117,7 +117,7 @@ public:
                         weightError += weightVector[m];
                 }
 
-                // 如果错误率大于0.5f则表示分类规则应该取反, 分类结果直接取反, 节省
+                // 如果错误率大于0.5f则表示分类规则应该取反, 分类结果直接取反
                 if (weightError > 0.5f)
                 {
                     stump.ClassifyRule = LARGER_MOON;
