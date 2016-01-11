@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestLog", "TestLog\TestLog.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWinRing0", "TestWinRing0\TestWinRing0.vcxproj", "{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDiskSpeed", "TestDiskSpeed\TestDiskSpeed.vcxproj", "{79276DD1-6570-4209-8ECD-487EAE22C234}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -55,6 +57,10 @@ Global
 		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Debug|Win32.Build.0 = Debug|Win32
 		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Release|Win32.ActiveCfg = Release|Win32
 		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Release|Win32.Build.0 = Release|Win32
+		{79276DD1-6570-4209-8ECD-487EAE22C234}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79276DD1-6570-4209-8ECD-487EAE22C234}.Debug|Win32.Build.0 = Debug|Win32
+		{79276DD1-6570-4209-8ECD-487EAE22C234}.Release|Win32.ActiveCfg = Release|Win32
+		{79276DD1-6570-4209-8ECD-487EAE22C234}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
