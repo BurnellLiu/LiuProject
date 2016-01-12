@@ -6,13 +6,14 @@
 
 int main()
 {
-    LDiskSequenceTest diskTest;
+    LDisk4KRandomTest diskTest;
     diskTest.Start(L"D:\\test.bin");
-    LSpeedTestState testState = diskTest.GetState();
+    LDiskTestState testState = diskTest.GetState();
     while (!testState.TestDone)
     {
         testState = diskTest.GetState();
         printf("Write Speed: %.1fM/s\n", testState.WriteSpeed);
+        printf("Read Speed: %.1fM/s\n", testState.ReadSpeed);
         Sleep(500);
     }
 
