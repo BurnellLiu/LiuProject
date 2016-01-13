@@ -12,11 +12,9 @@ int main()
     while (!testState.TestDone)
     {
         testState = diskTest.GetState();
-        printf("Write Speed: %.1fM/s\n", testState.WriteSpeed);
-        printf("Read Speed: %.1fM/s\n", testState.ReadSpeed);
+        printf("Write Speed: %.1fM/s Read Speed: %.1fM/s\r", testState.WriteSpeed, testState.ReadSpeed);  
         Sleep(500);
     }
-
     printf("\n");
     system("pause");
     return 0;
