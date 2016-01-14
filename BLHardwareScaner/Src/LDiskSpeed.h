@@ -50,6 +50,9 @@ public:
     /// @brief »ñÈ¡²âÊÔ×´Ì¬
     /// @return ²âÊÔ×´Ì¬
     virtual LDiskTestState GetState() = 0;
+
+    /// @brief Í£Ö¹²âÊÔ
+    virtual void Stop() = 0;
 };
 
 
@@ -69,6 +72,9 @@ public:
 
     /// @brief »ñÈ¡²âÊÔ×´Ì¬
     LDiskTestState GetState();
+
+    /// @brief Í£Ö¹²âÊÔ
+    void Stop();
 
 private:
     CDiskSequenceTest* m_pDiskSequenceTest; ///< Ë³Ğò²âÊÔÊµÏÖ¶ÔÏó
@@ -91,6 +97,9 @@ public:
 
     /// @brief »ñÈ¡²âÊÔ×´Ì¬
     LDiskTestState GetState();
+
+    /// @brief Í£Ö¹²âÊÔ
+    void Stop();
 
 private:
     CDisk4KRandomTest* m_pDisk4KRandomTest; ///< 4KËæ»ú²âÊÔÊµÏÖ¶ÔÏó

@@ -18,12 +18,12 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="LDiskSpeed.cpp">
+    <ClCompile Include="..\Src\LDiskSpeed.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LDiskSpeed.h">
+    <ClInclude Include="..\Src\LDiskSpeed.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

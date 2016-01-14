@@ -61,11 +61,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LDiskSpeed.cpp" />
+    <ClCompile Include="..\Src\LDiskSpeed.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LDiskSpeed.h" />
+    <ClInclude Include="..\Src\LDiskSpeed.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -99,6 +99,14 @@ public:
     {
         return m_testState;
     }
+
+    /// @brief 停止测试
+    void Stop()
+    {
+
+    }
+
+
 private:
     /// @brief 顺序测试
     /// @param[in] pParam 参数
@@ -241,6 +249,11 @@ LDiskTestState LDiskSequenceTest::GetState()
     return m_pDiskSequenceTest->GetState();
 }
 
+void LDiskSequenceTest::Stop()
+{
+    m_pDiskSequenceTest->Stop();
+}
+
 class CDisk4KRandomTest
 {
 public:
@@ -252,6 +265,8 @@ public:
         m_testState.TestDone = true;
         m_testState.ReadSpeed = 0.0f;
         m_testState.WriteSpeed = 0.0f;
+
+        m_bStopTest = false;
     }
 
     /// @brief 析构函数
@@ -266,13 +281,14 @@ public:
         if (false == m_testState.TestDone)
             return false;
 
+        m_bStopTest = false;
         m_filePath = filePath;
         m_testState.TestDone = false;
         m_testState.Error = false;
         m_testState.WriteSpeed = 0.0f;
         m_testState.ReadSpeed = 0.0f;
 
-        _beginthread(Disk4KRandomTest, 0, (void*)this);
+        _beginthread(Disk4KRandomTestThread, 0, (void*)this);
 
         return true;
     }
@@ -282,64 +298,21 @@ public:
     {
         return m_testState;
     }
-private:
-    /// @brief 4K随机测试
-    /// @param[in] pParam 参数
-    static void Disk4KRandomTest(void* pParam)
+
+    /// @brief 停止测试
+    void Stop()
     {
-        /*
-        测试算法:
-        先以512KB的单位尺寸生成1GB大小的测试文件,
-        然后在其地址范围内进行随机4KB单位尺寸进行写入及读取测试
-        */
+        if (true == m_testState.TestDone)
+            return;
 
-        CDisk4KRandomTest* pDisk4KRandomTest = (CDisk4KRandomTest*)pParam;
-        LDiskTestState& testState = pDisk4KRandomTest->m_testState;
-        wstring& filePath = pDisk4KRandomTest->m_filePath;
+        m_bStopTest = true;
 
-        // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为64位数
-        // 测试文件总大小1G
-        const unsigned long TOTAL_SIZE = (unsigned long)(1)  * 1024 * 1024 * 1024;
-
-
-        // 生成测试文件
-        bool bRet = GenerateFile(filePath, TOTAL_SIZE, 512 * 1024);
-        if (!bRet)
-        {
-            testState.Error = true;
-            goto SAFE_EXIT;
-        }
-
-        // 进行写测试
-        bRet = Disk4KRandomWriteTest(filePath, &testState.WriteSpeed);
-        if (!bRet)
-        {
-            testState.Error = true;
-            goto SAFE_EXIT;
-        }
-
-        // 进行读测试
-        bRet = Disk4KRandomReadTest(filePath, &testState.ReadSpeed);
-        if (!bRet)
-        {
-            testState.Error = true;
-            goto SAFE_EXIT;
-        }
-
-SAFE_EXIT:
-
-        // 设置测试状态
-        testState.TestDone = true;
-
-        // 删除文件
-        _wremove(filePath.c_str());
     }
 
+private:
     /// @brief 4K随机写测试
     /// 请确保输入的文件大小不小于1G, 该项测试最多进行20秒
-    /// @param[in] filePath 文件路径
-    /// @param[out] pSpeed 存储写速度
-    static bool Disk4KRandomWriteTest(IN const wstring& filePath, OUT float* pSpeed)
+    bool Disk4KRandomWriteTest()
     {
         const unsigned long TEST_TIME = 20000; // 单位ms
         const unsigned long  WRITE_BUFFER_LEN = (unsigned long)(4) * 1024;
@@ -358,12 +331,6 @@ SAFE_EXIT:
 
         // 定义写缓冲区
         char* pWriteBuffer = 0;
-
-        if ( 0 == pSpeed)
-        {
-            bRet = false;
-            goto SAFE_EXIT;
-        }
         
 
         // 分配一个写缓冲区
@@ -376,7 +343,7 @@ SAFE_EXIT:
 
         // 打开文件
         hFile = CreateFileW(
-            filePath.c_str(), 
+            m_filePath.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
@@ -410,12 +377,18 @@ SAFE_EXIT:
                 goto SAFE_EXIT;
             }
 
+            if (m_bStopTest)
+            {
+                bRet = false;
+                goto SAFE_EXIT;
+            }
+
             clockEnd = clock();
 
             // 经历时间, 换算成秒, 计算写入速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            (*pSpeed) = (float)WRITE_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
+            m_testState.WriteSpeed = (float)WRITE_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
         }
 
         bRet = true;
@@ -439,9 +412,7 @@ SAFE_EXIT:
 
     /// @brief 4K随机读测试
     /// 请确保输入的文件大小不小于1G, 该项测试最多进行20秒
-    /// @param[in] filePath 文件路径
-    /// @param[out] pSpeed 存储读速度
-    static bool Disk4KRandomReadTest(IN const wstring& filePath, OUT float* pSpeed)
+    bool Disk4KRandomReadTest()
     {
         const unsigned long TEST_TIME = 20000; // 单位ms
         const unsigned long  READ_BUFFER_LEN = (unsigned long)(4) * 1024;
@@ -461,12 +432,6 @@ SAFE_EXIT:
         // 定义读缓冲区
         char* pReadBuffer = 0;
 
-        if ( 0 == pSpeed)
-        {
-            bRet = false;
-            goto SAFE_EXIT;
-        }
-
 
         // 分配一个读缓冲区
         pReadBuffer = CreateRandomBuffer(READ_BUFFER_LEN);
@@ -478,7 +443,7 @@ SAFE_EXIT:
 
         // 打开文件
         hFile = CreateFileW(
-            filePath.c_str(), 
+            m_filePath.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
@@ -512,12 +477,18 @@ SAFE_EXIT:
                 goto SAFE_EXIT;
             }
 
+            if (m_bStopTest)
+            {
+                bRet = false;
+                goto SAFE_EXIT;
+            }
+
             clockEnd = clock();
 
-            // 经历时间, 换算成秒, 计算写入速度
+            // 经历时间, 换算成秒, 计算读取速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            (*pSpeed) = (float)READ_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
+            m_testState.ReadSpeed = (float)READ_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
         }
 
         bRet = true;
@@ -541,21 +512,17 @@ SAFE_EXIT:
 
     /// @brief 生成文件
     /// 单位尺寸值必须可以被文件大小整除
-    /// @param[in] filePath 文件路径
     /// @param[in] fileSize 文件大小
     /// @param[in] elemSize 生成文件的单位尺寸
     /// @return 成功返回true, 失败返回false
-    static bool GenerateFile(
-        IN const wstring& filePath, 
-        IN unsigned long long fileSize, 
-        IN unsigned int elemSize)
+    bool GenerateFile(IN unsigned long long fileSize, IN unsigned int elemSize)
     {
         bool bRet = false; // 函数返回值
         FILE* pFile = 0; // 文件指针
         char* pWriteBuffer = 0; // 写缓冲区
 
         // 打开文件
-        _wfopen_s(&pFile, filePath.c_str(), L"wb");
+        _wfopen_s(&pFile, m_filePath.c_str(), L"wb");
         if (0 == pFile)
         {
             bRet = false;
@@ -575,6 +542,12 @@ SAFE_EXIT:
         {
             size_t count = fwrite(pWriteBuffer, elemSize, 1, pFile);
             if (1 != count)
+            {
+                bRet = false;
+                goto SAFE_EXIT;
+            }
+
+            if (m_bStopTest)
             {
                 bRet = false;
                 goto SAFE_EXIT;
@@ -605,6 +578,60 @@ SAFE_EXIT:
 private:
     LDiskTestState m_testState; ///< 测试状态
     wstring m_filePath; ///< 测试文件路径
+    bool m_bStopTest; ///< 标识是否停止测试
+
+private:
+     /// @brief 4K随机测试
+    /// @param[in] pParam 参数
+    static void Disk4KRandomTestThread(void* pParam)
+    {
+        /*
+        测试算法:
+        先以512KB的单位尺寸生成1GB大小的测试文件,
+        然后在其地址范围内进行随机4KB单位尺寸进行写入及读取测试
+        */
+
+        CDisk4KRandomTest* pDisk4KRandomTest = (CDisk4KRandomTest*)pParam;
+        LDiskTestState& testState = pDisk4KRandomTest->m_testState;
+        wstring& filePath = pDisk4KRandomTest->m_filePath;
+
+        // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为64位数
+        // 测试文件总大小1G
+        const unsigned long TOTAL_SIZE = (unsigned long)(1)  * 1024 * 1024 * 1024;
+
+
+        // 生成测试文件
+        bool bRet = pDisk4KRandomTest->GenerateFile(TOTAL_SIZE, 512 * 1024);
+        if (!bRet)
+        {
+            testState.Error = true;
+            goto SAFE_EXIT;
+        }
+
+        // 进行写测试
+        bRet = pDisk4KRandomTest->Disk4KRandomWriteTest();
+        if (!bRet)
+        {
+            testState.Error = true;
+            goto SAFE_EXIT;
+        }
+
+        // 进行读测试
+        bRet = pDisk4KRandomTest->Disk4KRandomReadTest();
+        if (!bRet)
+        {
+            testState.Error = true;
+            goto SAFE_EXIT;
+        }
+
+SAFE_EXIT:
+
+        // 设置测试状态
+        testState.TestDone = true;
+
+        // 删除文件
+        _wremove(filePath.c_str());
+    }
 };
 
 LDisk4KRandomTest::LDisk4KRandomTest()
@@ -630,4 +657,9 @@ bool LDisk4KRandomTest::Start(IN const wstring& filePath)
 LDiskTestState LDisk4KRandomTest::GetState()
 {
     return m_pDisk4KRandomTest->GetState();
+}
+
+void LDisk4KRandomTest::Stop()
+{
+    m_pDisk4KRandomTest->Stop();
 }
