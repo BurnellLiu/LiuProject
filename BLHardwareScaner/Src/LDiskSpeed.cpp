@@ -55,7 +55,12 @@ static unsigned long RandValueFrom256K()
     return randValue;
 }
 
-
+/// @brief 磁盘速度测试文件结构
+struct LDiskSpeedTestFile
+{
+    wstring Path; ///< 测试文件路径
+    unsigned long Size; ///< 测试文件大小, 测试文件最大为2^32-1(即4G-1)
+};
 
 /// @brief 磁盘顺序测试
 class CDiskSequenceTest
@@ -65,7 +70,12 @@ public:
     /// @brief 构造函数
     CDiskSequenceTest()
     {
-        m_testState.Error = false;
+        m_bStopTest = false;
+
+        m_testFile.Path = L"";
+        m_testFile.Size = 0;
+
+        m_testState.Error = DST_NO_ERROR;
         m_testState.TestDone = true;
         m_testState.ReadSpeed = 0.0f;
         m_testState.WriteSpeed = 0.0f;
@@ -82,20 +92,26 @@ public:
     {
         if (false == m_testState.TestDone)
             return false;
-        
-        m_filePath = filePath;
+       
+
+        m_bStopTest = false;
+
+        // 测试文件设置为2G大小
+        m_testFile.Path = filePath;
+        m_testFile.Size = (unsigned long)(2)  * 1024 * 1024 * 1024;
+
         m_testState.TestDone = false;
-        m_testState.Error = false;
+        m_testState.Error = DST_NO_ERROR;
         m_testState.WriteSpeed = 0.0f;
         m_testState.ReadSpeed = 0.0f;
 
-        _beginthread(DiskSequenceTest, 0, (void*)this);
+        _beginthread(DiskSequenceTestThread, 0, (void*)this);
 
         return true;
     }
 
     /// @brief 获取测试状态
-    LDiskTestState& GetState()
+    LDiskSpeedTestState& GetState()
     {
         return m_testState;
     }
@@ -103,14 +119,18 @@ public:
     /// @brief 停止测试
     void Stop()
     {
-
+        m_bStopTest = true;
     }
 
+private:
+    LDiskSpeedTestFile m_testFile; ///< 测试文件
+    LDiskSpeedTestState m_testState; ///< 测试状态
+    bool m_bStopTest; ///< 标记是否停止测试
 
 private:
     /// @brief 顺序测试
     /// @param[in] pParam 参数
-    static void DiskSequenceTest(void* pParam)
+    static void DiskSequenceTestThread(void* pParam)
     {
         /*
         测试算法:
@@ -119,30 +139,27 @@ private:
         */
 
         CDiskSequenceTest* pDiskSequenceTest = (CDiskSequenceTest*)pParam;
-        LDiskTestState& testState = pDiskSequenceTest->m_testState;
+        LDiskSpeedTestState& testState = pDiskSequenceTest->m_testState;
+        LDiskSpeedTestFile& testFile = pDiskSequenceTest->m_testFile;
 
         HANDLE hFile = 0; // 文件句柄
 
         clock_t clockBegin; // 计时开始
         clock_t clockEnd; // 计时结束
 
-        // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为64位数
-        // 测试文件总大小2G
-        const unsigned long long TOTAL_SIZE = (unsigned long long)(2)  * 1024 * 1024 * 1024;
+        // 分配一个16M的读写缓冲区
+        const unsigned long RW_BUFFER_SIZE = (unsigned long)(16) * 1024 * 1024;
 
-        // 分配一个16M的写缓冲区, 并且初始化为10101010...结构
-        const unsigned long long WRITE_BUFFER_LEN = (unsigned long long)(16) * 1024 * 1024;
-
-        char* pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_LEN);
-        if (0 == pWriteBuffer)
+        char* pRWBuffer = CreateRandomBuffer(RW_BUFFER_SIZE);
+        if (0 == pRWBuffer)
         {
-            testState.Error = true;
+            testState.Error = DST_ALLOC_MEMORY_ERROR;
             goto SAFE_EXIT;
         }
         
         // 创建文件
         hFile = CreateFileW(
-            pDiskSequenceTest->m_filePath.c_str(), 
+            testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
@@ -151,41 +168,53 @@ private:
             NULL);
         if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
         {
-            testState.Error = true;
+            testState.Error = DST_OPEN_FILE_ERROR;
             goto SAFE_EXIT;
         }
 
         // 进行写测试
         clockBegin = clock();
-        for (unsigned long long i = 0; i < TOTAL_SIZE/WRITE_BUFFER_LEN; i++)
+        for (unsigned long i = 0; i < testFile.Size/RW_BUFFER_SIZE; i++)
         {
             unsigned long count = 0;
-            BOOL ret = WriteFile(hFile, (LPCVOID)pWriteBuffer, WRITE_BUFFER_LEN, &count, NULL);
+            BOOL ret = WriteFile(hFile, (LPCVOID)pRWBuffer, RW_BUFFER_SIZE, &count, NULL);
             if (FALSE == ret)
             {
-                testState.Error = true;
+                testState.Error = DST_WRITE_FILE_ERROR;
                 goto SAFE_EXIT;
             }
             
+            if (pDiskSequenceTest->m_bStopTest)
+            {
+                testState.Error = DST_TEST_ABORT_ERROR;
+                goto SAFE_EXIT;
+            }
+
             clockEnd = clock();
 
             // 经历时间, 换算成秒, 计算写入速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            testState.WriteSpeed = (float)(WRITE_BUFFER_LEN/1024/1024) * (i + 1.0f)/time;
+            testState.WriteSpeed = (float)(RW_BUFFER_SIZE/1024/1024) * (i + 1.0f)/time;
 
         }
 
         // 进行读测试
         SetFilePointer(hFile, 0, 0, FILE_BEGIN);
         clockBegin = clock();
-        for (unsigned long long i = 0; i < TOTAL_SIZE/WRITE_BUFFER_LEN; i++)
+        for (unsigned long i = 0; i < testFile.Size/RW_BUFFER_SIZE; i++)
         {
             unsigned long count = 0;
-            BOOL ret = ReadFile(hFile, (LPVOID)pWriteBuffer, WRITE_BUFFER_LEN, &count, NULL);
+            BOOL ret = ReadFile(hFile, (LPVOID)pRWBuffer, RW_BUFFER_SIZE, &count, NULL);
             if (FALSE == ret)
             {
-                testState.Error = true;
+                testState.Error = DST_READ_FILE_ERROR;
+                goto SAFE_EXIT;
+            }
+
+            if (pDiskSequenceTest->m_bStopTest)
+            {
+                testState.Error = DST_TEST_ABORT_ERROR;
                 goto SAFE_EXIT;
             }
 
@@ -194,7 +223,7 @@ private:
             // 经历时间, 换算成秒, 计算读取速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            testState.ReadSpeed = (float)(WRITE_BUFFER_LEN/1024/1024) * (i + 1.0f)/time;
+            testState.ReadSpeed = (float)(RW_BUFFER_SIZE/1024/1024) * (i + 1.0f)/time;
         }
         
 
@@ -209,19 +238,15 @@ SAFE_EXIT:
             CloseHandle(hFile);
             hFile = 0;
         }
-        if (0 != pWriteBuffer)
+        if (0 != pRWBuffer)
         {
-            delete[] pWriteBuffer;
-            pWriteBuffer = 0;
+            delete[] pRWBuffer;
+            pRWBuffer = 0;
         }
 
         // 删除文件
-        _wremove(pDiskSequenceTest->m_filePath.c_str());
+        _wremove(testFile.Path.c_str());
     }
-
-private:
-    LDiskTestState m_testState; ///< 测试状态
-    wstring m_filePath; ///< 测试文件路径
 };
 
 LDiskSequenceTest::LDiskSequenceTest()
@@ -244,7 +269,7 @@ bool LDiskSequenceTest::Start(IN const wstring& filePath)
     return m_pDiskSequenceTest->Start(filePath);
 }
 
-LDiskTestState LDiskSequenceTest::GetState()
+LDiskSpeedTestState LDiskSequenceTest::GetState()
 {
     return m_pDiskSequenceTest->GetState();
 }
@@ -261,12 +286,19 @@ public:
     /// @brief 构造函数
     CDisk4KRandomTest()
     {
-        m_testState.Error = false;
+        m_testTime = 0;
+
+        m_bStopTest = false;
+
+        m_testState.Error = DST_NO_ERROR;
         m_testState.TestDone = true;
         m_testState.ReadSpeed = 0.0f;
         m_testState.WriteSpeed = 0.0f;
 
-        m_bStopTest = false;
+        m_testFile.Path = L"";
+        m_testFile.Size = 0;
+
+        
     }
 
     /// @brief 析构函数
@@ -281,10 +313,19 @@ public:
         if (false == m_testState.TestDone)
             return false;
 
+        // 测试时间设置为20秒
+        m_testTime = 20000;
+
         m_bStopTest = false;
-        m_filePath = filePath;
+
+        m_testFile.Path = filePath;
+
+        // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为无符号32位数
+        // 测试文件总大小1G
+        m_testFile.Size = (unsigned long)(1)  * 1024 * 1024 * 1024;
+
         m_testState.TestDone = false;
-        m_testState.Error = false;
+        m_testState.Error = DST_NO_ERROR;
         m_testState.WriteSpeed = 0.0f;
         m_testState.ReadSpeed = 0.0f;
 
@@ -294,7 +335,7 @@ public:
     }
 
     /// @brief 获取测试状态
-    LDiskTestState& GetState()
+    LDiskSpeedTestState& GetState()
     {
         return m_testState;
     }
@@ -311,12 +352,11 @@ public:
 
 private:
     /// @brief 4K随机写测试
-    /// 请确保输入的文件大小不小于1G, 该项测试最多进行20秒
+    /// 该项测试最多进行20秒
     bool Disk4KRandomWriteTest()
     {
-        const unsigned long TEST_TIME = 20000; // 单位ms
-        const unsigned long  WRITE_BUFFER_LEN = (unsigned long)(4) * 1024;
-
+        // 写缓冲区4K
+        const unsigned long  WRITE_BUFFER_SIZE = (unsigned long)(4) * 1024;
 
         // 标识函数返回值
         bool bRet = false;
@@ -334,16 +374,17 @@ private:
         
 
         // 分配一个写缓冲区
-        pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_LEN);
+        pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_SIZE);
         if (0 == pWriteBuffer)
         {
             bRet = false;
+            m_testState.Error = DST_ALLOC_MEMORY_ERROR;
             goto SAFE_EXIT;
         }
 
         // 打开文件
         hFile = CreateFileW(
-            m_filePath.c_str(), 
+            m_testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
@@ -353,6 +394,7 @@ private:
         if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
         {
             bRet = false;
+            m_testState.Error = DST_OPEN_FILE_ERROR;
             goto SAFE_EXIT;
         }
 
@@ -360,26 +402,28 @@ private:
         clockBegin = clock();
         clockEnd = clock();
         rwCount = 0;
-        while ((clockEnd - clockBegin) < TEST_TIME)
+        while ((clockEnd - clockBegin) < (long)m_testTime)
         {
             rwCount++;
 
             // 4K * 256K = 1G
             unsigned long randAddr = RandValueFrom256K();
-            SetFilePointer(hFile, randAddr * WRITE_BUFFER_LEN, 0, FILE_BEGIN);
+            SetFilePointer(hFile, randAddr * WRITE_BUFFER_SIZE, 0, FILE_BEGIN);
 
             unsigned long count = 0;
-            BOOL ret = WriteFile(hFile, (LPCVOID)pWriteBuffer, WRITE_BUFFER_LEN, &count, NULL);
+            BOOL ret = WriteFile(hFile, (LPCVOID)pWriteBuffer, WRITE_BUFFER_SIZE, &count, NULL);
 
             if (FALSE == ret)
             {
                 bRet = false;
+                m_testState.Error = DST_WRITE_FILE_ERROR;
                 goto SAFE_EXIT;
             }
 
             if (m_bStopTest)
             {
                 bRet = false;
+                m_testState.Error = DST_TEST_ABORT_ERROR;
                 goto SAFE_EXIT;
             }
 
@@ -388,7 +432,7 @@ private:
             // 经历时间, 换算成秒, 计算写入速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            m_testState.WriteSpeed = (float)WRITE_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
+            m_testState.WriteSpeed = (float)WRITE_BUFFER_SIZE/1024.0f/1024.0f * rwCount/time;
         }
 
         bRet = true;
@@ -411,12 +455,11 @@ SAFE_EXIT:
     }
 
     /// @brief 4K随机读测试
-    /// 请确保输入的文件大小不小于1G, 该项测试最多进行20秒
+    /// 该项测试最多进行20秒
     bool Disk4KRandomReadTest()
     {
-        const unsigned long TEST_TIME = 20000; // 单位ms
+        // 读缓冲区4K
         const unsigned long  READ_BUFFER_LEN = (unsigned long)(4) * 1024;
-
 
         // 标识函数返回值
         bool bRet = false;
@@ -438,12 +481,13 @@ SAFE_EXIT:
         if (0 == pReadBuffer)
         {
             bRet = false;
+            m_testState.Error = DST_ALLOC_MEMORY_ERROR;
             goto SAFE_EXIT;
         }
 
         // 打开文件
         hFile = CreateFileW(
-            m_filePath.c_str(), 
+            m_testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
@@ -453,6 +497,7 @@ SAFE_EXIT:
         if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
         {
             bRet = false;
+            m_testState.Error = DST_OPEN_FILE_ERROR;
             goto SAFE_EXIT;
         }
 
@@ -460,7 +505,7 @@ SAFE_EXIT:
         clockBegin = clock();
         clockEnd = clock();
         rwCount = 0;
-        while ((clockEnd - clockBegin) < TEST_TIME)
+        while ((clockEnd - clockBegin) < (long)m_testTime)
         {
             rwCount++;
 
@@ -474,12 +519,14 @@ SAFE_EXIT:
             if (FALSE == ret)
             {
                 bRet = false;
+                m_testState.Error = DST_READ_FILE_ERROR;
                 goto SAFE_EXIT;
             }
 
             if (m_bStopTest)
             {
                 bRet = false;
+                m_testState.Error = DST_TEST_ABORT_ERROR;
                 goto SAFE_EXIT;
             }
 
@@ -511,45 +558,50 @@ SAFE_EXIT:
     }
 
     /// @brief 生成文件
-    /// 单位尺寸值必须可以被文件大小整除
-    /// @param[in] fileSize 文件大小
-    /// @param[in] elemSize 生成文件的单位尺寸
     /// @return 成功返回true, 失败返回false
-    bool GenerateFile(IN unsigned long long fileSize, IN unsigned int elemSize)
+    bool GenerateTestFile()
     {
+        // 512KB
+        const unsigned long WRITE_BUFFER_SIZE = 512 * 1024;
+
         bool bRet = false; // 函数返回值
         FILE* pFile = 0; // 文件指针
         char* pWriteBuffer = 0; // 写缓冲区
 
+        
         // 打开文件
-        _wfopen_s(&pFile, m_filePath.c_str(), L"wb");
+        _wfopen_s(&pFile, m_testFile.Path.c_str(), L"wb");
         if (0 == pFile)
         {
             bRet = false;
+            m_testState.Error = DST_OPEN_FILE_ERROR;
             goto SAFE_EXIT;
         }
 
         // 初始化写入缓冲区
-        pWriteBuffer = CreateRandomBuffer(elemSize);
+        pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_SIZE);
         if (0 == pWriteBuffer)
         {
             bRet = false;
+            m_testState.Error = DST_ALLOC_MEMORY_ERROR;
             goto SAFE_EXIT;
         }
 
         // 生成测试文件
-        for (unsigned long long i = 0; i < fileSize/elemSize; i++)
+        for (unsigned long long i = 0; i < m_testFile.Size/WRITE_BUFFER_SIZE; i++)
         {
-            size_t count = fwrite(pWriteBuffer, elemSize, 1, pFile);
+            size_t count = fwrite(pWriteBuffer, WRITE_BUFFER_SIZE, 1, pFile);
             if (1 != count)
             {
                 bRet = false;
+                m_testState.Error = DST_WRITE_FILE_ERROR;
                 goto SAFE_EXIT;
             }
 
             if (m_bStopTest)
             {
                 bRet = false;
+                m_testState.Error = DST_TEST_ABORT_ERROR;
                 goto SAFE_EXIT;
             }
 
@@ -575,9 +627,17 @@ SAFE_EXIT:
         return bRet;
     }
 
+    /// @brief 删除测试文件
+    void DeleteTestFile()
+    {
+        // 删除文件
+        _wremove(m_testFile.Path.c_str());
+    }
+
 private:
-    LDiskTestState m_testState; ///< 测试状态
-    wstring m_filePath; ///< 测试文件路径
+    unsigned long m_testTime; ///< 单项测试的时间, 单位毫秒
+    LDiskSpeedTestState m_testState; ///< 测试状态
+    LDiskSpeedTestFile m_testFile; ///< 测试文件
     bool m_bStopTest; ///< 标识是否停止测试
 
 private:
@@ -592,45 +652,33 @@ private:
         */
 
         CDisk4KRandomTest* pDisk4KRandomTest = (CDisk4KRandomTest*)pParam;
-        LDiskTestState& testState = pDisk4KRandomTest->m_testState;
-        wstring& filePath = pDisk4KRandomTest->m_filePath;
+        LDiskSpeedTestState& testState = pDisk4KRandomTest->m_testState;
 
-        // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为64位数
-        // 测试文件总大小1G
-        const unsigned long TOTAL_SIZE = (unsigned long)(1)  * 1024 * 1024 * 1024;
-
-
+        
         // 生成测试文件
-        bool bRet = pDisk4KRandomTest->GenerateFile(TOTAL_SIZE, 512 * 1024);
+        bool bRet = pDisk4KRandomTest->GenerateTestFile();
         if (!bRet)
-        {
-            testState.Error = true;
             goto SAFE_EXIT;
-        }
 
         // 进行写测试
         bRet = pDisk4KRandomTest->Disk4KRandomWriteTest();
         if (!bRet)
-        {
-            testState.Error = true;
             goto SAFE_EXIT;
-        }
 
         // 进行读测试
         bRet = pDisk4KRandomTest->Disk4KRandomReadTest();
         if (!bRet)
-        {
-            testState.Error = true;
             goto SAFE_EXIT;
-        }
 
 SAFE_EXIT:
 
         // 设置测试状态
         testState.TestDone = true;
 
-        // 删除文件
-        _wremove(filePath.c_str());
+        // 删除测试文件
+        pDisk4KRandomTest->DeleteTestFile();
+
+
     }
 };
 
@@ -654,7 +702,7 @@ bool LDisk4KRandomTest::Start(IN const wstring& filePath)
     return m_pDisk4KRandomTest->Start(filePath);
 }
 
-LDiskTestState LDisk4KRandomTest::GetState()
+LDiskSpeedTestState LDisk4KRandomTest::GetState()
 {
     return m_pDisk4KRandomTest->GetState();
 }

@@ -24,32 +24,43 @@ using std::wstring;
 class CDiskSequenceTest;
 class CDisk4KRandomTest;
 
-/// @brief 磁盘测试状态
-struct LDiskTestState 
+/// @brief 磁盘速度测试错误码
+enum LDiskSpeedTestError
 {
-    bool TestDone; ///< 标记测试是否已经结束
-    bool Error; ///< 标记是否存在错误
-    float ReadSpeed; ///< 读速度, 单位M/S
-    float WriteSpeed; ///< 写速度, 单位M/S
+    DST_NO_ERROR = 0, ///< 没有错误
+    DST_OPEN_FILE_ERROR, ///< 打开文件错误
+    DST_WRITE_FILE_ERROR, ///< 写文件错误
+    DST_READ_FILE_ERROR, ///< 读文件错误
+    DST_ALLOC_MEMORY_ERROR, ///< 分配内存错误
+    DST_TEST_ABORT_ERROR ///< 测试中断错误
 };
 
-/// @brief 磁盘测试接口
-class IDiskTest
+/// @brief 磁盘速度测试状态
+struct LDiskSpeedTestState 
+{
+    bool TestDone; ///< 标记测试是否已经结束
+    float ReadSpeed; ///< 读速度, 单位M/S
+    float WriteSpeed; ///< 写速度, 单位M/S
+    LDiskSpeedTestError Error; ///< 错误码
+};
+
+/// @brief 磁盘速度测试接口
+class IDiskSpeedTest
 {
 public:
     /// @brief 析构函数
-    virtual ~IDiskTest() = 0 {};
+    virtual ~IDiskSpeedTest() = 0 {};
 
     /// @brief 开始测试
     /// 该方法为异步方法, 开始测试后使用GetState可以获得测试结果
     /// 注意: 针对系统盘目录需要管理员权限
     /// @param[in] filePath 测试文件完整路径
-    /// @return 成功返回true, 失败返回false, 测试正在进行则测试会失败
+    /// @return 成功返回true, 失败返回false, 测试正在进行则会失败
     virtual bool Start(IN const wstring& filePath) = 0;
 
     /// @brief 获取测试状态
     /// @return 测试状态
-    virtual LDiskTestState GetState() = 0;
+    virtual LDiskSpeedTestState GetState() = 0;
 
     /// @brief 停止测试
     virtual void Stop() = 0;
@@ -58,7 +69,7 @@ public:
 
 
 /// @brief 磁盘顺序测试
-class LDiskSequenceTest : public IDiskTest
+class LDiskSequenceTest : public IDiskSpeedTest
 {
 public:
     /// @brief 构造函数
@@ -71,7 +82,7 @@ public:
     bool Start(IN const wstring& filePath);
 
     /// @brief 获取测试状态
-    LDiskTestState GetState();
+    LDiskSpeedTestState GetState();
 
     /// @brief 停止测试
     void Stop();
@@ -83,7 +94,7 @@ private:
 
 
 /// @brief 磁盘4KB随机测试
-class LDisk4KRandomTest : public IDiskTest
+class LDisk4KRandomTest : public IDiskSpeedTest
 {
 public:
     /// @brief 构造函数
@@ -96,7 +107,7 @@ public:
     bool Start(IN const wstring& filePath);
 
     /// @brief 获取测试状态
-    LDiskTestState GetState();
+    LDiskSpeedTestState GetState();
 
     /// @brief 停止测试
     void Stop();
