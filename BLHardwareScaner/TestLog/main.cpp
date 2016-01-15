@@ -8,11 +8,12 @@
 
 int main()
 {
+    LLog::Open(L"test.txt");
 
-    LLog::Open("TestLog");
-    LLog::WriteLineA("%%Test %d    %s", 32, L"svb");
-    LLog::Close();
-    printf("%%ss");
+    for (unsigned int i = 0; i < 1025; i++)
+    {
+        PrintLogW(L"Hello, World! %u", i);
+    }
     system("pause");
     return 0;
 }

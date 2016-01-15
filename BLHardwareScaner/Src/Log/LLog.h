@@ -26,7 +26,7 @@ public:
     /// @brief 打开LOG档, 如果不存在则创建, 如果已经存在那么原始内容将被销毁
     /// @param[in] szFileName LOG档文件名
     /// @return 成功返回true, 失败返回false
-    static bool Open(IN const char* szFileName);
+    static bool Open(IN const wchar_t* szFileName);
 
     /// @brief 关闭LOG档
     static void Close();
@@ -40,13 +40,6 @@ public:
     /// 默认不增加当前时间
     /// @param[in] bFlag 标识是否在每行LOG前显示当前时间
     static void ShowTime(IN bool bFlag);
-
-    /// @brief 设置是否延迟写(写缓存)
-    /// 默认为延迟写
-    /// 延迟写在程序崩溃时存在LOG没写入文件的情况
-    /// 直接写性能不佳
-    /// @param[in] bFlag 标识是否延迟写, true(延迟写), false(直接写)
-    static void SetDelayedWrite(IN bool bFlag);
 
     /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
     /// @param[in] szFormat 需要写入LOG的格式化字符串
