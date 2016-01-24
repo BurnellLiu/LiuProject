@@ -240,7 +240,7 @@ void ScanPerformanceThread::run()
         if (refreshCount%10 != 0)
             continue;
 
-        PrintLogW(L"Cpu Usage: %uP", processorPerf.LoadPercentage);
+        PrintLogW(L"Cpu Usage: %u%%", processorPerf.LoadPercentage);
         PrintLogW(L"Memory Total Size: %u", memoryPerf.TotalSize);
         PrintLogW(L"Memory Available Size: %u", memoryPerf.AvailableSize);
 

@@ -10,10 +10,13 @@ int main()
 {
     LLog::Open(L"test.txt");
 
-    for (unsigned int i = 0; i < 1025; i++)
+    for (unsigned int i = 0; i < 1; i++)
     {
-        PrintLogW(L"Hello, World! %u", i);
+        PrintLogW(L"%%Hello!");
+        PrintLogA("%%Hello, World");
+        PrintLogA("%%ÄãºÃ");
     }
+
     system("pause");
     return 0;
 }

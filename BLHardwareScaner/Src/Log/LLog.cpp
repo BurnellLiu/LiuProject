@@ -12,23 +12,24 @@ using std::map;
 
 #include <Windows.h>
 
-/// @brief 调试LOG文件类
-class CDebugLogFile
+/// @brief 调试LOG类
+/// 使用该类写LOG后可以直接写到硬盘中, 不会存在写到缓存中的情况
+class CDebugLog
 {
 public:
     /// @brief 构造函数
-    CDebugLogFile()
+    CDebugLog()
     {
         m_hFile = NULL;
         m_pWriteBuffer = 0;
         m_bufferUsedSize = 0;
         m_bufferTotalSize = 512;
 
-        m_fillChar = '\n';
+        m_fillChar = '\0';
     }
 
     /// @brief析构函数
-    ~CDebugLogFile()
+    ~CDebugLog()
     {
         this->Clear();
     }
@@ -64,9 +65,40 @@ public:
 
         memset(m_pWriteBuffer, m_fillChar, m_bufferTotalSize);
 
+        // 预先在文件头写上UNICODE标志符
+        char unicode[2] = {0};
+        unicode[0] = (char)0xFF;
+        unicode[1] = (char)0xFE;
+        this->Write(unicode, 2);
+
         return true;
     }
 
+    /// @brief 打印LOG
+    /// @param[in] wstr LOG信息
+    /// @return 成功返回true, 失败返回false
+    bool Print(IN const wstring& wstr)
+    {
+        return this->Write(wstr.c_str(), wstr.length() * 2);
+    }
+
+    /// @brief 打印LOG
+    /// @param[in] str LOG信息
+    /// @return 成功返回true, 失败返回false
+    bool Print(IN const string& str)
+    {
+        wstring wstr;
+        this->StringToWString(str, wstr);
+        return this->Print(wstr);
+    }
+
+    /// @brief 关闭文件
+    void Close()
+    {
+        this->Clear();
+    }
+
+private:
     /// @brief 写文件
     /// @param[in] pBuffer 写缓冲区
     /// @param[in] size 写缓冲区大小
@@ -139,13 +171,6 @@ public:
         return false;
     }
 
-    /// @brief 关闭文件
-    void Close()
-    {
-        this->Clear();
-    }
-
-private:
     /// @brief 清理资源
     void Clear()
     {
@@ -165,6 +190,29 @@ private:
         m_bufferUsedSize = 0;
     }
 
+    /// @brief 转换为宽字节字符串
+    /// @param[in] strSrc 源字符串
+    /// @param[in] strDest 存储转换后的字符串
+    /// @return 成功返回true, 失败返回false
+    bool StringToWString(const string& strSrc, wstring& strDest)
+    {
+        int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);  
+        if(nSize <= 0)
+            return false;  
+        wchar_t* pwszDst = new wchar_t[nSize+1];
+
+        int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
+
+        pwszDst[nSize] = 0; 
+
+        strDest.clear();
+        strDest.assign(pwszDst);
+
+        delete[] pwszDst;
+
+        return true;
+    }
+
 private:
     HANDLE m_hFile; ///< 文件句柄
 
@@ -174,120 +222,125 @@ private:
     unsigned int m_bufferTotalSize; ///< 缓冲区总大小
 };
 
-/// @brief LOG属性结构
-struct SLogProperty 
+namespace LLog
 {
-    CDebugLogFile* LogFile; ///< 文件指针
-    bool ShowThreadId; ///< 标识是否显示线程Id
-    bool ShowTime; ///< 标识是否显示当前时间
-};
-
-static SLogProperty s_logProperty = 
-{
-    0,
-    false,
-    false
-};
-
-/// @brief 在LOG中增加辅助信息
-static void AddAssistInforToLog()
-{
-    if (s_logProperty.LogFile == 0)
-        return;
-
-    if (s_logProperty.ShowThreadId)
-    {
-        static map<DWORD, DWORD> s_threadIdMap;
-        // LOG中增加当前线程ID, 用以在多线程中区分不同线程的LOG
-        DWORD dwId = GetCurrentThreadId();
-        if (s_threadIdMap.count(dwId) == 0)
-        {
-            s_threadIdMap[dwId] = 0;
-            s_threadIdMap[dwId] = s_threadIdMap.size();
-        }
    
 
-        char threadId[64] = {0};
-        sprintf_s(threadId, "[Thread %u]", s_threadIdMap[dwId]);
-        s_logProperty.LogFile->Write(threadId, strlen(threadId));
-    }
-    
-
-    if (s_logProperty.ShowTime)
+    /// @brief LOG属性结构
+    struct SLogProperty 
     {
-        // LOG中增加当前时间
-        time_t t = time(0);
-        char szTime[64] = {0}; 
-        tm tmTemp;
-        localtime_s(&tmTemp, &t);
-        strftime(szTime, sizeof(szTime), "[%H:%M:%S]",&tmTemp );
-        s_logProperty.LogFile->Write(szTime, strlen(szTime));
-    }
-}
+        CDebugLog* DebugLog; ///< 文件指针
+        bool ShowThreadId; ///< 标识是否显示线程Id
+        bool ShowTime; ///< 标识是否显示当前时间
+    };
 
-bool LLog::Open(IN const wchar_t* szFileName)
-{
-    if (s_logProperty.LogFile != 0)
+    static SLogProperty s_logProperty = 
     {
-        delete s_logProperty.LogFile;
-        s_logProperty.LogFile = 0;
-    }
+        0,
+        false,
+        false
+    };
 
-    s_logProperty.LogFile = new CDebugLogFile();
-    bool bRet = s_logProperty.LogFile->Open(szFileName);
-
-    return bRet;
-}
-
-void LLog::Close()
-{
-    if (s_logProperty.LogFile != 0)
+    /// @brief 在LOG中增加辅助信息
+    void AddAssistInforToLog()
     {
-        delete s_logProperty.LogFile;
-        s_logProperty.LogFile = 0;
+        if (s_logProperty.DebugLog == 0)
+            return;
+
+        if (s_logProperty.ShowThreadId)
+        {
+            static map<DWORD, DWORD> s_threadIdMap;
+            // LOG中增加当前线程ID, 用以在多线程中区分不同线程的LOG
+            DWORD dwId = GetCurrentThreadId();
+            if (s_threadIdMap.count(dwId) == 0)
+            {
+                s_threadIdMap[dwId] = 0;
+                s_threadIdMap[dwId] = s_threadIdMap.size();
+            }
+
+
+            wchar_t threadId[64] = {0};
+            wprintf_s(threadId, L"[Thread %u]", s_threadIdMap[dwId]);
+            s_logProperty.DebugLog->Print(threadId);
+        }
+
+
+        if (s_logProperty.ShowTime)
+        {
+            // LOG中增加当前时间
+            time_t t = time(0);
+            wchar_t szTime[64] = {0}; 
+            tm tmTemp;
+            localtime_s(&tmTemp, &t);
+            wcsftime(szTime, sizeof(szTime), L"[%H:%M:%S]",&tmTemp );
+            s_logProperty.DebugLog->Print(szTime);
+        }
     }
-}
 
-void LLog::ShowThreadId(IN bool bFlag)
-{
-    s_logProperty.ShowThreadId = bFlag;
-}
+    bool Open(IN const wchar_t* szFileName)
+    {
+        if (s_logProperty.DebugLog != 0)
+        {
+            delete s_logProperty.DebugLog;
+            s_logProperty.DebugLog = 0;
+        }
 
-void LLog::ShowTime(IN bool bFlag)
-{
-    s_logProperty.ShowTime = bFlag;
-}
+        s_logProperty.DebugLog = new CDebugLog();
+        bool bRet = s_logProperty.DebugLog->Open(szFileName);
 
-void LLog::WriteLineW(IN const wchar_t* szFormat, ...)
-{
-    if (s_logProperty.LogFile == 0)
-        return;
+        return bRet;
+    }
 
-    AddAssistInforToLog();
+    void Close()
+    {
+        if (s_logProperty.DebugLog != 0)
+        {
+            delete s_logProperty.DebugLog;
+            s_logProperty.DebugLog = 0;
+        }
+    }
 
-    va_list args;
-    va_start(args, szFormat);
-    wchar_t printfBuffer[1024] = {0};
-    vswprintf_s(printfBuffer, szFormat, args);
-    va_end(args);
+    void ShowThreadId(IN bool bFlag)
+    {
+        s_logProperty.ShowThreadId = bFlag;
+    }
 
-    s_logProperty.LogFile->Write(printfBuffer, wcslen(printfBuffer) * 2);
-    s_logProperty.LogFile->Write(L"\r\n", 4);
-}
+    void ShowTime(IN bool bFlag)
+    {
+        s_logProperty.ShowTime = bFlag;
+    }
 
-void LLog::WriteLineA(IN const char* szFormat, ...)
-{
-    if (s_logProperty.LogFile == 0)
-        return;
+    void WriteLineW(IN const wchar_t* szFormat, ...)
+    {
+        if (s_logProperty.DebugLog == 0)
+            return;
 
-    AddAssistInforToLog();
+        AddAssistInforToLog();
 
-    va_list args;
-    va_start(args, szFormat);
-    char printfBuffer[1024] = {0};
-    vsprintf_s(printfBuffer, szFormat, args);
-    va_end(args);
+        va_list args;
+        va_start(args, szFormat);
+        wchar_t printfBuffer[1024] = {0};
+        vswprintf_s(printfBuffer, szFormat, args);
+        va_end(args);
 
-    s_logProperty.LogFile->Write(printfBuffer, strlen(printfBuffer));
-    s_logProperty.LogFile->Write("\r\n", 2);
+        s_logProperty.DebugLog->Print(printfBuffer);
+        s_logProperty.DebugLog->Print(L"\r\n");
+    }
+
+    void WriteLineA(IN const char* szFormat, ...)
+    {
+        if (s_logProperty.DebugLog == 0)
+            return;
+
+        AddAssistInforToLog();
+
+        va_list args;
+        va_start(args, szFormat);
+        char printfBuffer[1024] = {0};
+        vsprintf_s(printfBuffer, szFormat, args);
+        va_end(args);
+
+        s_logProperty.DebugLog->Print(printfBuffer);
+        s_logProperty.DebugLog->Print("\r\n");
+    }
 }

@@ -8,7 +8,6 @@
 #include "..\\Src\\Log\\LLog.h"
 
 #define LOG_PATH ".\\Log"
-#define CMD_ARG_DEBUG "-DEBUG"
 
 /// @brief 检查路径, 路径不存在则创建
 /// @param[in] qstrPath 路径
@@ -31,14 +30,7 @@ int main(int argc, char *argv[])
 
     LLog::ShowThreadId(true);
     LLog::ShowTime(true);
-    if (argc >= 2)
-    {
-        QString cmdArg = argv[1];
-        cmdArg = cmdArg.toUpper().trimmed();
-        if (cmdArg.compare(CMD_ARG_DEBUG) == 0)
-            LLog::SetDelayedWrite(false);
-    }
-    LLog::Open(".\\Log\\TraceLog.txt");
+    LLog::Open(L".\\Log\\TraceLog.txt");
 
     PrintLogW(L"Log Start");
     PrintLogA("Program Path: %s", argv[0]);

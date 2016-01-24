@@ -20,34 +20,33 @@ using std::string;
 using std::wstring;
 
 /// @brief LOG类
-class LLog
+namespace LLog
 {
-public:
     /// @brief 打开LOG档, 如果不存在则创建, 如果已经存在那么原始内容将被销毁
     /// @param[in] szFileName LOG档文件名
     /// @return 成功返回true, 失败返回false
-    static bool Open(IN const wchar_t* szFileName);
+    bool Open(IN const wchar_t* szFileName);
 
     /// @brief 关闭LOG档
-    static void Close();
+    void Close();
 
     /// @brief 每行LOG前显示线程Id
     /// 默认不增加线程Id
     /// @param[in] bFlag 标识是否在每行LOG前显示线程Id
-    static void ShowThreadId(IN bool bFlag);
+    void ShowThreadId(IN bool bFlag);
 
     /// @brief 每行LOG前显示当前时间
     /// 默认不增加当前时间
     /// @param[in] bFlag 标识是否在每行LOG前显示当前时间
-    static void ShowTime(IN bool bFlag);
+    void ShowTime(IN bool bFlag);
+
+    /// @brief 写一行LOG, 自动换行, 每行最多1024个字符
+    /// @param[in] szFormat 需要写入LOG的格式化字符串
+    void WriteLineW(IN const wchar_t* szFormat, ...);
 
     /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
     /// @param[in] szFormat 需要写入LOG的格式化字符串
-    static void WriteLineW(IN const wchar_t* szFormat, ...);
-
-    /// @brief 写一行LOG, 自动换行, 没行最多1024个字符
-    /// @param[in] szFormat 需要写入LOG的格式化字符串
-    static void WriteLineA(IN const char* szFormat, ...);
+    void WriteLineA(IN const char* szFormat, ...);
 };
 
 /// @brief 打印LOG宏
