@@ -12,6 +12,73 @@ using std::map;
 
 #include <Windows.h>
 
+/// @brief 手动锁类
+class CManuLock
+{
+public:
+    /// @brief 构造函数
+    CManuLock()
+    {
+        InitializeCriticalSection(&m_criSection);
+    }
+
+    /// @brief 析构函数
+    ~CManuLock()
+    {
+        DeleteCriticalSection(&m_criSection);
+    }
+
+    /// @brief 上锁
+    void Lock()
+    {
+        EnterCriticalSection(&m_criSection);
+    }
+
+    /// @brief 解锁
+    void UnLock()
+    {
+        LeaveCriticalSection(&m_criSection);
+    }
+
+private:
+    CManuLock(const CManuLock&);
+    void operator = (const CManuLock&);
+
+    CRITICAL_SECTION m_criSection; ///< 临界区变量
+};
+
+/// @brief 自动锁类
+class CAutoLock
+{
+public:
+    /// @brief 构造函数 
+    /// @param[in] pLock 手动锁对象
+    CAutoLock(IN CManuLock* pLock)
+    {
+        if (pLock != 0)
+        {
+            m_pManuLock = pLock;
+            m_pManuLock->Lock();
+        }
+        
+    }
+
+    /// @brief 析构函数
+    ~CAutoLock()
+    {
+        if (m_pManuLock != 0)
+        {
+            m_pManuLock->UnLock();
+        }
+    }
+
+private:
+    CAutoLock(const CAutoLock& );
+    void operator = (const CAutoLock&);
+
+    CManuLock* m_pManuLock; ///< 手动锁对象
+};
+
 /// @brief 调试LOG类
 /// 使用该类写LOG后可以直接写到硬盘中, 不会存在写到缓存中的情况
 class CDebugLog
@@ -74,22 +141,14 @@ public:
         return true;
     }
 
-    /// @brief 打印LOG
+    /// @brief 打印一行LOG
     /// @param[in] wstr LOG信息
     /// @return 成功返回true, 失败返回false
-    bool Print(IN const wstring& wstr)
+    bool PrintLine(IN const wstring& wstr)
     {
-        return this->Write(wstr.c_str(), wstr.length() * 2);
-    }
-
-    /// @brief 打印LOG
-    /// @param[in] str LOG信息
-    /// @return 成功返回true, 失败返回false
-    bool Print(IN const string& str)
-    {
-        wstring wstr;
-        this->StringToWString(str, wstr);
-        return this->Print(wstr);
+        CAutoLock lock(&m_fileLock);
+        this->Write(wstr.c_str(), wstr.length() * 2);
+        return this->Write(L"\r\n", 4);
     }
 
     /// @brief 关闭文件
@@ -190,6 +249,36 @@ private:
         m_bufferUsedSize = 0;
     }
 
+private:
+    HANDLE m_hFile; ///< 文件句柄
+
+    char m_fillChar; ///< 填充字符
+    unsigned char* m_pWriteBuffer; ///< 写缓冲区
+    unsigned int m_bufferUsedSize; ///< 缓冲区中已被使用的大小
+    unsigned int m_bufferTotalSize; ///< 缓冲区总大小
+
+    CManuLock m_fileLock; ///< 文件锁对象, 用于多线程
+};
+
+namespace LLog
+{
+   
+
+    /// @brief LOG属性结构
+    struct SLogProperty 
+    {
+        CDebugLog* DebugLog; ///< 文件指针
+        bool ShowThreadId; ///< 标识是否显示线程Id
+        bool ShowTime; ///< 标识是否显示当前时间
+    };
+
+    static SLogProperty s_logProperty = 
+    {
+        0,
+        false,
+        false
+    };
+
     /// @brief 转换为宽字节字符串
     /// @param[in] strSrc 源字符串
     /// @param[in] strDest 存储转换后的字符串
@@ -213,39 +302,12 @@ private:
         return true;
     }
 
-private:
-    HANDLE m_hFile; ///< 文件句柄
-
-    char m_fillChar; ///< 填充字符
-    unsigned char* m_pWriteBuffer; ///< 写缓冲区
-    unsigned int m_bufferUsedSize; ///< 缓冲区中已被使用的大小
-    unsigned int m_bufferTotalSize; ///< 缓冲区总大小
-};
-
-namespace LLog
-{
-   
-
-    /// @brief LOG属性结构
-    struct SLogProperty 
+    /// @brief 获取辅助信息
+    void GetAssistInfor(OUT wstring* pWStr)
     {
-        CDebugLog* DebugLog; ///< 文件指针
-        bool ShowThreadId; ///< 标识是否显示线程Id
-        bool ShowTime; ///< 标识是否显示当前时间
-    };
-
-    static SLogProperty s_logProperty = 
-    {
-        0,
-        false,
-        false
-    };
-
-    /// @brief 在LOG中增加辅助信息
-    void AddAssistInforToLog()
-    {
-        if (s_logProperty.DebugLog == 0)
+        if (pWStr == 0)
             return;
+        pWStr->clear();
 
         if (s_logProperty.ShowThreadId)
         {
@@ -261,7 +323,7 @@ namespace LLog
 
             wchar_t threadId[64] = {0};
             wprintf_s(threadId, L"[Thread %u]", s_threadIdMap[dwId]);
-            s_logProperty.DebugLog->Print(threadId);
+            pWStr->append(threadId);
         }
 
 
@@ -273,7 +335,7 @@ namespace LLog
             tm tmTemp;
             localtime_s(&tmTemp, &t);
             wcsftime(szTime, sizeof(szTime), L"[%H:%M:%S]",&tmTemp );
-            s_logProperty.DebugLog->Print(szTime);
+            pWStr->append(szTime);
         }
     }
 
@@ -315,16 +377,17 @@ namespace LLog
         if (s_logProperty.DebugLog == 0)
             return;
 
-        AddAssistInforToLog();
-
         va_list args;
         va_start(args, szFormat);
         wchar_t printfBuffer[1024] = {0};
         vswprintf_s(printfBuffer, szFormat, args);
         va_end(args);
 
-        s_logProperty.DebugLog->Print(printfBuffer);
-        s_logProperty.DebugLog->Print(L"\r\n");
+        wstring message;
+        GetAssistInfor(&message);
+        message.append(printfBuffer);
+
+        s_logProperty.DebugLog->PrintLine(message);
     }
 
     void WriteLineA(IN const char* szFormat, ...)
@@ -332,15 +395,19 @@ namespace LLog
         if (s_logProperty.DebugLog == 0)
             return;
 
-        AddAssistInforToLog();
-
         va_list args;
         va_start(args, szFormat);
         char printfBuffer[1024] = {0};
         vsprintf_s(printfBuffer, szFormat, args);
         va_end(args);
 
-        s_logProperty.DebugLog->Print(printfBuffer);
-        s_logProperty.DebugLog->Print("\r\n");
+        wstring logMessage;
+        GetAssistInfor(&logMessage);
+
+        wstring message;
+        StringToWString(printfBuffer, message);
+
+        logMessage += message;
+        s_logProperty.DebugLog->PrintLine(logMessage);
     }
 }
