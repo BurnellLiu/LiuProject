@@ -6,38 +6,6 @@
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
 
-/// @brief 转换制造商名称
-///  
-/// 如ASUSTeK COMPUTER INC变成ASUS
-/// @param[in] manufacturer 原始制造商名称
-/// @return 新的制造商名称
-static QString ConvertManufacturer(IN const QString& manufacturer)
-{
-    QString oldStr = manufacturer.toUpper();
-    QString newStr = manufacturer;
-
-    if (oldStr.indexOf("ASUSTEK") != -1)
-    {
-        newStr = "ASUS";
-        goto EXIT;
-    }
-
-    if (oldStr.indexOf("INTEL") != -1)
-    {
-        newStr = "Intel";
-        goto EXIT;
-    }
-
-    if (oldStr.indexOf("QUALCOMM") != -1)
-    {
-        newStr = "Qualcomn";
-        goto EXIT;
-    }
-
-EXIT:
-    return newStr;
-}
-
 HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
@@ -208,7 +176,7 @@ void ComputerItemInfor::LoadHWInfor()
     
     const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
     QString strManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
-    QString strPCSystemInfor = ConvertManufacturer(strManufacturer);
+    QString strPCSystemInfor = strManufacturer;
     strPCSystemInfor += QString::fromStdWString(L"  ");
     QString modelName = QString::fromStdWString(computerSystemInfor.ModelName);
     modelName = modelName.trimmed();
@@ -249,7 +217,6 @@ void ComputerItemInfor::LoadHWInfor()
     const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
     QString motherBoardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
     QString motherBoardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
-    motherBoardManufacturer = ConvertManufacturer(motherBoardManufacturer);
     QString motherBoardDesc = motherBoardManufacturer;
     motherBoardDesc += "  ";
     motherBoardDesc += motherBoardProductName;
@@ -327,7 +294,6 @@ void ComputerItemInfor::LoadHWInfor()
     if (batteryStaticInfor.Exist)
     {
         QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer);
-        batteryManufacturer = ConvertManufacturer(batteryManufacturer);
 
         QString batteryName = QString::fromStdWString(batteryStaticInfor.Name);
 
@@ -365,7 +331,7 @@ void ProcessorItemInfor::LoadHWInfor()
     PrintLogW(L"\tDescription: %s", processprInfor.Description.c_str());
 
     QString manufacturer = QString::fromStdWString(processprInfor.Manufacturer);
-    this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(manufacturer));
+    this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
     PrintLogW(L"\tManufacturer: %s", processprInfor.Manufacturer.c_str());
 
     QString coresNumber = QString::fromStdString("Cores: %1    Logical Processors: %2").arg(processprInfor.CoresNumber).arg(processprInfor.LogicalProcessorNumber);
@@ -393,7 +359,6 @@ void MotherBoardItemInfor::LoadHWInfor()
     PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
 
     QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
-    boardManufacturer = ConvertManufacturer(boardManufacturer);
     this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
     PrintLogW(L"\tManufacturer: %s", motherBoardInfor.Manufacturer.c_str());
     
@@ -601,7 +566,7 @@ void BatteryItemInfor::LoadHWInfor()
     PrintLogW(L"\tName: %s", batteryName.toStdWString().c_str());
 
     QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer).trimmed();
-    this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(batteryManufacturer));
+    this->ContentAddItem(QObject::tr("Manufacturer"), batteryManufacturer);
     PrintLogW(L"\tManufacturer: %s", batteryManufacturer.toStdWString().c_str());
 
     QString batterySerialNumber = QString::fromStdWString(batteryStaticInfor.SerialNumber).trimmed();
@@ -651,7 +616,7 @@ void NetworkCardItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Type"), type);
         PrintLogW(L"\tType: %s", type.toStdWString().c_str());
 
-        QString manufacturer = ConvertManufacturer(QString::fromStdWString(networkCardInforArray.Manufacturer[i]));
+        QString manufacturer = QString::fromStdWString(networkCardInforArray.Manufacturer[i]);
         this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
         PrintLogW(L"\tManufacturer: %s", manufacturer.toStdWString().c_str());
 
