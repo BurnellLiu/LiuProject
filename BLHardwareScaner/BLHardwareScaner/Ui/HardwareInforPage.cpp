@@ -376,6 +376,8 @@ void ProcessorItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Max Speed"), speed);
     PrintLogW(L"\tMax Speed: %uMHz", processprInfor.MaxClockSpeed);
 
+    PrintLogW(L"");
+
 }
 
 void MotherBoardItemInfor::LoadHWInfor()
@@ -417,6 +419,8 @@ void MotherBoardItemInfor::LoadHWInfor()
     QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
     this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
     PrintLogW(L"\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
+
+    PrintLogW(L"");
 }
 
 void MemoryItemInfor::LoadHWInfor()
@@ -454,6 +458,8 @@ void MemoryItemInfor::LoadHWInfor()
 
         this->ContentAddBlankLine();
     }
+
+    PrintLogW(L"");
 
 }
 
@@ -512,6 +518,8 @@ void DiskItemInfor::LoadHWInfor()
 
         this->ContentAddBlankLine();
     }
+
+    PrintLogW(L"");
 }
 
 void VideoCardItemInfor::LoadHWInfor()
@@ -519,13 +527,17 @@ void VideoCardItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle("Video Card");
+    PrintLogW(L"Video Card Information:");
 
     // ÃÓ–¥œ‘ø®–≈œ¢
     const VideoCardInforArray& videoCardInforArray = HardwareInfor::GetInstance().GetVideoCardInfor();
     for (int i = 0; i < videoCardInforArray.Count; i++)
     {
+        PrintLogW(L"\tVideo Card Index: %d", i);
+
         QString videoCardName = QString::fromStdWString(videoCardInforArray.Description[i]);
         this->ContentAddItem(QObject::tr("Model"), videoCardName);
+        PrintLogW(L"\tModel: %s", videoCardName.toStdWString().c_str());
 
         QString videoCardType;
         if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
@@ -536,13 +548,17 @@ void VideoCardItemInfor::LoadHWInfor()
             videoCardType = QString::fromStdWString(L"Unknown");
 
         this->ContentAddItem(QObject::tr("Type"), videoCardType);
+        PrintLogW(L"\tType: %s", videoCardType.toStdWString().c_str());
 
         QString videoSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
 
         this->ContentAddItem(QObject::tr("Size"), videoSize);
+        PrintLogW(L"\tSize: %s", videoSize.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
+
+    PrintLogW(L"");
 }
 
 void MonitorItemInfor::LoadHWInfor()
@@ -551,18 +567,24 @@ void MonitorItemInfor::LoadHWInfor()
 
     this->SetTitle("Monitor");
 
+    PrintLogW(L"Monitor Information:");
+
     const MonitorInforArray& monitorInforArray = HardwareInfor::GetInstance().GetMonitorInfor();
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
-        
+        PrintLogW(L"\tMonitor Index: %u", i);
         QString monitorName = QString::fromStdWString(monitorInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("Model"), monitorName);
+        PrintLogW(L"\tModel: %s", monitorName.toStdWString().c_str());
 
         QString date = QString::fromStdWString(monitorInforArray.Date[i]);
         this->ContentAddItem(QObject::tr("Product Date"), date);
+        PrintLogW(L"\tProductDate: %s", date.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
+
+    PrintLogW(L"");
 }
 
 void BatteryItemInfor::LoadHWInfor()
@@ -570,26 +592,33 @@ void BatteryItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle("Battery");
+    PrintLogW(L"Battery Information:");
 
     const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
 
     QString batteryName = QString::fromStdWString(batteryStaticInfor.Name).trimmed();
     this->ContentAddItem(QObject::tr("Name"), batteryName);
+    PrintLogW(L"\tName: %s", batteryName.toStdWString().c_str());
 
     QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer).trimmed();
     this->ContentAddItem(QObject::tr("Manufacturer"), ConvertManufacturer(batteryManufacturer));
+    PrintLogW(L"\tManufacturer: %s", batteryManufacturer.toStdWString().c_str());
 
     QString batterySerialNumber = QString::fromStdWString(batteryStaticInfor.SerialNumber).trimmed();
     this->ContentAddItem(QObject::tr("Serial Number"), batterySerialNumber);
+    PrintLogW(L"\tSerial Number: %s", batterySerialNumber.toStdWString().c_str());
 
     QString designedCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.DesignedCapacity);
     this->ContentAddItem(QObject::tr("Designed Capacity"), designedCapacity);
+    PrintLogW(L"\tDesigned Capacity: %s", designedCapacity.toStdWString().c_str());
 
     QString fullCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.FullChargedCapacity);
     this->ContentAddItem(QObject::tr("Full Capacity"), fullCapacity);
+    PrintLogW(L"\tFullCapacity: %s", fullCapacity.toStdWString().c_str());
 
     QString designedVoltage = QString::fromStdString("%1 mV").arg(batteryStaticInfor.DesignedVoltage);
     this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
+    PrintLogW(L"\tDesigned Voltage: %s", designedVoltage.toStdWString().c_str());
 
 }
 
@@ -598,13 +627,16 @@ void NetworkCardItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle(QObject::tr("Network Card"));
+    PrintLogW(L"Network Card Information:");
 
     const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
 
     for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
     {
+        PrintLogW(L"\tNetwork Card Index: %u", i);
         QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("Name"), name);
+        PrintLogW(L"\tName: %s", name.toStdWString().c_str());
 
         QString type;
         if (networkCardInforArray.Type[i] == ETHERNET_NETCARD)
@@ -617,13 +649,18 @@ void NetworkCardItemInfor::LoadHWInfor()
             type = "Unknown";
 
         this->ContentAddItem(QObject::tr("Type"), type);
+        PrintLogW(L"\tType: %s", type.toStdWString().c_str());
 
         QString manufacturer = ConvertManufacturer(QString::fromStdWString(networkCardInforArray.Manufacturer[i]));
         this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
+        PrintLogW(L"\tManufacturer: %s", manufacturer.toStdWString().c_str());
 
         QString macAddress = QString::fromStdWString(networkCardInforArray.MACAddress[i]);
         this->ContentAddItem(QObject::tr("MACAddress"), macAddress);
+        PrintLogW(L"\tMACAddress: %s", macAddress.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
+
+    PrintLogW(L"");
 }
