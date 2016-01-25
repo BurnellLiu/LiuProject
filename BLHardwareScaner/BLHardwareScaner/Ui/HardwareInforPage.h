@@ -21,7 +21,7 @@
 
 class HWItemInfor;
 
-    /// @brief 硬件信息页面
+/// @brief 硬件信息页面
 class HardwareInforPage : public QWidget
 {
     Q_OBJECT

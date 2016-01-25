@@ -6,6 +6,7 @@
 
 class HardwareInforPage;
 class TempManagementPage;
+class TestItemPage;
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +22,7 @@ protected:
 private slots:
     void HardwareInforClicked();
     void TemperatureClicked();
+    void TestItemClicked();
 
 
 private:
@@ -28,6 +30,7 @@ private:
 
     HardwareInforPage* m_pHardwareInforPage;
     TempManagementPage* m_pTempManagementPage;
+    TestItemPage* m_pTestItemPage;
 
     float m_uiRatio; ///< UI需要调整的比例
 };

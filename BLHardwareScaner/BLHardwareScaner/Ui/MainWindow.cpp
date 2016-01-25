@@ -7,6 +7,8 @@
 
 #include "HardwareInforPage.h"
 #include "TempManagementPage.h"
+#include "TestItemPage.h"
+
 #include "..\\Src\\Log\\LLog.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
@@ -37,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
     QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));
     QObject::connect(ui.toolButtonTempManagement, SIGNAL(clicked()), this, SLOT(TemperatureClicked()));
+    QObject::connect(ui.toolButtonTestItem, SIGNAL(clicked()), this, SLOT(TestItemClicked()));
     
     width = ui.stackedWidget->width() * m_uiRatio;
     height = ui.stackedWidget->height() * m_uiRatio;
@@ -49,6 +52,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     m_pTempManagementPage = new TempManagementPage();
     m_pTempManagementPage->setFixedSize(width, height);
     ui.stackedWidget->addWidget(m_pTempManagementPage);
+
+    m_pTestItemPage = new TestItemPage();
+    m_pTestItemPage->setFixedSize(width, height);
+    ui.stackedWidget->addWidget(m_pTestItemPage);
 
 }
 
@@ -65,6 +72,12 @@ MainWindow::~MainWindow()
         delete m_pTempManagementPage;
         m_pTempManagementPage = NULL;
     }
+
+    if (m_pTestItemPage != NULL)
+    {
+        delete m_pTestItemPage;
+        m_pTestItemPage = NULL;
+    }
 }
 
 void MainWindow::showEvent(QShowEvent* e)
@@ -80,4 +93,9 @@ void MainWindow::HardwareInforClicked()
 void MainWindow::TemperatureClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pTempManagementPage);
+}
+
+void MainWindow::TestItemClicked()
+{
+    ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
 }

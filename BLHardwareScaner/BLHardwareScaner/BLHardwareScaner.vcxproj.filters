@@ -126,6 +126,12 @@
     <ClCompile Include="..\Src\BaseUnit\WinRing0\LWinRing0.cpp">
       <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_TestItemPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\TestItemPage.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\MainWindow.h">
@@ -147,6 +153,12 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\TempManagementPage.h">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItemPage.h">
       <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -204,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\BaseUnit\WinRing0\LWinRing0.h">
       <Filter>Src\BaseUnit\WinRing0</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_TestItem.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
