@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MainWindow mainWindow;
 
-    QPixmap splashMap(":/MyResource/Images/splash.png");
+    QPixmap splashMap(".\\Image\\Background\\splash.png");
     QSplashScreen splashScreen(splashMap);
     splashScreen.show();
     splashScreen.showMessage(QObject::tr("Getting Hardware Information..."), Qt::AlignLeft | Qt::AlignTop, Qt::red);

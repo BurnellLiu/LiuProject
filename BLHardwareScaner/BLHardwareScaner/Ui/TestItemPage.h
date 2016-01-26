@@ -30,6 +30,12 @@ protected:
     void showEvent(QShowEvent* e);
 
 private:
+    /// @brief 增加一个测试项
+    /// @param[in] name 测试项名称
+    /// @param[in] icon 测试项图标
+    void AddTestItem(IN const QString& name, IN const QIcon& icon);
+
+private:
     Ui::TestItemForm ui;
 };
 
