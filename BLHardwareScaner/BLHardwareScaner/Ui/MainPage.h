@@ -2,19 +2,19 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
-#include "ui_MainWindow.h"
+#include "ui_Main.h"
 
 class HardwareInforPage;
 class TempManagementPage;
 class TestItemPage;
 
-class MainWindow : public QMainWindow
+class MainPage : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+    MainPage(QWidget *parent = 0, Qt::WFlags flags = 0);
+    ~MainPage();
 
 protected:
     void showEvent(QShowEvent* e);
@@ -26,7 +26,7 @@ private slots:
 
 
 private:
-    Ui::MainWindowForm ui;
+    Ui::MainForm ui;
 
     HardwareInforPage* m_pHardwareInforPage;
     TempManagementPage* m_pTempManagementPage;

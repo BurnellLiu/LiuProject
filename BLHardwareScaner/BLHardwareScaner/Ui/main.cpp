@@ -4,7 +4,7 @@
 #include <QtGui/QSplashScreen>
 #include <QtCore/QDir>
 
-#include "MainWindow.h"
+#include "MainPage.h"
 #include "..\\Src\\Log\\LLog.h"
 
 #define LOG_PATH ".\\Log"
@@ -40,14 +40,14 @@ int main(int argc, char *argv[])
     }
    
     QApplication app(argc, argv);
-    MainWindow mainWindow;
+    MainPage mainPage;
 
     QPixmap splashMap(".\\Image\\Background\\splash.png");
     QSplashScreen splashScreen(splashMap);
     splashScreen.show();
     splashScreen.showMessage(QObject::tr("Getting Hardware Information..."), Qt::AlignLeft | Qt::AlignTop, Qt::red);
-    mainWindow.show();
-    splashScreen.finish(&mainWindow);
+    mainPage.show();
+    splashScreen.finish(&mainPage);
 
     app.exec();
 

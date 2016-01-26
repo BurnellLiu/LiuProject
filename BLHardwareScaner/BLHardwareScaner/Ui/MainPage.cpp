@@ -1,5 +1,5 @@
 
-#include "MainWindow.h"
+#include "MainPage.h"
 
 #include <QtGui/QPaintDevice>
 #include <QtGui/QPainter>
@@ -11,7 +11,7 @@
 
 #include "..\\Src\\Log\\LLog.h"
 
-MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
+MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
     // 获取当前系统DPI, 当前系统DPI除以设计时DPI值, 则得到UI放大系数
@@ -55,11 +55,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
     m_pTestItemPage = new TestItemPage();
     m_pTestItemPage->setFixedSize(width, height);
+    m_pTestItemPage->SetUIRatio(m_uiRatio);
     ui.stackedWidget->addWidget(m_pTestItemPage);
 
 }
 
-MainWindow::~MainWindow()
+MainPage::~MainPage()
 {
     if (m_pHardwareInforPage != NULL)
     {
@@ -80,22 +81,22 @@ MainWindow::~MainWindow()
     }
 }
 
-void MainWindow::showEvent(QShowEvent* e)
+void MainPage::showEvent(QShowEvent* e)
 {
     ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
 }
 
-void MainWindow::HardwareInforClicked()
+void MainPage::HardwareInforClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
 }
 
-void MainWindow::TemperatureClicked()
+void MainPage::TemperatureClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pTempManagementPage);
 }
 
-void MainWindow::TestItemClicked()
+void MainPage::TestItemClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
 }

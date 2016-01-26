@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
     <Filter Include="Generated Files">
       <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
       <Extensions>moc;h;cpp</Extensions>
@@ -50,17 +46,11 @@
     <Filter Include="Src\BaseUnit\WinRing0">
       <UniqueIdentifier>{c4bdba93-b1d2-4526-9420-109e2548a741}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ui\TestItem">
+      <UniqueIdentifier>{312310ff-3bb6-4adb-baf5-b6eda618c29b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Ui\main.cpp">
-      <Filter>Ui</Filter>
-    </ClCompile>
-    <ClCompile Include="Ui\MainWindow.cpp">
-      <Filter>Ui</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\moc_MainWindow.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\HardwareInfor.cpp">
       <Filter>Src</Filter>
     </ClCompile>
@@ -124,37 +114,53 @@
     <ClCompile Include="Ui\TestItemPage.cpp">
       <Filter>Ui</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\main.cpp" />
+    <ClCompile Include="Ui\MainPage.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_MainPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_DiskSpeedPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\TestItem\DiskSpeedPage.cpp">
+      <Filter>Ui\TestItem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Ui\MainWindow.h">
-      <Filter>Ui</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Ui\MainWindow.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Ui\HardwareInforPage.h">
       <Filter>Ui</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Ui\HardwareInfor.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Ui\TempManagement.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\TempManagementPage.h">
       <Filter>Ui</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\TestItem.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Ui\TestItemPage.h">
       <Filter>Ui</Filter>
     </CustomBuild>
+    <CustomBuild Include="Ui\TestItem.ui">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TempManagement.ui">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\HardwareInfor.ui">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\MainPage.h">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\Main.ui">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\DiskSpeed.ui">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\DiskSpeedPage.h">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\HardwareInfor.h">
       <Filter>Src</Filter>
     </ClInclude>
@@ -207,6 +213,12 @@
       <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_TestItem.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_Main.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_DiskSpeed.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
