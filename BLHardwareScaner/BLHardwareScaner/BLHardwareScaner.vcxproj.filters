@@ -127,6 +127,9 @@
     <ClCompile Include="Ui\TestItem\DiskSpeedPage.cpp">
       <Filter>Ui\TestItem</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\LDiskSpeed.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_DiskSpeed.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\LDiskSpeed.h">
+      <Filter>Src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

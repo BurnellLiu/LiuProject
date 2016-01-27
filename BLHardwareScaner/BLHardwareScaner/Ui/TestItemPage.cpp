@@ -39,7 +39,7 @@ void TestItemPage::Init()
     connect(ui.listWidgetTestItem, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(TestItemDoubleClicked(QListWidgetItem*)));
     // ÉèÖÃÊôÐÔ
     ui.listWidgetTestItem->setViewMode(QListView::IconMode);
-    ui.listWidgetTestItem->setIconSize(QSize(96 * m_uiRatio, 96 * m_uiRatio));
+    ui.listWidgetTestItem->setIconSize(QSize(64 * m_uiRatio, 64 * m_uiRatio));
     ui.listWidgetTestItem->setMovement(QListView::Static);
     ui.listWidgetTestItem->setResizeMode(QListView::Adjust);
 

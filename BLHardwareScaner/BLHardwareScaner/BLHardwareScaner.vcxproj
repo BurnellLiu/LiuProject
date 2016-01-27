@@ -86,6 +86,7 @@
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
     <ClCompile Include="..\Src\Gpu\Gpu.cpp" />
     <ClCompile Include="..\Src\HardwareInfor.cpp" />
+    <ClCompile Include="..\Src\LDiskSpeed.cpp" />
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <TreatWChar_tAsBuiltInType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWChar_tAsBuiltInType>
     </ClCompile>
@@ -141,6 +142,7 @@
     <ClInclude Include="..\Src\DiskController\LDiskController.h" />
     <ClInclude Include="..\Src\Gpu\Gpu.h" />
     <ClInclude Include="..\Src\HardwareInfor.h" />
+    <ClInclude Include="..\Src\LDiskSpeed.h" />
     <ClInclude Include="..\Src\Log\LLog.h" />
     <ClInclude Include="..\Src\Memory\LMemory.h" />
     <ClInclude Include="..\Src\PerformanceCounter.h" />
