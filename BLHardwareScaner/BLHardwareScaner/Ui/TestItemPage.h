@@ -17,6 +17,8 @@
 #define OUT
 #endif
 
+class DiskSpeedPage;
+
 /// @brief 测试项页面
 class TestItemPage : public QWidget
 {
@@ -45,13 +47,13 @@ private:
     /// @param[in] icon 测试项图标
     void AddTestItem(IN const QString& name, IN const QIcon& icon);
 
-    void DiskSpeedClick();
-
 private slots:
-    void TestItemDoubleClicked(QListWidgetItem* pItem);
+    void TestItemClicked(QListWidgetItem* pItem);
 
 private:
     Ui::TestItemForm ui;
+
+    DiskSpeedPage* m_pDiskSpeedPage;
 
     float m_uiRatio; ///< UI需要调整的比例
     bool m_bInitDone; ///< 标记是否初始化完成

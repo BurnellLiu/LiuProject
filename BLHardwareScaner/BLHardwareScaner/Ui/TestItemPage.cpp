@@ -12,11 +12,17 @@ TestItemPage::TestItemPage(QWidget *parent, Qt::WFlags flags)
 
     m_bInitDone = false;
     m_uiRatio = 1.0f;
+
+    m_pDiskSpeedPage = new DiskSpeedPage();
 }
 
 TestItemPage::~TestItemPage()
 {
-
+    if (m_pDiskSpeedPage != 0)
+    {
+        delete m_pDiskSpeedPage;
+        m_pDiskSpeedPage = 0;
+    }
 }
 
 void TestItemPage::SetUIRatio(IN float ratio)
@@ -36,7 +42,7 @@ void TestItemPage::showEvent(QShowEvent* e)
 
 void TestItemPage::Init()
 {
-    connect(ui.listWidgetTestItem, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(TestItemDoubleClicked(QListWidgetItem*)));
+    connect(ui.listWidgetTestItem, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(TestItemDoubleClicked(QListWidgetItem*)));
     // ÉèÖÃÊôÐÔ
     ui.listWidgetTestItem->setViewMode(QListView::IconMode);
     ui.listWidgetTestItem->setIconSize(QSize(64 * m_uiRatio, 64 * m_uiRatio));
@@ -44,6 +50,9 @@ void TestItemPage::Init()
     ui.listWidgetTestItem->setResizeMode(QListView::Adjust);
 
     this->AddTestItem(STRING_TESTITEM_DISK_SPEED, QIcon(".\\Image\\TestItem\\DiskSpeed.png"));
+
+    ui.stackedWidget->addWidget(m_pDiskSpeedPage);
+    ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
 }
 
 void TestItemPage::AddTestItem(IN const QString& name, IN const QIcon& icon)
@@ -57,19 +66,13 @@ void TestItemPage::AddTestItem(IN const QString& name, IN const QIcon& icon)
     pItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
-void TestItemPage::DiskSpeedClick()
-{
-    DiskSpeedPage page(this);
-    page.exec();
-}
-
-void TestItemPage::TestItemDoubleClicked(QListWidgetItem* pItem)
+void TestItemPage::TestItemClicked(QListWidgetItem* pItem)
 {
     if (NULL == pItem)
         return;
 
     if (pItem->text() == STRING_TESTITEM_DISK_SPEED)
     {
-        this->DiskSpeedClick();
+        ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
     }
 }
