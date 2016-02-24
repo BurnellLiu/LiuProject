@@ -16,9 +16,6 @@ public:
     MainPage(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainPage();
 
-protected:
-    void showEvent(QShowEvent* e);
-
 private slots:
     void HardwareInforClicked();
     void TemperatureClicked();

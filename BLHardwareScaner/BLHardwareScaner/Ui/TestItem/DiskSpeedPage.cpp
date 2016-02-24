@@ -1,120 +1,169 @@
 
 #include "DiskSpeedPage.h"
 
+#include "..\\Src\\Log\\LLog.h"
+
+#define DISK_TEST_START QString::fromStdWString(L"Test Start")
+#define DISK_TEST_STOP QString::fromStdWString(L"Test Stop")
+#define DISK_SPEED_ZERO QString::fromStdWString(L"0.00")
+
 DiskSpeedPage::DiskSpeedPage(QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
 {
-    ui.setupUi(this); 
+    m_pSeqTest = new LDiskSequenceTest();
+    m_p4KRandTest = new LDisk4KRandomTest();
 
-    m_uiRatio = 1.0f;
-    m_currentRuningIndex = 0;
+    ui.setupUi(this); 
 
     QObject::connect(ui.pushButtonTest, SIGNAL(clicked()), this, SLOT(TestButtonClicked()));
 
-    m_testMonitorTimer.setInterval(500);
-    QObject::connect(&m_testMonitorTimer, SIGNAL(timeout()), this, SLOT(TestMonitorTimerTimeout()));
+    m_seqTestTimer.setInterval(500);
+    m_rand4KTestTimer.setInterval(500);
+
+    QObject::connect(&m_seqTestTimer, SIGNAL(timeout()), this, SLOT(SeqTestMonitorTimer()));
+    QObject::connect(&m_rand4KTestTimer, SIGNAL(timeout()), this, SLOT(Rand4KTestMonitorTimer()));
 }
 
 DiskSpeedPage::~DiskSpeedPage()
 {
-    this->Clear();
-}
+    if (m_pSeqTest != 0)
+    {
+        delete m_pSeqTest;
+        m_pSeqTest = 0;
+    }
 
-void DiskSpeedPage::SetUIRatio(IN float ratio)
-{
-    m_uiRatio = ratio;
+    if (m_p4KRandTest != 0)
+    {
+        delete m_p4KRandTest;
+        m_p4KRandTest = 0;
+    }
 }
 
 void DiskSpeedPage::showEvent(QShowEvent* e)
 {
-    this->Init();
-}
+    static bool s_intiDone = false;
 
-void DiskSpeedPage::Init()
-{
-    this->Clear();
-
-    ui.labelSeqWSpeed->setText("");
-    ui.labelSeqRSpeed->setText("");
-    ui.label4KRandWSpeed->setText("");
-    ui.label4KRandRSpeed->setText("");
-
-    // 测试项列表中增加一个开头项, 但不做实际测试
-    IDiskSpeedTest* pTempTest = new LDiskSequenceTest();
-    m_testItemList.push_back(pTempTest);
-
-    IDiskSpeedTest* pSeqTest = new LDiskSequenceTest();
-    m_testItemList.push_back(pSeqTest);
-
-    IDiskSpeedTest* p4KRandTest = new LDisk4KRandomTest();
-    m_testItemList.push_back(p4KRandTest);
-}
-
-void DiskSpeedPage::Clear()
-{
-    for (unsigned int i = 0; i < m_testItemList.size(); i++)
+    if (!s_intiDone)
     {
-        delete m_testItemList[i];
-        m_testItemList[i] = 0;
-    }
+        ui.labelSeqWSpeed->setText(DISK_SPEED_ZERO);
+        ui.labelSeqRSpeed->setText(DISK_SPEED_ZERO);
+        ui.label4KRandWSpeed->setText(DISK_SPEED_ZERO);
+        ui.label4KRandRSpeed->setText(DISK_SPEED_ZERO);
 
-    m_testItemList.clear();
+        ui.labelTestState->setText("");
+
+        ui.pushButtonTest->setText(DISK_TEST_START);
+
+        s_intiDone = true;
+    }
+    
 }
 
 void DiskSpeedPage::TestButtonClicked()
 {
-    if (ui.pushButtonTest->text() == "StartTest")
+    if (ui.pushButtonTest->text() == DISK_TEST_START)
     {
-        m_testMonitorTimer.start();
+        PrintLogW(L"");
+        PrintLogW(L"Start Disk Speed Test");
 
-        ui.labelSeqWSpeed->setText("");
-        ui.labelSeqRSpeed->setText("");
-        ui.label4KRandWSpeed->setText("");
-        ui.label4KRandRSpeed->setText("");
+        ui.labelSeqWSpeed->setText(DISK_SPEED_ZERO);
+        ui.labelSeqRSpeed->setText(DISK_SPEED_ZERO);
+        ui.label4KRandWSpeed->setText(DISK_SPEED_ZERO);
+        ui.label4KRandRSpeed->setText(DISK_SPEED_ZERO);
 
-        ui.pushButtonTest->setText("StopTest");
+        ui.pushButtonTest->setText(DISK_TEST_STOP);
 
-        m_currentRuningIndex = 0;
+        m_pSeqTest->Start(L"D:\\test.temp");
+        m_seqTestTimer.start();
+
+        ui.labelTestState->setText("Sequence Test Is Running...");
+        PrintLogW(L"Start Disk Sequence Test");
+
     }
-    else if (ui.pushButtonTest->text() == "StopTest")
+    else if (ui.pushButtonTest->text() == DISK_TEST_STOP)
     {
-        m_testMonitorTimer.stop();
-        ui.pushButtonTest->setText("StartTest");
+        PrintLogW(L"User Stop Disk Speed Test");
 
+        m_pSeqTest->Stop();
+        m_p4KRandTest->Stop();
+
+        m_seqTestTimer.stop();
+        m_rand4KTestTimer.stop();
+
+        ui.pushButtonTest->setText(DISK_TEST_START);
+        ui.labelTestState->setText("");
     }
 }
 
-void DiskSpeedPage::TestMonitorTimerTimeout()
+void DiskSpeedPage::SeqTestMonitorTimer()
 {
-    LDiskSpeedTestState state = m_testItemList[m_currentRuningIndex]->GetState();
-    QString readSpeed = QString::fromStdString("%1").arg(state.ReadSpeed);
-    QString writeSpeed = QString::fromStdString("%1").arg(state.WriteSpeed);
+    LDiskSpeedTestState state = m_pSeqTest->GetState();
+    QString readSpeed = QString::number(state.ReadSpeed, 'f', 2);
+    QString writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+    ui.labelSeqRSpeed->setText(readSpeed);
+    ui.labelSeqWSpeed->setText(writeSpeed);
 
-    if (m_currentRuningIndex == 1)
+    // 测试未结束
+    if (!state.TestDone)
+        return;
+
+    // 测试结束
+    m_seqTestTimer.stop();
+
+    // 测试没发生错误则进行4K随机测试
+    if (state.Error == DST_NO_ERROR)
     {
-        ui.labelSeqRSpeed->setText(readSpeed);
-        ui.labelSeqWSpeed->setText(writeSpeed);
+        PrintLogW(L"Disk Sequence Test Is Done, Read Speed: %s MB/s, Write Speed: %s MB/s", 
+            readSpeed.toStdWString().c_str(), 
+            writeSpeed.toStdWString().c_str());
+
+        m_p4KRandTest->Start(L"D:\\test.temp");
+        m_rand4KTestTimer.start();
+        
+        ui.labelTestState->setText("4K Random Test Is Running...");
+
+        PrintLogW(L"Start Disk 4K Random Test");
     }
 
-    if (m_currentRuningIndex == 2)
+    // 测试发生错误, 显示错误消息, 停止测试
+    if (state.Error != DST_NO_ERROR)
     {
-        ui.label4KRandRSpeed->setText(readSpeed);
-        ui.label4KRandWSpeed->setText(writeSpeed);
-    }
+        PrintLogW(L"Disk Sequence Test Error, Message: %s", state.ErrorMsg.c_str());
+        PrintLogW(L"Disk Sequence Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
 
-    if (state.TestDone)
+        ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
+        ui.pushButtonTest->setText(DISK_TEST_START);
+    }
+    
+}
+
+void DiskSpeedPage::Rand4KTestMonitorTimer()
+{
+    LDiskSpeedTestState state = m_p4KRandTest->GetState();
+    QString readSpeed = QString::number(state.ReadSpeed, 'f', 2);
+    QString writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+    ui.label4KRandRSpeed->setText(readSpeed);
+    ui.label4KRandWSpeed->setText(writeSpeed);
+
+    if (!state.TestDone)
+        return;
+
+    m_rand4KTestTimer.stop();
+    ui.pushButtonTest->setText(DISK_TEST_START);
+
+    if (state.Error == DST_NO_ERROR)
     {
-        m_currentRuningIndex++;
-        if (m_currentRuningIndex >= m_testItemList.size())
-        {
-            m_testMonitorTimer.stop();
-            ui.pushButtonTest->setText("StartTest");
-        }
-        else
-        {
-            m_testItemList[m_currentRuningIndex]->Start(L"D:\\test.temp");
-        }
+        PrintLogW(L"Disk 4K Random Test Is Done, Read Speed: %s MB/s, Write Speed: %s MB/s", 
+            readSpeed.toStdWString().c_str(), 
+            writeSpeed.toStdWString().c_str());
+
+        ui.labelTestState->setText("");
     }
+    else
+    {
+        PrintLogW(L"Disk 4K Random Test Error, Message: %s", state.ErrorMsg.c_str());
+        PrintLogW(L"Disk 4K Random Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
 
-
+        ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
+    }
 }

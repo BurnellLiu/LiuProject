@@ -42,6 +42,8 @@ struct LDiskSpeedTestState
     float ReadSpeed; ///< 读速度, 单位M/S
     float WriteSpeed; ///< 写速度, 单位M/S
     LDiskSpeedTestError Error; ///< 错误码
+    wstring ErrorMsg; ///< 简略错误消息
+    wstring ErrorMsgWindows; ///< Windows错误消息
 };
 
 /// @brief 磁盘速度测试接口

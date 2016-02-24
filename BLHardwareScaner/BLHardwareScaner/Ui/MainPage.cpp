@@ -58,6 +58,8 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     m_pTestItemPage->SetUIRatio(m_uiRatio);
     ui.stackedWidget->addWidget(m_pTestItemPage);
 
+    ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
+
 }
 
 MainPage::~MainPage()
@@ -79,11 +81,6 @@ MainPage::~MainPage()
         delete m_pTestItemPage;
         m_pTestItemPage = NULL;
     }
-}
-
-void MainPage::showEvent(QShowEvent* e)
-{
-    ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
 }
 
 void MainPage::HardwareInforClicked()

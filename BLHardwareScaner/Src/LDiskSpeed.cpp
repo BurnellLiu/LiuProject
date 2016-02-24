@@ -13,6 +13,17 @@ using std::bitset;
 
 #include <Windows.h>
 
+/// @brief 错误消息字符串列表
+static wchar_t* ErrorMsgList[] =
+{
+    L"No Error",
+    L"Open File Error",
+    L"Write File Error",
+    L"Read File Error",
+    L"Alloc Memory Error",
+    L"Test Abort Error"
+};
+
 /// @brief 产生随机整数
 /// @param[in] min 随机整数的最小值
 /// @param[in] max 随机整数的最大值
@@ -55,6 +66,18 @@ static unsigned long RandValueFrom256K()
     return randValue;
 }
 
+/// @brief 获取Windows错误码
+/// @param[out] pWStr 存储错误信息
+static void GetWindowsError(OUT wstring* pWStr)
+{
+    if (0 == pWStr)
+        return;
+
+    wchar_t windowsErrorCode[256] = {0};
+    wsprintfW(windowsErrorCode, L"Windows Error Code: 0x%x", GetLastError());
+    (*pWStr) = windowsErrorCode;
+}
+
 /// @brief 磁盘速度测试文件结构
 struct LDiskSpeedTestFile
 {
@@ -76,6 +99,7 @@ public:
         m_testFile.Size = 0;
 
         m_testState.Error = DST_NO_ERROR;
+        m_testState.ErrorMsg = ErrorMsgList[DST_NO_ERROR];
         m_testState.TestDone = true;
         m_testState.ReadSpeed = 0.0f;
         m_testState.WriteSpeed = 0.0f;
@@ -102,6 +126,8 @@ public:
 
         m_testState.TestDone = false;
         m_testState.Error = DST_NO_ERROR;
+        m_testState.ErrorMsg = ErrorMsgList[DST_NO_ERROR];
+        m_testState.ErrorMsgWindows = L"";
         m_testState.WriteSpeed = 0.0f;
         m_testState.ReadSpeed = 0.0f;
 
@@ -154,21 +180,25 @@ private:
         if (0 == pRWBuffer)
         {
             testState.Error = DST_ALLOC_MEMORY_ERROR;
+            testState.ErrorMsg = ErrorMsgList[DST_ALLOC_MEMORY_ERROR];
             goto SAFE_EXIT;
         }
         
-        // 创建文件
+        // 创建文件, 关闭文件句柄后会自动删除文件, 程序意外关闭后, 也可删除测试文件
         hFile = CreateFileW(
             testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
             CREATE_ALWAYS, 
-            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, 
+            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_DELETE_ON_CLOSE, 
             NULL);
         if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
         {
             testState.Error = DST_OPEN_FILE_ERROR;
+            testState.ErrorMsg = ErrorMsgList[DST_OPEN_FILE_ERROR];
+            GetWindowsError(&testState.ErrorMsgWindows);
+
             goto SAFE_EXIT;
         }
 
@@ -181,12 +211,16 @@ private:
             if (FALSE == ret)
             {
                 testState.Error = DST_WRITE_FILE_ERROR;
+                testState.ErrorMsg = ErrorMsgList[DST_WRITE_FILE_ERROR];
+                GetWindowsError(&testState.ErrorMsgWindows);
+
                 goto SAFE_EXIT;
             }
             
             if (pDiskSequenceTest->m_bStopTest)
             {
                 testState.Error = DST_TEST_ABORT_ERROR;
+                testState.ErrorMsg = ErrorMsgList[DST_TEST_ABORT_ERROR];
                 goto SAFE_EXIT;
             }
 
@@ -209,12 +243,16 @@ private:
             if (FALSE == ret)
             {
                 testState.Error = DST_READ_FILE_ERROR;
+                testState.ErrorMsg = ErrorMsgList[DST_READ_FILE_ERROR];
+                GetWindowsError(&testState.ErrorMsgWindows);
+
                 goto SAFE_EXIT;
             }
 
             if (pDiskSequenceTest->m_bStopTest)
             {
                 testState.Error = DST_TEST_ABORT_ERROR;
+                testState.ErrorMsg = ErrorMsgList[DST_TEST_ABORT_ERROR];
                 goto SAFE_EXIT;
             }
 
@@ -243,9 +281,6 @@ SAFE_EXIT:
             delete[] pRWBuffer;
             pRWBuffer = 0;
         }
-
-        // 删除文件
-        _wremove(testFile.Path.c_str());
     }
 };
 
@@ -291,6 +326,7 @@ public:
         m_bStopTest = false;
 
         m_testState.Error = DST_NO_ERROR;
+        m_testState.ErrorMsg = ErrorMsgList[DST_NO_ERROR];
         m_testState.TestDone = true;
         m_testState.ReadSpeed = 0.0f;
         m_testState.WriteSpeed = 0.0f;
@@ -298,12 +334,18 @@ public:
         m_testFile.Path = L"";
         m_testFile.Size = 0;
 
-        
+        m_testFileHandle = 0;
     }
 
     /// @brief 析构函数
     ~CDisk4KRandomTest()
     {
+        if (m_testFileHandle != 0 &&
+            m_testFileHandle != INVALID_HANDLE_VALUE)
+        {
+            CloseHandle(m_testFileHandle);
+            m_testFileHandle = 0;
+        }
 
     }
 
@@ -326,8 +368,17 @@ public:
 
         m_testState.TestDone = false;
         m_testState.Error = DST_NO_ERROR;
+        m_testState.ErrorMsg = ErrorMsgList[DST_NO_ERROR];
+        m_testState.ErrorMsgWindows = L"";
         m_testState.WriteSpeed = 0.0f;
         m_testState.ReadSpeed = 0.0f;
+
+        if (m_testFileHandle != 0 &&
+            m_testFileHandle != INVALID_HANDLE_VALUE)
+        {
+            CloseHandle(m_testFileHandle);
+            m_testFileHandle = 0;
+        }
 
         _beginthread(Disk4KRandomTestThread, 0, (void*)this);
 
@@ -361,7 +412,6 @@ private:
         // 标识函数返回值
         bool bRet = false;
 
-        HANDLE hFile = NULL;
         unsigned int rwCount = 0;
         
         // 计时开始变量
@@ -379,22 +429,7 @@ private:
         {
             bRet = false;
             m_testState.Error = DST_ALLOC_MEMORY_ERROR;
-            goto SAFE_EXIT;
-        }
-
-        // 打开文件
-        hFile = CreateFileW(
-            m_testFile.Path.c_str(), 
-            GENERIC_WRITE | GENERIC_READ, 
-            0, 
-            NULL, 
-            OPEN_EXISTING, 
-            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, 
-            NULL);
-        if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
-        {
-            bRet = false;
-            m_testState.Error = DST_OPEN_FILE_ERROR;
+            m_testState.ErrorMsg = ErrorMsgList[DST_ALLOC_MEMORY_ERROR];
             goto SAFE_EXIT;
         }
 
@@ -408,15 +443,18 @@ private:
 
             // 4K * 256K = 1G
             unsigned long randAddr = RandValueFrom256K();
-            SetFilePointer(hFile, randAddr * WRITE_BUFFER_SIZE, 0, FILE_BEGIN);
+            SetFilePointer(m_testFileHandle, randAddr * WRITE_BUFFER_SIZE, 0, FILE_BEGIN);
 
             unsigned long count = 0;
-            BOOL ret = WriteFile(hFile, (LPCVOID)pWriteBuffer, WRITE_BUFFER_SIZE, &count, NULL);
+            BOOL ret = WriteFile(m_testFileHandle, (LPCVOID)pWriteBuffer, WRITE_BUFFER_SIZE, &count, NULL);
 
             if (FALSE == ret)
             {
                 bRet = false;
                 m_testState.Error = DST_WRITE_FILE_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_WRITE_FILE_ERROR];
+                GetWindowsError(&m_testState.ErrorMsgWindows);
+
                 goto SAFE_EXIT;
             }
 
@@ -424,6 +462,7 @@ private:
             {
                 bRet = false;
                 m_testState.Error = DST_TEST_ABORT_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_TEST_ABORT_ERROR];
                 goto SAFE_EXIT;
             }
 
@@ -438,13 +477,6 @@ private:
         bRet = true;
 
 SAFE_EXIT:
-        if (NULL != hFile ||
-            INVALID_HANDLE_VALUE != hFile)
-        {
-            CloseHandle(hFile);
-            hFile = NULL;
-        }
-
         if (0 != pWriteBuffer)
         {
             delete[] pWriteBuffer;
@@ -464,7 +496,6 @@ SAFE_EXIT:
         // 标识函数返回值
         bool bRet = false;
 
-        HANDLE hFile = NULL;
         unsigned int rwCount = 0;
 
         // 计时开始变量
@@ -482,22 +513,7 @@ SAFE_EXIT:
         {
             bRet = false;
             m_testState.Error = DST_ALLOC_MEMORY_ERROR;
-            goto SAFE_EXIT;
-        }
-
-        // 打开文件
-        hFile = CreateFileW(
-            m_testFile.Path.c_str(), 
-            GENERIC_WRITE | GENERIC_READ, 
-            0, 
-            NULL, 
-            OPEN_EXISTING, 
-            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, 
-            NULL);
-        if (0 == hFile || INVALID_HANDLE_VALUE == hFile)
-        {
-            bRet = false;
-            m_testState.Error = DST_OPEN_FILE_ERROR;
+            m_testState.ErrorMsg = ErrorMsgList[DST_ALLOC_MEMORY_ERROR];
             goto SAFE_EXIT;
         }
 
@@ -511,15 +527,18 @@ SAFE_EXIT:
 
             // 4K * 256K = 1G
             unsigned long randAddr = RandValueFrom256K();
-            SetFilePointer(hFile, randAddr * READ_BUFFER_LEN, 0, FILE_BEGIN);
+            SetFilePointer(m_testFileHandle, randAddr * READ_BUFFER_LEN, 0, FILE_BEGIN);
 
             unsigned long count = 0;
-            BOOL ret = ReadFile(hFile, (LPVOID)pReadBuffer, READ_BUFFER_LEN, &count, NULL);
+            BOOL ret = ReadFile(m_testFileHandle, (LPVOID)pReadBuffer, READ_BUFFER_LEN, &count, NULL);
 
             if (FALSE == ret)
             {
                 bRet = false;
                 m_testState.Error = DST_READ_FILE_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_READ_FILE_ERROR];
+                GetWindowsError(&m_testState.ErrorMsgWindows);
+
                 goto SAFE_EXIT;
             }
 
@@ -527,6 +546,7 @@ SAFE_EXIT:
             {
                 bRet = false;
                 m_testState.Error = DST_TEST_ABORT_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_TEST_ABORT_ERROR];
                 goto SAFE_EXIT;
             }
 
@@ -541,13 +561,6 @@ SAFE_EXIT:
         bRet = true;
 
 SAFE_EXIT:
-        if (NULL != hFile ||
-            INVALID_HANDLE_VALUE != hFile)
-        {
-            CloseHandle(hFile);
-            hFile = NULL;
-        }
-
         if (0 != pReadBuffer)
         {
             delete[] pReadBuffer;
@@ -565,16 +578,24 @@ SAFE_EXIT:
         const unsigned long WRITE_BUFFER_SIZE = 512 * 1024;
 
         bool bRet = false; // 函数返回值
-        FILE* pFile = 0; // 文件指针
         char* pWriteBuffer = 0; // 写缓冲区
 
-        
-        // 打开文件
-        _wfopen_s(&pFile, m_testFile.Path.c_str(), L"wb");
-        if (0 == pFile)
+        // 创建文件, 关闭文件句柄后会自动删除文件, 程序意外关闭后, 也可删除测试文件
+        m_testFileHandle = CreateFileW(
+            m_testFile.Path.c_str(), 
+            GENERIC_WRITE | GENERIC_READ, 
+            0, 
+            NULL, 
+            CREATE_ALWAYS, 
+            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_DELETE_ON_CLOSE, 
+            NULL);
+        if (0 == m_testFileHandle || INVALID_HANDLE_VALUE == m_testFileHandle)
         {
-            bRet = false;
             m_testState.Error = DST_OPEN_FILE_ERROR;
+            m_testState.ErrorMsg = ErrorMsgList[DST_OPEN_FILE_ERROR];
+            GetWindowsError(&m_testState.ErrorMsgWindows);
+            bRet = false;
+
             goto SAFE_EXIT;
         }
 
@@ -584,17 +605,23 @@ SAFE_EXIT:
         {
             bRet = false;
             m_testState.Error = DST_ALLOC_MEMORY_ERROR;
+            m_testState.ErrorMsg = ErrorMsgList[DST_ALLOC_MEMORY_ERROR];
             goto SAFE_EXIT;
         }
 
+       
         // 生成测试文件
         for (unsigned long long i = 0; i < m_testFile.Size/WRITE_BUFFER_SIZE; i++)
         {
-            size_t count = fwrite(pWriteBuffer, WRITE_BUFFER_SIZE, 1, pFile);
-            if (1 != count)
+            unsigned long count = 0;
+            BOOL ret = WriteFile(m_testFileHandle, (LPCVOID)pWriteBuffer, WRITE_BUFFER_SIZE, &count, NULL);
+            if (FALSE == ret)
             {
                 bRet = false;
                 m_testState.Error = DST_WRITE_FILE_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_WRITE_FILE_ERROR];
+                GetWindowsError(&m_testState.ErrorMsgWindows);
+
                 goto SAFE_EXIT;
             }
 
@@ -602,6 +629,7 @@ SAFE_EXIT:
             {
                 bRet = false;
                 m_testState.Error = DST_TEST_ABORT_ERROR;
+                m_testState.ErrorMsg = ErrorMsgList[DST_TEST_ABORT_ERROR];
                 goto SAFE_EXIT;
             }
 
@@ -610,14 +638,6 @@ SAFE_EXIT:
         bRet = true;
 
 SAFE_EXIT:
-
-        // 释放资源
-        if (0 != pFile)
-        {
-            fclose(pFile);
-            pFile = 0;
-        }
-
         if (0 != pWriteBuffer)
         {
             delete[] pWriteBuffer;
@@ -630,8 +650,11 @@ SAFE_EXIT:
     /// @brief 删除测试文件
     void DeleteTestFile()
     {
-        // 删除文件
-        _wremove(m_testFile.Path.c_str());
+        if (m_testFileHandle != 0 && m_testFileHandle != INVALID_HANDLE_VALUE)
+        {
+            CloseHandle(m_testFileHandle);
+            m_testFileHandle = 0;
+        }
     }
 
 private:
@@ -639,6 +662,8 @@ private:
     LDiskSpeedTestState m_testState; ///< 测试状态
     LDiskSpeedTestFile m_testFile; ///< 测试文件
     bool m_bStopTest; ///< 标识是否停止测试
+
+    HANDLE m_testFileHandle; ///< 测试文件句柄
 
 private:
      /// @brief 4K随机测试
