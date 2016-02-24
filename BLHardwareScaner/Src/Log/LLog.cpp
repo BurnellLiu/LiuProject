@@ -112,7 +112,7 @@ public:
         m_hFile = CreateFileW(
             fileName.c_str(), 
             GENERIC_READ | GENERIC_WRITE, 
-            0, 
+            FILE_SHARE_READ, 
             NULL, 
             CREATE_ALWAYS, 
             FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, 
