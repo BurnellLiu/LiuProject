@@ -1,7 +1,6 @@
 
 #include "LDiskSpeed.h"
 
-#include <stdio.h>
 #include <ctime>
 #include <cstdlib>
 #include <process.h>
