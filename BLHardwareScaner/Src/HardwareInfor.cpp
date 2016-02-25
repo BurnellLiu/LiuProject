@@ -278,6 +278,7 @@ void HardwareInfor::ScanDiskInfor(OUT DiskInforArray& diskInfor)
         diskDriveManager.GetDiskModel(i, diskInfor.Model[i]);
         diskDriveManager.GetDiskSerialNumber(i, diskInfor.SerialNumber[i]);
         diskDriveManager.GetDiskSize(i, diskInfor.TotalSize[i]);
+        diskDriveManager.GetDiskLogicalName(i, diskInfor.LogicalName[i]);
         
         LWMI::LDiskDriveManager::LDISK_TYPE diskType;
         diskDriveManager.GetDiskType(i, diskType);

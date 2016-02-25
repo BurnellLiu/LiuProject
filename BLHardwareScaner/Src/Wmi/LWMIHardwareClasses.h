@@ -343,7 +343,7 @@ namespace LWMI
         /// @brief 获取磁盘接口类型
         /// @param[in] index 磁盘索引
         /// @param[out] type 磁盘接口类型(SCSI, HDC, IDE, USB, 1394)
-        /// @return
+        /// @return 成功返回true, 失败返回false
         bool GetDiskInterfaceType(IN int index, OUT wstring& type);
 
         /// @brief 获取磁盘类型
@@ -351,6 +351,13 @@ namespace LWMI
         /// @param[out] type 存储磁盘类型
         /// @return 成功返回true, 失败返回false
         bool GetDiskType(IN int index, OUT LDISK_TYPE& type);
+
+        /// @brief 获取磁盘逻辑分区名称
+        ///  多个分区以分号隔开如: C:;D:;E:
+        /// @param[in] index 磁盘索引
+        /// @param[out] logicalName 存储磁盘逻辑名称
+        /// @return 成功返回true, 失败返回false
+        bool GetDiskLogicalName(IN int index, OUT wstring& logicalName);
 
     private:
         LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者

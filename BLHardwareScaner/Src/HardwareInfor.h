@@ -126,6 +126,7 @@ struct DiskInforArray
     unsigned long TotalSize[MAX_DISK_NUMBER]; ///< 磁盘总大小, 单位(G)
     wstring InterfaceType[MAX_DISK_NUMBER]; ///< 磁盘接口类型(SCSI, HDC, IDE, USB 1394)
     DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< 磁盘类型
+    wstring LogicalName[MAX_DISK_NUMBER]; ///< 磁盘逻辑分区名称, 多个分区以分号隔开, 如C:;D:;E:
 
     bool IsATA[MAX_DISK_NUMBER]; ///< 标识是否为ATA接口硬盘
     struct  

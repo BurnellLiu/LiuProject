@@ -477,6 +477,73 @@ SAFE_EXIT:
         return bRet;
     }
 
+    bool LDiskDriveManager::GetDiskLogicalName(IN int index, OUT wstring& logicalName)
+    {
+        logicalName.clear();
+
+        wstring diskDeviceID;
+        bool bRet = this->GetDiskDeviceID(index, diskDeviceID);
+        if (!bRet)
+            return false;
+
+        wstring partitionQuery;
+        partitionQuery = L"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='";
+        partitionQuery += diskDeviceID;
+        partitionQuery += L"'} WHERE AssocClass = Win32_DiskDriveToDiskPartition";
+
+        LWMICoreManager diskPartitionManager;
+        bRet = diskPartitionManager.BaseInit(NAMESPACE_ROOT_CIMV2);
+        if (!bRet)
+            return false;
+
+        bRet = diskPartitionManager.WQLQuery(partitionQuery.c_str());
+        if (!bRet)
+            return false;
+
+        for (int i = 0; i < diskPartitionManager.GetObjectsCount(); i++)
+        {
+            wstring partitionDeviceId;
+            bRet = diskPartitionManager.GetStringProperty(i, L"DeviceID", partitionDeviceId);
+            if (!bRet)
+                continue;
+
+
+            wstring logicalDiskQuery;
+            logicalDiskQuery = L"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='";
+            logicalDiskQuery += partitionDeviceId;
+            logicalDiskQuery += L"'} WHERE AssocClass = Win32_LogicalDiskToPartition";
+
+            LWMICoreManager logicalDiskManager;
+            bRet = logicalDiskManager.BaseInit(NAMESPACE_ROOT_CIMV2);
+            if (!bRet)
+                continue;
+
+            bRet = logicalDiskManager.WQLQuery(logicalDiskQuery.c_str());
+            if (!bRet)
+                continue;
+                
+
+            for (int j = 0; j < logicalDiskManager.GetObjectsCount(); j++)
+            {
+                wstring name;
+                bRet = logicalDiskManager.GetStringProperty(j, L"Name", name);
+                if (!bRet)
+                    continue;
+
+                logicalName += name;
+                logicalName += L";";
+            }
+        }
+
+        // 删除最后一个分号
+        if (!logicalName.empty())
+        {
+            logicalName.erase(logicalName.size()-1, 1);
+        }
+
+        return true;
+    }
+
 
     LBatteryManager::LBatteryManager()
     {
