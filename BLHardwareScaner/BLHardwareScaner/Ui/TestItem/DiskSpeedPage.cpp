@@ -2,10 +2,15 @@
 #include "DiskSpeedPage.h"
 
 #include "..\\Src\\Log\\LLog.h"
+#include "..\\Src\\HardwareInfor.h"
+#include "..\\Src\\DiskController\\LDiskController.h"
 
 #define DISK_TEST_START QString::fromStdWString(L"Test Start")
 #define DISK_TEST_STOP QString::fromStdWString(L"Test Stop")
 #define DISK_SPEED_ZERO QString::fromStdWString(L"0.00")
+
+#define SEQ_TEST_FILENAME QString::fromStdWString(L"SquenceTest.temp");
+#define RANDOM_4K_TEST_FILENAME QString::fromStdWString(L"Random4KTest.temp");
 
 DiskSpeedPage::DiskSpeedPage(QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
@@ -22,6 +27,9 @@ DiskSpeedPage::DiskSpeedPage(QWidget *parent, Qt::WFlags flags)
 
     QObject::connect(&m_seqTestTimer, SIGNAL(timeout()), this, SLOT(SeqTestMonitorTimer()));
     QObject::connect(&m_rand4KTestTimer, SIGNAL(timeout()), this, SLOT(Rand4KTestMonitorTimer()));
+
+    // 如果在showEvent中更新磁盘信息, 那么第一次显示测速UI的时候有卡顿现象
+    this->UpdateDiskInformation();
 }
 
 DiskSpeedPage::~DiskSpeedPage()
@@ -63,25 +71,48 @@ void DiskSpeedPage::TestButtonClicked()
 {
     if (ui.pushButtonTest->text() == DISK_TEST_START)
     {
+        int diskIndex = ui.comboBoxDiskList->currentIndex();
+
+        unsigned long long driveFreeSpace = 0;
+        this->SelectLogicalDrive(m_diskLogicalNameList[diskIndex], &m_currentTestLogicalDrive, &driveFreeSpace);
         PrintLogW(L"");
-        PrintLogW(L"Start Disk Speed Test");
+        PrintLogW(L"Current Test Logical Drive: %s, Free Space: %I64u", 
+            m_currentTestLogicalDrive.toStdWString().c_str(),
+            driveFreeSpace);
+        if (driveFreeSpace < (unsigned long long)(4) * 1024 * 1024 * 1024)
+        {
+            ui.labelTestState->setText(QString::fromStdWString(L"Disk Free Size Is Tool Small"));
+            PrintLogW(L"Disk Free Size Is Tool Small, 4G Is Needed");
+            return;
+        }
 
         ui.labelSeqWSpeed->setText(DISK_SPEED_ZERO);
         ui.labelSeqRSpeed->setText(DISK_SPEED_ZERO);
         ui.label4KRandWSpeed->setText(DISK_SPEED_ZERO);
         ui.label4KRandRSpeed->setText(DISK_SPEED_ZERO);
-
         ui.pushButtonTest->setText(DISK_TEST_STOP);
+        ui.labelTestState->setText("Sequence Test Is Running...");
+        ui.comboBoxDiskList->setEnabled(false);
+  
+        PrintLogW(L"Start Disk Speed Test");
+        
+        QString testFilePath = m_currentTestLogicalDrive;
+        testFilePath += QString::fromStdWString(L"\\");
+        testFilePath += SEQ_TEST_FILENAME;
+        PrintLogW(L"Sequence Test File Path: %s", testFilePath.toStdWString().c_str());
 
-        m_pSeqTest->Start(L"D:\\test.temp");
+        m_pSeqTest->Start(testFilePath.toStdWString());
         m_seqTestTimer.start();
 
-        ui.labelTestState->setText("Sequence Test Is Running...");
         PrintLogW(L"Start Disk Sequence Test");
 
     }
     else if (ui.pushButtonTest->text() == DISK_TEST_STOP)
     {
+        ui.pushButtonTest->setText(DISK_TEST_START);
+        ui.labelTestState->setText("");
+        ui.comboBoxDiskList->setEnabled(true);
+
         PrintLogW(L"User Stop Disk Speed Test");
 
         m_pSeqTest->Stop();
@@ -90,8 +121,7 @@ void DiskSpeedPage::TestButtonClicked()
         m_seqTestTimer.stop();
         m_rand4KTestTimer.stop();
 
-        ui.pushButtonTest->setText(DISK_TEST_START);
-        ui.labelTestState->setText("");
+        
     }
 }
 
@@ -113,26 +143,32 @@ void DiskSpeedPage::SeqTestMonitorTimer()
     // 测试没发生错误则进行4K随机测试
     if (state.Error == DST_NO_ERROR)
     {
+        ui.labelTestState->setText("4K Random Test Is Running...");
+
         PrintLogW(L"Disk Sequence Test Is Done, Read Speed: %s MB/s, Write Speed: %s MB/s", 
             readSpeed.toStdWString().c_str(), 
             writeSpeed.toStdWString().c_str());
 
-        m_p4KRandTest->Start(L"D:\\test.temp");
+        QString testFilePath = m_currentTestLogicalDrive;
+        testFilePath += QString::fromStdWString(L"\\");
+        testFilePath += RANDOM_4K_TEST_FILENAME;
+        PrintLogW(L"Disk 4K Random Test File Path: %s", testFilePath.toStdWString().c_str());
+
+        m_p4KRandTest->Start(testFilePath.toStdWString());
         m_rand4KTestTimer.start();
         
-        ui.labelTestState->setText("4K Random Test Is Running...");
-
         PrintLogW(L"Start Disk 4K Random Test");
     }
 
     // 测试发生错误, 显示错误消息, 停止测试
     if (state.Error != DST_NO_ERROR)
     {
-        PrintLogW(L"Disk Sequence Test Error, Message: %s", state.ErrorMsg.c_str());
-        PrintLogW(L"Disk Sequence Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
-
         ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
         ui.pushButtonTest->setText(DISK_TEST_START);
+        ui.comboBoxDiskList->setEnabled(true);
+
+        PrintLogW(L"Disk Sequence Test Error, Message: %s", state.ErrorMsg.c_str());
+        PrintLogW(L"Disk Sequence Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
     }
     
 }
@@ -149,7 +185,9 @@ void DiskSpeedPage::Rand4KTestMonitorTimer()
         return;
 
     m_rand4KTestTimer.stop();
+
     ui.pushButtonTest->setText(DISK_TEST_START);
+    ui.comboBoxDiskList->setEnabled(true);
 
     if (state.Error == DST_NO_ERROR)
     {
@@ -166,4 +204,78 @@ void DiskSpeedPage::Rand4KTestMonitorTimer()
 
         ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
     }
+}
+
+void DiskSpeedPage::UpdateDiskInformation()
+{
+    m_diskLogicalNameList.clear();
+    QVector<QString> diskModelNameList;
+
+    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    for (unsigned int i = 0; i < diskInforArray.Count; i++)
+    {
+        DISK_TYPE diskType = diskInforArray.DiskType[i];
+        if (diskType != FIXED_DISK)
+            continue;
+
+        m_diskLogicalNameList.push_back(QString::fromStdWString(diskInforArray.LogicalName[i]));
+        diskModelNameList.push_back(QString::fromStdWString(diskInforArray.Model[i]));
+    }
+
+    ui.comboBoxDiskList->clear();
+    for (int i = 0; i < diskModelNameList.size(); i++)
+    {
+        QString showName;
+        showName += QString::fromStdWString(L"(");
+        showName += m_diskLogicalNameList[i];
+        showName += QString::fromStdWString(L")");
+        showName.replace(QString::fromStdWString(L";"), QString::fromStdWString(L" "));
+        showName += diskModelNameList[i];
+
+        ui.comboBoxDiskList->addItem(showName);
+
+    }
+
+    if (diskModelNameList.size() != 0)
+    {
+        ui.comboBoxDiskList->setCurrentIndex(0);
+    }
+}
+
+bool DiskSpeedPage::SelectLogicalDrive(
+    IN const QString& diskLogicalName, 
+    OUT QString* pDrive, 
+    OUT unsigned long long* pDriveFreeSpace)
+{
+    if (diskLogicalName.isEmpty())
+        return false;
+
+    QStringList driveList = diskLogicalName.split(QString::fromStdWString(L";"));
+    if (driveList.size() < 1)
+        return false;
+
+    QString driveName;
+    unsigned long long freeSpaceMax = 0;
+    for (int i = 0; i < driveList.size(); i++)
+    {
+        unsigned long long freeSpace = 0;
+        GetLogicalDriveFreeSpace(driveList[i].toStdWString(), &freeSpace);
+        if (freeSpace > freeSpaceMax)
+        {
+            freeSpaceMax = freeSpace;
+            driveName = driveList[i];
+        }
+    }
+
+    if (pDrive != 0)
+    {
+        (*pDrive) = driveName;
+    }
+
+    if (pDriveFreeSpace != 0)
+    {
+        (*pDriveFreeSpace) = freeSpaceMax;
+    }
+
+    return true;
 }

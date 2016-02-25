@@ -451,6 +451,11 @@ void DiskItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Size"), size);
         PrintLogW(L"\tSize: %s", size.toStdWString().c_str());
 
+        QString logicalName = QString::fromStdWString(diskInforArray.LogicalName[i]);
+        logicalName.replace(QString::fromStdWString(L";"), QString::fromStdWString(L" "));
+        this->ContentAddItem(QObject::tr("Logical Name"), logicalName);
+        PrintLogW(L"\tLogical Name: %s", logicalName.toStdWString().c_str());
+
         QString serialNumber = QString::fromStdWString(diskInforArray.SerialNumber[i]);
         this->ContentAddItem(QObject::tr("Serial Number"), serialNumber);
         PrintLogW(L"\tSerial Number: %s", serialNumber.toStdWString().c_str());

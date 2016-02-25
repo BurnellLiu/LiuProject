@@ -71,6 +71,7 @@ public:
 
 
 /// @brief 磁盘顺序测试
+/// 磁盘顺序测速要求磁盘最少有2G的剩余空间
 class LDiskSequenceTest : public IDiskSpeedTest
 {
 public:
@@ -96,6 +97,7 @@ private:
 
 
 /// @brief 磁盘4KB随机测试
+/// 磁盘4K随机测试要求磁盘至少有1G的剩余空间
 class LDisk4KRandomTest : public IDiskSpeedTest
 {
 public:

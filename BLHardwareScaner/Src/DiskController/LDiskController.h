@@ -21,6 +21,12 @@ using std::wstring;
 #define SMART_DATA_LENGTH 362
 #endif
 
+/// @brief 获取逻辑分区剩余空间
+/// @param[in] logicalDrive 逻辑分区名称
+/// @param[out] pFreeSpace 存储剩余空间, 单位字节
+/// @return 成功返回true, 失败返回false 
+bool GetLogicalDriveFreeSpace(IN const wstring& logicalDrive, unsigned long long* pFreeSpace);
+
 class CIDEDiskController;
 
 /// @brief IDE(ATA)磁盘控制器

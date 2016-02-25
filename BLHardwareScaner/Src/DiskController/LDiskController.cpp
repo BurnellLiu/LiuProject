@@ -1361,6 +1361,27 @@ SAFE_EXIT:
     return bRet;
 }
 
+bool GetLogicalDriveFreeSpace(IN const wstring& logicalDrive, unsigned long long* pFreeSpace)
+{
+    if (pFreeSpace == 0)
+        return false;
+
+    if (logicalDrive.empty())
+        return false;
+
+    (*pFreeSpace) = 0;
+
+    ULARGE_INTEGER freeSpace;
+    BOOL iRet = GetDiskFreeSpaceExW(logicalDrive.c_str(), &freeSpace, 0, 0);
+    if (iRet == FALSE)
+        return false;
+
+    (*pFreeSpace) = freeSpace.QuadPart;
+
+
+    return true;
+}
+
 LIDEDiskController::LIDEDiskController(IN const wstring& devicePath)
 {
     m_pIDEDiskController = new CIDEDiskController(devicePath);

@@ -49,6 +49,21 @@ private slots:
     void Rand4KTestMonitorTimer();
 
 private:
+    /// @brief 更新磁盘信息
+    void UpdateDiskInformation();
+
+    /// @brief 从磁盘的逻辑分区中选择一个
+    /// 优先选择剩余空间大的分区
+    /// @param[in] diskLogicalName 磁盘逻辑名称, 多个分区以分号隔开如: C:;D:;E:
+    /// @param[out] pDrive 存储选择的逻辑分区
+    /// @param[out] pDriveFreeSpace 逻辑分区的剩余空间, 单位字节
+    /// @return 成功返回true, 失败返回false
+    bool SelectLogicalDrive(
+        IN const QString& diskLogicalName, 
+        OUT QString* pDrive, 
+        OUT unsigned long long* pDriveFreeSpace);
+
+private:
     Ui::DiskSpeedForm ui;
 
     QTimer m_seqTestTimer; ///< 顺序测试监测定时器
@@ -56,6 +71,9 @@ private:
 
     IDiskSpeedTest* m_pSeqTest; ///< 顺序测试
     IDiskSpeedTest* m_p4KRandTest; ///< 4K随机测试
+
+    QString m_currentTestLogicalDrive; ///< 当前需要测试的逻辑分区
+    QVector<QString> m_diskLogicalNameList; ///< 磁盘逻辑盘符名称列表
 
 };
 
