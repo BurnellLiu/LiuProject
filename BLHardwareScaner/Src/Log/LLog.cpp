@@ -322,7 +322,7 @@ namespace LLog
 
 
             wchar_t threadId[64] = {0};
-            wprintf_s(threadId, L"[Thread %u]", s_threadIdMap[dwId]);
+            wsprintfW(threadId, L"[Thread %u]", s_threadIdMap[dwId]);
             pWStr->append(threadId);
         }
 
