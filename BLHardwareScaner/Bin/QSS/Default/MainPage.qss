@@ -1,0 +1,38 @@
+
+QMainWindow#MainForm
+{
+    background-color: rgb(115, 176, 255);
+}
+
+QToolButton#toolButtonHardware
+{
+	border-style: none;
+}
+
+QToolButton#toolButtonHardware:hover
+{
+    background-color: rgb(167, 205, 255)
+}
+
+QToolButton#toolButtonTempManagement
+{
+	border-style: none;
+}
+QToolButton#toolButtonTempManagement:hover
+{
+    background-color: rgb(167, 205, 255)
+}
+
+QToolButton#toolButtonTestItem
+{
+	border-style: none;
+}
+QToolButton#toolButtonTestItem:hover
+{
+    background-color: rgb(167, 205, 255)
+}
+
+QStackedWidget#stackedWidget
+{
+    background-color: rgb(255, 255, 255);
+}

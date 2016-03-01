@@ -4,6 +4,7 @@
 #include <QtGui/QPaintDevice>
 #include <QtGui/QPainter>
 #include <QtGui/QDesktopWidget>
+#include <QtCore/QFile>
 
 #include "HardwareInforPage.h"
 #include "TempManagementPage.h"
@@ -14,6 +15,10 @@
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
+     ui.setupUi(this);
+
+     this->LoadQSS();
+
     // 获取当前系统DPI, 当前系统DPI除以设计时DPI值, 则得到UI放大系数
     const float DESIGN_DPI = 96.0f; // 设计时DPI
     QPainter painter(this);
@@ -26,9 +31,6 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
         m_uiRatio = 1.0f;
     PrintLogW(L"UI Ratio: %f", m_uiRatio);
 
-  
-    ui.setupUi(this);
-
     // 根据比例重新调整主UI大小, 并居中显示
     int width = this->geometry().width() * m_uiRatio;
     int height = this->geometry().height() * m_uiRatio;
@@ -36,7 +38,7 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     QDesktopWidget* pDesk = QApplication::desktop();
     this->move((pDesk->width() - width) / 2, (pDesk->height() - height) / 2);
 
-
+    
     QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));
     QObject::connect(ui.toolButtonTempManagement, SIGNAL(clicked()), this, SLOT(TemperatureClicked()));
     QObject::connect(ui.toolButtonTestItem, SIGNAL(clicked()), this, SLOT(TestItemClicked()));
@@ -96,4 +98,18 @@ void MainPage::TemperatureClicked()
 void MainPage::TestItemClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
+}
+
+void MainPage::LoadQSS()
+{
+    QFile qssFile(".\\Qss\\Default\\MainPage.qss");  
+    qssFile.open(QFile::ReadOnly);  
+
+    if(qssFile.isOpen())  
+    {  
+        QString qss = qssFile.readAll();
+        qssFile.close();  
+
+        this->setStyleSheet(qss);
+    }  
 }

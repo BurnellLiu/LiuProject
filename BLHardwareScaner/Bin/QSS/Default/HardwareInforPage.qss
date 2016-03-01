@@ -1,0 +1,22 @@
+
+
+QWidget#HardwareInforForm
+{
+    background-color: rgb(255, 255, 255);
+}
+
+QListWidget
+{
+	color: rgb(255, 255, 255);
+	background-color: rgb(167, 205, 255);
+}
+
+QListWidget#listWidgetHWItem::item
+{
+	min-height: 35px;
+}
+
+QTextEdit#textEditHWInfor QScrollBar:vertical
+{
+    width:8px;
+}

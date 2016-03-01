@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true"/>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
@@ -46,16 +46,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">QListWidget
-{
-	color: rgb(255, 255, 255);
-	background-color: rgb(167, 205, 255);
-}
-
-QListWidget#listWidgetHWItem::item
-{
-	min-height: 35px;
-}</string>
+        <string notr="true"/>
        </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
@@ -100,13 +91,6 @@ QListWidget#listWidgetHWItem::item
          </property>
          <property name="contextMenuPolicy">
           <enum>Qt::DefaultContextMenu</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QTextEdit#textEditHWInfor QScrollBar:vertical
-{
-    width:8px;
-}
-</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>

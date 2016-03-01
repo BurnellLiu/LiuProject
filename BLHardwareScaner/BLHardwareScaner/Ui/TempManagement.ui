@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true"/>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="1" column="0">
@@ -72,14 +72,7 @@
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QProgressBar#progressBarCpuTemp
-{
-     border: 1px solid grey;
- }
-QProgressBar#progressBarCpuTemp::chunk 
-{
-     background-color: rgb(100, 160, 255);
- }</string>
+               <string notr="true"/>
               </property>
               <property name="value">
                <number>24</number>
@@ -169,14 +162,7 @@ QProgressBar#progressBarCpuTemp::chunk
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QProgressBar#progressBarGpuTemp
-{
-     border: 1px solid grey;
- }
-QProgressBar#progressBarGpuTemp::chunk 
-{
-     background-color: rgb(100, 160, 255);
- }</string>
+               <string notr="true"/>
               </property>
               <property name="value">
                <number>24</number>
@@ -263,14 +249,7 @@ QProgressBar#progressBarGpuTemp::chunk
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QProgressBar#progressBarDiskTemp
-{
-     border: 1px solid grey;
- }
-QProgressBar#progressBarDiskTemp::chunk 
-{
-     background-color: rgb(100, 160, 255);
- }</string>
+               <string notr="true"/>
               </property>
               <property name="value">
                <number>24</number>
@@ -379,14 +358,7 @@ QProgressBar#progressBarDiskTemp::chunk
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QProgressBar#progressBarCpuUsage 
-{
-     border: 1px solid grey;
- }
-QProgressBar#progressBarCpuUsage::chunk 
-{
-     background-color: rgb(100, 160, 255);
- }</string>
+               <string notr="true"/>
               </property>
               <property name="value">
                <number>24</number>
@@ -470,14 +442,7 @@ QProgressBar#progressBarCpuUsage::chunk
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QProgressBar#progressBarMemUsage 
-{
-     border: 1px solid grey;
- }
-QProgressBar#progressBarMemUsage::chunk 
-{
-     background-color: rgb(100, 160, 255);
- }</string>
+               <string notr="true"/>
               </property>
               <property name="value">
                <number>24</number>

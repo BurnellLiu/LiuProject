@@ -1,6 +1,8 @@
 
 #include "DiskSpeedPage.h"
 
+#include <QtCore/QFile>
+
 #include "..\\Src\\Log\\LLog.h"
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\DiskController\\LDiskController.h"
@@ -15,10 +17,11 @@
 DiskSpeedPage::DiskSpeedPage(QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
 {
+    ui.setupUi(this);
+    this->LoadQSS();
+
     m_pSeqTest = new LDiskSequenceTest();
     m_p4KRandTest = new LDisk4KRandomTest();
-
-    ui.setupUi(this); 
 
     QObject::connect(ui.pushButtonTest, SIGNAL(clicked()), this, SLOT(TestButtonClicked()));
 
@@ -278,4 +281,18 @@ bool DiskSpeedPage::SelectLogicalDrive(
     }
 
     return true;
+}
+
+void DiskSpeedPage::LoadQSS()
+{
+    QFile qssFile(".\\Qss\\Default\\DiskSpeedPage.qss");  
+    qssFile.open(QFile::ReadOnly);  
+
+    if(qssFile.isOpen())  
+    {  
+        QString qss = qssFile.readAll();
+        qssFile.close();  
+
+        this->setStyleSheet(qss);
+    } 
 }

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLHardwareScaner", "BLHardwareScaner\BLHardwareScaner.vcxproj", "{C554EE12-094A-44E9-8F09-A4486F5C1035}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWinRing0", "TestWinRing0\TestWinRing0.vcxproj", "{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{C554EE12-094A-44E9-8F09-A4486F5C1035}.Debug|Win32.Build.0 = Debug|Win32
 		{C554EE12-094A-44E9-8F09-A4486F5C1035}.Release|Win32.ActiveCfg = Release|Win32
 		{C554EE12-094A-44E9-8F09-A4486F5C1035}.Release|Win32.Build.0 = Release|Win32
+		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Debug|Win32.Build.0 = Debug|Win32
+		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Release|Win32.ActiveCfg = Release|Win32
+		{8B70367B-3B22-46ED-A0FF-4DD3E94A56F2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

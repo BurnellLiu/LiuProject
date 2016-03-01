@@ -79,6 +79,9 @@ private:
     /// @brief 刷新UI
     void RefreshUi();
 
+    /// @brief 加载UI样式
+    void LoadQSS();
+
 private:
     Ui::TempManagementForm ui;
     QTimer* m_pUiRefreshTimer; ///< 刷新UI定时器

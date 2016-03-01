@@ -23,6 +23,10 @@ private slots:
 
 
 private:
+    /// @brief ¼ÓÔØUIÑùÊ½
+    void LoadQSS();
+
+private:
     Ui::MainForm ui;
 
     HardwareInforPage* m_pHardwareInforPage;

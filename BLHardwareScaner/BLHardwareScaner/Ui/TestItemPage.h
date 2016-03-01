@@ -47,6 +47,9 @@ private:
     /// @param[in] icon 测试项图标
     void AddTestItem(IN const QString& name, IN const QIcon& icon);
 
+    /// @brief 加载UI样式
+    void LoadQSS();
+
 private slots:
     void TestItemClicked(QListWidgetItem* pItem);
 

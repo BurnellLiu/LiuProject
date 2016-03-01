@@ -41,6 +41,9 @@ private:
     /// @brief 初始化硬件信息
     void InitHardwareInfor();
 
+    /// @brief 加载UI样式
+    void LoadQSS();
+
 private:
     Ui::HardwareInforForm ui;
 

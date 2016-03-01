@@ -2,6 +2,7 @@
 #include "HardwareInforPage.h"
 
 #include <QtCore/QString>
+#include <QtCore/QFile>
 
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -10,6 +11,8 @@ HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
     ui.setupUi(this);
+
+    this->LoadQSS();
 
     QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));    
 }
@@ -108,6 +111,20 @@ void HardwareInforPage::InitHardwareInfor()
     {
         m_hwItemVec[i]->LoadHWInfor();
     }
+}
+
+void HardwareInforPage::LoadQSS()
+{
+    QFile qssFile(".\\Qss\\Default\\HardwareInforPage.qss");  
+    qssFile.open(QFile::ReadOnly);  
+
+    if(qssFile.isOpen())  
+    {  
+        QString qss = qssFile.readAll();
+        qssFile.close();  
+
+        this->setStyleSheet(qss);
+    }  
 }
 
 HWItemInfor::HWItemInfor()

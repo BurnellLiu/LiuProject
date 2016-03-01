@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(115, 176, 255);</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -64,14 +64,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton#toolButtonHardware
-{
-	border-style: none;
-}
-QToolButton#toolButtonHardware:hover
-{
-    background-color: rgb(167, 205, 255)
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>HardWare</string>
@@ -105,14 +98,7 @@ QToolButton#toolButtonHardware:hover
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton#toolButtonTempManagement
-{
-	border-style: none;
-}
-QToolButton#toolButtonTempManagement:hover
-{
-    background-color: rgb(167, 205, 255)
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Temperature</string>
@@ -140,14 +126,7 @@ QToolButton#toolButtonTempManagement:hover
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton#toolButtonTestItem
-{
-	border-style: none;
-}
-QToolButton#toolButtonTestItem:hover
-{
-    background-color: rgb(167, 205, 255)
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>TestItem</string>
@@ -184,7 +163,7 @@ QToolButton#toolButtonTestItem:hover
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);</string>
+         <string notr="true"/>
         </property>
         <property name="lineWidth">
          <number>0</number>
@@ -206,7 +185,6 @@ QToolButton#toolButtonTestItem:hover
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
- </resources>
+ <resources/>
  <connections/>
 </ui>

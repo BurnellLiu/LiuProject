@@ -3,6 +3,7 @@
 #include "TempManagementPage.h"
 
 #include <QtGui/QMessageBox>
+#include <QtCore/QFile>
 
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\TemperatureProbe.h"
@@ -252,6 +253,7 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     : QWidget(parent, flags)
 {
     ui.setupUi(this);
+    this->LoadQSS();
 
     m_pUiRefreshTimer = new QTimer();
     m_pUiRefreshTimer->setInterval(500);
@@ -350,5 +352,19 @@ void TempManagementPage::RefreshUi()
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
     ui.progressBarMemUsage->setValue(memoryPerf.LoadPercentage);
         
+}
+
+void TempManagementPage::LoadQSS()
+{
+    QFile qssFile(".\\Qss\\Default\\TempManagementPage.qss");  
+    qssFile.open(QFile::ReadOnly);  
+
+    if(qssFile.isOpen())  
+    {  
+        QString qss = qssFile.readAll();
+        qssFile.close();  
+
+        this->setStyleSheet(qss);
+    }  
 }
 

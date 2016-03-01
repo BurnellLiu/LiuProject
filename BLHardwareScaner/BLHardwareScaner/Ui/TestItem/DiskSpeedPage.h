@@ -63,6 +63,9 @@ private:
         OUT QString* pDrive, 
         OUT unsigned long long* pDriveFreeSpace);
 
+    /// @brief ¼ÓÔØUIÑùÊ½
+    void LoadQSS();
+
 private:
     Ui::DiskSpeedForm ui;
 
