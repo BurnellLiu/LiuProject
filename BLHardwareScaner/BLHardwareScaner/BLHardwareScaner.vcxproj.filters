@@ -28,23 +28,11 @@
     <Filter Include="Src\SMARTParser">
       <UniqueIdentifier>{2c6a6440-c714-467f-9979-740a76a2d43e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Cpu">
-      <UniqueIdentifier>{5eeddbc5-4d05-40b8-94f7-3d5e66e71655}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Gpu">
-      <UniqueIdentifier>{0a281d05-ecf5-4a5b-a1b0-9837c995caa3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Log">
       <UniqueIdentifier>{22d7634c-09e4-4114-8aec-63728a622413}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Memory">
       <UniqueIdentifier>{508a3cab-a4f8-4e52-bc40-9c18e97f8d9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\BaseUnit">
-      <UniqueIdentifier>{689e736e-3cb3-4eb4-9533-e3bf404a726d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\BaseUnit\WinRing0">
-      <UniqueIdentifier>{c4bdba93-b1d2-4526-9420-109e2548a741}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ui\TestItem">
       <UniqueIdentifier>{312310ff-3bb6-4adb-baf5-b6eda618c29b}</UniqueIdentifier>
@@ -90,12 +78,6 @@
     <ClCompile Include="..\Src\TemperatureProbe.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Cpu\LCpuTemperature.cpp">
-      <Filter>Src\Cpu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\Gpu\Gpu.cpp">
-      <Filter>Src\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\PerfoemanceCounter.cpp">
       <Filter>Src</Filter>
     </ClCompile>
@@ -104,9 +86,6 @@
     </ClCompile>
     <ClCompile Include="..\Src\Memory\LMemory.cpp">
       <Filter>Src\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\BaseUnit\WinRing0\LWinRing0.cpp">
-      <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\moc_TestItemPage.cpp">
       <Filter>Generated Files</Filter>
@@ -197,12 +176,6 @@
     <ClInclude Include="..\Src\TemperatureProbe.h">
       <Filter>Src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Src\Cpu\LCpuTemperature.h">
-      <Filter>Src\Cpu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Src\Gpu\Gpu.h">
-      <Filter>Src\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\PerformanceCounter.h">
       <Filter>Src</Filter>
     </ClInclude>
@@ -211,9 +184,6 @@
     </ClInclude>
     <ClInclude Include="..\Src\Memory\LMemory.h">
       <Filter>Src\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Src\BaseUnit\WinRing0\LWinRing0.h">
-      <Filter>Src\BaseUnit\WinRing0</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_TestItem.h">
       <Filter>Generated Files</Filter>

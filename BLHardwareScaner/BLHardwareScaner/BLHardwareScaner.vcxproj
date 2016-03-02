@@ -81,10 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\BaseUnit\WinRing0\LWinRing0.cpp" />
-    <ClCompile Include="..\Src\Cpu\LCpuTemperature.cpp" />
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
-    <ClCompile Include="..\Src\Gpu\Gpu.cpp" />
     <ClCompile Include="..\Src\HardwareInfor.cpp" />
     <ClCompile Include="..\Src\LDiskSpeed.cpp" />
     <ClCompile Include="..\Src\Log\LLog.cpp">
@@ -137,10 +134,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Src\BaseUnit\WinRing0\LWinRing0.h" />
-    <ClInclude Include="..\Src\Cpu\LCpuTemperature.h" />
     <ClInclude Include="..\Src\DiskController\LDiskController.h" />
-    <ClInclude Include="..\Src\Gpu\Gpu.h" />
     <ClInclude Include="..\Src\HardwareInfor.h" />
     <ClInclude Include="..\Src\LDiskSpeed.h" />
     <ClInclude Include="..\Src\Log\LLog.h" />

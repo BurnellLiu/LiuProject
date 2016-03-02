@@ -52,7 +52,7 @@ struct CpuTempInfor
 
 /// @brief 最大GPU温度传感器数量
 #ifndef MAX_GPU_SENSORS_NUMBER
-#define MAX_GPU_SENSORS_NUMBER 15
+#define MAX_GPU_SENSORS_NUMBER 16
 #endif
 
 /// @brief GPU温度信息

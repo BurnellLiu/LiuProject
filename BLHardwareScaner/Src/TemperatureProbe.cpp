@@ -4,111 +4,113 @@
 
 #include <Windows.h>
 
-#include "Cpu\\LCpuTemperature.h"
-#include "Gpu\\Gpu.h"
-
 #include "DiskController\\LDiskController.h"
 #include "SMARTPaser\\LSMARTPaser.h"
 
-/// @brief 温度探测类
+typedef bool (*GetCpuTempFun)(OUT unsigned int* pCoreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]);
+
+typedef bool (*GetGpuTempFun)(OUT unsigned int* pSensorNum, OUT unsigned int temp[MAX_GPU_SENSORS_NUMBER]);
+
+/// @brief 温度探测实现类
 class CTemperatureProbe
 {
 public:
-    CTemperatureProbe();
-    ~CTemperatureProbe();
+    /// @brief 构造函数
+    CTemperatureProbe()
+    {
+        m_pGetCpuTemp = NULL;
+        m_pGetGpuTemp = NULL;
+        m_hCoreTemp = NULL;
+
+        m_hCoreTemp = LoadLibraryW(L".\\CoreTemp\\CoreTemp.dll");
+
+        if (m_hCoreTemp == NULL)
+            return;
+
+        m_pGetCpuTemp = (GetCpuTempFun)GetProcAddress(m_hCoreTemp, "GetCpuTemp");
+
+        m_pGetGpuTemp = (GetGpuTempFun)GetProcAddress(m_hCoreTemp, "GetGpuTemp");
+
+    }
+
+    /// @brief 析构函数
+    ~CTemperatureProbe()
+    {
+        if (m_hCoreTemp != NULL)
+        {
+            FreeLibrary(m_hCoreTemp);
+            m_hCoreTemp = NULL;
+        }
+    }
 
     /// @brief 获取CPU温度
     /// @param[out] OUT cpuTemp 存储CPU温度信息
     /// @return 成功返回true, 失败返回false
-    bool GetCpuTemp(OUT CpuTempInfor& cpuTemp);
+    bool GetCpuTemp(OUT CpuTempInfor& cpuTemp)
+    {
+        cpuTemp.CoreNum = 0;
+
+        if (m_pGetCpuTemp == NULL)
+            return false;
+
+        return m_pGetCpuTemp(&cpuTemp.CoreNum, cpuTemp.CoreTemp);
+    }
 
     /// @brief 获取GPU温度
     /// @param[out] OUT gpuTemp 存储GPU温度信息
     /// @return 成功返回true, 失败返回false
-    bool GetGpuTemp(OUT GpuTempInfor& gpuTemp);
+    bool GetGpuTemp(OUT GpuTempInfor& gpuTemp)
+    {
+        gpuTemp.SensorsNum = 0;
+
+        if (m_pGetGpuTemp == NULL)
+            return false;
+
+        return m_pGetGpuTemp(&gpuTemp.SensorsNum, gpuTemp.Temp);
+    }
 
     /// @brief 获取磁盘温度
     /// @param[out] diskTemp 存储磁盘温度
-    void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
+    void GetDiskTemp(OUT DiskTempInforArray& diskTemp)
+    {
+        diskTemp.Count = 0;
+
+        for (int i = 0; i < 25; i++)
+        {
+            wchar_t diskDriveID[256] = {0};
+            wsprintfW(diskDriveID, L"\\\\.\\PhysicalDrive%d", i);
+
+            // 打开磁盘控制器
+            LIDEDiskController diskController(diskDriveID);
+            if (!diskController.DeviceExist())
+                continue;
+
+            // 获取SMART数据
+            unsigned char smartData[362] = {0};
+            if (!diskController.GetSMARTData(smartData))
+                continue;
+
+            // 解析SMART数据
+            LSMARTParser smartParser(smartData);
+            unsigned int temp = 0;
+            if (!smartParser.GetTemperature(temp))
+                continue;
+
+            diskTemp.Temp[diskTemp.Count] = temp;
+            diskTemp.DiskDriveID[diskTemp.Count] = diskDriveID;
+
+            diskTemp.Count += 1;
+            if(diskTemp.Count >= MAX_DISKTEMP_NUMBER)
+                break;
+
+        }
+    }
+
 private:
-    LCpuTemperature* m_pCpuTemperature; ///< CPU温度获取类对象
-    LGpu* m_pGpu; ///< GPU操作类对象
+    GetCpuTempFun m_pGetCpuTemp; ///< 获取CPU温度函数指针
+    GetGpuTempFun m_pGetGpuTemp; ///< 获取GPU温度函数指针
+    HMODULE m_hCoreTemp; ///< CoreTemp DLL句柄
 };
-
-
-CTemperatureProbe::CTemperatureProbe()
-{
-    m_pCpuTemperature = new LCpuTemperature();
-    m_pGpu = new LGpu();
-}
-
-CTemperatureProbe::~CTemperatureProbe()
-{
-    if (m_pCpuTemperature != 0)
-    {
-        delete m_pCpuTemperature;
-        m_pCpuTemperature = 0;
-    }
-}
-
-bool CTemperatureProbe::GetCpuTemp(OUT CpuTempInfor& cpuTemp)
-{
-    cpuTemp.CoreNum = 0;
-
-    if (m_pCpuTemperature == 0)
-    {
-        m_pCpuTemperature = new LCpuTemperature();
-    }
-
-    return m_pCpuTemperature->Get(cpuTemp.CoreNum, cpuTemp.CoreTemp);
-}
-
-bool CTemperatureProbe::GetGpuTemp(OUT GpuTempInfor& gpuTemp)
-{
-    gpuTemp.SensorsNum = 0;
-    if (m_pGpu == 0)
-    {
-        m_pGpu = new LGpu();
-    }
-
-    return m_pGpu->GetTemperature(gpuTemp.SensorsNum, gpuTemp.Temp);
-}
-
-void CTemperatureProbe::GetDiskTemp(OUT DiskTempInforArray& diskTemp)
-{
-    diskTemp.Count = 0;
-
-    for (int i = 0; i < 25; i++)
-    {
-        wchar_t diskDriveID[256] = {0};
-        wsprintfW(diskDriveID, L"\\\\.\\PhysicalDrive%d", i);
-
-        // 打开磁盘控制器
-        LIDEDiskController diskController(diskDriveID);
-        if (!diskController.DeviceExist())
-            continue;
-
-        // 获取SMART数据
-        unsigned char smartData[362] = {0};
-        if (!diskController.GetSMARTData(smartData))
-            continue;
-
-        // 解析SMART数据
-        LSMARTParser smartParser(smartData);
-        unsigned int temp = 0;
-        if (!smartParser.GetTemperature(temp))
-            continue;
-
-        diskTemp.Temp[diskTemp.Count] = temp;
-        diskTemp.DiskDriveID[diskTemp.Count] = diskDriveID;
-
-        diskTemp.Count += 1;
-        if(diskTemp.Count >= MAX_DISKTEMP_NUMBER)
-            break;
-
-    }
-
-}
 
 TemperatureProbe::TemperatureProbe()
 {
