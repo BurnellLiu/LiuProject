@@ -78,9 +78,6 @@
     <ClCompile Include="..\Src\TemperatureProbe.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\PerfoemanceCounter.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <Filter>Src\Log</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
       <Filter>Ui\TestItem</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\LDiskSpeed.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\PerformanceCounter.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -57,6 +57,12 @@ static void DllProcessDetach()
         delete gCpuTemp;
         gCpuTemp = 0;
     }
+
+    if (gGpuTemp != 0)
+    {
+        delete gGpuTemp;
+        gGpuTemp = 0;
+    }
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD canReason, LPVOID lpReserved)
