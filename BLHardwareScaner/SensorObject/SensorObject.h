@@ -23,6 +23,9 @@
 // 最大传感器数目
 #define MAX_SENSOR_NUMBER 8
 
+// 最大字符串长度
+#define MAX_STRING_LEN 256
+
 /// <SUMMARY>
 /// 重力加速度传感器(3D)数据
 /// </SUMMARY>
@@ -39,7 +42,8 @@ struct SENSOR_API_DECLSPEC SAccelerometer3DSensorData
 struct SENSOR_API_DECLSPEC SAccelerometer3DInforArray
 {
     unsigned int Count; // 传感器数量
-    SAccelerometer3DSensorData Data[MAX_SENSOR_NUMBER];
+    wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // 友好名称
+    SAccelerometer3DSensorData Data[MAX_SENSOR_NUMBER]; // 传感器数据
 };
 
 /// <SUMMARY>
@@ -58,7 +62,8 @@ struct SENSOR_API_DECLSPEC SGyrometer3DSensorData
 struct SENSOR_API_DECLSPEC SGyrometer3DInforArray
 {
     unsigned int Count; // 传感器数量
-    SGyrometer3DSensorData Data[MAX_SENSOR_NUMBER];
+    wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // 友好名称
+    SGyrometer3DSensorData Data[MAX_SENSOR_NUMBER]; // 传感器数据
 };
 
 /// <SUMMARY>
@@ -77,7 +82,8 @@ struct SENSOR_API_DECLSPEC SCompass3DSensorData
 struct SENSOR_API_DECLSPEC SCompass3DInforArray
 {
     unsigned int Count; // 传感器数量
-    SCompass3DSensorData Data[MAX_SENSOR_NUMBER];
+    wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // 友好名称
+    SCompass3DSensorData Data[MAX_SENSOR_NUMBER]; // 传感器数据
 };
 
 /// <SUMMARY>
@@ -94,7 +100,8 @@ struct SENSOR_API_DECLSPEC SAmbientLightSensorData
 struct SENSOR_API_DECLSPEC SAmbientLightInforArray
 {
     unsigned int Count; // 传感器数量
-    SAmbientLightSensorData Data[MAX_SENSOR_NUMBER];
+    wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // 友好名称
+    SAmbientLightSensorData Data[MAX_SENSOR_NUMBER]; // 传感器数据
 };
 
 /// <SUMMARY>
@@ -112,7 +119,8 @@ struct SENSOR_API_DECLSPEC SGpsSensorData
 struct SENSOR_API_DECLSPEC SGpsInforArray
 {
     unsigned int Count; // 传感器数量
-    SGpsSensorData Data[MAX_SENSOR_NUMBER];
+    wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // 友好名称
+    SGpsSensorData Data[MAX_SENSOR_NUMBER]; // 传感器数据
 };
 
 extern "C"

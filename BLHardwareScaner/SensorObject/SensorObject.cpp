@@ -4,6 +4,7 @@
 
 #include <string>
 using std::string;
+using std::wstring;
 
 #include <Sensorsapi.h>
 #include <Sensors.h>
@@ -154,6 +155,50 @@ public:
     }
 
     /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        name.clear();
+
+        if (index >= m_sensorCount || index < 0)
+        {
+            m_errorMessage = "Index is out of range";
+            return false;
+        }
+
+        ISensor* pSensor = m_pSensorArray[index];
+
+
+        BSTR friendlyNameBstr = NULL;
+        HRESULT hr = pSensor->GetFriendlyName(&friendlyNameBstr);
+
+        if (friendlyNameBstr != NULL)
+        {
+            wstring friendlyNameWstr(friendlyNameBstr, SysStringLen(friendlyNameBstr));
+            name = friendlyNameWstr;
+        }
+
+        SysFreeString(friendlyNameBstr);
+
+        if (hr != S_OK)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <SUMMARY>
     /// 获取传感器数据
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
@@ -259,6 +304,23 @@ public:
     }
 
     /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        return m_sensorObject.GetFriendlyName(index, name);
+    }
+
+    /// <SUMMARY>
     /// 获取重力加速度传感器数据
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
@@ -338,6 +400,23 @@ public:
     unsigned int GetCount()
     {
         return m_sensorObject.GetSensorCount();
+    }
+
+    /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        return m_sensorObject.GetFriendlyName(index, name);
     }
 
     /// <SUMMARY>
@@ -422,6 +501,23 @@ public:
     }
 
     /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        return m_sensorObject.GetFriendlyName(index, name);
+    }
+
+    /// <SUMMARY>
     /// 获取指南针传感器数据
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
@@ -502,6 +598,23 @@ public:
     }
 
     /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        return m_sensorObject.GetFriendlyName(index, name);
+    }
+
+    /// <SUMMARY>
     /// 获取GPS传感器数据
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
@@ -576,6 +689,23 @@ public:
     unsigned int GetCount()
     {
         return m_sensorObject.GetSensorCount();
+    }
+
+    /// <SUMMARY>
+    /// 获取传感器友好名称
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 传感器设备索引
+    /// </PARAM>
+    /// <PARAM name = "name" dir = "OUT">
+    /// 存储传感器友好名称
+    /// </PARAM>
+    /// <RETURNS>
+    /// true(获取成功), false(获取失败)
+    /// </RETURNS>
+    bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
+    {
+        return m_sensorObject.GetFriendlyName(index, name);
     }
 
     /// <SUMMARY>
@@ -683,10 +813,15 @@ bool GetAccelerometer3DSensorInfor(OUT SAccelerometer3DInforArray* pInforArray)
         gAccelerometer3D = new LAccelerometer3DSensor();
     }
 
+    ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
+
     pInforArray->Count = gAccelerometer3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
         gAccelerometer3D->GetData(i, pInforArray->Data[i]);
+        wstring name;
+        gAccelerometer3D->GetFriendlyName(i, name);
+        wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
     }
 
     return true;
@@ -702,10 +837,16 @@ bool GetGyrometer3DSensorInfor(OUT SGyrometer3DInforArray* pInforArray)
         gGyrometer3D = new LGyrometer3DSensor();
     }
 
+    ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
+
     pInforArray->Count = gGyrometer3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
         gGyrometer3D->GetData(i, pInforArray->Data[i]);
+
+        wstring name;
+        gGyrometer3D->GetFriendlyName(i, name);
+        wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
     }
 
     return true;
@@ -721,10 +862,16 @@ bool GetCompass3DSensorInfor(OUT SCompass3DInforArray* pInforArray)
         gCompass3D = new LCompass3DSensor();
     }
 
+    ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
+
     pInforArray->Count = gCompass3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
         gCompass3D->GetData(i, pInforArray->Data[i]);
+
+        wstring name;
+        gCompass3D->GetFriendlyName(i, name);
+        wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
     }
 
     return true;
@@ -740,10 +887,16 @@ bool GetGpsSensorInfor(OUT SGpsInforArray* pInforArray)
         gLocationGps = new LLocationGpsSensor();
     }
 
+    ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
+
     pInforArray->Count = gLocationGps->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
         gLocationGps->GetData(i, pInforArray->Data[i]);
+
+        wstring name;
+        gLocationGps->GetFriendlyName(i, name);
+        wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
     }
 
     return true;
@@ -759,10 +912,16 @@ bool GetAmbientLightSensorInfor(OUT SAmbientLightInforArray* pInforArray)
         gAmbientLight = new LAmbientLightSensor();
     }
 
+    ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
+
     pInforArray->Count = gAmbientLight->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
         gAmbientLight->GetData(i, pInforArray->Data[i]);
+
+        wstring name;
+        gAmbientLight->GetFriendlyName(i, name);
+        wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
     }
 
     return true;
