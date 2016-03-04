@@ -87,6 +87,7 @@
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <TreatWChar_tAsBuiltInType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWChar_tAsBuiltInType>
     </ClCompile>
+    <ClCompile Include="..\Src\LSensorObject.cpp" />
     <ClCompile Include="..\Src\Memory\LMemory.cpp" />
     <ClCompile Include="..\Src\PerformanceCounter.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="..\Src\HardwareInfor.h" />
     <ClInclude Include="..\Src\LDiskSpeed.h" />
     <ClInclude Include="..\Src\Log\LLog.h" />
+    <ClInclude Include="..\Src\LSensorObject.h" />
     <ClInclude Include="..\Src\Memory\LMemory.h" />
     <ClInclude Include="..\Src\PerformanceCounter.h" />
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
