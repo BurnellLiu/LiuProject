@@ -166,4 +166,13 @@ public:
     virtual void LoadHWInfor();
 };
 
+/// @brief 传感器项信息
+class SensorsItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+
+};
+
 #endif

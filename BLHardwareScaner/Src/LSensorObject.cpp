@@ -46,7 +46,7 @@ public:
             (GetAmbientLightSensorInforFun)GetProcAddress(m_hSensorObject, "GetAmbientLightSensorInfor");
 
         m_pGetGpsSensorInforFun = 
-            (GetGpsSensorInforFun)GetProcAddress(m_hSensorObject, "GetGpsSensorInforFun");
+            (GetGpsSensorInforFun)GetProcAddress(m_hSensorObject, "GetGpsSensorInfor");
         
     }
 

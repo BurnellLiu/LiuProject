@@ -4,6 +4,7 @@
 #include <QtCore/QString>
 #include <QtCore/QFile>
 
+#include "..\\Src\\LSensorObject.h"
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
 
@@ -106,6 +107,31 @@ void HardwareInforPage::InitHardwareInfor()
         HWItemInfor* pBatteryItem = new BatteryItemInfor();
         m_hwItemVec.push_back(pBatteryItem);
     }
+
+    LSensorObject sensorObject;
+
+    SAccelerometer3DInforArray accelerometerSensor;
+    sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
+    SGyrometer3DInforArray gyrometerSensor;
+    sensorObject.GetGyrometer3DInfor(&gyrometerSensor);
+    SCompass3DInforArray compassSensor;
+    sensorObject.GetCompass3DInfor(&compassSensor);
+    SAmbientLightInforArray lightSensor;
+    sensorObject.GetAmbientLightInfor(&lightSensor);
+    SGpsInforArray gpsSensor;
+    sensorObject.GetGpsInfor(&gpsSensor);
+    if (accelerometerSensor.Count > 0 || 
+        gyrometerSensor.Count > 0 || 
+        compassSensor.Count > 0 || 
+        lightSensor.Count > 0 || 
+        gpsSensor.Count > 0)
+    {
+        ui.listWidgetHWItem->addItem(tr("Sensors"));
+        HWItemInfor* pSensorsItem = new SensorsItemInfor();
+        m_hwItemVec.push_back(pSensorsItem);
+    }
+
+
 
     for (int i = 0; i < m_hwItemVec.size(); i++)
     {
@@ -607,6 +633,7 @@ void BatteryItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
     PrintLogW(L"\tDesigned Voltage: %s", designedVoltage.toStdWString().c_str());
 
+    PrintLogW(L"");
 }
 
 void NetworkCardItemInfor::LoadHWInfor()
@@ -650,4 +677,67 @@ void NetworkCardItemInfor::LoadHWInfor()
     }
 
     PrintLogW(L"");
+}
+
+void SensorsItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle(QObject::tr("Sensors"));
+    PrintLogW(L"Sensors Information:");
+
+    LSensorObject sensorObject;
+
+    SAccelerometer3DInforArray accelerometerSensor;
+    sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
+    for (unsigned int i = 0; i < accelerometerSensor.Count; i++)
+    {
+        QString friendlyName = QString::fromStdWString(accelerometerSensor.FriendlyName[i]);
+        this->ContentAddItem(QObject::tr("Accelerometer"), friendlyName);
+        PrintLogW(L"\tAccelerometer: %s", accelerometerSensor.FriendlyName[i]);
+    }
+    this->ContentAddBlankLine();
+
+
+    SGyrometer3DInforArray gyrometerSensor;
+    sensorObject.GetGyrometer3DInfor(&gyrometerSensor);
+
+    for (unsigned int i = 0; i < gyrometerSensor.Count; i++)
+    {
+        QString friendlyName = QString::fromStdWString(gyrometerSensor.FriendlyName[i]);
+        this->ContentAddItem(QObject::tr("Gyrometer"), friendlyName);
+        PrintLogW(L"\tGyrometer: %s", gyrometerSensor.FriendlyName[i]);
+    }
+    this->ContentAddBlankLine();
+
+
+    SCompass3DInforArray compassSensor;
+    sensorObject.GetCompass3DInfor(&compassSensor);
+    for (unsigned int i = 0; i < compassSensor.Count; i++)
+    {
+        QString friendlyName = QString::fromStdWString(compassSensor.FriendlyName[i]);
+        this->ContentAddItem(QObject::tr("Compass"), friendlyName);
+        PrintLogW(L"\tCompass: %s", compassSensor.FriendlyName[i]);
+    }
+    this->ContentAddBlankLine();
+
+    SAmbientLightInforArray lightSensor;
+    sensorObject.GetAmbientLightInfor(&lightSensor);
+    for (unsigned int i =0; i< lightSensor.Count; i++)
+    {
+        QString friendlyName = QString::fromStdWString(lightSensor.FriendlyName[i]);
+        this->ContentAddItem(QObject::tr("Light"), friendlyName);
+        PrintLogW(L"\tLight: %s", lightSensor.FriendlyName[i]);
+    }
+    this->ContentAddBlankLine();
+
+    SGpsInforArray gpsSensor;
+    sensorObject.GetGpsInfor(&gpsSensor);
+    for (unsigned int i = 0; i < gpsSensor.Count; i++)
+    {
+        QString friendlyName = QString::fromStdWString(gpsSensor.FriendlyName[i]);
+        this->ContentAddItem(QObject::tr("GPS"), friendlyName);
+        PrintLogW(L"\tGPS: %s", gpsSensor.FriendlyName[i]);
+    }
+    this->ContentAddBlankLine();
 }
