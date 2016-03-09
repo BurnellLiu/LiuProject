@@ -242,6 +242,21 @@ public:
     /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
     /// </RETURNS>
     unsigned long GetManufacturer(IN int index, OUT wstring& manufacturer);
+
+    /// <SUMMARY>
+    /// 获取匹配设备ID
+    /// </SUMMARY>
+    /// <PARAM name = "index" dir = "IN">
+    /// 设备索引
+    /// </PARAM>
+    /// <PARAM name = "matchingDeviceId" dir = "OUT">
+    /// 保存匹配设备ID
+    /// </PARAM>
+    /// <RETURNS>
+    /// 成功返回0 失败返回ErrorCode, 返回系统的GetLastError()
+    /// </RETURNS>
+    unsigned long GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId);
+
 protected:
     LSetupDev();
 
@@ -309,6 +324,16 @@ private:
     /// 成功返回true, 失败返回false
     /// </RETURNS>
     bool GetEDID(IN int index, OUT LMonitorEDID& edid);
+};
+
+/// <SUMMARY>
+/// SCSI和RAID控制器设备类
+/// </SUMMARY>
+class LSetupSCSIController : public LSetupDev
+{
+public:
+    LSetupSCSIController();
+    ~LSetupSCSIController();
 };
 
 #endif

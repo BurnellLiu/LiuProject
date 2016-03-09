@@ -127,6 +127,8 @@ public:
 
     DWORD GetManufacturer(IN int index, OUT wstring& manufacturer);
 
+    DWORD GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId);
+
 protected:
     /// <SUMMARY>
     /// 获取设备注册表属性(字符串)
@@ -445,6 +447,11 @@ DWORD CSADevObject::GetBusNumber(IN int index, OUT unsigned int& busNumber)
 DWORD CSADevObject::GetManufacturer(IN int index, OUT wstring& manufacturer)
 {
     return this->GetPropertyStr(index, &DEVPKEY_Device_Manufacturer, manufacturer);
+}
+
+DWORD CSADevObject::GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId)
+{
+    return this->GetPropertyStr(index, &DEVPKEY_Device_MatchingDeviceId, matchingDeviceId);
 }
 
 
@@ -821,6 +828,11 @@ DWORD LSetupDev::GetManufacturer(IN int index, OUT wstring& manufacturer)
     return m_pSADevObject->GetManufacturer(index, manufacturer);
 }
 
+DWORD LSetupDev::GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId)
+{
+    return m_pSADevObject->GetMatchingDeviceId(index, matchingDeviceId);
+}
+
 LSetupDisplayCard::LSetupDisplayCard()
     : LSetupDev()
 {
@@ -964,6 +976,17 @@ SAFE_EXIT:
     }
 
     return bRet;
+}
+
+LSetupSCSIController::LSetupSCSIController()
+    : LSetupDev()
+{
+    m_pSADevObject->Scan(&GUID_DEVCLASS_SCSIADAPTER);
+}
+
+LSetupSCSIController::~LSetupSCSIController()
+{
+
 }
 
 
