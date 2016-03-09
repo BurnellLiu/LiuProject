@@ -83,6 +83,17 @@ static bool StringToWString(const string& strSrc, wstring& strDest)
 }
 
 /// <SUMMARY>
+/// 字符串转换为大写模式
+/// </SUMMARY>
+/// <PARAM name = "wstr" dir = "INOUT">
+/// 需要转换的字符串
+/// </PARAM>
+void WStringToUpper(INOUT wstring& wstr)
+{
+    transform(wstr.begin(), wstr.end(), wstr.begin(),towupper);
+}
+
+/// <SUMMARY>
 /// 设备对象类
 /// 该类方法不对索引范围进行检查
 /// 本类方法返回的ErrorCode都取自GetLastError
@@ -378,6 +389,7 @@ DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
     {
         devInstanceID.clear();
         devInstanceID.append(pBuffer);
+        WStringToUpper(devInstanceID);
     }
 
     if (pBuffer)
@@ -392,6 +404,7 @@ DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
 DWORD CSADevObject::GetParentInstanceId(IN int index, OUT wstring& devInstanceID)
 {
     DWORD dwRet = this->GetPropertyStr(index, &DEVPKEY_Device_Parent, devInstanceID);
+    WStringToUpper(devInstanceID);
     return dwRet;
 }
 
@@ -419,6 +432,7 @@ DWORD CSADevObject::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT 
     for (unsigned int i = 0; i < propertyList.size(); i++)
     {
         devInstanceIDList[i] = propertyList[i];
+        WStringToUpper(devInstanceIDList[i]);
     }
 
     return returnCode;
