@@ -222,7 +222,29 @@ void DiskSpeedPage::UpdateDiskInformation()
             continue;
 
         m_diskLogicalNameList.push_back(QString::fromStdWString(diskInforArray.LogicalName[i]));
-        diskModelNameList.push_back(QString::fromStdWString(diskInforArray.Model[i]));
+        QString modelName;
+        switch (diskInforArray.FixedDiskType[i])
+        {
+        case FIXED_DISK_HDD:
+            modelName += "(HDD)";
+            break;
+        case FIXED_DISK_SSD:
+            modelName += "(SSD)";
+            break;
+        case FIXED_DISK_EMMC:
+            modelName += "(EMMC)";
+            break;
+        case FIXED_DISK_RAID:
+            modelName += "(RAID)";
+            break;
+        default:
+            break;
+        }
+   
+
+        modelName += QString::fromStdWString(diskInforArray.Model[i]);
+        diskModelNameList.push_back(modelName);
+
     }
 
     ui.comboBoxDiskList->clear();

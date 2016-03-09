@@ -115,7 +115,7 @@ public:
     unsigned long GetLoctionInfo(IN int index, OUT wstring& devLocationInfo);
 
     /// <SUMMARY>
-    /// 获取设备实例ID
+    /// 获取设备实例ID(大写)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
     /// 设备索引
@@ -129,7 +129,7 @@ public:
     unsigned long GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
-    /// 获取父系设备实例ID
+    /// 获取父系设备实例ID(大写)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
     /// 设备索引
@@ -157,7 +157,7 @@ public:
     unsigned long GetChildrenNumber(IN int index, OUT int& number);
 
     /// <SUMMARY>
-    /// 获取子代设备实例ID列表
+    /// 获取子代设备实例ID列表(大写)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
     /// 设备索引

@@ -476,9 +476,10 @@ void DiskItemInfor::LoadHWInfor()
     this->ClearInfor();
 
     this->SetTitle("Disk");
-    PrintLogW(L"Disk Information:");
-
+    
     const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+
+    PrintLogW(L"Disk Information:");
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
     {
         if (diskInforArray.DiskType[i] != FIXED_DISK)
@@ -506,6 +507,28 @@ void DiskItemInfor::LoadHWInfor()
         QString interfaceType = QString::fromStdWString(diskInforArray.InterfaceType[i]);
         this->ContentAddItem(QObject::tr("Interface Type"), interfaceType);
         PrintLogW(L"\tInterface Type: %s", interfaceType.toStdWString().c_str());
+
+        QString fixedDiskType;
+        switch (diskInforArray.FixedDiskType[i])
+        {
+        case FIXED_DISK_HDD:
+            fixedDiskType = "HDD";
+            break;
+        case FIXED_DISK_SSD:
+            fixedDiskType = "SSD";
+            break;
+        case FIXED_DISK_EMMC:
+            fixedDiskType = "EMMC";
+            break;
+        case FIXED_DISK_RAID:
+            fixedDiskType = "RAID";
+            break;
+        default:
+            fixedDiskType = "UNKNOWN";
+            break;
+        }
+        this->ContentAddItem(QObject::tr("Fixed Disk Type"), fixedDiskType);
+        PrintLogW(L"\tFixed Disk Type: %d", diskInforArray.FixedDiskType[i]);
 
         PrintLogW(L"\tATA Disk: %s", diskInforArray.IsATA[i] ? L"Yes" : L"No");
         if (diskInforArray.IsATA[i])

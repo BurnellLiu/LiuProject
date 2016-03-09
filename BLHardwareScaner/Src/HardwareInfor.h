@@ -114,7 +114,17 @@ enum DISK_TYPE
     EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
     VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
     USB_FLASH_DISK = 4, // U盘
-    SD_CARD_DISK = 5// SD卡
+    SD_CARD_DISK = 5 // SD卡
+};
+
+/// @brief 固定磁盘类型
+enum FIXED_DISK_TYPE
+{
+    FIXED_DISK_UNKNOWN = 0, // 未知类型
+    FIXED_DISK_HDD = 1, // 机械硬盘
+    FIXED_DISK_SSD = 2, // 固态硬盘
+    FIXED_DISK_EMMC = 3, // EMMC硬盘
+    FIXED_DISK_RAID = 4 // 硬盘阵列
 };
 
 /// @brief 磁盘信息组
@@ -135,6 +145,8 @@ struct DiskInforArray
         unsigned long SATAType; ///< SATA接口类型, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(获取失败)
         unsigned long PowerOnHours; ///< 通电总时间, 单位hours(小时)
     }ATAInfor[MAX_DISK_NUMBER]; ///< 只有IDE(ATA)接口的硬盘才应该使用该结构中的值
+
+    FIXED_DISK_TYPE FixedDiskType[MAX_DISK_NUMBER]; ///< 只有属于FIXED_DISK分类的硬盘, 该值才有效
 };
 
 /// @brief 最大显示器数量
