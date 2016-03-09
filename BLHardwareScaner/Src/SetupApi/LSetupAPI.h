@@ -265,6 +265,16 @@ protected:
 };
 
 /// <SUMMARY>
+/// 所有设备类
+/// </SUMMARY>
+class LSetupDevAll : public LSetupDev
+{
+public:
+    LSetupDevAll();
+    ~LSetupDevAll();
+};
+
+/// <SUMMARY>
 /// 显卡设备类
 /// </SUMMARY>
 class LSetupDisplayCard : public LSetupDev

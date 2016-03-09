@@ -833,6 +833,17 @@ DWORD LSetupDev::GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId
     return m_pSADevObject->GetMatchingDeviceId(index, matchingDeviceId);
 }
 
+LSetupDevAll::LSetupDevAll()
+    : LSetupDev()
+{
+    m_pSADevObject->Scan(NULL);
+};
+
+LSetupDevAll::~LSetupDevAll()
+{
+
+}
+
 LSetupDisplayCard::LSetupDisplayCard()
     : LSetupDev()
 {
