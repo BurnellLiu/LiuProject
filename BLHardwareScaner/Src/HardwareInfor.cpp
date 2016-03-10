@@ -403,6 +403,7 @@ void HardwareInfor::ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStatic
     if (batteryManager.GetBatteryCount() < 1)
     {
         batteryStaticInfor.Exist = false;
+        return;
     }
 
     batteryStaticInfor.Exist = true;

@@ -101,7 +101,10 @@ void HardwareInforPage::InitHardwareInfor()
     m_hwItemVec.push_back(pMonitorItem);
 
     const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
-    if (batteryStaticInfor.Exist)
+    const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
+    if (batteryStaticInfor.Exist || 
+        computerSystemInfor.Type == COMPUTER_TYPE_NOTE_BOOK ||
+        computerSystemInfor.Type == COMPUTER_TYPE_TABLET)
     {
         ui.listWidgetHWItem->addItem(tr("Battery"));
         HWItemInfor* pBatteryItem = new BatteryItemInfor();
@@ -254,6 +257,9 @@ void ComputerItemInfor::LoadHWInfor()
     strOperatingSystemInfor += "  ";
     strOperatingSystemInfor += systemArchitecture;
     this->ContentAddItem(QObject::tr("Operating System"), strOperatingSystemInfor);
+    QString strOperatingSystemVersion;
+    strOperatingSystemVersion = QString::fromStdWString(operatingSystemInfor.Version);
+    this->ContentAddItem(QObject::tr("OS Version"), strOperatingSystemVersion);
     this->ContentAddBlankLine();
 
     // 填写主板信息
@@ -345,6 +351,15 @@ void ComputerItemInfor::LoadHWInfor()
         batteryInfor += batteryName;
 
         this->ContentAddItem(QObject::tr("Battery"), batteryInfor);
+    }
+    else
+    {
+        if (computerSystemInfor.Type == COMPUTER_TYPE_NOTE_BOOK || 
+            computerSystemInfor.Type == COMPUTER_TYPE_TABLET)
+        {
+            QString errorInfor = "Disconnect";
+            this->ContentAddItem(QObject::tr("Battery"), errorInfor);
+        }
     }
 
     // 填写光驱信息
@@ -586,10 +601,12 @@ void VideoCardItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Type"), videoCardType);
         PrintLogW(L"\tType: %s", videoCardType.toStdWString().c_str());
 
-        QString videoSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
+        QString videoRAMSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
+        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
+            videoRAMSize += "(Share)";
 
-        this->ContentAddItem(QObject::tr("Size"), videoSize);
-        PrintLogW(L"\tSize: %s", videoSize.toStdWString().c_str());
+        this->ContentAddItem(QObject::tr("RAMSize"), videoRAMSize);
+        PrintLogW(L"\tRAMSize: %s", videoRAMSize.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
@@ -632,29 +649,40 @@ void BatteryItemInfor::LoadHWInfor()
 
     const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
 
-    QString batteryName = QString::fromStdWString(batteryStaticInfor.Name).trimmed();
-    this->ContentAddItem(QObject::tr("Name"), batteryName);
-    PrintLogW(L"\tName: %s", batteryName.toStdWString().c_str());
+    if (batteryStaticInfor.Exist)
+    {
+        QString batteryName = QString::fromStdWString(batteryStaticInfor.Name).trimmed();
+        this->ContentAddItem(QObject::tr("Name"), batteryName);
+        PrintLogW(L"\tName: %s", batteryName.toStdWString().c_str());
 
-    QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer).trimmed();
-    this->ContentAddItem(QObject::tr("Manufacturer"), batteryManufacturer);
-    PrintLogW(L"\tManufacturer: %s", batteryManufacturer.toStdWString().c_str());
+        QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer).trimmed();
+        this->ContentAddItem(QObject::tr("Manufacturer"), batteryManufacturer);
+        PrintLogW(L"\tManufacturer: %s", batteryManufacturer.toStdWString().c_str());
 
-    QString batterySerialNumber = QString::fromStdWString(batteryStaticInfor.SerialNumber).trimmed();
-    this->ContentAddItem(QObject::tr("Serial Number"), batterySerialNumber);
-    PrintLogW(L"\tSerial Number: %s", batterySerialNumber.toStdWString().c_str());
+        QString batterySerialNumber = QString::fromStdWString(batteryStaticInfor.SerialNumber).trimmed();
+        this->ContentAddItem(QObject::tr("Serial Number"), batterySerialNumber);
+        PrintLogW(L"\tSerial Number: %s", batterySerialNumber.toStdWString().c_str());
 
-    QString designedCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.DesignedCapacity);
-    this->ContentAddItem(QObject::tr("Designed Capacity"), designedCapacity);
-    PrintLogW(L"\tDesigned Capacity: %s", designedCapacity.toStdWString().c_str());
+        QString designedCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.DesignedCapacity);
+        this->ContentAddItem(QObject::tr("Designed Capacity"), designedCapacity);
+        PrintLogW(L"\tDesigned Capacity: %s", designedCapacity.toStdWString().c_str());
 
-    QString fullCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.FullChargedCapacity);
-    this->ContentAddItem(QObject::tr("Full Capacity"), fullCapacity);
-    PrintLogW(L"\tFullCapacity: %s", fullCapacity.toStdWString().c_str());
+        QString fullCapacity = QString::fromStdString("%1 mWh").arg(batteryStaticInfor.FullChargedCapacity);
+        this->ContentAddItem(QObject::tr("Full Capacity"), fullCapacity);
+        PrintLogW(L"\tFullCapacity: %s", fullCapacity.toStdWString().c_str());
 
-    QString designedVoltage = QString::fromStdString("%1 mV").arg(batteryStaticInfor.DesignedVoltage);
-    this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
-    PrintLogW(L"\tDesigned Voltage: %s", designedVoltage.toStdWString().c_str());
+        QString designedVoltage = QString::fromStdString("%1 mV").arg(batteryStaticInfor.DesignedVoltage);
+        this->ContentAddItem(QObject::tr("Designed Voltage"), designedVoltage);
+        PrintLogW(L"\tDesigned Voltage: %s", designedVoltage.toStdWString().c_str());
+    }
+    else
+    {
+        QString errorInfor = "Disconnect";
+        this->ContentAddItem(QObject::tr("State"), errorInfor);
+        PrintLogW(L"\tState: %s", errorInfor.toStdWString().c_str());
+    }
+
+    
 
     PrintLogW(L"");
 }
