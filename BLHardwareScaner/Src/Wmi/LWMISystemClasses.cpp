@@ -191,7 +191,7 @@ namespace LWMI
         LUINT64 temp;
         bool bRet = m_pWMICoreManager->GetUINT64Property(index, L"AvailableMBytes", temp);
         if (bRet)
-            availableBytes = temp;
+            availableBytes = (unsigned long)temp;
 
         return bRet;
     }
@@ -202,7 +202,7 @@ namespace LWMI
         bool bRet = m_pWMICoreManager->GetUINT64Property(index, L"FreeAndZeroPageListBytes", temp);
         if (bRet)
         {
-            unusedBytes = temp/1024/1024;
+            unusedBytes = (unsigned long)(temp/1024/1024);
         }
 
         return bRet;

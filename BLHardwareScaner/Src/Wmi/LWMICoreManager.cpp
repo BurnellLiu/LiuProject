@@ -64,6 +64,10 @@ namespace LWMI
         m_pObjectArray = NULL;
         m_objectCount = 0;
 
+        m_pWbemRefresher = NULL;
+        m_pWbemConfigRefresher = NULL;
+        m_pRefreshAbleObjectArray = NULL;
+
         m_pInitComObject = new LInitCom();
     }
 
@@ -110,6 +114,21 @@ namespace LWMI
             goto SAFE_EXIT;
         }
 
+        hr = CoCreateInstance(CLSID_WbemRefresher, NULL, CLSCTX_INPROC_SERVER,
+            IID_IWbemRefresher, (LPVOID*)&m_pWbemRefresher);
+        if (FAILED(hr)) 
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        hr = m_pWbemRefresher->QueryInterface(IID_IWbemConfigureRefresher, (LPVOID*)&m_pWbemConfigRefresher);
+        if (FAILED(hr)) 
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
         bRet = true;
 
 SAFE_EXIT:
@@ -131,6 +150,7 @@ SAFE_EXIT:
         }
         LSAFE_DELARRAY(m_pObjectArray);
         LSAFE_RELEASE(m_pEnumObject);
+        m_objectCount = 0;
 
         HRESULT hr = m_pWbemServices->ExecQuery(_bstr_t(L"WQL"), _bstr_t(pQuery),
             WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, NULL, &m_pEnumObject);
@@ -164,6 +184,25 @@ SAFE_EXIT:
             m_objectCount++;
         }
 
+        if (m_objectCount > 0)
+        {
+            m_pRefreshAbleObjectArray = new IWbemClassObject*[m_objectCount];
+        }
+
+        for (int i = 0; i < m_objectCount; i++)
+        {
+            m_pRefreshAbleObjectArray[i] = NULL;
+
+            long lid;
+            HRESULT hr = m_pWbemConfigRefresher->AddObjectByTemplate(
+                m_pWbemServices,
+                m_pObjectArray[i],
+                0,
+                NULL,
+                &(m_pRefreshAbleObjectArray[i]),
+                &lid);
+        }
+
         return true;
     }
 
@@ -183,6 +222,7 @@ SAFE_EXIT:
             bRet = false;
             goto SAFE_EXIT;
         }
+
         if (pPropertyName == NULL)
         {
             bRet = false;
@@ -191,6 +231,11 @@ SAFE_EXIT:
 
         strProperty.clear();
 
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
 
         VariantInit(&vtProp);
         hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
@@ -215,6 +260,69 @@ SAFE_EXIT:
         return bRet;
     }
 
+    bool LWMICoreManager::GetStringPropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty)
+    {
+        strProperty.clear();
+
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex < 0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pWbemRefresher == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        hr = m_pWbemRefresher->Refresh(WBEM_FLAG_REFRESH_AUTO_RECONNECT);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pRefreshAbleObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        VariantInit(&vtProp);
+        hr = m_pRefreshAbleObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        bRet = true;
+        strProperty.assign(vtProp.bstrVal);
+
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
+    
+
     bool LWMICoreManager::GetUINT16Property(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property)
     {
         bool bRet = false;
@@ -232,9 +340,72 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
 
         VariantInit(&vtProp);
         hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        bRet = true;
+        ui16Property = vtProp.uiVal;
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
+    bool LWMICoreManager::GetUINT16PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property)
+    {
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex <0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pWbemRefresher == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        hr = m_pWbemRefresher->Refresh(WBEM_FLAG_REFRESH_AUTO_RECONNECT);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pRefreshAbleObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        VariantInit(&vtProp);
+        hr = m_pRefreshAbleObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
         if (hr != WBEM_S_NO_ERROR)
         {
             bRet = false;
@@ -272,9 +443,72 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
 
         VariantInit(&vtProp);
         hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        bRet = true;
+        uiProperty = vtProp.uintVal;
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
+    bool LWMICoreManager::GetUINT32PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT& uiProperty)
+    {
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex <0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pWbemRefresher == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        hr = m_pWbemRefresher->Refresh(WBEM_FLAG_REFRESH_AUTO_RECONNECT);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pRefreshAbleObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        VariantInit(&vtProp);
+        hr = m_pRefreshAbleObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
         if (hr != WBEM_S_NO_ERROR)
         {
             bRet = false;
@@ -311,10 +545,76 @@ SAFE_EXIT:
             bRet = false;
             goto SAFE_EXIT;
         }
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
 
 
         VariantInit(&vtProp);
         hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        /*
+        64位整数以字符串的方式保存在VARIANT中
+        */
+        bRet = true;
+        ui64Property = _wcstoui64(vtProp.bstrVal, L'\0', 0);
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
+    bool LWMICoreManager::GetUINT64PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT64& ui64Property)
+    {
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex <0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pWbemRefresher == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        hr = m_pWbemRefresher->Refresh(WBEM_FLAG_REFRESH_AUTO_RECONNECT);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pRefreshAbleObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+
+        VariantInit(&vtProp);
+        hr = m_pRefreshAbleObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
         if (hr != WBEM_S_NO_ERROR)
         {
             bRet = false;
@@ -342,12 +642,21 @@ SAFE_EXIT:
         for (int i = 0; i < m_objectCount; i ++)
         {
             LSAFE_RELEASE(m_pObjectArray[i]);
+            LSAFE_RELEASE(m_pRefreshAbleObjectArray[i]);
         }
+
         m_objectCount = 0;
+
         LSAFE_DELARRAY(m_pObjectArray);
+        LSAFE_DELARRAY(m_pRefreshAbleObjectArray);
+
         LSAFE_RELEASE(m_pEnumObject);
         LSAFE_RELEASE(m_pWbemServices);
         LSAFE_RELEASE(m_pWbemLocator);
+        
+        LSAFE_RELEASE(m_pWbemConfigRefresher);
+        LSAFE_RELEASE(m_pWbemRefresher);
+
 
     }
 }

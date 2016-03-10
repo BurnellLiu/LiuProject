@@ -26,6 +26,8 @@ struct IWbemLocator;
 struct IWbemServices;
 struct IEnumWbemClassObject;
 struct IWbemClassObject;
+struct IWbemRefresher;
+struct IWbemConfigureRefresher;
 
 namespace LWMI
 {
@@ -60,12 +62,26 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetStringProperty(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty);
 
+        /// @brief 获取字符串属性(刷新后)
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPrppertyName 属性名称
+        /// @param[out] strProperty 存储属性值
+        /// @return 成功返回true, 失败返回false
+        bool GetStringPropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty);
+
         /// @brief 获取无符号整数属性
         /// @param[in] objectIndex 对象索引
         /// @param[in] pPropertyName 属性名称
         /// @param[out] uiProperty 存储属性值
         /// @return 成功返回true, 失败返回false
         bool GetUINT16Property(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property);
+
+        /// @brief 获取无符号整数属性(刷新后)
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPropertyName 属性名称
+        /// @param[out] uiProperty 存储属性值
+        /// @return 成功返回true, 失败返回false
+        bool GetUINT16PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property);
 
         /// @brief 获取无符号整数属性
         /// @param[in] objectIndex 对象索引
@@ -74,12 +90,26 @@ namespace LWMI
         /// @return 成功返回true, 失败返回false
         bool GetUINT32Property(int objectIndex, const wchar_t* pPropertyName, LUINT& uiProperty);
 
+        /// @brief 获取无符号整数属性(刷新后)
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPropertyName 属性名称
+        /// @param[out] uiProperty 存储属性值
+        /// @return 成功返回true, 失败返回false
+        bool GetUINT32PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT& uiProperty);
+
         /// @brief 获取无符号64位整数属性
         /// @param[in] objectIndex 对象索引
         /// @param[in] pPropertyName 属性名称
         /// @param[out] ui64Property 存储属性值
         /// @return 成功返回true, 失败返回false
         bool GetUINT64Property(int objectIndex, const wchar_t* pPropertyName, LUINT64& ui64Property);
+
+        /// @brief 获取无符号64位整数属性(刷新后)
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPropertyName 属性名称
+        /// @param[out] ui64Property 存储属性值
+        /// @return 成功返回true, 失败返回false
+        bool GetUINT64PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT64& ui64Property);
 
     private:
         /// @brief 清理资源
@@ -92,6 +122,10 @@ namespace LWMI
         IEnumWbemClassObject* m_pEnumObject;
         IWbemClassObject** m_pObjectArray;
         int m_objectCount;
+
+        IWbemRefresher* m_pWbemRefresher;
+        IWbemConfigureRefresher* m_pWbemConfigRefresher;
+        IWbemClassObject** m_pRefreshAbleObjectArray;
 
         LInitCom* m_pInitComObject;
     };

@@ -161,7 +161,7 @@ namespace LWMI
     bool LProcessorManager::GetProcessorLoadPercentage(IN int index, OUT unsigned long& percentage)
     {
         LUINT16 temp;
-        bool bRet = m_pWMICoreManager->GetUINT16Property(index, L"LoadPercentage", temp);
+        bool bRet = m_pWMICoreManager->GetUINT16PropertyRefreshed(index, L"LoadPercentage", temp);
         if (bRet)
             percentage = (unsigned long)temp;
 
@@ -407,7 +407,7 @@ namespace LWMI
         }
 
         pDeviceDescriptor = (PSTORAGE_DEVICE_DESCRIPTOR)malloc(nBytes);
-        bRet = DeviceIoControl(
+        dwRet = DeviceIoControl(
             hDiskDrive, 
             IOCTL_STORAGE_QUERY_PROPERTY, 
             &propertyQuery, 
@@ -417,7 +417,7 @@ namespace LWMI
             &nBytes, 
             NULL);
 
-        if (bRet == FALSE)
+        if (dwRet == FALSE)
         {
             bRet = false;
             goto SAFE_EXIT;
