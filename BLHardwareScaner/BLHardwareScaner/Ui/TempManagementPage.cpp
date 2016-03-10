@@ -4,6 +4,7 @@
 
 #include <QtGui/QMessageBox>
 #include <QtCore/QFile>
+#include <QtCore/QTime>
 
 #include "..\\Src\\HardwareInfor.h"
 #include "..\\Src\\TemperatureProbe.h"
@@ -143,21 +144,13 @@ void ScanTempThread::run()
 
     TempHouse tempHouse;
 
-    int refreshCount = -1;
+    int refreshCount = 0;
     while (!m_bStopThread)
     {
         refreshCount++;
 
-        bRet = tempProbe.GetCpuTemp(cpuTempInfor);
-        if (!bRet)
-        {
-            PrintLogW(L"Warning: TemperatureProbe::GetCpuTemp Error");
-        }
-        bRet = tempProbe.GetGpuTemp(gpuTempInfor);
-        if (!bRet)
-        {
-            PrintLogW(L"Warning: TemperatureProbe::GetGpuTemp Error");
-        }
+        tempProbe.GetCpuTemp(cpuTempInfor);
+        tempProbe.GetGpuTemp(gpuTempInfor);
         tempProbe.GetDiskTemp(diskTempInforArray);
        
         tempHouse.SetCpuTemp(cpuTempInfor);
@@ -166,8 +159,8 @@ void ScanTempThread::run()
 
         this->msleep(500);
 
-        // 每刷新10次写一次LOG
-        if (refreshCount%10 != 0)
+        // 每刷新60次写一次LOG
+        if (refreshCount%60 != 0)
             continue;
 
         PrintLogW(L"Cpu Cores(Temperature): %u", cpuTempInfor.CoreNum);
@@ -185,7 +178,6 @@ void ScanTempThread::run()
         PrintLogW(L"");
         
     }
-
 
 }
 
@@ -215,30 +207,22 @@ void ScanPerformanceThread::run()
 
     PerformanceHouse perfHouse;
 
-    int refreshCount = -1;
+    int refreshCount = 0;
     while (!m_bStopThread)
     {
         refreshCount++;
-       
-        bRet = perfCounter.GetMemoryPerformance(memoryPerf);
-        if (!bRet)
-        {
-            PrintLogW(L"Warning: PerformanceCounter::GetMemoryPerformance Error");
-        }
-        perfCounter.GetProcessorPerformance(processorPerf);
-        if (!bRet)
-        {
-            PrintLogW(L"Warning: PerformanceCounter::GetProcessorPerformance Error");
-        }
 
+        perfCounter.GetMemoryPerformance(memoryPerf);
         perfHouse.SetMemoryPerformance(memoryPerf);
+
+        perfCounter.GetProcessorPerformance(processorPerf);
         perfHouse.SetProcessorPerformance(processorPerf);
         
 
         this->msleep(500);
 
-        // 每刷新10次写一次LOG
-        if (refreshCount%10 != 0)
+        // 每刷新30次写一次LOG
+        if (refreshCount%30 != 0)
             continue;
 
         PrintLogW(L"Cpu Usage: %u%%", processorPerf.LoadPercentage);
@@ -247,6 +231,7 @@ void ScanPerformanceThread::run()
 
         PrintLogW(L"");
     }
+
 }
 
 TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
@@ -276,6 +261,8 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
         }
     }
 
+    m_scanPerformanceThred.start();
+    m_scanTempThread.start();
 
 }
 
@@ -291,16 +278,11 @@ TempManagementPage::~TempManagementPage()
 void TempManagementPage::showEvent(QShowEvent* e)
 {
     m_pUiRefreshTimer->start();
-    m_scanPerformanceThred.start();
-    m_scanTempThread.start();
 }
 
 void TempManagementPage::hideEvent(QHideEvent* e)
 {
     m_pUiRefreshTimer->stop();
-
-    m_scanTempThread.Stop();
-    m_scanPerformanceThred.Stop();
 }
 
 void TempManagementPage::UiRefreshTimerTimeout()
