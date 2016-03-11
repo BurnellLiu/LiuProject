@@ -87,7 +87,6 @@
     <ClCompile Include="Ui\TestItemPage.cpp">
       <Filter>Ui</Filter>
     </ClCompile>
-    <ClCompile Include="Ui\main.cpp" />
     <ClCompile Include="Ui\MainPage.cpp">
       <Filter>Ui</Filter>
     </ClCompile>
@@ -112,6 +111,7 @@
     <ClCompile Include="..\Src\LHardwareInfor.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
