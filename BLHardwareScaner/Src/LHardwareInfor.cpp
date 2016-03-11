@@ -170,6 +170,15 @@ public:
         return m_cdRomDriveInfor;
     }
 
+    /// @brief 获取摄像机信息
+    /// @return 摄像机信息
+    const CameraInforArray& GetCameraInfor()
+    {
+        this->ScanCameraInfor(m_cameraInfor);
+
+        return m_cameraInfor;
+    }
+
     /// @brief 析构函数
     ~CHardwareInfor()
     {
@@ -513,6 +522,22 @@ private:
         }
     }
 
+    /// @brief 扫描摄像机信息
+    /// @param[out] cameraInfor 存储摄像机信息
+    void ScanCameraInfor(OUT CameraInforArray& cameraInfor)
+    {
+        LSetupCamera camera;
+        cameraInfor.Count = (unsigned long)camera.GetDevNum();
+        for (int i = 0; i < camera.GetDevNum(); i++)
+        {
+            unsigned long lRet = camera.GetFriendlyName(i, cameraInfor.Name[i]);
+            if (lRet != 0 || cameraInfor.Name[i].empty())
+            {
+                camera.GetDevDesc(i, cameraInfor.Name[i]);
+            }
+        }
+    }
+
     /// @brief 将字符串的小写字母转换为大写
     ///  
     /// 不要尝试将非uicode字符串转换大小写, 因为在中文在多字节编码中使用两个字节表示
@@ -544,6 +569,7 @@ private:
     BatteryStaticInfor m_batteryStaticInfor; ///< 电池静态信息
     NetworkCardInforArray m_networkCardInfor; ///< 网卡信息
     CDRomDriveInforArray m_cdRomDriveInfor; ///< 光驱信息
+    CameraInforArray m_cameraInfor; ///< 摄像机信息
 };
 
 
@@ -610,6 +636,11 @@ const NetworkCardInforArray& LHardwareInfor::GetNetworkCardInfor()
 const CDRomDriveInforArray& LHardwareInfor::GetCDRomDriveInfor()
 {
     return CHardwareInfor::GetInstance().GetCDRomDriveInfor();
+}
+
+const CameraInforArray& LHardwareInfor::GetCameraInfor()
+{
+    return CHardwareInfor::GetInstance().GetCameraInfor();
 }
 
 

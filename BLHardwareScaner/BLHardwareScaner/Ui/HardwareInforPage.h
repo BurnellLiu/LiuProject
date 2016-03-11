@@ -100,15 +100,6 @@ public:
     virtual void LoadHWInfor();
 };
 
-/// @brief 处理器项信息
-class ProcessorItemInfor : public HWItemInfor
-{
-public:
-
-    /// @brief 加载硬件信息
-    virtual void LoadHWInfor();
-};
-
 /// @brief 主板项信息
 class MotherBoardItemInfor : public HWItemInfor
 {
@@ -118,11 +109,29 @@ public:
     virtual void LoadHWInfor();
 };
 
+/// @brief 处理器项信息
+class ProcessorItemInfor : public HWItemInfor
+{
+public:
+
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+
+/// @brief 显卡项信息
+class VideoCardItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
 /// @brief 内存项信息
 class MemoryItemInfor : public HWItemInfor
 {
 public:
-     /// @brief 加载硬件信息
+    /// @brief 加载硬件信息
     virtual void LoadHWInfor();
 };
 
@@ -134,8 +143,8 @@ public:
     virtual void LoadHWInfor();
 };
 
-/// @brief 显卡项信息
-class VideoCardItemInfor : public HWItemInfor
+/// @brief 网卡项信息
+class NetworkCardItemInfor : public HWItemInfor
 {
 public:
     /// @brief 加载硬件信息
@@ -158,8 +167,16 @@ public:
     virtual void LoadHWInfor();
 };
 
-/// @brief 网卡项信息
-class NetworkCardItemInfor : public HWItemInfor
+/// @brief 摄像机项信息
+class CameraItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+};
+
+/// @brief CDRom驱动器项信息
+class CDRomDriveItemInfor : public HWItemInfor
 {
 public:
     /// @brief 加载硬件信息

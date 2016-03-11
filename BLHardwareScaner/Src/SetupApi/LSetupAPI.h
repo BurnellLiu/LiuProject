@@ -346,4 +346,14 @@ public:
     ~LSetupSCSIController();
 };
 
+/// <SUMMARY>
+/// 摄像头设备类
+/// </SUMMARY>
+class LSetupCamera : public LSetupDev
+{
+public:
+    LSetupCamera();
+    ~LSetupCamera();
+};
+
 #endif

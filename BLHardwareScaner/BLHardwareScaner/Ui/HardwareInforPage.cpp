@@ -111,8 +111,23 @@ void HardwareInforPage::InitHardwareInfor()
         m_hwItemVec.push_back(pBatteryItem);
     }
 
-    LSensorObject sensorObject;
+    const CameraInforArray& cameraInfor = LHardwareInfor::GetCameraInfor();
+    if (cameraInfor.Count > 0)
+    {
+        ui.listWidgetHWItem->addItem(tr("Camera"));
+        HWItemInfor* pCameraItem = new CameraItemInfor();
+        m_hwItemVec.push_back(pCameraItem);
+    }
 
+    const CDRomDriveInforArray& cdRomInfor = LHardwareInfor::GetCDRomDriveInfor();
+    if (cdRomInfor.Count > 0)
+    {
+        ui.listWidgetHWItem->addItem(tr("CDRomDrive"));
+        HWItemInfor* pCDRomDriveItem = new CDRomDriveItemInfor();
+        m_hwItemVec.push_back(pCDRomDriveItem);
+    }
+
+    LSensorObject sensorObject;
     SAccelerometer3DInforArray accelerometerSensor;
     sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
     SGyrometer3DInforArray gyrometerSensor;
@@ -362,6 +377,14 @@ void ComputerItemInfor::LoadHWInfor()
         }
     }
 
+    // 填写摄像机信息
+    const CameraInforArray& cameraInforArray = LHardwareInfor::GetCameraInfor();
+    for (unsigned int i = 0; i < cameraInforArray.Count; i++)
+    {
+        QString cameraName = QString::fromStdWString(cameraInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("Camera"), cameraName);
+    }
+
     // 填写光驱信息
     const CDRomDriveInforArray& cdRomDriveInforArray = LHardwareInfor::GetCDRomDriveInfor();
     for (unsigned int i = 0; i < cdRomDriveInforArray.Count; i++)
@@ -369,6 +392,81 @@ void ComputerItemInfor::LoadHWInfor()
         QString cdRomName = QString::fromStdWString(cdRomDriveInforArray.Name[i]);
         this->ContentAddItem(QObject::tr("CD ROM Drive"), cdRomName);
     }
+
+    // 填写传感器信息
+    LSensorObject sensorObject;
+    SAccelerometer3DInforArray accelerometerSensor;
+    sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
+    SGyrometer3DInforArray gyrometerSensor;
+    sensorObject.GetGyrometer3DInfor(&gyrometerSensor);
+    SCompass3DInforArray compassSensor;
+    sensorObject.GetCompass3DInfor(&compassSensor);
+    SAmbientLightInforArray lightSensor;
+    sensorObject.GetAmbientLightInfor(&lightSensor);
+    SGpsInforArray gpsSensor;
+    sensorObject.GetGpsInfor(&gpsSensor);
+    if (accelerometerSensor.Count > 0 || 
+        gyrometerSensor.Count > 0 || 
+        compassSensor.Count > 0 || 
+        lightSensor.Count > 0 || 
+        gpsSensor.Count > 0)
+    {
+        QString sensors;
+        if (accelerometerSensor.Count > 0)
+            sensors += "Accelerometer  ";
+        if (gyrometerSensor.Count > 0)
+            sensors += "Gyrometer  ";
+        if (compassSensor.Count > 0)
+            sensors += "Compass  ";
+        if (lightSensor.Count > 0)
+            sensors += "Light  ";
+        if (gpsSensor.Count > 0)
+            sensors += "GPS  ";
+
+        this->ContentAddItem(QObject::tr("Sensor"), sensors);
+    }
+}
+
+void MotherBoardItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle(QObject::tr("Mother Board"));
+    PrintLogW(L"Mother Board Information:");
+
+    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
+    QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
+    this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
+    PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
+
+    QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
+    this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
+    PrintLogW(L"\tManufacturer: %s", motherBoardInfor.Manufacturer.c_str());
+
+
+    QString boardSN = QString::fromStdWString(motherBoardInfor.SerialNumber);
+    this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
+    PrintLogW(L"\tSerial Number: %s", motherBoardInfor.SerialNumber.c_str());
+
+    this->ContentAddBlankLine();
+
+    QString biosSN = QString::fromStdWString(motherBoardInfor.BiosSerialNumber);
+    this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
+    PrintLogW(L"\tBIOS SerialNumber: %s", motherBoardInfor.BiosSerialNumber.c_str());
+
+    QString biosVersion = QString::fromStdWString(motherBoardInfor.BiosVersion);
+    this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
+    PrintLogW(L"\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
+
+    QString biosReleaseDate = QString::fromStdWString(motherBoardInfor.BiosReleaseDate).trimmed();
+    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
+    PrintLogW(L"\tBIOS Release Date: %s", motherBoardInfor.BiosReleaseDate.c_str());
+
+    QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
+    this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
+    PrintLogW(L"\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
+
+    PrintLogW(L"");
 }
 
 void ProcessorItemInfor::LoadHWInfor()
@@ -404,44 +502,43 @@ void ProcessorItemInfor::LoadHWInfor()
 
 }
 
-void MotherBoardItemInfor::LoadHWInfor()
+void VideoCardItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
 
-    this->SetTitle(QObject::tr("Mother Board"));
-    PrintLogW(L"Mother Board Information:");
+    this->SetTitle("Video Card");
+    PrintLogW(L"Video Card Information:");
 
-    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
-    QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
-    this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
-    PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
+    // 填写显卡信息
+    const VideoCardInforArray& videoCardInforArray = LHardwareInfor::GetVideoCardInfor();
+    for (int i = 0; i < videoCardInforArray.Count; i++)
+    {
+        PrintLogW(L"\tVideo Card Index: %d", i);
 
-    QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
-    this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
-    PrintLogW(L"\tManufacturer: %s", motherBoardInfor.Manufacturer.c_str());
-    
+        QString videoCardName = QString::fromStdWString(videoCardInforArray.Description[i]);
+        this->ContentAddItem(QObject::tr("Model"), videoCardName);
+        PrintLogW(L"\tModel: %s", videoCardName.toStdWString().c_str());
 
-    QString boardSN = QString::fromStdWString(motherBoardInfor.SerialNumber);
-    this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
-    PrintLogW(L"\tSerial Number: %s", motherBoardInfor.SerialNumber.c_str());
+        QString videoCardType;
+        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
+            videoCardType = QString::fromStdWString(L"Integrated");
+        else if(videoCardInforArray.Type[i] == VIDEO_CARD_EXTERNAL)
+            videoCardType = QString::fromStdWString(L"Independent");
+        else
+            videoCardType = QString::fromStdWString(L"Unknown");
 
-    this->ContentAddBlankLine();
+        this->ContentAddItem(QObject::tr("Type"), videoCardType);
+        PrintLogW(L"\tType: %s", videoCardType.toStdWString().c_str());
 
-    QString biosSN = QString::fromStdWString(motherBoardInfor.BiosSerialNumber);
-    this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
-    PrintLogW(L"\tBIOS SerialNumber: %s", motherBoardInfor.BiosSerialNumber.c_str());
+        QString videoRAMSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
+        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
+            videoRAMSize += "(Share)";
 
-    QString biosVersion = QString::fromStdWString(motherBoardInfor.BiosVersion);
-    this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
-    PrintLogW(L"\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
+        this->ContentAddItem(QObject::tr("RAMSize"), videoRAMSize);
+        PrintLogW(L"\tRAMSize: %s", videoRAMSize.toStdWString().c_str());
 
-    QString biosReleaseDate = QString::fromStdWString(motherBoardInfor.BiosReleaseDate).trimmed();
-    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
-    PrintLogW(L"\tBIOS Release Date: %s", motherBoardInfor.BiosReleaseDate.c_str());
-
-    QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
-    this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
-    PrintLogW(L"\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
+        this->ContentAddBlankLine();
+    }
 
     PrintLogW(L"");
 }
@@ -573,40 +670,42 @@ void DiskItemInfor::LoadHWInfor()
     PrintLogW(L"");
 }
 
-void VideoCardItemInfor::LoadHWInfor()
+void NetworkCardItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
 
-    this->SetTitle("Video Card");
-    PrintLogW(L"Video Card Information:");
+    this->SetTitle(QObject::tr("Network Card"));
+    PrintLogW(L"Network Card Information:");
 
-    // 填写显卡信息
-    const VideoCardInforArray& videoCardInforArray = LHardwareInfor::GetVideoCardInfor();
-    for (int i = 0; i < videoCardInforArray.Count; i++)
+    const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
+
+    for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
     {
-        PrintLogW(L"\tVideo Card Index: %d", i);
+        PrintLogW(L"\tNetwork Card Index: %u", i);
+        QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
+        this->ContentAddItem(QObject::tr("Name"), name);
+        PrintLogW(L"\tName: %s", name.toStdWString().c_str());
 
-        QString videoCardName = QString::fromStdWString(videoCardInforArray.Description[i]);
-        this->ContentAddItem(QObject::tr("Model"), videoCardName);
-        PrintLogW(L"\tModel: %s", videoCardName.toStdWString().c_str());
-
-        QString videoCardType;
-        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
-            videoCardType = QString::fromStdWString(L"Integrated");
-        else if(videoCardInforArray.Type[i] == VIDEO_CARD_EXTERNAL)
-            videoCardType = QString::fromStdWString(L"Independent");
+        QString type;
+        if (networkCardInforArray.Type[i] == ETHERNET_NETCARD)
+            type = "Ethernet";
+        else if (networkCardInforArray.Type[i] == WIFI_NETCARD)
+            type = "Wi-Fi";
+        else if (networkCardInforArray.Type[i] == BLUETOOTH_NETCARD)
+            type = "Bluetooth";
         else
-            videoCardType = QString::fromStdWString(L"Unknown");
+            type = "Unknown";
 
-        this->ContentAddItem(QObject::tr("Type"), videoCardType);
-        PrintLogW(L"\tType: %s", videoCardType.toStdWString().c_str());
+        this->ContentAddItem(QObject::tr("Type"), type);
+        PrintLogW(L"\tType: %s", type.toStdWString().c_str());
 
-        QString videoRAMSize = QString::fromStdString("%1M").arg(videoCardInforArray.RAMSize[i]);
-        if (videoCardInforArray.Type[i] == VIDEO_CARD_INTERNAL)
-            videoRAMSize += "(Share)";
+        QString manufacturer = QString::fromStdWString(networkCardInforArray.Manufacturer[i]);
+        this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
+        PrintLogW(L"\tManufacturer: %s", manufacturer.toStdWString().c_str());
 
-        this->ContentAddItem(QObject::tr("RAMSize"), videoRAMSize);
-        PrintLogW(L"\tRAMSize: %s", videoRAMSize.toStdWString().c_str());
+        QString macAddress = QString::fromStdWString(networkCardInforArray.MACAddress[i]);
+        this->ContentAddItem(QObject::tr("MACAddress"), macAddress);
+        PrintLogW(L"\tMACAddress: %s", macAddress.toStdWString().c_str());
 
         this->ContentAddBlankLine();
     }
@@ -687,42 +786,42 @@ void BatteryItemInfor::LoadHWInfor()
     PrintLogW(L"");
 }
 
-void NetworkCardItemInfor::LoadHWInfor()
+void CameraItemInfor::LoadHWInfor()
 {
     this->ClearInfor();
 
-    this->SetTitle(QObject::tr("Network Card"));
-    PrintLogW(L"Network Card Information:");
+    this->SetTitle("Camera");
 
-    const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
+    PrintLogW(L"Camera Information:");
 
-    for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
+    const CameraInforArray& cameraInfor = LHardwareInfor::GetCameraInfor();
+    for (unsigned long i = 0; i < cameraInfor.Count; i++)
     {
-        PrintLogW(L"\tNetwork Card Index: %u", i);
-        QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
-        this->ContentAddItem(QObject::tr("Name"), name);
-        PrintLogW(L"\tName: %s", name.toStdWString().c_str());
+        PrintLogW(L"\tCamera Index: %u", i);
+        QString cameraName = QString::fromStdWString(cameraInfor.Name[i]);
+        this->ContentAddItem(QObject::tr("Name"), cameraName);
+        PrintLogW(L"\tName: %s", cameraInfor.Name[i].c_str());
 
-        QString type;
-        if (networkCardInforArray.Type[i] == ETHERNET_NETCARD)
-            type = "Ethernet";
-        else if (networkCardInforArray.Type[i] == WIFI_NETCARD)
-            type = "Wi-Fi";
-        else if (networkCardInforArray.Type[i] == BLUETOOTH_NETCARD)
-            type = "Bluetooth";
-        else
-            type = "Unknown";
+        this->ContentAddBlankLine();
+    }
+    PrintLogW(L"");
+}
 
-        this->ContentAddItem(QObject::tr("Type"), type);
-        PrintLogW(L"\tType: %s", type.toStdWString().c_str());
+void CDRomDriveItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
 
-        QString manufacturer = QString::fromStdWString(networkCardInforArray.Manufacturer[i]);
-        this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
-        PrintLogW(L"\tManufacturer: %s", manufacturer.toStdWString().c_str());
+    this->SetTitle("CDRomDrive");
 
-        QString macAddress = QString::fromStdWString(networkCardInforArray.MACAddress[i]);
-        this->ContentAddItem(QObject::tr("MACAddress"), macAddress);
-        PrintLogW(L"\tMACAddress: %s", macAddress.toStdWString().c_str());
+    PrintLogW(L"CDRomDrive Information:");
+
+    const CDRomDriveInforArray& cdRomDriveInfor = LHardwareInfor::GetCDRomDriveInfor();
+    for (unsigned long i = 0; i < cdRomDriveInfor.Count; i++)
+    {
+        PrintLogW(L"\tCDRomDrive Index: %u", i);
+        QString cdRomDriveName = QString::fromStdWString(cdRomDriveInfor.Name[i]);
+        this->ContentAddItem(QObject::tr("Name"), cdRomDriveName);
+        PrintLogW(L"\tName: %s", cdRomDriveInfor.Name[i].c_str());
 
         this->ContentAddBlankLine();
     }

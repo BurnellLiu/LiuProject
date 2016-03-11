@@ -205,6 +205,16 @@ struct CDRomDriveInforArray
     wstring Name[MAX_CDROMDRIVE_NUMBER]; ///< 光驱名称
 };
 
+/// @brief 最大摄像机数量
+#define MAX_CAMERA_NUMBER 8
+
+/// @brief 摄像机信息组
+struct CameraInforArray
+{
+    unsigned long Count; ///< 摄像机数量
+    wstring Name[MAX_CAMERA_NUMBER]; ///< 摄像机名称
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -260,6 +270,10 @@ public:
     /// @brief 获取光驱信息
     /// @return 光驱信息
     static const CDRomDriveInforArray& GetCDRomDriveInfor();
+
+    /// @brief 获取摄像机信息
+    /// @return 摄像机信息
+    static const CameraInforArray& GetCameraInfor();
 };
 
 #endif

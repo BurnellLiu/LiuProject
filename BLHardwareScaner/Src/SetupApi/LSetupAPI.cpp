@@ -20,78 +20,7 @@ using std::vector;
 
 #pragma comment(lib, "Setupapi.lib")
 
-/// <SUMMARY>
-/// 宽字符串转换为字符串
-/// </SUMMARY>
-/// <PARAM name = " strSrc" dir = "IN">
-/// 源宽字符串
-/// </PARAM>
-/// <PARAM name = " strDest" dir = "OUT">
-/// 存储转换后的字符串
-/// </PARAM>
-/// <RETURNS>
-/// 成功返回0, 失败返回false
-/// </RETURNS>
-static bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
-{
-	int nLen = WideCharToMultiByte(CP_ACP, 0, strSrc.c_str(), -1, NULL, 0, NULL, NULL);  
-	if (nLen<= 0)
-		return false;
 
-	char* pszDst = new char[nLen];  
-
-	int iRet = WideCharToMultiByte(CP_ACP, 0, strSrc.c_str(), -1, pszDst, nLen, NULL, NULL); 
-
-	pszDst[nLen -1] = 0;  
-	strDest.clear();
-	strDest.assign(pszDst);
-
-	delete[] pszDst;
-
-	return true;
-}
-
-/// <SUMMARY>
-/// 字符串转换为宽字符串
-/// </SUMMARY>
-/// <PARAM name = " strSrc" dir = "IN">
-/// 源字符串
-/// </PARAM>
-/// <PARAM name = " strDest" dir = "OUT">
-/// 存储转换后的宽字符串
-/// </PARAM>
-/// <RETURNS>
-/// 成功返回0, 失败返回false
-/// </RETURNS>
-static bool StringToWString(const string& strSrc, wstring& strDest)
-{
-    int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);  
-    if(nSize <= 0)
-        return false;  
-    wchar_t* pwszDst = new wchar_t[nSize+1];
-
-    int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
-
-    pwszDst[nSize] = 0; 
-
-    strDest.clear();
-    strDest.assign(pwszDst);
-
-    delete[] pwszDst;
-
-    return true;
-}
-
-/// <SUMMARY>
-/// 字符串转换为大写模式
-/// </SUMMARY>
-/// <PARAM name = "wstr" dir = "INOUT">
-/// 需要转换的字符串
-/// </PARAM>
-void WStringToUpper(INOUT wstring& wstr)
-{
-    transform(wstr.begin(), wstr.end(), wstr.begin(),towupper);
-}
 
 /// <SUMMARY>
 /// 设备对象类
@@ -101,46 +30,238 @@ void WStringToUpper(INOUT wstring& wstr)
 class CSADevObject
 {
 public:
-    CSADevObject();
-    ~CSADevObject();
+    CSADevObject()
+    {
+        m_hDevInfoSet = NULL;
+        m_pDevInfoList = NULL;
+        m_devCount = 0;
+    }
 
-    DWORD Scan(IN const GUID* pGUID);
+    ~CSADevObject()
+    {
+        this->BaseCleanUp();
+    }
 
-    int GetDevNum();
+    DWORD Scan(IN const GUID* pGUID)
+    {
+        BaseCleanUp();
 
-    DWORD Enable(IN int index);
+        DWORD returnCode = 0;
+        if (pGUID != NULL)
+        {
+            /*
+            if ((*pGUID) == GUID_DEVINTERFACE_USB_DEVICE ||
+            (*pGUID) == GUID_DEVINTERFACE_USB_HUB ||
+            (*pGUID) == GUID_DEVINTERFACE_USB_HOST_CONTROLLER)
+            {
+            m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+            }
+            else
+            {
+            m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT);
+            }
+            */
+            m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT);
+        }
+        else
+        {
+            m_hDevInfoSet = SetupDiGetClassDevsA(NULL, NULL, NULL, DIGCF_PRESENT | DIGCF_ALLCLASSES);
+        }
+        if (m_hDevInfoSet == INVALID_HANDLE_VALUE)
+        {
+            m_hDevInfoSet = NULL;
+            returnCode = GetLastError();
+            return returnCode;
+        }
 
-    DWORD Disable(IN int index);
+        // 获取设备数目
+        SP_DEVINFO_DATA devInfoData;
+        devInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
+        for (int i = 0; SetupDiEnumDeviceInfo(m_hDevInfoSet, i, &devInfoData); i++)
+        {
+            m_devCount = i + 1;
+        }
 
-    DWORD GetDevDesc(IN int index, OUT wstring& devDesc);
+        if (m_devCount == 0)
+        {
+            returnCode = 0;
+            return returnCode;
+        }
 
-    DWORD GetHardwareId(IN int index, OUT wstring& devHardwareId);
+        // 获取设备信息
+        m_pDevInfoList = new SP_DEVINFO_DATA[m_devCount];
 
-    DWORD GetFriendlyName(IN int index, OUT wstring& devFrindName);
+        for (int i = 0; i < m_devCount; i++)
+        {
+            m_pDevInfoList[i].cbSize =  sizeof(SP_DEVINFO_DATA);
+            BOOL bRet = SetupDiEnumDeviceInfo(m_hDevInfoSet, i, &m_pDevInfoList[i]);
+            if (FALSE == bRet)
+            {
+                m_devCount = 0;
+                returnCode = GetLastError();
+                return returnCode;
+            }
+        }
 
-    DWORD GetLoctionInfo(IN int index, OUT wstring& devLocationInfo);
+        return returnCode;
+    }
 
-    DWORD GetInstanceID(IN int index, OUT wstring& devInstanceID);
+    int GetDevNum()
+    {
+        return m_devCount;
+    }
 
-    DWORD GetParentInstanceId(IN int index, OUT wstring& devInstanceID);
+    DWORD Enable(IN int index)
+    {
+        return this->ChangeState(index, DICS_ENABLE);
+    }
 
-    DWORD GetChildrenNumber(IN int index, OUT int& number);
+    DWORD Disable(IN int index)
+    {
+        return this->ChangeState(index, DICS_DISABLE);
+    }
 
-    DWORD GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList);
+    DWORD GetDevDesc(IN int index, OUT wstring& devDesc)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_DEVICEDESC, devDesc);
+    }
 
-    DWORD GetDriverKeyName(IN int index, OUT wstring& driverKeyName);
+    DWORD GetHardwareId(IN int index, OUT wstring& devHardwareId)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_HARDWAREID, devHardwareId);
+    }
 
-    DWORD GetClass(IN int index, OUT wstring& strClass);
+    DWORD GetFriendlyName(IN int index, OUT wstring& devFrindName)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_FRIENDLYNAME, devFrindName);
+    }
 
-    DWORD GetClassGuid(IN int index, OUT wstring& strClassGuid);
+    DWORD GetLoctionInfo(IN int index, OUT wstring& devLocationInfo)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_LOCATION_INFORMATION, devLocationInfo);
+    }
 
-    DWORD GetBusNumber(IN int index, OUT unsigned int& busNumber);
+    DWORD GetInstanceID(IN int index, OUT wstring& devInstanceID)
+    {
+        DWORD bufferSize = 0;
+        PWSTR pBuffer = NULL;
 
-    DWORD GetManufacturer(IN int index, OUT wstring& manufacturer);
+        DWORD returnCode = 0;
+        while (true)
+        {
+            BOOL bRet = SetupDiGetDeviceInstanceIdW(m_hDevInfoSet,
+                &m_pDevInfoList[index],
+                pBuffer,
+                bufferSize,
+                &bufferSize);
+            if (bRet == TRUE)
+            {
+                break;
+            }
 
-    DWORD GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId);
+            if (bRet == FALSE)
+            {
+                if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (pBuffer)
+                    {
+                        LocalFree(pBuffer);
+                        pBuffer = NULL;
+                    }
+                    pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
+                }
+                else
+                {
+                    returnCode = GetLastError();
+                    break;
+                }
+            }
+        }
 
-protected:
+        if (returnCode == 0)
+        {
+            devInstanceID.clear();
+            devInstanceID.append(pBuffer);
+            WStringToUpper(devInstanceID);
+        }
+
+        if (pBuffer)
+        {
+            LocalFree(pBuffer);
+            pBuffer = NULL;
+        }
+
+        return returnCode;
+    }
+
+    DWORD GetParentInstanceId(IN int index, OUT wstring& devInstanceID)
+    {
+        DWORD dwRet = this->GetPropertyStr(index, &DEVPKEY_Device_Parent, devInstanceID);
+        WStringToUpper(devInstanceID);
+        return dwRet;
+    }
+
+    DWORD GetChildrenNumber(IN int index, OUT int& number)
+    {
+        vector<wstring> propertyList;
+        DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
+        number = propertyList.size();
+        return returnCode;
+    }
+
+    DWORD GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList)
+    {
+        vector<wstring> propertyList;
+        DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
+        if (returnCode != 0)
+            return returnCode;
+
+        if ((unsigned int)listSize < propertyList.size())
+        {
+            returnCode = ERROR_INSUFFICIENT_BUFFER;
+            return  returnCode;
+        }
+
+        for (unsigned int i = 0; i < propertyList.size(); i++)
+        {
+            devInstanceIDList[i] = propertyList[i];
+            WStringToUpper(devInstanceIDList[i]);
+        }
+
+        return returnCode;
+    }
+
+    DWORD GetDriverKeyName(IN int index, OUT wstring& driverKeyName)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_DRIVER, driverKeyName);
+    }
+
+    DWORD GetClass(IN int index, OUT wstring& strClass)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_CLASS, strClass);
+    }
+
+    DWORD GetClassGuid(IN int index, OUT wstring& strClassGuid)
+    {
+        return this->GetRegistryPropertyStr(index, SPDRP_CLASSGUID, strClassGuid);
+    }
+
+    DWORD GetBusNumber(IN int index, OUT unsigned int& busNumber)
+    {
+        return this->GetRegistryPropertyUInt(index, SPDRP_BUSNUMBER, busNumber);
+    }
+
+    DWORD GetManufacturer(IN int index, OUT wstring& manufacturer)
+    {
+        return this->GetPropertyStr(index, &DEVPKEY_Device_Manufacturer, manufacturer);
+    }
+
+    DWORD GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId)
+    {
+        return this->GetPropertyStr(index, &DEVPKEY_Device_MatchingDeviceId, matchingDeviceId);
+    }
+
+private:
     /// <SUMMARY>
     /// 获取设备注册表属性(字符串)
     /// </SUMMARY>
@@ -156,7 +277,60 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty);
+    DWORD GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty)
+    {
+        DWORD bufferSize = 0;
+        LPWSTR pBuffer = NULL;
+        DWORD dataType;
+
+        DWORD returnCode = 0;
+        while (true)
+        {
+            BOOL bRet = SetupDiGetDeviceRegistryPropertyW(m_hDevInfoSet,
+                &m_pDevInfoList[index],
+                dwProperty,
+                &dataType,
+                (PBYTE)pBuffer,
+                bufferSize,
+                &bufferSize);
+            if (bRet == TRUE)
+            {
+                break;
+            }
+
+            if (bRet == FALSE)
+            {
+                if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (pBuffer)
+                    {
+                        LocalFree(pBuffer);
+                        pBuffer = NULL;
+                    }
+                    pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
+                }
+                else
+                {
+                    returnCode = GetLastError();
+                    break;
+                }
+            }
+        }
+
+        if (returnCode == 0)
+        {
+            strProperty.clear();
+            strProperty.append(pBuffer);
+        }
+
+        if (pBuffer)
+        {
+            LocalFree(pBuffer);
+            pBuffer = NULL;
+        }
+
+        return returnCode;
+    }
 
     /// <SUMMARY>
     /// 获取设备注册表属性(无符号整形)
@@ -173,7 +347,59 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetRegistryPropertyUInt(IN int index, IN DWORD dwProperty, OUT unsigned int& propertyValue);
+    DWORD GetRegistryPropertyUInt(IN int index, IN DWORD dwProperty, OUT unsigned int& propertyValue)
+    {
+        DWORD bufferSize = 0;
+        BYTE* pBuffer = NULL;
+        DWORD dataType;
+
+        DWORD returnCode = 0;
+        while (true)
+        {
+            BOOL bRet = SetupDiGetDeviceRegistryPropertyA(m_hDevInfoSet,
+                &m_pDevInfoList[index],
+                dwProperty,
+                &dataType,
+                pBuffer,
+                bufferSize,
+                &bufferSize);
+            if (bRet == TRUE)
+            {
+                break;
+            }
+
+            if (bRet == FALSE)
+            {
+                if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (pBuffer)
+                    {
+                        LocalFree(pBuffer);
+                        pBuffer = NULL;
+                    }
+                    pBuffer = (BYTE*)LocalAlloc(LPTR, bufferSize);
+                }
+                else
+                {
+                    returnCode = GetLastError();
+                    break;
+                }
+            }
+        }
+
+        if (returnCode == 0)
+        {
+            propertyValue = (unsigned int)(*pBuffer);
+        }
+
+        if (pBuffer)
+        {
+            LocalFree(pBuffer);
+            pBuffer = NULL;
+        }
+
+        return returnCode;
+    }
 
     /// <SUMMARY>
     /// 获取设备属性(字符串)
@@ -190,7 +416,60 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty);
+    DWORD GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty)
+    {
+        DWORD bufferSize = 0;
+        LPWSTR pBuffer = NULL;
+        DEVPROPTYPE dataType;
+
+        DWORD returnCode = 0;
+        while (true)
+        {
+            BOOL bRet = SetupDiGetDevicePropertyW(m_hDevInfoSet,
+                &m_pDevInfoList[index],
+                propertyKey,
+                &dataType,
+                (PBYTE)pBuffer,
+                bufferSize,
+                &bufferSize,
+                0);
+            if (bRet == TRUE)
+            {
+                break;
+            }
+
+            if (bRet == FALSE)
+            {
+                if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (pBuffer)
+                    {
+                        LocalFree(pBuffer);
+                        pBuffer = NULL;
+                    }
+                    pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize);
+                }
+                else
+                {
+                    returnCode = GetLastError();
+                    break;
+                }
+            }
+        }
+
+        if (returnCode == 0)
+        {
+            strProperty.append(pBuffer);
+        }
+
+        if (pBuffer)
+        {
+            LocalFree(pBuffer);
+            pBuffer = NULL;
+        }
+
+        return returnCode;
+    }
 
     /// <SUMMARY>
     /// 获取设备属性(字符串列表)
@@ -207,7 +486,76 @@ protected:
     /// <RETURNS>
     /// 成功返回0, 失败返回ErrorCode
     /// </RETURNS>
-    DWORD GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList);
+    DWORD GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList)
+    {
+        DWORD bufferSize = 0;
+        LPWSTR pBuffer = NULL;
+        DEVPROPTYPE dataType;
+
+        DWORD returnCode = 0;
+        while (true)
+        {
+            BOOL bRet = SetupDiGetDevicePropertyW(m_hDevInfoSet,
+                &m_pDevInfoList[index],
+                propertyKey,
+                &dataType,
+                (PBYTE)pBuffer,
+                bufferSize,
+                &bufferSize,
+                0);
+            if (bRet == TRUE)
+            {
+                break;
+            }
+
+            if (bRet == FALSE)
+            {
+                if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (pBuffer)
+                    {
+                        LocalFree(pBuffer);
+                        pBuffer = NULL;
+                    }
+                    pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize);
+                }
+                else
+                {
+                    returnCode = GetLastError();
+                    break;
+                }
+            }
+        }
+
+        if (returnCode == 0)
+        {
+            wstring strProperty;
+            WCHAR lastWChar = L'\0';
+            for (unsigned int i = 0; i < bufferSize/sizeof(WCHAR); i++)
+            {
+                if (lastWChar == L'\0')
+                {
+                    if (pBuffer[i] != L'\0')
+                    {
+                        strProperty = pBuffer + i;
+                        strPropertyList.push_back(strProperty);
+                    }
+                }
+
+                lastWChar = pBuffer[i];
+            }
+
+
+        }
+
+        if (pBuffer)
+        {
+            LocalFree(pBuffer);
+            pBuffer = NULL;
+        }
+
+        return returnCode;
+    }
 
     /// <SUMMARY>
     /// 改变设备状态
@@ -222,534 +570,132 @@ protected:
     /// <RETURNS>
     /// 成功返回0 失败返回ErrorCode
     /// </RETURNS>
-    DWORD ChangeState(IN int index, IN DWORD newSate);
+    DWORD ChangeState(IN int index, IN DWORD newSate)
+    {
+        DWORD returnCode = 0;
 
-protected:
-    HDEVINFO m_hDevInfoSet; ///<设备信息集
-    int m_devCount; ///<设备数目
-    SP_DEVINFO_DATA* m_pDevInfoList; /// 设备信息列表 
+        SP_PROPCHANGE_PARAMS propChangeParam;
+        propChangeParam.ClassInstallHeader.cbSize = sizeof(SP_CLASSINSTALL_HEADER);
+        propChangeParam.ClassInstallHeader.InstallFunction = DIF_PROPERTYCHANGE;
+        propChangeParam.Scope = DICS_FLAG_GLOBAL;
+        propChangeParam.StateChange = newSate;
+        propChangeParam.HwProfile = 0;
 
-private:
+        BOOL bRet = SetupDiSetClassInstallParamsA(m_hDevInfoSet, &m_pDevInfoList[index], 
+            &propChangeParam.ClassInstallHeader, sizeof(propChangeParam));
+        if (FALSE == bRet)
+        {
+            returnCode = GetLastError();
+            return returnCode;
+        }
+
+        bRet = SetupDiChangeState(m_hDevInfoSet, &m_pDevInfoList[index]);
+        if (bRet == TRUE) 
+            returnCode = 0;
+        else
+            returnCode = GetLastError();
+
+        return returnCode;
+    }
+
     /// <SUMMARY>
     /// 清理资源
     /// </SUMMARY>
-    void BaseCleanUp();
-};
-
-CSADevObject::CSADevObject()
-{
-	m_hDevInfoSet = NULL;
-	m_pDevInfoList = NULL;
-	m_devCount = 0;
-};
-
-CSADevObject::~CSADevObject()
-{
-	BaseCleanUp();
-}
-
-DWORD CSADevObject::Scan(IN const GUID* pGUID)
-{
-	BaseCleanUp();
-
-	DWORD returnCode = 0;
-	if (pGUID != NULL)
-	{
-        /*
-		if ((*pGUID) == GUID_DEVINTERFACE_USB_DEVICE ||
-			(*pGUID) == GUID_DEVINTERFACE_USB_HUB ||
-			(*pGUID) == GUID_DEVINTERFACE_USB_HOST_CONTROLLER)
-		{
-			m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
-		}
-		else
-		{
-			m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT);
-		}
-        */
-        m_hDevInfoSet = SetupDiGetClassDevsA(pGUID, NULL, NULL, DIGCF_PRESENT);
-	}
-	else
-	{
-		m_hDevInfoSet = SetupDiGetClassDevsA(NULL, NULL, NULL, DIGCF_PRESENT | DIGCF_ALLCLASSES);
-	}
-	if (m_hDevInfoSet == INVALID_HANDLE_VALUE)
-	{
-		m_hDevInfoSet = NULL;
-		returnCode = GetLastError();
-		return returnCode;
-	}
-
-	// 获取设备数目
-	SP_DEVINFO_DATA devInfoData;
-	devInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
-	for (int i = 0; SetupDiEnumDeviceInfo(m_hDevInfoSet, i, &devInfoData); i++)
-	{
-		m_devCount = i + 1;
-	}
-
-	if (m_devCount == 0)
-	{
-		returnCode = 0;
-		return returnCode;
-	}
-
-	// 获取设备信息
-	m_pDevInfoList = new SP_DEVINFO_DATA[m_devCount];
-
-	for (int i = 0; i < m_devCount; i++)
-	{
-		m_pDevInfoList[i].cbSize =  sizeof(SP_DEVINFO_DATA);
-		BOOL bRet = SetupDiEnumDeviceInfo(m_hDevInfoSet, i, &m_pDevInfoList[i]);
-		if (FALSE == bRet)
-		{
-			m_devCount = 0;
-			returnCode = GetLastError();
-			return returnCode;
-		}
-	}
-
-	return returnCode;
-}
-
-int CSADevObject::GetDevNum()
-{
-	return m_devCount;
-}
-
-DWORD CSADevObject::Enable(IN int index)
-{
-    return this->ChangeState(index, DICS_ENABLE);
-}
-
-DWORD CSADevObject::Disable(IN int index)
-{
-    return this->ChangeState(index, DICS_DISABLE);
-}
-
-DWORD CSADevObject::GetDevDesc(IN int index, OUT wstring& devDesc)
-{
-	return this->GetRegistryPropertyStr(index, SPDRP_DEVICEDESC, devDesc);
-}
-
-DWORD CSADevObject::GetHardwareId(IN int index, OUT wstring& devHardwareId)
-{
-	return this->GetRegistryPropertyStr(index, SPDRP_HARDWAREID, devHardwareId);
-}
-
-
-DWORD CSADevObject::GetFriendlyName(IN int index, OUT wstring& devFrindName)
-{
-    return this->GetRegistryPropertyStr(index, SPDRP_FRIENDLYNAME, devFrindName);
-}
-
-DWORD CSADevObject::GetLoctionInfo(IN int index, OUT wstring& devLocationInfo)
-{
-    return this->GetRegistryPropertyStr(index, SPDRP_LOCATION_INFORMATION, devLocationInfo);
-}
-
-DWORD CSADevObject::GetInstanceID(IN int index, OUT wstring& devInstanceID)
-{
-    DWORD bufferSize = 0;
-    PWSTR pBuffer = NULL;
-
-    DWORD returnCode = 0;
-    while (true)
+    void BaseCleanUp()
     {
-        BOOL bRet = SetupDiGetDeviceInstanceIdW(m_hDevInfoSet,
-            &m_pDevInfoList[index],
-            pBuffer,
-            bufferSize,
-            &bufferSize);
-        if (bRet == TRUE)
+        if (m_hDevInfoSet != NULL)
         {
-            break;
+            SetupDiDestroyDeviceInfoList(m_hDevInfoSet);
+            m_hDevInfoSet = NULL;
         }
 
-        if (bRet == FALSE)
+        if (m_pDevInfoList != NULL)
         {
-            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-            {
-                if (pBuffer)
-                {
-                    LocalFree(pBuffer);
-                    pBuffer = NULL;
-                }
-                pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
-            }
-            else
-            {
-                returnCode = GetLastError();
-                break;
-            }
+            delete [] m_pDevInfoList;
+            m_pDevInfoList = NULL;
         }
+
+        m_devCount = 0;
     }
 
-    if (returnCode == 0)
+    /// <SUMMARY>
+    /// 宽字符串转换为字符串
+    /// </SUMMARY>
+    /// <PARAM name = " strSrc" dir = "IN">
+    /// 源宽字符串
+    /// </PARAM>
+    /// <PARAM name = " strDest" dir = "OUT">
+    /// 存储转换后的字符串
+    /// </PARAM>
+    /// <RETURNS>
+    /// 成功返回0, 失败返回false
+    /// </RETURNS>
+    bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
     {
-        devInstanceID.clear();
-        devInstanceID.append(pBuffer);
-        WStringToUpper(devInstanceID);
+        int nLen = WideCharToMultiByte(CP_ACP, 0, strSrc.c_str(), -1, NULL, 0, NULL, NULL);  
+        if (nLen<= 0)
+            return false;
+
+        char* pszDst = new char[nLen];  
+
+        int iRet = WideCharToMultiByte(CP_ACP, 0, strSrc.c_str(), -1, pszDst, nLen, NULL, NULL); 
+
+        pszDst[nLen -1] = 0;  
+        strDest.clear();
+        strDest.assign(pszDst);
+
+        delete[] pszDst;
+
+        return true;
     }
 
-    if (pBuffer)
+    /// <SUMMARY>
+    /// 字符串转换为宽字符串
+    /// </SUMMARY>
+    /// <PARAM name = " strSrc" dir = "IN">
+    /// 源字符串
+    /// </PARAM>
+    /// <PARAM name = " strDest" dir = "OUT">
+    /// 存储转换后的宽字符串
+    /// </PARAM>
+    /// <RETURNS>
+    /// 成功返回0, 失败返回false
+    /// </RETURNS>
+    bool StringToWString(const string& strSrc, wstring& strDest)
     {
-        LocalFree(pBuffer);
-        pBuffer = NULL;
+        int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);  
+        if(nSize <= 0)
+            return false;  
+        wchar_t* pwszDst = new wchar_t[nSize+1];
+
+        int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
+
+        pwszDst[nSize] = 0; 
+
+        strDest.clear();
+        strDest.assign(pwszDst);
+
+        delete[] pwszDst;
+
+        return true;
     }
 
-    return returnCode;
-}
-
-DWORD CSADevObject::GetParentInstanceId(IN int index, OUT wstring& devInstanceID)
-{
-    DWORD dwRet = this->GetPropertyStr(index, &DEVPKEY_Device_Parent, devInstanceID);
-    WStringToUpper(devInstanceID);
-    return dwRet;
-}
-
-DWORD CSADevObject::GetChildrenNumber(IN int index, OUT int& number)
-{
-    vector<wstring> propertyList;
-    DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
-    number = propertyList.size();
-    return returnCode;
-}
-
-DWORD CSADevObject::GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList)
-{
-    vector<wstring> propertyList;
-    DWORD returnCode = this->GetPropertyStrList(index, &DEVPKEY_Device_Children, propertyList);
-    if (returnCode != 0)
-        return returnCode;
-
-    if ((unsigned int)listSize < propertyList.size())
+    /// <SUMMARY>
+    /// 字符串转换为大写模式
+    /// </SUMMARY>
+    /// <PARAM name = "wstr" dir = "INOUT">
+    /// 需要转换的字符串
+    /// </PARAM>
+    void WStringToUpper(INOUT wstring& wstr)
     {
-        returnCode = ERROR_INSUFFICIENT_BUFFER;
-        return  returnCode;
+        transform(wstr.begin(), wstr.end(), wstr.begin(),towupper);
     }
 
-    for (unsigned int i = 0; i < propertyList.size(); i++)
-    {
-        devInstanceIDList[i] = propertyList[i];
-        WStringToUpper(devInstanceIDList[i]);
-    }
-
-    return returnCode;
-}
-
-DWORD CSADevObject::GetDriverKeyName(IN int index, OUT wstring& driverKeyName)
-{
-    return this->GetRegistryPropertyStr(index, SPDRP_DRIVER, driverKeyName);
-}
-
-DWORD CSADevObject::GetClass(IN int index, OUT wstring& strClass)
-{
-    return this->GetRegistryPropertyStr(index, SPDRP_CLASS, strClass);
-}
-
-DWORD CSADevObject::GetClassGuid(IN int index, OUT wstring& strClassGuid)
-{
-    return this->GetRegistryPropertyStr(index, SPDRP_CLASSGUID, strClassGuid);
-}
-
-DWORD CSADevObject::GetBusNumber(IN int index, OUT unsigned int& busNumber)
-{
-    return this->GetRegistryPropertyUInt(index, SPDRP_BUSNUMBER, busNumber);
-}
-
-DWORD CSADevObject::GetManufacturer(IN int index, OUT wstring& manufacturer)
-{
-    return this->GetPropertyStr(index, &DEVPKEY_Device_Manufacturer, manufacturer);
-}
-
-DWORD CSADevObject::GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId)
-{
-    return this->GetPropertyStr(index, &DEVPKEY_Device_MatchingDeviceId, matchingDeviceId);
-}
-
-
-DWORD CSADevObject::GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty)
-{
-	DWORD bufferSize = 0;
-	LPWSTR pBuffer = NULL;
-	DWORD dataType;
-
-	DWORD returnCode = 0;
-	while (true)
-	{
-		BOOL bRet = SetupDiGetDeviceRegistryPropertyW(m_hDevInfoSet,
-			&m_pDevInfoList[index],
-			dwProperty,
-			&dataType,
-			(PBYTE)pBuffer,
-			bufferSize,
-			&bufferSize);
-		if (bRet == TRUE)
-		{
-			break;
-		}
-
-		if (bRet == FALSE)
-		{
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-			{
-				if (pBuffer)
-				{
-					LocalFree(pBuffer);
-					pBuffer = NULL;
-				}
-				pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize * 2);
-			}
-			else
-			{
-				returnCode = GetLastError();
-				break;
-			}
-		}
-	}
-
-	if (returnCode == 0)
-	{
-		strProperty.clear();
-		strProperty.append(pBuffer);
-	}
-	
-	if (pBuffer)
-	{
-		LocalFree(pBuffer);
-		pBuffer = NULL;
-	}
-
-	return returnCode;
-}
-
-DWORD CSADevObject::GetRegistryPropertyUInt(IN int index, IN DWORD dwProperty, OUT unsigned int& propertyValue)
-{
-	DWORD bufferSize = 0;
-	BYTE* pBuffer = NULL;
-	DWORD dataType;
-
-	DWORD returnCode = 0;
-	while (true)
-	{
-		BOOL bRet = SetupDiGetDeviceRegistryPropertyA(m_hDevInfoSet,
-			&m_pDevInfoList[index],
-			dwProperty,
-			&dataType,
-			pBuffer,
-			bufferSize,
-			&bufferSize);
-		if (bRet == TRUE)
-		{
-			break;
-		}
-
-		if (bRet == FALSE)
-		{
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-			{
-				if (pBuffer)
-				{
-					LocalFree(pBuffer);
-					pBuffer = NULL;
-				}
-				pBuffer = (BYTE*)LocalAlloc(LPTR, bufferSize);
-			}
-			else
-			{
-				returnCode = GetLastError();
-				break;
-			}
-		}
-	}
-
-	if (returnCode == 0)
-	{
-		propertyValue = (unsigned int)(*pBuffer);
-	}
-
-	if (pBuffer)
-	{
-		LocalFree(pBuffer);
-		pBuffer = NULL;
-	}
-
-	return returnCode;
-}
-
-DWORD CSADevObject::GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty)
-{
-	DWORD bufferSize = 0;
-	LPWSTR pBuffer = NULL;
-	DEVPROPTYPE dataType;
-	
-	DWORD returnCode = 0;
-	while (true)
-	{
-		BOOL bRet = SetupDiGetDevicePropertyW(m_hDevInfoSet,
-			&m_pDevInfoList[index],
-			propertyKey,
-			&dataType,
-			(PBYTE)pBuffer,
-			bufferSize,
-			&bufferSize,
-			0);
-		if (bRet == TRUE)
-		{
-			break;
-		}
-
-		if (bRet == FALSE)
-		{
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-			{
-				if (pBuffer)
-				{
-					LocalFree(pBuffer);
-					pBuffer = NULL;
-				}
-				pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize);
-			}
-			else
-			{
-				returnCode = GetLastError();
-				break;
-			}
-		}
-	}
-
-	if (returnCode == 0)
-	{
-		strProperty.append(pBuffer);
-	}
-
-	if (pBuffer)
-	{
-		LocalFree(pBuffer);
-		pBuffer = NULL;
-	}
-
-	return returnCode;
-}
-
-DWORD CSADevObject::GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList)
-{
-	DWORD bufferSize = 0;
-	LPWSTR pBuffer = NULL;
-	DEVPROPTYPE dataType;
-
-	DWORD returnCode = 0;
-	while (true)
-	{
-		BOOL bRet = SetupDiGetDevicePropertyW(m_hDevInfoSet,
-			&m_pDevInfoList[index],
-			propertyKey,
-			&dataType,
-			(PBYTE)pBuffer,
-			bufferSize,
-			&bufferSize,
-			0);
-		if (bRet == TRUE)
-		{
-			break;
-		}
-
-		if (bRet == FALSE)
-		{
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
-			{
-				if (pBuffer)
-				{
-					LocalFree(pBuffer);
-					pBuffer = NULL;
-				}
-				pBuffer = (LPWSTR)LocalAlloc(LPTR, bufferSize);
-			}
-			else
-			{
-				returnCode = GetLastError();
-				break;
-			}
-		}
-	}
-
-	if (returnCode == 0)
-	{
-		wstring strProperty;
-		WCHAR lastWChar = L'\0';
-		for (unsigned int i = 0; i < bufferSize/sizeof(WCHAR); i++)
-		{
-			if (lastWChar == L'\0')
-			{
-				if (pBuffer[i] != L'\0')
-				{
-					strProperty = pBuffer + i;
-					strPropertyList.push_back(strProperty);
-				}
-			}
-
-			lastWChar = pBuffer[i];
-		}
-		
-		
-	}
-
-	if (pBuffer)
-	{
-		LocalFree(pBuffer);
-		pBuffer = NULL;
-	}
-
-	return returnCode;
-}
-
-DWORD CSADevObject::ChangeState(IN int index, IN DWORD newSate)
-{
-	DWORD returnCode = 0;
-
-	SP_PROPCHANGE_PARAMS propChangeParam;
-	propChangeParam.ClassInstallHeader.cbSize = sizeof(SP_CLASSINSTALL_HEADER);
-	propChangeParam.ClassInstallHeader.InstallFunction = DIF_PROPERTYCHANGE;
-	propChangeParam.Scope = DICS_FLAG_GLOBAL;
-	propChangeParam.StateChange = newSate;
-	propChangeParam.HwProfile = 0;
-	
-	BOOL bRet = SetupDiSetClassInstallParamsA(m_hDevInfoSet, &m_pDevInfoList[index], 
-		&propChangeParam.ClassInstallHeader, sizeof(propChangeParam));
-	if (FALSE == bRet)
-	{
-		returnCode = GetLastError();
-		return returnCode;
-	}
-
-	bRet = SetupDiChangeState(m_hDevInfoSet, &m_pDevInfoList[index]);
-	if (bRet == TRUE) 
-		returnCode = 0;
-	else
-		returnCode = GetLastError();
-
-	return returnCode;
-}
-
-
-
-void CSADevObject::BaseCleanUp()
-{
-    if (m_hDevInfoSet != NULL)
-    {
-        SetupDiDestroyDeviceInfoList(m_hDevInfoSet);
-        m_hDevInfoSet = NULL;
-    }
-
-    if (m_pDevInfoList != NULL)
-    {
-        delete [] m_pDevInfoList;
-        m_pDevInfoList = NULL;
-    }
-
-    m_devCount = 0;
-}
+private:
+    HDEVINFO m_hDevInfoSet; ///<设备信息集
+    int m_devCount; ///<设备数目
+    SP_DEVINFO_DATA* m_pDevInfoList; /// 设备信息列表 
+};
 
 LSetupDev::LSetupDev()
 {
@@ -1014,4 +960,15 @@ LSetupSCSIController::~LSetupSCSIController()
 
 }
 
+
+LSetupCamera::LSetupCamera()
+    : LSetupDev()
+{
+    m_pSADevObject->Scan(&GUID_DEVCLASS_IMAGE);
+}
+
+LSetupCamera::~LSetupCamera()
+{
+
+}
 
