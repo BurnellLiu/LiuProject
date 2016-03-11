@@ -24,7 +24,7 @@ class CSADevObject;
 class LSetupDev
 {
 public:
-    ~LSetupDev();
+    virtual ~LSetupDev();
 
     /// <SUMMARY>
     /// 获取设备数目

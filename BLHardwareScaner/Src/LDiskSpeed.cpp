@@ -283,35 +283,7 @@ SAFE_EXIT:
     }
 };
 
-LDiskSequenceTest::LDiskSequenceTest()
-{
-    m_pDiskSequenceTest = 0;
-    m_pDiskSequenceTest = new CDiskSequenceTest();
-}
 
-LDiskSequenceTest::~LDiskSequenceTest()
-{
-    if (0 != m_pDiskSequenceTest)
-    {
-        delete m_pDiskSequenceTest;
-        m_pDiskSequenceTest = 0;
-    }
-}
-
-bool LDiskSequenceTest::Start(IN const wstring& filePath)
-{
-    return m_pDiskSequenceTest->Start(filePath);
-}
-
-LDiskSpeedTestState LDiskSequenceTest::GetState()
-{
-    return m_pDiskSequenceTest->GetState();
-}
-
-void LDiskSequenceTest::Stop()
-{
-    m_pDiskSequenceTest->Stop();
-}
 
 class CDisk4KRandomTest
 {
@@ -705,6 +677,36 @@ SAFE_EXIT:
 
     }
 };
+
+LDiskSequenceTest::LDiskSequenceTest()
+{
+    m_pDiskSequenceTest = 0;
+    m_pDiskSequenceTest = new CDiskSequenceTest();
+}
+
+LDiskSequenceTest::~LDiskSequenceTest()
+{
+    if (0 != m_pDiskSequenceTest)
+    {
+        delete m_pDiskSequenceTest;
+        m_pDiskSequenceTest = 0;
+    }
+}
+
+bool LDiskSequenceTest::Start(IN const wstring& filePath)
+{
+    return m_pDiskSequenceTest->Start(filePath);
+}
+
+LDiskSpeedTestState LDiskSequenceTest::GetState()
+{
+    return m_pDiskSequenceTest->GetState();
+}
+
+void LDiskSequenceTest::Stop()
+{
+    m_pDiskSequenceTest->Stop();
+}
 
 LDisk4KRandomTest::LDisk4KRandomTest()
 {
