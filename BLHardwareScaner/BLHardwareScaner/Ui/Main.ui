@@ -36,7 +36,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,4">
         <property name="spacing">
          <number>5</number>
         </property>
@@ -46,16 +46,10 @@
         <item>
          <widget class="QToolButton" name="toolButtonHardware">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>90</width>
-            <height>70</height>
-           </size>
           </property>
           <property name="font">
            <font>
@@ -80,16 +74,10 @@
         <item>
          <widget class="QToolButton" name="toolButtonTempManagement">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>90</width>
-            <height>70</height>
-           </size>
           </property>
           <property name="font">
            <font>
@@ -108,16 +96,10 @@
         <item>
          <widget class="QToolButton" name="toolButtonTestItem">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>90</width>
-            <height>70</height>
-           </size>
           </property>
           <property name="font">
            <font>
