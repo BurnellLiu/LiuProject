@@ -1,7 +1,7 @@
 
 
-#ifndef _HARDWAREINFOR_H_
-#define _HARDWAREINFOR_H_
+#ifndef _LHARDWAREINFOR_H_
+#define _LHARDWAREINFOR_H_
 
 #include <string>
 using std::string;
@@ -208,121 +208,58 @@ struct CDRomDriveInforArray
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
-class HardwareInfor
+class LHardwareInfor
 {
 public:
-    /// @brief 获取实例对象
-    /// @return 实例对象
-    static HardwareInfor& GetInstance();
+    /// @brief 构造函数
+    LHardwareInfor();
+
+    /// @brief 析构函数
+    ~LHardwareInfor();
 
     /// @brief 获取计算机系统信息
     /// @return 计算机系统信息
-    const ComputerSystemInfor& GetComputerSystemInfor(); 
+    static const ComputerSystemInfor& GetComputerSystemInfor(); 
 
     /// @brief 获取操作系统信息
     /// @return 操作系统信息
-    const OperatingSystemInfor& GetOperatingSystemInfor();
+    static const OperatingSystemInfor& GetOperatingSystemInfor();
 
     /// @brief 获取主板信息
     /// @return 主板信息
-    const MotherBoardInfor& GetMotherBoardInfor();
+    static const MotherBoardInfor& GetMotherBoardInfor();
 
     /// @brief 获取处理器信息
     /// @return 处理器信息
-    const ProcessorInfor& GetProcessorInfor();
+    static const ProcessorInfor& GetProcessorInfor();
 
     /// @brief 获取显卡信息
     /// @return 显卡信息
-    const VideoCardInforArray& GetVideoCardInfor();
+    static const VideoCardInforArray& GetVideoCardInfor();
 
     /// @brief 获取物理内存信息
     /// @return 物理内存信息
-    const PhysicalMemoryInforArray& GetPhysicalMemoryInfor();
+    static const PhysicalMemoryInforArray& GetPhysicalMemoryInfor();
 
     /// @brief 获取磁盘信息
     /// @return 磁盘信息
-    const DiskInforArray& GetDiskInfor();
+    static const DiskInforArray& GetDiskInfor();
 
     /// @brief 获取显示器信息
     /// @return 显示器信息
-    const MonitorInforArray& GetMonitorInfor();
+    static const MonitorInforArray& GetMonitorInfor();
 
     /// @brief 获取电池静态信息
     /// @return 电池静态信息
-    const BatteryStaticInfor& GetBatteryStaticInfor();
+    static const BatteryStaticInfor& GetBatteryStaticInfor();
 
     /// @brief 获取网卡信息
     /// @return 网卡信息
-    const NetworkCardInforArray& GetNetworkCardInfor();
+    static const NetworkCardInforArray& GetNetworkCardInfor();
 
     /// @brief 获取光驱信息
     /// @return 光驱信息
-    const CDRomDriveInforArray& GetCDRomDriveInfor();
-
-    /// @brief 析构函数
-    ~HardwareInfor();
-
-private:
-    /// @brief 扫描计算机系统信息
-    /// @param[out] computerSystemInfor 存储计算机系统信息
-    void ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor);
-
-    /// @brief 扫描操作系统信息
-    /// @param[out] operatingSystemInfor 操作系统信息
-    void ScanOperatingSystemInfor(OUT OperatingSystemInfor& operatingSystemInfor);
-
-    /// @brief 扫描主板信息
-    /// @param[out] motherBoardInfor 主板信息
-    void ScanMotherBoardInfor(OUT MotherBoardInfor& baseBoardInfor);
-
-    /// @brief 扫描处理器信息
-    /// @param[out] processorInfor 存储处理器信息
-    void ScanProcessorInfor(OUT ProcessorInfor& processorInfor);
-
-    /// @brief 扫描显卡信息
-    /// @param[out] videoCardInfor 存储显卡信息
-    void ScanVideoCardInfor(OUT VideoCardInforArray& displayCardInfor);
-
-    /// @brief 扫描显卡信息
-    /// @param[out] physicalMemoryInfor 存储物理内存信息
-    void ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physicalMemoryInfor);
-
-    /// @brief 扫描磁盘信息
-    /// @param[out] diskInfor 存储磁盘信息
-    void ScanDiskInfor(OUT DiskInforArray& diskInfor);
-
-    /// @brief 扫描显示器信息
-    /// @param[out] monitorInfor 存储显示器信息
-    void ScanMonitorInfor(OUT MonitorInforArray& monitorInfor);
-
-    /// @brief 扫描电池静态信息
-    /// @param[out] batteryStaticInfor 存储电池静态信息
-    void ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStaticInfor);
-
-    /// @brief 扫描网卡信息
-    /// @param[out] networkCardInfor 存储网卡信息
-    void ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor);
-
-    /// @brief 扫描光驱信息
-    /// @param[out] cdRomDrive 存储光驱信息
-    void ScanCDRomDriveInfor(OUT CDRomDriveInforArray& cdRomDriveInfor);
-
-    HardwareInfor(); // 禁止构造
-    HardwareInfor(const HardwareInfor&); // 禁止默认拷贝构造函数
-    HardwareInfor& operator = (const HardwareInfor&); // 禁止赋值操作符
-
-private:
-    ComputerSystemInfor m_computerSystemInfor; ///< 计算机系统信息
-    OperatingSystemInfor m_operatingSystemInfor; ///< 操作系统信息
-    MotherBoardInfor m_motherBoardInfor; ///< 主板信息
-    ProcessorInfor m_processorInfor; ///< 处理器信息
-    VideoCardInforArray m_videoCardInfor; ///< 显卡信息
-    PhysicalMemoryInforArray m_physicalMemoryInfor; ///< 物理内存信息
-    DiskInforArray m_diskInfor; ///< 磁盘信息
-    MonitorInforArray m_monitorInfor; ////< 显示器信息
-    BatteryStaticInfor m_batteryStaticInfor; ///< 电池静态信息
-    NetworkCardInforArray m_networkCardInfor; ///< 网卡信息
-    CDRomDriveInforArray m_cdRomDriveInfor; ///< 光驱信息
+    static const CDRomDriveInforArray& GetCDRomDriveInfor();
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTime>
 
-#include "..\\Src\\HardwareInfor.h"
+#include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\TemperatureProbe.h"
 #include "..\\Src\\PerformanceCounter.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -251,7 +251,7 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     ui.progressBarDiskTemp->setValue(0);
 
     m_bExternalVideoCardExist = false;
-    const VideoCardInforArray& videoCardInfor = HardwareInfor::GetInstance().GetVideoCardInfor();
+    const VideoCardInforArray& videoCardInfor = LHardwareInfor::GetVideoCardInfor();
     for (unsigned int i = 0; i < videoCardInfor.Count; i++)
     {
         if (videoCardInfor.Type[i] == VIDEO_CARD_EXTERNAL)

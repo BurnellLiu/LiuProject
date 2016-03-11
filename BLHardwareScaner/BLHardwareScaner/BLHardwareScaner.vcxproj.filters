@@ -39,9 +39,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\HardwareInfor.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -112,6 +109,9 @@
     <ClCompile Include="..\Src\LSensorObject.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\LHardwareInfor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -146,9 +146,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Src\HardwareInfor.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -201,6 +198,9 @@
       <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\LSensorObject.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\LHardwareInfor.h">
       <Filter>Src</Filter>
     </ClInclude>
   </ItemGroup>

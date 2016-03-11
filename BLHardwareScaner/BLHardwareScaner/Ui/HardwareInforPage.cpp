@@ -5,7 +5,7 @@
 #include <QtCore/QFile>
 
 #include "..\\Src\\LSensorObject.h"
-#include "..\\Src\\HardwareInfor.h"
+#include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
 
 HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
@@ -88,7 +88,7 @@ void HardwareInforPage::InitHardwareInfor()
     HWItemInfor* pDiskItem = new DiskItemInfor();
     m_hwItemVec.push_back(pDiskItem);
 
-    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+    const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
     if (networkCardInforArray.Count >= 1)
     {
         ui.listWidgetHWItem->addItem(tr("Network Card"));
@@ -100,8 +100,8 @@ void HardwareInforPage::InitHardwareInfor()
     HWItemInfor* pMonitorItem = new MonitorItemInfor();
     m_hwItemVec.push_back(pMonitorItem);
 
-    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
-    const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
+    const BatteryStaticInfor& batteryStaticInfor = LHardwareInfor::GetBatteryStaticInfor();
+    const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
     if (batteryStaticInfor.Exist || 
         computerSystemInfor.Type == COMPUTER_TYPE_NOTE_BOOK ||
         computerSystemInfor.Type == COMPUTER_TYPE_TABLET)
@@ -220,7 +220,7 @@ void ComputerItemInfor::LoadHWInfor()
 
      // 获取计算机系统信息
     
-    const ComputerSystemInfor& computerSystemInfor = HardwareInfor::GetInstance().GetComputerSystemInfor();
+    const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
     QString strManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
     QString strPCSystemInfor = strManufacturer;
     strPCSystemInfor += QString::fromStdWString(L"  ");
@@ -247,7 +247,7 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Computer Model"), strPCSystemInfor);
 
     // 填充操作系统信息
-    const OperatingSystemInfor& operatingSystemInfor = HardwareInfor::GetInstance().GetOperatingSystemInfor();
+    const OperatingSystemInfor& operatingSystemInfor = LHardwareInfor::GetOperatingSystemInfor();
     QString systemCaption = QString::fromStdWString(operatingSystemInfor.Caption);
     systemCaption = systemCaption.trimmed();
     QString systemArchitecture = QString::fromStdWString(operatingSystemInfor.Architecture);
@@ -263,7 +263,7 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddBlankLine();
 
     // 填写主板信息
-    const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
+    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
     QString motherBoardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
     QString motherBoardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
     QString motherBoardDesc = motherBoardManufacturer;
@@ -272,14 +272,14 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Mother Board"), motherBoardDesc);
 
     // 填写处理器信息
-    const ProcessorInfor& processorInfor = HardwareInfor::GetInstance().GetProcessorInfor();
+    const ProcessorInfor& processorInfor = LHardwareInfor::GetProcessorInfor();
     QString processorName = QString::fromStdWString(processorInfor.Name);
     processorName = processorName.trimmed();
     processorName += QString::fromStdWString(L"(Cores: %1 Threads: %2)").arg(processorInfor.CoresNumber).arg(processorInfor.LogicalProcessorNumber);
     this->ContentAddItem(QObject::tr("Processor"), processorName);
 
     // 填写显卡信息
-    const VideoCardInforArray& videoCardInfor = HardwareInfor::GetInstance().GetVideoCardInfor();
+    const VideoCardInforArray& videoCardInfor = LHardwareInfor::GetVideoCardInfor();
     for (int i = 0; i < videoCardInfor.Count; i++)
     {
         QString displayCardName = QString::fromStdWString(videoCardInfor.Description[i]);
@@ -295,7 +295,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
 
     // 填写内存信息
-    const PhysicalMemoryInforArray& physicalMemoryInfor = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
+    const PhysicalMemoryInforArray& physicalMemoryInfor = LHardwareInfor::GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInfor.Count; i++)
     {
         QString memoryInfor;
@@ -305,7 +305,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
     
     // 填写磁盘信息
-    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    const DiskInforArray& diskInforArray = LHardwareInfor::GetDiskInfor();
     
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
     {
@@ -322,7 +322,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
 
     // 获取网卡信息
-    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+    const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
     for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
     {
         QString name = QString::fromStdWString(networkCardInforArray.Name[i]);
@@ -330,7 +330,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
 
     // 填写显示器信息
-    const MonitorInforArray& monitorInforArray = HardwareInfor::GetInstance().GetMonitorInfor();
+    const MonitorInforArray& monitorInforArray = LHardwareInfor::GetMonitorInfor();
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
         QString monitorInfor;
@@ -339,7 +339,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
 
     // 填写电池信息
-    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
+    const BatteryStaticInfor& batteryStaticInfor = LHardwareInfor::GetBatteryStaticInfor();
     if (batteryStaticInfor.Exist)
     {
         QString batteryManufacturer = QString::fromStdWString(batteryStaticInfor.Manufacturer);
@@ -363,7 +363,7 @@ void ComputerItemInfor::LoadHWInfor()
     }
 
     // 填写光驱信息
-    const CDRomDriveInforArray& cdRomDriveInforArray = HardwareInfor::GetInstance().GetCDRomDriveInfor();
+    const CDRomDriveInforArray& cdRomDriveInforArray = LHardwareInfor::GetCDRomDriveInfor();
     for (unsigned int i = 0; i < cdRomDriveInforArray.Count; i++)
     {
         QString cdRomName = QString::fromStdWString(cdRomDriveInforArray.Name[i]);
@@ -378,7 +378,7 @@ void ProcessorItemInfor::LoadHWInfor()
     this->SetTitle(QObject::tr("Processor"));
     PrintLogW(L"Processor Information:");
 
-    const ProcessorInfor& processprInfor = HardwareInfor::GetInstance().GetProcessorInfor();
+    const ProcessorInfor& processprInfor = LHardwareInfor::GetProcessorInfor();
 
     QString name = QString::fromStdWString(processprInfor.Name);
     this->ContentAddItem(QObject::tr("Name"), name);
@@ -411,7 +411,7 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->SetTitle(QObject::tr("Mother Board"));
     PrintLogW(L"Mother Board Information:");
 
-    const MotherBoardInfor& motherBoardInfor = HardwareInfor::GetInstance().GetMotherBoardInfor();
+    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
     QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
     this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
     PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
@@ -454,7 +454,7 @@ void MemoryItemInfor::LoadHWInfor()
     PrintLogW(L"Memory Information");
 
     // 填写内存信息
-    const PhysicalMemoryInforArray& physicalMemoryInforArray = HardwareInfor::GetInstance().GetPhysicalMemoryInfor();
+    const PhysicalMemoryInforArray& physicalMemoryInforArray = LHardwareInfor::GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInforArray.Count; i++)
     {
         PrintLogW(L"\tMemory : %u", i);
@@ -492,7 +492,7 @@ void DiskItemInfor::LoadHWInfor()
 
     this->SetTitle("Disk");
     
-    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    const DiskInforArray& diskInforArray = LHardwareInfor::GetDiskInfor();
 
     PrintLogW(L"Disk Information:");
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
@@ -581,7 +581,7 @@ void VideoCardItemInfor::LoadHWInfor()
     PrintLogW(L"Video Card Information:");
 
     // 填写显卡信息
-    const VideoCardInforArray& videoCardInforArray = HardwareInfor::GetInstance().GetVideoCardInfor();
+    const VideoCardInforArray& videoCardInforArray = LHardwareInfor::GetVideoCardInfor();
     for (int i = 0; i < videoCardInforArray.Count; i++)
     {
         PrintLogW(L"\tVideo Card Index: %d", i);
@@ -622,7 +622,7 @@ void MonitorItemInfor::LoadHWInfor()
 
     PrintLogW(L"Monitor Information:");
 
-    const MonitorInforArray& monitorInforArray = HardwareInfor::GetInstance().GetMonitorInfor();
+    const MonitorInforArray& monitorInforArray = LHardwareInfor::GetMonitorInfor();
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
         PrintLogW(L"\tMonitor Index: %u", i);
@@ -647,7 +647,7 @@ void BatteryItemInfor::LoadHWInfor()
     this->SetTitle("Battery");
     PrintLogW(L"Battery Information:");
 
-    const BatteryStaticInfor& batteryStaticInfor = HardwareInfor::GetInstance().GetBatteryStaticInfor();
+    const BatteryStaticInfor& batteryStaticInfor = LHardwareInfor::GetBatteryStaticInfor();
 
     if (batteryStaticInfor.Exist)
     {
@@ -694,7 +694,7 @@ void NetworkCardItemInfor::LoadHWInfor()
     this->SetTitle(QObject::tr("Network Card"));
     PrintLogW(L"Network Card Information:");
 
-    const NetworkCardInforArray& networkCardInforArray = HardwareInfor::GetInstance().GetNetworkCardInfor();
+    const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
 
     for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
     {

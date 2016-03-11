@@ -82,7 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
-    <ClCompile Include="..\Src\HardwareInfor.cpp" />
+    <ClCompile Include="..\Src\LHardwareInfor.cpp" />
     <ClCompile Include="..\Src\LDiskSpeed.cpp" />
     <ClCompile Include="..\Src\Log\LLog.cpp">
       <TreatWChar_tAsBuiltInType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWChar_tAsBuiltInType>
@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\DiskController\LDiskController.h" />
-    <ClInclude Include="..\Src\HardwareInfor.h" />
+    <ClInclude Include="..\Src\LHardwareInfor.h" />
     <ClInclude Include="..\Src\LDiskSpeed.h" />
     <ClInclude Include="..\Src\Log\LLog.h" />
     <ClInclude Include="..\Src\LSensorObject.h" />

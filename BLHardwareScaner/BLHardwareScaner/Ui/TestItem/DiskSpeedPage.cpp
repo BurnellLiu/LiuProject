@@ -4,7 +4,7 @@
 #include <QtCore/QFile>
 
 #include "..\\Src\\Log\\LLog.h"
-#include "..\\Src\\HardwareInfor.h"
+#include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\DiskController\\LDiskController.h"
 
 #define DISK_TEST_START QString::fromStdWString(L"Test Start")
@@ -214,7 +214,7 @@ void DiskSpeedPage::UpdateDiskInformation()
     m_diskLogicalNameList.clear();
     QVector<QString> diskModelNameList;
 
-    const DiskInforArray& diskInforArray = HardwareInfor::GetInstance().GetDiskInfor();
+    const DiskInforArray& diskInforArray = LHardwareInfor::GetDiskInfor();
     for (unsigned int i = 0; i < diskInforArray.Count; i++)
     {
         DISK_TYPE diskType = diskInforArray.DiskType[i];
