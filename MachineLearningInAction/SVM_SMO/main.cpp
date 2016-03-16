@@ -45,7 +45,7 @@ int main()
     
 
     LSVMProblem problem(sampleMatrix, classVector);
-    LSVMRBF rbf;
+    LSVMKRBF rbf;
     rbf.SetGamma(1.9f);
     svm.TrainModel(problem, &rbf);
 
