@@ -15,7 +15,7 @@ int main()
 {
     
     vector<string> lineList;
-    LFileReader fileReader(".\\testSet.txt");
+    LFileReader fileReader(".\\testSetRBF2.txt");
     fileReader.Open();
     while (!fileReader.AtEnd())
     {
@@ -46,7 +46,7 @@ int main()
 
     LSVMProblem problem(sampleMatrix, classVector);
     LSVMKRBF rbf;
-    rbf.SetGamma(1.9f);
+    rbf.SetGamma(0.9f);
     svm.TrainModel(problem, &rbf);
 
     printf("Support Vector Number: %u\n", svm.GetSupportVectorNumber());

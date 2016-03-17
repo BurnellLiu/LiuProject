@@ -117,6 +117,11 @@ public:
 
 private:
     CSVM* m_pSVM; ///< SVM实现对象
+
+private:
+    // 禁止拷贝构造函数和赋值操作符
+    LSVM(const LSVM&);
+    LSVM& operator = (const LSVM&);
 };
 
 #endif
