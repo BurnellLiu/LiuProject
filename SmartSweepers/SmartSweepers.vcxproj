@@ -11,22 +11,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LiuLibrary\LMachineLearning\LNeuralNetwork.cpp" />
-    <ClCompile Include="..\LiuLibrary\LMachineLearning\LOptimization.cpp" />
-    <ClCompile Include="..\LiuLibrary\Windows\LWindowsGDI\LShape.cpp" />
-    <ClCompile Include="..\LiuLibrary\Windows\LWindowsGDI\LWindowGDI.cpp" />
     <ClCompile Include="LMine.cpp" />
+    <ClCompile Include="LNeuralNetwork.cpp" />
+    <ClCompile Include="LOptimization.cpp" />
+    <ClCompile Include="LShape.cpp" />
+    <ClCompile Include="LWindowGDI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="LSweeper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LiuLibrary\LMachineLearning\LNeuralNetwork.h" />
-    <ClInclude Include="..\LiuLibrary\LMachineLearning\LOptimization.h" />
-    <ClInclude Include="..\LiuLibrary\Windows\LMacroDefine.h" />
-    <ClInclude Include="..\LiuLibrary\Windows\LWindowsGDI\LShape.h" />
-    <ClInclude Include="..\LiuLibrary\Windows\LWindowsGDI\LVector2D.h" />
-    <ClInclude Include="..\LiuLibrary\Windows\LWindowsGDI\LWindowGDI.h" />
+    <ClInclude Include="LArray.h" />
+    <ClInclude Include="LLib.h" />
+    <ClInclude Include="LMacroDefine.h" />
     <ClInclude Include="LMine.h" />
+    <ClInclude Include="LNeuralNetwork.h" />
+    <ClInclude Include="LOptimization.h" />
+    <ClInclude Include="LShape.h" />
+    <ClInclude Include="LString.h" />
+    <ClInclude Include="LVector2D.h" />
+    <ClInclude Include="LWindowGDI.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="LSweeper.h" />
   </ItemGroup>
@@ -39,7 +42,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -63,7 +66,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\ProgramDemo\MyLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,7 +78,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>E:\MyExercise\LiuLibrary\Windows;E:\MyExercise\LiuLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

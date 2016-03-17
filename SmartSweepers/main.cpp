@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#include "LLib.h"
+
 
 LGameWindow::LGameWindow()
 {
@@ -42,7 +44,7 @@ void LGameWindow::InitGame()
 	m_hGreenPen = CreatePen(PS_SOLID, 1, RGB(0, 150, 0));
 	m_hOldPen	= NULL;
 
-	SRandTime();
+	LRandom::SRandTime();
 
 	m_sweeperNum = 30;
 	m_sweeperList = new LSweeper[m_sweeperNum];
@@ -67,11 +69,11 @@ void LGameWindow::InitGame()
 
 	LNNSplitPointList splitPointList;
 	m_sweeperList[0].GetNNSplitPointList(splitPointList);
-	m_geneticOptimize.SetSplitPoint(splitPointList.Length, splitPointList.Data);
+	m_geneticOptimize.SetCrossOverSplitPointList(splitPointList);
 
 	int geneListLength = m_sweeperList[0].GetNNWeightNum();
-	LGOGeneDomainList domainList;
-	domainList.Create(geneListLength);
+	LOGenomeDomain domainList;
+	domainList.Reset(geneListLength);
 
 	for (int i = 0; i < geneListLength; i++)
 	{
@@ -83,13 +85,13 @@ void LGameWindow::InitGame()
 
 	// 更新所有扫雷机的神经网络权重
 	m_weightListLen = geneListLength;
-	m_weightList.Create(m_weightListLen);
+	m_weightList.Reset(m_weightListLen);
 	for (int i = 0; i < m_sweeperNum; i++)
 	{
-		LGOGenome& genome = m_geneticOptimize.GetGenome(i);
-		for (int j = 0; j < genome.PGeneList->Length; j++)
+		LOSolution& genome = m_geneticOptimize.GetSolution(i);
+		for (int j = 0; j < genome.PGenome->Length; j++)
 		{
-			m_weightList.Data[j] = (float)genome.PGeneList->Data[j]/1000.0f;
+			m_weightList.Data[j] = (float)genome.PGenome->Data[j]/1000.0f;
 		}
 
 		m_sweeperList[i].SetNNWeight(m_weightList);
@@ -117,7 +119,7 @@ void LGameWindow::RunGame()
 		int totalScore = 0;
 		for (int i = 0; i < m_sweeperNum; i++)
 		{
-			LGOGenome& genome = m_geneticOptimize.GetGenome(i);
+			LOSolution& genome = m_geneticOptimize.GetSolution(i);
 			int score = m_sweeperList[i].GetScore();
 			genome.Cost -= score;
 			if (score > bestScore)
@@ -135,10 +137,10 @@ void LGameWindow::RunGame()
 		// 使用新一代的权重来更新神经网络
 		for (int i = 0; i < m_sweeperNum; i++)
 		{
-			LGOGenome& genome = m_geneticOptimize.GetGenome(i);
-			for (int j = 0; j < genome.PGeneList->Length; j++)
+			LOSolution& genome = m_geneticOptimize.GetSolution(i);
+			for (int j = 0; j < genome.PGenome->Length; j++)
 			{
-				m_weightList.Data[j] = (float)genome.PGeneList->Data[j]/1000.0f;
+				m_weightList.Data[j] = (float)genome.PGenome->Data[j]/1000.0f;
 			}
 
 			m_sweeperList[i].SetNNWeight(m_weightList);
@@ -149,7 +151,7 @@ void LGameWindow::RunGame()
 
 void LGameWindow::PaintGame()
 {
-	m_backDC.Clear();
+	m_backDC.Clear(255, 255, 255);
 
 	HDC hBackDC = m_backDC.GetBackDC();
 
@@ -159,18 +161,18 @@ void LGameWindow::PaintGame()
 		m_hOldPen = (HPEN)SelectObject(hBackDC, m_hRedPen);
 		for (int i = 0; i < m_sweeperNum && i < 6; i++)
 		{
-			m_backDC.DrawObject((IDrawTo*)&m_sweeperList[i]);
+			m_backDC.Draw((IPaint*)&m_sweeperList[i]);
 		}
 
 		SelectObject(hBackDC, m_hBluePen);
 		for (int i = 6; i < m_sweeperNum; i++)
 		{
-			m_backDC.DrawObject((IDrawTo*)&m_sweeperList[i]);
+			m_backDC.Draw((IPaint*)&m_sweeperList[i]);
 		}
 
 		// 绘制地雷集合
 		SelectObject(hBackDC, m_hGreenPen);
-		m_backDC.DrawObject((IDrawTo*)&m_mineSet);
+		m_backDC.Draw((IPaint*)&m_mineSet);
 		SelectObject(hBackDC, m_hOldPen);
 	}
 	else
@@ -249,7 +251,7 @@ void LGameWindow::PaintLineChart(HDC hdc)
 
 void LGameWindow::CleanUp()
 {
-	SAFE_DELETE_ARR(m_sweeperList);
+	LDestroy::SafeDeleteArray(m_sweeperList);
 	SAFE_DELETE_GDI(m_hRedPen);
 	SAFE_DELETE_GDI(m_hBluePen);
 	SAFE_DELETE_GDI(m_hGreenPen);

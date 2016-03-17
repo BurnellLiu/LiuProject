@@ -1,6 +1,8 @@
 
 #include "LMine.h"
 
+#include "LLib.h"
+
 const LPoint g_mine[4] = 
 {
 	LPoint(-1, -1),
@@ -18,7 +20,7 @@ LMineSet::LMineSet()
 
 LMineSet::~LMineSet()
 {
-	SAFE_DELETE_ARR(m_minePosList);
+	LDestroy::SafeDeleteArray(m_minePosList);
 }
 
 void LMineSet::SetArea(IN int width, IN int height)
@@ -44,8 +46,8 @@ void LMineSet::Init()
 	m_minePosList = new LPoint[m_mineNum];
 	for (int i = 0; i < m_mineNum; i++)
 	{
-		float x = (float)RandInt(0, m_areaWidth);
-		float y = (float)RandInt(0, m_areaHeight);
+		float x = (float)LRandom::RandInt(0, m_areaWidth);
+		float y = (float)LRandom::RandInt(0, m_areaHeight);
 
 		m_minePosList[i].X = x;
 		m_minePosList[i].Y = y;
@@ -57,7 +59,7 @@ LPoint* LMineSet::GetPosList()
 	return m_minePosList;
 }
 
-void LMineSet::DrawTo(IN HDC hdc)
+void LMineSet::Paint(IN HDC hdc)
 {
 	for (int i = 0; i < m_mineNum; i++)
 	{

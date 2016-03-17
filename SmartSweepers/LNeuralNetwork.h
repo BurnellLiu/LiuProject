@@ -3,7 +3,7 @@
 #ifndef _LNEURALNETWORK_H_
 #define _LNEURALNETWORK_H_
 
-#include <LDataStruct/LArray.h>
+#include "LArray.h"
 
 #ifndef IN
 #define IN

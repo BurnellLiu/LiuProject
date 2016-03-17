@@ -2,11 +2,11 @@
 #ifndef _LMINE_H_
 #define _LMINE_H_
 
-#include "LWindowsGDI/LShape.h"
-#include "LWindowsGDI/LWindowGDI.h"
+#include "LShape.h"
+#include "LWindowGDI.h"
 
 /// @brief 地雷集合类
-class LMineSet : public IDrawTo
+class LMineSet : public IPaint
 {
 public:
 	LMineSet();
@@ -30,7 +30,7 @@ public:
 
 	/// @brief 绘制
 	/// @param[in] hdc 在指定的hdc中绘制图形
-	virtual void DrawTo(IN HDC hdc);
+	virtual void Paint(IN HDC hdc);
 
 private:
 	int m_areaWidth; ///< 地雷区域宽度

@@ -36,6 +36,18 @@
     <ClCompile Include="..\LiuLibrary\Windows\LWindowsGDI\LWindowGDI.cpp">
       <Filter>External Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LNeuralNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LOptimization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LWindowGDI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -64,6 +76,33 @@
     </ClInclude>
     <ClInclude Include="..\LiuLibrary\Windows\LWindowsGDI\LWindowGDI.h">
       <Filter>External Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LNeuralNetwork.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LOptimization.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LWindowGDI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LShape.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LString.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LVector2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LMacroDefine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LLib.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

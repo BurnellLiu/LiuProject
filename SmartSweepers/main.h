@@ -5,8 +5,8 @@
 #include "LSweeper.h"
 #include "LMine.h"
 
-#include "LMachineLearning/LOptimization.h"
-#include "LWindowsGDI/LWindowGDI.h"
+#include "LOptimization.h"
+#include "LWindowGDI.h"
 
 #include<vector>
 using std::vector;
@@ -53,7 +53,7 @@ private:
 	LSweeper* m_sweeperList; ///< 扫雷机列表
 	int m_sweeperNum; ///< 扫雷机数量
 
-	LGeneticOptimize m_geneticOptimize; ///< 遗传算法优化
+	LOpenedGenetic m_geneticOptimize; ///< 遗传算法优化
 
 	int m_generationCount; ///< 记录经历的遗传的代数
 	int m_frameCount; ///< 记录刷新的帧数

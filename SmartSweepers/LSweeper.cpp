@@ -1,5 +1,7 @@
 #include "LSweeper.h"
 
+#include "LLib.h"
+
 LPoint LSweeper::s_sweeperVBLocal[16] =
 {
 	// 左轮
@@ -47,16 +49,16 @@ void LSweeper::SetLiveArea(IN float width, IN float height)
 
 void LSweeper::Init()
 {
-	m_sweeperShape.PosX = (float)RandInt(0, (int)m_liveWidth);
-	m_sweeperShape.PosY = (float)RandInt(0, (int)m_liveHeight);
+	m_sweeperShape.PosX = (float)LRandom::RandInt(0, (int)m_liveWidth);
+	m_sweeperShape.PosY = (float)LRandom::RandInt(0, (int)m_liveHeight);
 	m_sweeperShape.Scale = 6;
 	m_vLookAt.X = 0.0;
 	m_vLookAt.Y = 1.0;
 	
 	m_neuronNet.Init(1, 2, 1, 10);
 
-	m_inputParamList.Create(1);
-	m_outputParamList.Create(2);
+	m_inputParamList.Reset(1);
+	m_outputParamList.Reset(2);
 }
 
 void LSweeper::Update(IN LPoint* minePosList, IN int mineNum)
@@ -181,15 +183,15 @@ void LSweeper::Update(IN LPoint* minePosList, IN int mineNum)
 		m_score++;
 
 		// 重新放置地雷
-		minePosList[nearestMineIndex].X = (float)RandInt(0, (int)m_liveWidth);
-		minePosList[nearestMineIndex].Y = (float)RandInt(0, (int)m_liveHeight);
+		minePosList[nearestMineIndex].X = (float)LRandom::RandInt(0, (int)m_liveWidth);
+		minePosList[nearestMineIndex].Y = (float)LRandom::RandInt(0, (int)m_liveHeight);
 	}
 
 }
 
 
 
-void LSweeper::DrawTo(IN HDC hdc)
+void LSweeper::Paint(IN HDC hdc)
 {
 	/*
 	wstring strGeneration;

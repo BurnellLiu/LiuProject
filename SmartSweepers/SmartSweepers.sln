@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmartSweepers", "SmartSweepers.vcxproj", "{B4EAACEE-9777-413F-9ABA-36DF4FDA90AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestLArray", "..\TestLArray\TestLArray.vcxproj", "{184EAE3C-CC20-42BE-B4A4-D32B2A5096F8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,10 +13,6 @@ Global
 		{B4EAACEE-9777-413F-9ABA-36DF4FDA90AF}.Debug|Win32.Build.0 = Debug|Win32
 		{B4EAACEE-9777-413F-9ABA-36DF4FDA90AF}.Release|Win32.ActiveCfg = Release|Win32
 		{B4EAACEE-9777-413F-9ABA-36DF4FDA90AF}.Release|Win32.Build.0 = Release|Win32
-		{184EAE3C-CC20-42BE-B4A4-D32B2A5096F8}.Debug|Win32.ActiveCfg = Debug|Win32
-		{184EAE3C-CC20-42BE-B4A4-D32B2A5096F8}.Debug|Win32.Build.0 = Debug|Win32
-		{184EAE3C-CC20-42BE-B4A4-D32B2A5096F8}.Release|Win32.ActiveCfg = Release|Win32
-		{184EAE3C-CC20-42BE-B4A4-D32B2A5096F8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

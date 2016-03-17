@@ -3,14 +3,14 @@
 #ifndef _LSWEEPER_H_
 #define _LSWEEPER_H_
 
-#include "LWindowsGDI/LShape.h"
-#include "LWindowsGDI/LWindowGDI.h"
-#include "LWindowsGDI/LVector2D.h"
+#include "LShape.h"
+#include "LWindowGDI.h"
+#include "LVector2D.h"
 
-#include "LMachineLearning/LNeuralNetwork.h"
+#include "LNeuralNetwork.h"
 
 /// @brief 扫雷机类
-class LSweeper : IDrawTo
+class LSweeper : IPaint
 {
 public:
 	LSweeper();
@@ -31,7 +31,7 @@ public:
 
 	/// @brief 绘制扫雷机
 	/// @param[in] hdc 在指定的hdc中绘制图形
-	virtual void DrawTo(IN HDC hdc);
+	virtual void Paint(IN HDC hdc);
 
 	/// @brief 获取扫雷机的得分
 	/// @return 分数
@@ -63,7 +63,7 @@ private:
 
 	LNNInputList m_inputParamList; ///< 扫雷机神经网络输入参数列表
 	LNNOutputList m_outputParamList; ///< 扫雷机神经网络输出参数列表
-	LNeuronNet m_neuronNet; ///< 扫雷机的神经网络
+	LUnSuperviseNN m_neuronNet; ///< 扫雷机的神经网络
 	int m_score; ///< 扫雷机得分
 };
 
