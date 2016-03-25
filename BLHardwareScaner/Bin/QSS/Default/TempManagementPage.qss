@@ -49,3 +49,13 @@ QProgressBar#progressBarDiskTemp::chunk
 {
      background-color: rgb(100, 160, 255);
 }
+
+QPushButton#pushButtonCpuAction
+{
+	border-style: none;
+    background-color: rgb(167, 205, 255)
+}
+QPushButton#pushButtonCpuAction:hover
+{
+    background-color: rgb(115, 176, 255)
+}

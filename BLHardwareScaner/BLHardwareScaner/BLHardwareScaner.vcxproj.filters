@@ -112,6 +112,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Ui\main.cpp" />
+    <ClCompile Include="..\Src\LCpuStress.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -201,6 +204,9 @@
       <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="..\Src\LHardwareInfor.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\LCpuStress.h">
       <Filter>Src</Filter>
     </ClInclude>
   </ItemGroup>

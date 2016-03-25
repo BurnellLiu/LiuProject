@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\DiskController\LDiskController.cpp" />
+    <ClCompile Include="..\Src\LCpuStress.cpp" />
     <ClCompile Include="..\Src\LHardwareInfor.cpp" />
     <ClCompile Include="..\Src\LDiskSpeed.cpp" />
     <ClCompile Include="..\Src\Log\LLog.cpp">
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\DiskController\LDiskController.h" />
+    <ClInclude Include="..\Src\LCpuStress.h" />
     <ClInclude Include="..\Src\LHardwareInfor.h" />
     <ClInclude Include="..\Src\LDiskSpeed.h" />
     <ClInclude Include="..\Src\Log\LLog.h" />

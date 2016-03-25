@@ -11,6 +11,9 @@
 #include "..\\Src\\PerformanceCounter.h"
 #include "..\\Src\\Log\\LLog.h"
 
+#define CPU_STRESS_START QString::fromStdWString(L"Start")
+#define CPU_STRESS_STOP QString::fromStdWString(L"Stop")
+
 
 
 /// @brief ÎÂ¶È²Ö¿âÀà
@@ -244,6 +247,12 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     m_pUiRefreshTimer->setInterval(500);
     QObject::connect(m_pUiRefreshTimer, SIGNAL(timeout()), this, SLOT(UiRefreshTimerTimeout()));
 
+    m_pCpuStressTimer = new QTimer();
+    m_pCpuStressTimer->setInterval(500);
+    QObject::connect(m_pCpuStressTimer, SIGNAL(timeout()), this, SLOT(CpuStressTimerTimeout()));
+    QObject::connect(ui.pushButtonCpuAction, SIGNAL(clicked()), this, SLOT(CpuActionButtonClicked()));
+    ui.labelCpuScore->setText("");
+
     ui.progressBarCpuUsage->setValue(0);
     ui.progressBarMemUsage->setValue(0);
     ui.progressBarCpuTemp->setValue(0);
@@ -290,6 +299,43 @@ void TempManagementPage::UiRefreshTimerTimeout()
     this->RefreshUi();
 }
 
+void TempManagementPage::CpuActionButtonClicked()
+{
+    if (ui.pushButtonCpuAction->text() == CPU_STRESS_START)
+    {
+        m_cpuStressTest.Start(120);
+        ui.pushButtonCpuAction->setText(CPU_STRESS_STOP);
+        m_pCpuStressTimer->start();
+    }
+    else if (ui.pushButtonCpuAction->text() == CPU_STRESS_STOP)
+    {
+        m_cpuStressTest.Stop();
+        ui.pushButtonCpuAction->setText(CPU_STRESS_START);
+        m_cpuStressTest.Stop();
+    }
+}
+
+void TempManagementPage::CpuStressTimerTimeout()
+{
+    const LCpuStressTestState& state = m_cpuStressTest.GetState();
+
+    unsigned long score = 0;
+    for (unsigned int i = 0; i < state.LogicalCoreNum; i++)
+    {
+        score += state.Score[i];
+    }
+    score /= state.LogicalCoreNum;
+
+    QString qStrScore = QString::fromStdWString(L"Score: %1 * %2").arg(state.LogicalCoreNum).arg(score);
+    ui.labelCpuScore->setText(qStrScore);
+
+    if (state.TestDone)
+    {
+        ui.pushButtonCpuAction->setText(CPU_STRESS_START);
+        m_pCpuStressTimer->stop();
+    }
+}
+
 void TempManagementPage::RefreshUi()
 {
     TempHouse tempHouse;
@@ -333,7 +379,7 @@ void TempManagementPage::RefreshUi()
 
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
     ui.progressBarMemUsage->setValue(memoryPerf.LoadPercentage);
-        
+   
 }
 
 void TempManagementPage::LoadQSS()
