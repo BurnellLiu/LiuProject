@@ -52,15 +52,14 @@ public:
     /// @return 成功返回true, 失败返回false
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance)
     {
-        if (!m_processorManager.GetProcessorLoadPercentage(0, processorPerformance.LoadPercentage))
+        LWMI::LProcessorManager processorManager;
+        if (!processorManager.GetProcessorLoadPercentage(0, processorPerformance.LoadPercentage))
             return false;
 
 
         return true;
     }
-
-private:
-    LWMI::LProcessorManager m_processorManager;
+    
 };
 
 PerformanceCounter::PerformanceCounter()

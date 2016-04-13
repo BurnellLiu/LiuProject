@@ -31,11 +31,12 @@ enum COMPUTER_TYPE
 /// @brief 计算机系统信息结构
 struct ComputerSystemInfor
 {
-    wstring ModelName; ////< 机种名
-    wstring Manufacturer; ///< 制造商
-    COMPUTER_TYPE Type; ///< 计算机类型
+    wstring ModelName; ////< 计算机机种名
+    wstring Manufacturer; ///< 计算机制造商
+    string Version; ///< 计算机版本
     string SerialNumber; ///< 计算机序列号
     unsigned char UUID[16]; ///< 计算机唯一标识符
+    COMPUTER_TYPE Type; ///< 计算机类型
 };
 
 /// @brief 操作系统信息结构
@@ -50,9 +51,10 @@ struct OperatingSystemInfor
 /// @brief 主板信息结构
 struct MotherBoardInfor
 {
-    string ProductName; ///< 产品名
-    string Manufacturer; ///< 制造商
-    string SerialNumber; ///< 序列号
+    string ProductName; ///< 主板产品名
+    string Manufacturer; ///< 主板制造商
+    string Version; ///< 主板版本
+    string SerialNumber; ///< 主板序列号
 
     string BiosVendor; ///< Bios厂商
     string BiosVersion; ///< Bios版本

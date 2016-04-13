@@ -161,7 +161,7 @@ namespace LWMI
     bool LProcessorManager::GetProcessorLoadPercentage(IN int index, OUT unsigned long& percentage)
     {
         LUINT16 temp;
-        bool bRet = m_pWMICoreManager->GetUINT16PropertyRefreshed(index, L"LoadPercentage", temp);
+        bool bRet = m_pWMICoreManager->GetUINT16Property(index, L"LoadPercentage", temp);
         if (bRet)
             percentage = (unsigned long)temp;
 

@@ -207,6 +207,7 @@ private:
         LSMBiosPaser smBiosPaser(data);
         SMBiosSystemInfor smBiosSystemInfor;
         smBiosPaser.GetSystemInfor(smBiosSystemInfor);
+        computerSystemInfor.Version = smBiosSystemInfor.Version;
         computerSystemInfor.SerialNumber = smBiosSystemInfor.SerialNumber;
         for (unsigned int i = 0; i < 16; i++)
         {
@@ -243,6 +244,7 @@ private:
 
         motherBoardInfor.Manufacturer = baseBoardInfor.Manufacturer;
         motherBoardInfor.ProductName = baseBoardInfor.Product;
+        motherBoardInfor.Version = baseBoardInfor.Version;
         motherBoardInfor.SerialNumber = baseBoardInfor.SerialNumber;
 
         motherBoardInfor.BiosVendor = biosInfor.Vendor;

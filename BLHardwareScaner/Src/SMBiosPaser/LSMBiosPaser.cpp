@@ -124,6 +124,7 @@ public:
 
         systemInfor.Manufacturer = stringList[typeInfor.TypeData[0x04]-1];
         systemInfor.ProductName = stringList[typeInfor.TypeData[0x05]-1];
+        systemInfor.Version = stringList[typeInfor.TypeData[0x06]-1];
         systemInfor.SerialNumber = stringList[typeInfor.TypeData[0x07]-1];
 
         for (unsigned int i = 0; i < 16; i++)
@@ -158,6 +159,7 @@ public:
 
         baseBoardInfor.Manufacturer = stringList[typeInfor.TypeData[0x04]-1];
         baseBoardInfor.Product = stringList[typeInfor.TypeData[0x05]-1];
+        baseBoardInfor.Version = stringList[typeInfor.TypeData[0x06]-1];
         baseBoardInfor.SerialNumber = stringList[typeInfor.TypeData[0x07]-1];
 
         return true;

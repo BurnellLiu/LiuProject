@@ -36,6 +36,7 @@ struct SMBiosSystemInfor
 {
     string Manufacturer; ///< 电脑制造商
     string ProductName; ///< 电脑名称
+    string Version; ///< 电脑版本
     string SerialNumber; ///< 电脑序列号
     unsigned char UUID[16]; ///< 电脑唯一标识符
 };
@@ -45,6 +46,7 @@ struct SMBiosBaseBoardInfor
 {
     string Manufacturer; ///< 主板制造商
     string Product; ///< 主板名
+    string Version; ///< 主板版本
     string SerialNumber; ///< 主板序列号
 };
 

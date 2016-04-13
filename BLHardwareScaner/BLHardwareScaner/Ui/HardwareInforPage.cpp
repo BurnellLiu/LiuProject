@@ -234,7 +234,6 @@ void ComputerItemInfor::LoadHWInfor()
 
 
      // 获取计算机系统信息
-    
     const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
     QString strManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
     QString strPCSystemInfor = strManufacturer;
@@ -443,19 +442,33 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("System Manufacturer"), systemManufacturer);
     PrintLogW(L"\tSystem Manufacturer: %s", computerSystemInfor.Manufacturer.c_str());
 
+    QString systemVersion = QString::fromStdString(computerSystemInfor.Version);
+    this->ContentAddItem(QObject::tr("System Version"), systemVersion);
+    PrintLogA("\tSystem Version: %s", computerSystemInfor.Version.c_str());
+
     QString systemSN = QString::fromStdString(computerSystemInfor.SerialNumber);
     this->ContentAddItem(QObject::tr("System SerialNumber"), systemSN);
     PrintLogA("\tSystem SerialNumber: %s", computerSystemInfor.SerialNumber.c_str());
 
-    /*
+    
     QString systemUUID;
     for (unsigned int i = 0; i < 16; i++)
     {
-        systemUUID.push_back(computerSystemInfor.UUID[i]);
+        QString strNum = QString::number(computerSystemInfor.UUID[i], 16).toUpper();
+        if (strNum.size() < 2)
+        {
+            strNum.push_front("0");
+        }
+        systemUUID += strNum;
+
+        if (i == 4 || i == 6 || i == 8 || i == 10)
+        {
+            systemUUID += "-";
+        }
     }
     this->ContentAddItem(QObject::tr("System UUID"), systemUUID);
     PrintLogA("\tSystem UUID: %s", systemUUID.toStdString().c_str());
-    */
+    
     
 
     this->ContentAddBlankLine();
@@ -469,6 +482,9 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("Board Manufacturer"), boardManufacturer);
     PrintLogA("\tBoard Manufacturer: %s", motherBoardInfor.Manufacturer.c_str());
 
+    QString boardVersion = QString::fromStdString(motherBoardInfor.Version);
+    this->ContentAddItem(QObject::tr("Board Version"), boardVersion);
+    PrintLogA("\tBoard Version: %s", motherBoardInfor.Version.c_str());
 
     QString boardSN = QString::fromStdString(motherBoardInfor.SerialNumber);
     this->ContentAddItem(QObject::tr("Board SerialNumber"), boardSN);
@@ -485,7 +501,7 @@ void MotherBoardItemInfor::LoadHWInfor()
     PrintLogA("\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
 
     QString biosReleaseDate = QString::fromStdString(motherBoardInfor.BiosReleaseDate).trimmed();
-    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
+    this->ContentAddItem(QObject::tr("BIOS ReleaseDate"), biosReleaseDate);
     PrintLogA("\tBIOS ReleaseDate: %s", motherBoardInfor.BiosReleaseDate.c_str());
 
     PrintLogW(L"");
