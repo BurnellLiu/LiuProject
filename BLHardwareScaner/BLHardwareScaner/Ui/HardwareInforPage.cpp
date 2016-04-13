@@ -279,8 +279,8 @@ void ComputerItemInfor::LoadHWInfor()
 
     // ÌîÐ´Ö÷°åÐÅÏ¢
     const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
-    QString motherBoardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
-    QString motherBoardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
+    QString motherBoardProductName = QString::fromStdString(motherBoardInfor.ProductName).trimmed();
+    QString motherBoardManufacturer = QString::fromStdString(motherBoardInfor.Manufacturer);
     QString motherBoardDesc = motherBoardManufacturer;
     motherBoardDesc += "  ";
     motherBoardDesc += motherBoardProductName;
@@ -434,37 +434,59 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->SetTitle(QObject::tr("Mother Board"));
     PrintLogW(L"Mother Board Information:");
 
-    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
-    QString boardProductName = QString::fromStdWString(motherBoardInfor.ProductName).trimmed();
-    this->ContentAddItem(QObject::tr("Product Name"), boardProductName);
-    PrintLogW(L"\tProduct Name: %s", motherBoardInfor.ProductName.c_str());
+    const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
+    QString systemModelName = QString::fromStdWString(computerSystemInfor.ModelName);
+    this->ContentAddItem(QObject::tr("System ModelName"), systemModelName);
+    PrintLogW(L"\tSystem ModelName: %s", computerSystemInfor.ModelName.c_str());
 
-    QString boardManufacturer = QString::fromStdWString(motherBoardInfor.Manufacturer);
-    this->ContentAddItem(QObject::tr("Manufacturer"), boardManufacturer);
-    PrintLogW(L"\tManufacturer: %s", motherBoardInfor.Manufacturer.c_str());
+    QString systemManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
+    this->ContentAddItem(QObject::tr("System Manufacturer"), systemManufacturer);
+    PrintLogW(L"\tSystem Manufacturer: %s", computerSystemInfor.Manufacturer.c_str());
 
+    QString systemSN = QString::fromStdString(computerSystemInfor.SerialNumber);
+    this->ContentAddItem(QObject::tr("System SerialNumber"), systemSN);
+    PrintLogA("\tSystem SerialNumber: %s", computerSystemInfor.SerialNumber.c_str());
 
-    QString boardSN = QString::fromStdWString(motherBoardInfor.SerialNumber);
-    this->ContentAddItem(QObject::tr("Serial Number"), boardSN);
-    PrintLogW(L"\tSerial Number: %s", motherBoardInfor.SerialNumber.c_str());
+    /*
+    QString systemUUID;
+    for (unsigned int i = 0; i < 16; i++)
+    {
+        systemUUID.push_back(computerSystemInfor.UUID[i]);
+    }
+    this->ContentAddItem(QObject::tr("System UUID"), systemUUID);
+    PrintLogA("\tSystem UUID: %s", systemUUID.toStdString().c_str());
+    */
+    
 
     this->ContentAddBlankLine();
 
-    QString biosSN = QString::fromStdWString(motherBoardInfor.BiosSerialNumber);
-    this->ContentAddItem(QObject::tr("BIOS SerialNumber"), biosSN);
-    PrintLogW(L"\tBIOS SerialNumber: %s", motherBoardInfor.BiosSerialNumber.c_str());
+    const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
+    QString boardProductName = QString::fromStdString(motherBoardInfor.ProductName).trimmed();
+    this->ContentAddItem(QObject::tr("Board ProductName"), boardProductName);
+    PrintLogA("\tBoard ProductName: %s", motherBoardInfor.ProductName.c_str());
 
-    QString biosVersion = QString::fromStdWString(motherBoardInfor.BiosVersion);
-    this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
-    PrintLogW(L"\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
+    QString boardManufacturer = QString::fromStdString(motherBoardInfor.Manufacturer);
+    this->ContentAddItem(QObject::tr("Board Manufacturer"), boardManufacturer);
+    PrintLogA("\tBoard Manufacturer: %s", motherBoardInfor.Manufacturer.c_str());
 
-    QString biosReleaseDate = QString::fromStdWString(motherBoardInfor.BiosReleaseDate).trimmed();
-    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
-    PrintLogW(L"\tBIOS Release Date: %s", motherBoardInfor.BiosReleaseDate.c_str());
 
-    QString biosVendor = QString::fromStdWString(motherBoardInfor.BiosVendor).trimmed();
+    QString boardSN = QString::fromStdString(motherBoardInfor.SerialNumber);
+    this->ContentAddItem(QObject::tr("Board SerialNumber"), boardSN);
+    PrintLogA("\tBoard SerialNumber: %s", motherBoardInfor.SerialNumber.c_str());
+
+    this->ContentAddBlankLine();
+
+    QString biosVendor = QString::fromStdString(motherBoardInfor.BiosVendor).trimmed();
     this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
-    PrintLogW(L"\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
+    PrintLogA("\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());
+
+    QString biosVersion = QString::fromStdString(motherBoardInfor.BiosVersion);
+    this->ContentAddItem(QObject::tr("BIOS Version"), biosVersion);
+    PrintLogA("\tBIOS Version: %s", motherBoardInfor.BiosVersion.c_str());
+
+    QString biosReleaseDate = QString::fromStdString(motherBoardInfor.BiosReleaseDate).trimmed();
+    this->ContentAddItem(QObject::tr("BIOS Release Date"), biosReleaseDate);
+    PrintLogA("\tBIOS ReleaseDate: %s", motherBoardInfor.BiosReleaseDate.c_str());
 
     PrintLogW(L"");
 }

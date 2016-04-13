@@ -34,6 +34,8 @@ struct ComputerSystemInfor
     wstring ModelName; ////< 机种名
     wstring Manufacturer; ///< 制造商
     COMPUTER_TYPE Type; ///< 计算机类型
+    string SerialNumber; ///< 计算机序列号
+    unsigned char UUID[16]; ///< 计算机唯一标识符
 };
 
 /// @brief 操作系统信息结构
@@ -48,14 +50,14 @@ struct OperatingSystemInfor
 /// @brief 主板信息结构
 struct MotherBoardInfor
 {
-    wstring ProductName; ///< 产品名
-    wstring Manufacturer; ///< 制造商
-    wstring SerialNumber; ///< 序列号
+    string ProductName; ///< 产品名
+    string Manufacturer; ///< 制造商
+    string SerialNumber; ///< 序列号
 
-    wstring BiosSerialNumber; ///< Bios序列号
-    wstring BiosVersion; ///< Bios版本
-    wstring BiosReleaseDate; ///< Bios发布日期
-    wstring BiosVendor; ///< Bios厂商
+    string BiosVendor; ///< Bios厂商
+    string BiosVersion; ///< Bios版本
+    string BiosReleaseDate; ///< Bios发布日期
+    unsigned long BiosRomSize; ///< Bios Rom大小, 单位K
 };
 
 /// @brief 处理器信息

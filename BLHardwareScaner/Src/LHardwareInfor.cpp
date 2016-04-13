@@ -17,6 +17,8 @@ using std::transform;
 
 #include "Log/LLog.h"
 
+#include "SMBiosPaser/LSMBiosPaser.h"
+
 
 
 
@@ -198,6 +200,18 @@ private:
         computerSytemManager.GetComputerSystemPCType(0, pcType);
         computerSystemInfor.Type = (COMPUTER_TYPE)pcType;
         computerSytemManager.GetComputerSystemModel(0, computerSystemInfor.ModelName);
+
+        LWMI::LMSSmBios_RawSMBiosTablesManager smBios;
+        vector<unsigned char> data;
+        smBios.GetSMBiosData(0, data);
+        LSMBiosPaser smBiosPaser(data);
+        SMBiosSystemInfor smBiosSystemInfor;
+        smBiosPaser.GetSystemInfor(smBiosSystemInfor);
+        computerSystemInfor.SerialNumber = smBiosSystemInfor.SerialNumber;
+        for (unsigned int i = 0; i < 16; i++)
+        {
+            computerSystemInfor.UUID[i] = smBiosSystemInfor.UUID[i];
+        }
     }
 
 
@@ -216,18 +230,25 @@ private:
     /// @param[out] motherBoardInfor 主板信息
     void ScanMotherBoardInfor(OUT MotherBoardInfor& motherBoardInfor)
     {
-        LWMI::LBaseBoardManager baseBoardManager;
-        baseBoardManager.GetBaseBoardManufacturer(0, motherBoardInfor.Manufacturer);
-        baseBoardManager.GetBaseBoardSerialNumber(0, motherBoardInfor.SerialNumber);
+        LWMI::LMSSmBios_RawSMBiosTablesManager smBios;
+        vector<unsigned char> data;
+        smBios.GetSMBiosData(0, data);
+        LSMBiosPaser smBiosPaser(data);
 
-        LWMI::LBIOSManager biosManager;
-        biosManager.GetBIOSSerialNumber(0, motherBoardInfor.BiosSerialNumber);
-        biosManager.GetSMBIOSBIOSVersion(0, motherBoardInfor.BiosVersion);
-        biosManager.GetBIOSManufacturer(0, motherBoardInfor.BiosVendor);
+        SMBiosBaseBoardInfor baseBoardInfor;
+        smBiosPaser.GetBaseBoardInfor(baseBoardInfor);
 
-        LWMI::LMS_SystemInformationManager systemInforManager;
-        systemInforManager.GetBaseBoardProductName(0, motherBoardInfor.ProductName);
-        systemInforManager.GetBIOSReleaseDate(0, motherBoardInfor.BiosReleaseDate);
+        SMBiosBIOSInfor biosInfor;
+        smBiosPaser.GetBiosInfor(biosInfor);
+
+        motherBoardInfor.Manufacturer = baseBoardInfor.Manufacturer;
+        motherBoardInfor.ProductName = baseBoardInfor.Product;
+        motherBoardInfor.SerialNumber = baseBoardInfor.SerialNumber;
+
+        motherBoardInfor.BiosVendor = biosInfor.Vendor;
+        motherBoardInfor.BiosVersion = biosInfor.Version;
+        motherBoardInfor.BiosReleaseDate = biosInfor.ReleaseDate;
+        motherBoardInfor.BiosRomSize = biosInfor.RomSize;
     }
 
     /// @brief 扫描处理器信息

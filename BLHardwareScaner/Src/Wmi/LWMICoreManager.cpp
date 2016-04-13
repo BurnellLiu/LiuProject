@@ -321,6 +321,102 @@ SAFE_EXIT:
         return bRet;
     }
 
+    bool LWMICoreManager::GetUINT8Property(int objectIndex, const wchar_t* pPropertyName, LBYTE& ui8Property)
+    {
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex <0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        VariantInit(&vtProp);
+        hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        bRet = true;
+        ui8Property = vtProp.bVal;
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
+    bool LWMICoreManager::GetUINT8ArrayProperty(int objectIndex, const wchar_t* pPropertyName, vector<unsigned char>& arrayProperty)
+    {
+        bool bRet = false;
+        VARIANT vtProp;
+        HRESULT hr;
+
+        if(objectIndex <0 || objectIndex >= m_objectCount)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+        if (pPropertyName == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if (m_pObjectArray[objectIndex] == NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        VariantInit(&vtProp);
+        hr = m_pObjectArray[objectIndex]->Get(pPropertyName, 0, &vtProp, 0, 0);
+        if (hr != WBEM_S_NO_ERROR)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        if(vtProp.vt == VT_EMPTY||vtProp.vt == VT_NULL)
+        {
+            bRet = false;
+            goto SAFE_EXIT;
+        }
+
+        bRet = true;
+        
+        arrayProperty.clear();
+        arrayProperty.resize(vtProp.parray->rgsabound->cElements);
+        for (long i = 0; i < (long)arrayProperty.size(); i++)
+        {
+            SafeArrayGetElement(vtProp.parray, &i, &arrayProperty[i]);
+        }
+
+SAFE_EXIT:
+        VariantClear(&vtProp);
+        return bRet;
+    }
+
     
 
     bool LWMICoreManager::GetUINT16Property(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property)

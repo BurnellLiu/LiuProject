@@ -37,6 +37,9 @@
     <Filter Include="Ui\TestItem">
       <UniqueIdentifier>{312310ff-3bb6-4adb-baf5-b6eda618c29b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\SMBiosParser">
+      <UniqueIdentifier>{459d2a58-b494-4093-bf73-c15b2afe357a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -114,6 +117,9 @@
     <ClCompile Include="Ui\main.cpp" />
     <ClCompile Include="..\Src\LCpuStress.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\SMBiosPaser\LSMBiosPaser.cpp">
+      <Filter>Src\SMBiosParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\LCpuStress.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\SMBiosPaser\LSMBiosPaser.h">
+      <Filter>Src\SMBiosParser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

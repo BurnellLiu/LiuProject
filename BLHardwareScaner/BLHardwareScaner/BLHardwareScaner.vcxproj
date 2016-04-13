@@ -93,6 +93,7 @@
     <ClCompile Include="..\Src\PerformanceCounter.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
+    <ClCompile Include="..\Src\SMBiosPaser\LSMBiosPaser.cpp" />
     <ClCompile Include="..\Src\TemperatureProbe.cpp" />
     <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="..\Src\PerformanceCounter.h" />
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
+    <ClInclude Include="..\Src\SMBiosPaser\LSMBiosPaser.h" />
     <ClInclude Include="..\Src\TemperatureProbe.h" />
     <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />

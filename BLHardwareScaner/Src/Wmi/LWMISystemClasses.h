@@ -5,6 +5,8 @@
 
 #include <string>
 using std::wstring;
+#include <vector>
+using std::vector;
 
 #ifndef IN
 #define IN
@@ -191,6 +193,43 @@ namespace LWMI
     private:
         LMS_SystemInformationManager(const LMS_SystemInformationManager&);
         LMS_SystemInformationManager& operator = (const LMS_SystemInformationManager&);
+    };
+
+    /// @brief SMBIOS二进制数据表管理者类
+    class LMSSmBios_RawSMBiosTablesManager
+    {
+    public:
+        LMSSmBios_RawSMBiosTablesManager();
+        ~LMSSmBios_RawSMBiosTablesManager();
+
+        /// @brief 获取SMBios数据表数目(一般为1)
+        /// @return SMBios数据表数目
+        int GetRawSMBiosTablesCount();
+
+        /// @brief 获取SMBios主版本
+        /// @param[in] index 索引
+        /// @param[out] version 存储版本
+        /// @return 成功返回true, 失败返回false
+        bool GetSMBiosMajorVersion(IN int index, OUT unsigned char& version);
+
+        /// @brief 获取SMBios次版本
+        /// @param[in] index 索引
+        /// @param[out] version 存储版本
+        /// @return 成功返回true, 失败返回false
+        bool GetSMBiosMinorVersion(IN int index, OUT unsigned char& version);
+
+        /// @brief 获取SMBios数据
+        /// @param[in] index 索引
+        /// @param[out] data 存储数据
+        /// @return 成功返回true, 失败返回false
+        bool GetSMBiosData(IN int index, OUT vector<unsigned char>& data);
+
+    private:
+        LWMICoreManager* m_pWMICoreManager; ///< WMI核心管理者
+
+    private:
+        LMSSmBios_RawSMBiosTablesManager(const LMSSmBios_RawSMBiosTablesManager&);
+        LMSSmBios_RawSMBiosTablesManager& operator = (const LMSSmBios_RawSMBiosTablesManager&);
     };
 
     /// @brief 系统信息管理者类

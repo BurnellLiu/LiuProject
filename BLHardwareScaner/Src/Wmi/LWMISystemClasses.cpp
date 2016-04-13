@@ -164,6 +164,43 @@ namespace LWMI
         return m_pWMICoreManager->GetStringProperty(index, L"SystemSKU", sku);
     }
 
+    LMSSmBios_RawSMBiosTablesManager::LMSSmBios_RawSMBiosTablesManager()
+    {
+        m_pWMICoreManager = 0;
+        m_pWMICoreManager = new LWMICoreManager();
+        bool bRet = m_pWMICoreManager->BaseInit(NAMESPACE_ROOT_WMI);
+        bRet = m_pWMICoreManager->WQLQuery(L"SELECT * FROM MSSmBios_RawSMBiosTables");
+    }
+
+    LMSSmBios_RawSMBiosTablesManager::~LMSSmBios_RawSMBiosTablesManager()
+    {
+        if (m_pWMICoreManager != 0)
+        {
+            delete m_pWMICoreManager;
+            m_pWMICoreManager = 0;
+        }
+    }
+
+    int LMSSmBios_RawSMBiosTablesManager::GetRawSMBiosTablesCount()
+    {
+        return m_pWMICoreManager->GetObjectsCount();
+    }
+
+    bool LMSSmBios_RawSMBiosTablesManager::GetSMBiosMajorVersion(IN int index, OUT unsigned char& version)
+    {
+        return m_pWMICoreManager->GetUINT8Property(index, L"SmbiosMajorVersion", version);
+    }
+
+    bool LMSSmBios_RawSMBiosTablesManager::GetSMBiosMinorVersion(IN int index, OUT unsigned char& version)
+    {
+        return m_pWMICoreManager->GetUINT8Property(index, L"SmbiosMinorVersion", version);
+    }
+
+    bool LMSSmBios_RawSMBiosTablesManager::GetSMBiosData(IN int index, OUT vector<unsigned char>& data)
+    {
+        return m_pWMICoreManager->GetUINT8ArrayProperty(index, L"SMBiosData", data);
+    }
+
     LPerfRawData_PerfOS_MemoryManager::LPerfRawData_PerfOS_MemoryManager()
     {
         m_pWMICoreManager = 0;

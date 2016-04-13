@@ -7,6 +7,8 @@
 
 #include <string>
 using std::wstring;
+#include <vector>
+using std::vector;
 
 #ifndef NAMESPACE_ROOT_WMI
 #define NAMESPACE_ROOT_WMI L"ROOT\\WMI"
@@ -68,6 +70,20 @@ namespace LWMI
         /// @param[out] strProperty 存储属性值
         /// @return 成功返回true, 失败返回false
         bool GetStringPropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty);
+
+        /// @brief 获取无符号整数属性
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPropertyName 属性名称
+        /// @param[out] ui8Property 存储属性值
+        /// @return 成功返回true, 失败返回false
+        bool GetUINT8Property(int objectIndex, const wchar_t* pPropertyName, LBYTE& ui8Property);
+
+        /// @brief 获取字节数组属性
+        /// @param[in] objectIndex 对象索引
+        /// @param[in] pPrppertyName 属性名称
+        /// @param[out] arrayProperty 存储字节数组属性
+        /// @return 成功返回true, 失败返回false
+        bool GetUINT8ArrayProperty(int objectIndex, const wchar_t* pPropertyName, vector<LBYTE>& arrayProperty);
 
         /// @brief 获取无符号整数属性
         /// @param[in] objectIndex 对象索引
