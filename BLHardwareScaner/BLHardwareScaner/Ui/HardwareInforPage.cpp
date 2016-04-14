@@ -504,6 +504,10 @@ void MotherBoardItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("BIOS ReleaseDate"), biosReleaseDate);
     PrintLogA("\tBIOS ReleaseDate: %s", motherBoardInfor.BiosReleaseDate.c_str());
 
+    QString biosRomSize = QString::fromStdString("%1K").arg(motherBoardInfor.BiosRomSize);
+    this->ContentAddItem(QObject::tr("BIOS RomSize"), biosRomSize);
+    PrintLogW(L"\tBIOS RomSize: %uK", motherBoardInfor.BiosRomSize);
+
     PrintLogW(L"");
 }
 
