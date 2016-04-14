@@ -961,13 +961,13 @@ LSetupSCSIController::~LSetupSCSIController()
 }
 
 
-LSetupCamera::LSetupCamera()
+LSetupImage::LSetupImage()
     : LSetupDev()
 {
     m_pSADevObject->Scan(&GUID_DEVCLASS_IMAGE);
 }
 
-LSetupCamera::~LSetupCamera()
+LSetupImage::~LSetupImage()
 {
 
 }

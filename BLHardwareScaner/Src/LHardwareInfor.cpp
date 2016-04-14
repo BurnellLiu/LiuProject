@@ -19,6 +19,8 @@ using std::transform;
 
 #include "SMBiosPaser/LSMBiosPaser.h"
 
+#include "Webcam/LWebcam.h"
+
 
 
 
@@ -549,15 +551,45 @@ private:
     /// @param[out] cameraInfor 存储摄像机信息
     void ScanCameraInfor(OUT CameraInforArray& cameraInfor)
     {
-        LSetupCamera camera;
-        cameraInfor.Count = (unsigned long)camera.GetDevNum();
-        for (int i = 0; i < camera.GetDevNum(); i++)
+        vector<LWebcam*> webcamVec;
+        string error;
+        LEnumWebcam(webcamVec, error);
+
+        LSetupImage imageDevice;
+        cameraInfor.Count = 0;
+        for (int i = 0; i < imageDevice.GetDevNum(); i++)
         {
-            unsigned long lRet = camera.GetFriendlyName(i, cameraInfor.Name[i]);
-            if (lRet != 0 || cameraInfor.Name[i].empty())
+            wstring instanceId;
+            unsigned long lRet = imageDevice.GetInstanceID(i, instanceId);
+            if (lRet != 0 || instanceId.empty())
+                continue;
+
+            for (unsigned int j = 0; j < webcamVec.size(); j++)
             {
-                camera.GetDevDesc(i, cameraInfor.Name[i]);
+                wstring displayName;
+                bool bRet = webcamVec[j]->GetDisplayName(displayName);
+                if (!bRet)
+                    continue;
+
+                // 先转换为大写, 再替换'#'为'\\'
+                displayName = WStringToUpper(displayName);
+                for (unsigned int k = 0; k < displayName.size(); k++)
+                {
+                    if (displayName[k] == L'#')
+                    {
+                        displayName[k] = L'\\';
+                    }
+                }
+                if (displayName.find(instanceId) == wstring::npos)
+                    continue;
+
+                wstring friendlyName;
+                webcamVec[j]->GetFriendlyName(friendlyName);
+
+                cameraInfor.Name[cameraInfor.Count] = friendlyName;
+                cameraInfor.Count++;
             }
+          
         }
     }
 

@@ -347,13 +347,13 @@ public:
 };
 
 /// <SUMMARY>
-/// 摄像头设备类
+/// 图像设备类
 /// </SUMMARY>
-class LSetupCamera : public LSetupDev
+class LSetupImage : public LSetupDev
 {
 public:
-    LSetupCamera();
-    ~LSetupCamera();
+    LSetupImage();
+    ~LSetupImage();
 };
 
 #endif
