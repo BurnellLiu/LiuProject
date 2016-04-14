@@ -461,7 +461,7 @@ void MotherBoardItemInfor::LoadHWInfor()
         }
         systemUUID += strNum;
 
-        if (i == 4 || i == 6 || i == 8 || i == 10)
+        if (i == 3 || i == 5 || i == 7 || i == 9)
         {
             systemUUID += "-";
         }

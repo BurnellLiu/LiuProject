@@ -129,7 +129,7 @@ public:
 
         for (unsigned int i = 0; i < 16; i++)
         {
-            systemInfor.UUID[i] = typeInfor.TypeData[0x09 + i];
+            systemInfor.UUID[i] = typeInfor.TypeData[0x08 + i];
         }
 
         return true;
