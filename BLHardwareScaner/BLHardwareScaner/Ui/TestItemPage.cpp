@@ -81,7 +81,7 @@ void TestItemPage::Init()
 
     if (m_bCameraExist)
     {
-        this->AddTestItem(STRING_TESTITEM_CAMERA_VIEW, QIcon(".\\Image\\TestItem\\CameraView.jpg"));
+        this->AddTestItem(STRING_TESTITEM_CAMERA_VIEW, QIcon(".\\Image\\TestItem\\CameraView.png"));
         ui.stackedWidget->addWidget(m_pCameraViewPage);
     }
     
