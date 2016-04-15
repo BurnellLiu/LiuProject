@@ -18,6 +18,7 @@
 #endif
 
 class DiskSpeedPage;
+class CameraViewPage;
 
 /// @brief 测试项页面
 class TestItemPage : public QWidget
@@ -57,6 +58,9 @@ private:
     Ui::TestItemForm ui;
 
     DiskSpeedPage* m_pDiskSpeedPage;
+    CameraViewPage* m_pCameraViewPage;
+
+    bool m_bCameraExist; ///< 标记是否存在摄像头
 
     float m_uiRatio; ///< UI需要调整的比例
     bool m_bInitDone; ///< 标记是否初始化完成

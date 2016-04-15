@@ -178,7 +178,13 @@ public:
     /// @return 摄像机信息
     const CameraInforArray& GetCameraInfor()
     {
-        this->ScanCameraInfor(m_cameraInfor);
+        static bool s_bScanDone = false;
+        if (!s_bScanDone)
+        {
+            this->ScanCameraInfor(m_cameraInfor);
+            s_bScanDone = true;
+        }
+        
 
         return m_cameraInfor;
     }
@@ -590,6 +596,17 @@ private:
                 cameraInfor.Count++;
             }
           
+        }
+
+        // 释放资源
+        for (unsigned int i = 0; i < webcamVec.size(); i++)
+        {
+            if (webcamVec[i] != 0)
+            {
+                webcamVec[i]->Release();
+                webcamVec[i] = 0;
+            }
+            
         }
     }
 

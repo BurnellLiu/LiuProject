@@ -127,6 +127,12 @@
     <ClCompile Include="..\Src\Webcam\LWebcam.cpp">
       <Filter>Src\Webcam</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_CameraViewPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\TestItem\CameraViewPage.cpp">
+      <Filter>Ui\TestItem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -157,6 +163,12 @@
       <Filter>Ui\TestItem</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\TestItem\DiskSpeedPage.h">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\CameraView.ui">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\CameraViewPage.h">
       <Filter>Ui\TestItem</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -226,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\Webcam\LWebcam.h">
       <Filter>Src\Webcam</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_CameraView.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
