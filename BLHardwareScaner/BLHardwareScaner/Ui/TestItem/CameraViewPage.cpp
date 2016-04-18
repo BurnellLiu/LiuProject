@@ -75,7 +75,7 @@ void CameraViewPage::SwitchButtonClicked()
 
 void CameraViewPage::LoadQSS()
 {
-    QFile qssFile(".\\Qss\\Default\\CameraViewPage.qss");  
+    QFile qssFile(".\\QSS\\Default\\CameraViewPage.qss");  
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  
