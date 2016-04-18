@@ -2,6 +2,7 @@
 #include "DiskSpeedPage.h"
 
 #include <QtCore/QFile>
+#include <QtGui/QListView>
 
 #include "..\\Src\\Log\\LLog.h"
 #include "..\\Src\\LHardwareInfor.h"
@@ -307,6 +308,8 @@ bool DiskSpeedPage::SelectLogicalDrive(
 
 void DiskSpeedPage::LoadQSS()
 {
+    QListView* pListView = new QListView();
+    ui.comboBoxDiskList->setView(pListView);
     QFile qssFile(".\\Qss\\Default\\DiskSpeedPage.qss");  
     qssFile.open(QFile::ReadOnly);  
 

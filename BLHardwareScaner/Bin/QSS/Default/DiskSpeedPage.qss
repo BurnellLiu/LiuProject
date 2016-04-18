@@ -16,7 +16,25 @@ QComboBox#comboBoxDiskList
 }
 
 QComboBox#comboBoxDiskList::drop-down
-{   
+{       
     border-image: url(:/ControlImage/DropDown.png);
 }
 
+
+QComboBox#comboBoxDiskList QAbstractItemView
+{
+    border: 1px solid gray;
+    outline: 0px;
+}
+
+QComboBox QAbstractItemView::item
+{
+    color: black;
+    min-height: 25px; 
+}
+
+QComboBox QAbstractItemView::item::selected
+{
+    color: white;
+    background-color: rgb(167, 205, 255);  
+}
