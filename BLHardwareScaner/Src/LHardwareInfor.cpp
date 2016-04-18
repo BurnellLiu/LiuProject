@@ -557,6 +557,7 @@ private:
     /// @param[out] cameraInfor ¥Ê¥¢…„œÒª˙–≈œ¢
     void ScanCameraInfor(OUT CameraInforArray& cameraInfor)
     {
+        PrintLogW(L"Scan Camera Infor Function");
         vector<LWebcam*> webcamVec;
         string error;
         LEnumWebcam(webcamVec, error);
@@ -567,6 +568,7 @@ private:
         {
             wstring instanceId;
             unsigned long lRet = imageDevice.GetInstanceID(i, instanceId);
+            PrintLogW(L"Image Device Index: %d, InstanceID: %s", i, instanceId.c_str());
             if (lRet != 0 || instanceId.empty())
                 continue;
 
@@ -574,6 +576,7 @@ private:
             {
                 wstring displayName;
                 bool bRet = webcamVec[j]->GetDisplayName(displayName);
+                PrintLogW(L"Webcam Index: %u, DisplayName: %s", j, displayName.c_str());
                 if (!bRet)
                     continue;
 

@@ -1,6 +1,8 @@
 
 #include "CameraViewPage.h"
 
+#include <QtCore/QFile>
+
 
 
 
@@ -8,6 +10,7 @@ CameraViewPage::CameraViewPage(IN QWidget *parent /* = 0 */, IN Qt::WFlags flags
     : QDialog(parent, flags)
 {
     ui.setupUi(this);
+    this->LoadQSS();
 
     QObject::connect(ui.pushButtonSwitch, SIGNAL(clicked()), this, SLOT(SwitchButtonClicked()));
 
@@ -68,6 +71,20 @@ void CameraViewPage::SwitchButtonClicked()
 
     this->ShowCurrentCamera();
     
+}
+
+void CameraViewPage::LoadQSS()
+{
+    QFile qssFile(".\\Qss\\Default\\CameraViewPage.qss");  
+    qssFile.open(QFile::ReadOnly);  
+
+    if(qssFile.isOpen())  
+    {  
+        QString qss = qssFile.readAll();
+        qssFile.close();  
+
+        this->setStyleSheet(qss);
+    } 
 }
 
 void CameraViewPage::ShowCurrentCamera()

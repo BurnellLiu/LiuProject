@@ -39,6 +39,14 @@
        </item>
        <item>
         <widget class="QLabel" name="labelCameraName">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>TextLabel</string>
          </property>

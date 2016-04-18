@@ -133,6 +133,9 @@
     <ClCompile Include="Ui\TestItem\CameraViewPage.cpp">
       <Filter>Ui\TestItem</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -170,6 +173,9 @@
     </CustomBuild>
     <CustomBuild Include="Ui\TestItem\CameraViewPage.h">
       <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\UIControlImage.qrc">
+      <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

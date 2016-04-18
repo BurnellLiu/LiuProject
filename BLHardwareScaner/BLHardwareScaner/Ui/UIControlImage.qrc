@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ControlImage/DropDown.png</file>
+    </qresource>
+</RCC>

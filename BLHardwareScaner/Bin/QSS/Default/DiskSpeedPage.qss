@@ -9,3 +9,14 @@ QPushButton#pushButtonTest:hover
 {
     background-color: rgb(115, 176, 255)
 }
+
+QComboBox#comboBoxDiskList
+{
+    border: 1px solid gray;
+}
+
+QComboBox#comboBoxDiskList::drop-down
+{   
+    border-image: url(:/ControlImage/DropDown.png);
+}
+

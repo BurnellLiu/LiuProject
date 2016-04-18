@@ -47,6 +47,10 @@ private slots:
    void SwitchButtonClicked();
 
 private:
+   /// @brief 加载UI样式
+   void LoadQSS();
+
+private:
     /// @brief 显示当前摄像头
     void ShowCurrentCamera();
 
@@ -56,6 +60,7 @@ private:
     /// @brief 获取Webcam接口指针
     /// @param[in] index Webcam索引
     LWebcam* GetWebcam(IN unsigned int index);
+
 
 private:
     Ui::CameraViewForm ui;
