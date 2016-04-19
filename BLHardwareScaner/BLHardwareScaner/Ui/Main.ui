@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BLHardwareScaner</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
