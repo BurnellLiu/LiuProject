@@ -137,13 +137,11 @@ public:
 
     /// @brief []操作符
     ///
-    /// 如果想使用高效率访问请直接使用Data
     /// @param[in] row 矩阵行
     Type*& operator[](IN unsigned int row);
 
     /// @brief []操作符
     ///
-    /// 如果想使用高效率访问请直接使用Data
     /// @param[in] row 矩阵行
     const Type* operator[](IN unsigned int row) const;
 
@@ -190,50 +188,53 @@ public:
     void Reset(IN unsigned int row, IN unsigned int col, IN const Type& initValue);
 
 public:
-    unsigned int RowLen; ///< 行长度
-    unsigned int ColumnLen; ///< 列长度
-    Type** Data; ///< 数据列表
+    const unsigned int& RowLen; ///< 行长度属性
+    const unsigned int& ColumnLen; ///< 列长度属性
+
 private:
-    Type* m_data; ///< 实际存储的数据
+    Type** m_dataTable; ///< 二维数据表
+    Type* m_dataList; ///< 实际存储的数据列表
+    unsigned int m_rowLen; ///< 矩阵行长度
+    unsigned int m_columnLen; ///< 矩阵列长度
 };
 
 LTEMPLATE
 LMatrix<Type>::LMatrix()
-: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+: m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
 
 }
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col)
-: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+: m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
     this->Reset(row, col);
 }
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type& initValue)
-: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+: m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
     this->Reset(row, col);
 
     unsigned int size = row * col;
     for (unsigned int i = 0; i < size; i++)
     {
-        this->m_data[i] = initValue;
+        this->m_dataList[i] = initValue;
     }
 }
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* pDataList)
-: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+: m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
     this->Reset(row, col);
 
     unsigned int size = row * col;
     for (unsigned int i = 0; i < size; i++)
     {
-        this->m_data[i] = pDataList[i];
+        this->m_dataList[i] = pDataList[i];
     }
 
 }
@@ -241,32 +242,32 @@ LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* 
 LTEMPLATE
 LMatrix<Type>::~LMatrix()
 {
-    if (this->Data)
+    if (this->m_dataTable)
     {
-        delete[] this->Data;
-        this->Data = 0;
+        delete[] this->m_dataTable;
+        this->m_dataTable = 0;
     }
 
-    if (this->m_data)
+    if (this->m_dataList)
     {
-        delete[] this->m_data;
-        this->m_data = 0;
+        delete[] this->m_dataList;
+        this->m_dataList = 0;
     }
 
-    this->RowLen = 0;
-    this->ColumnLen = 0;
+    this->m_rowLen = 0;
+    this->m_columnLen = 0;
 }
 
 LTEMPLATE
 LMatrix<Type>::LMatrix(IN const LMatrix<Type>& rhs)
-: RowLen(0), ColumnLen(0), Data(0), m_data(0)
+: m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
     this->Reset(rhs.RowLen, rhs.ColumnLen);
 
     unsigned int size = rhs.RowLen * rhs.ColumnLen;
     for (unsigned int i = 0; i < size; i++)
     {
-        this->m_data[i] = rhs.m_data[i];
+        this->m_dataList[i] = rhs.m_dataList[i];
     }
 
 }
@@ -279,7 +280,7 @@ LMatrix<Type>& LMatrix<Type>::operator = (IN const LMatrix<Type>& rhs)
     unsigned int size = rhs.RowLen * rhs.ColumnLen;
     for (unsigned int i = 0; i < size; i++)
     {
-        this->m_data[i] = rhs.m_data[i];
+        this->m_dataList[i] = rhs.m_dataList[i];
     }
 
     return *this;
@@ -320,13 +321,13 @@ LMatrix<Type> LMatrix<Type>::ScalarMul(IN const Type& B) const
 LTEMPLATE
 Type*& LMatrix<Type>::operator[](IN unsigned int row)
 {
-    return this->Data[row];
+    return this->m_dataTable[row];
 }
 
 LTEMPLATE
 const Type* LMatrix<Type>::operator[](IN unsigned int row) const
 {
-    return this->Data[row];
+    return this->m_dataTable[row];
 }
 
 LTEMPLATE
@@ -340,7 +341,7 @@ LMatrix<Type> LMatrix<Type>::T() const
 LTEMPLATE
 LMatrix<Type> LMatrix<Type>::GetRow(IN unsigned int row) const
 {
-    LMatrix<Type> rowVector(1, this->ColumnLen);
+    LMatrix<Type> rowVector(1, this->m_columnLen);
 	this->GetRow(row, rowVector);
 
     return rowVector;
@@ -349,17 +350,17 @@ LMatrix<Type> LMatrix<Type>::GetRow(IN unsigned int row) const
 LTEMPLATE
 void LMatrix<Type>::GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const
 {
-	rowVector.Reset(1, this->ColumnLen);
-	for (unsigned int i = 0; i < this->ColumnLen; i++)
+	rowVector.Reset(1, this->m_columnLen);
+	for (unsigned int i = 0; i < this->m_columnLen; i++)
 	{
-		rowVector.Data[0][i] = this->Data[row][i];
+		rowVector.m_dataTable[0][i] = this->m_dataTable[row][i];
 	}
 }
 
 LTEMPLATE
 LMatrix<Type> LMatrix<Type>::GetColumn(IN unsigned int col) const
 {
-    LMatrix<Type> columnVector(this->RowLen, 1);
+    LMatrix<Type> columnVector(this->m_rowLen, 1);
 	this->GetColumn(col, columnVector);
 
     return columnVector;
@@ -368,47 +369,47 @@ LMatrix<Type> LMatrix<Type>::GetColumn(IN unsigned int col) const
 LTEMPLATE
 void LMatrix<Type>::GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const
 {
-	colVector.Reset(this->RowLen, 1);
-	for (unsigned int i = 0; i < this->RowLen; i++)
+	colVector.Reset(this->m_rowLen, 1);
+	for (unsigned int i = 0; i < this->m_rowLen; i++)
 	{
-		colVector.Data[i][0] = this->Data[i][col];
+		colVector.m_dataTable[i][0] = this->m_dataTable[i][col];
 	}
 }
 
 LTEMPLATE
 void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col)
 {
-    if ((this->RowLen != row) || this->ColumnLen != col)
+    if ((this->m_rowLen != row) || this->m_columnLen != col)
     {
-        if (this->Data)
+        if (this->m_dataTable)
         {
-            delete[] this->Data;
-            this->Data = 0;
+            delete[] this->m_dataTable;
+            this->m_dataTable = 0;
         }
 
-        if (this->m_data)
+        if (this->m_dataList)
         {
-            delete[] this->m_data;
-            this->m_data = 0;
+            delete[] this->m_dataList;
+            this->m_dataList = 0;
         }
 
         
         if (row * col > 0)
         {
-            this->RowLen = row;
-            this->ColumnLen = col;
+            this->m_rowLen = row;
+            this->m_columnLen = col;
 
-            this->Data = new Type*[this->RowLen];
-            this->m_data = new Type[this->RowLen * this->ColumnLen];
-            for (unsigned int i = 0; i < this->RowLen; i++)
+            this->m_dataTable = new Type*[this->m_rowLen];
+            this->m_dataList = new Type[this->m_rowLen * this->m_columnLen];
+            for (unsigned int i = 0; i < this->m_rowLen; i++)
             {
-                this->Data[i] = &this->m_data[this->ColumnLen * i];
+                this->m_dataTable[i] = &this->m_dataList[this->m_columnLen * i];
             }
         }
         else
         {
-            this->RowLen = 0;
-            this->ColumnLen = 0;
+            this->m_rowLen = 0;
+            this->m_columnLen = 0;
         }
     }
 }
@@ -421,7 +422,7 @@ void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col, IN const Typ
     unsigned int size = row * col;
     for (unsigned int i = 0; i < size; i++)
     {
-        this->m_data[i] = initValue;
+        this->m_dataList[i] = initValue;
     }
 }
 
@@ -437,10 +438,10 @@ bool LMatrix<Type>::MUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OU
     {
         for (unsigned int j = 0; j < C.ColumnLen; j++)
         {
-            C.Data[i][j] = A.Data[i][0] * B.Data[0][j];
+            C.m_dataTable[i][j] = A.m_dataTable[i][0] * B.m_dataTable[0][j];
             for (unsigned int k = 1; k < A.ColumnLen; k++)
             {
-                C.Data[i][j] += A.Data[i][k] * B.Data[k][j];
+                C.m_dataTable[i][j] += A.m_dataTable[i][k] * B.m_dataTable[k][j];
             }
         }
     }
@@ -460,7 +461,7 @@ bool LMatrix<Type>::DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B,
     {
         for (unsigned int j = 0; j < C.ColumnLen; j++)
         {
-            C.Data[i][j] = A.Data[i][j] * B.Data[i][j];
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] * B.m_dataTable[i][j];
         }
     }
 
@@ -483,7 +484,7 @@ bool LMatrix<Type>::SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT L
     {
         for (unsigned int col = 0; col < A.ColumnLen; col++)
         {
-            C.Data[row][col] = A.Data[row][col] * B;
+            C.m_dataTable[row][col] = A.m_dataTable[row][col] * B;
         }
     }
 
@@ -502,7 +503,7 @@ bool LMatrix<Type>::SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OU
     {
         for (unsigned int j = 0; j < C.ColumnLen; j++)
         {
-            C.Data[i][j] = A.Data[i][j] - B.Data[i][j];
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] - B.m_dataTable[i][j];
         }
     }
 
@@ -521,7 +522,7 @@ bool LMatrix<Type>::ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OU
     {
         for (unsigned int j = 0; j < C.ColumnLen; j++)
         {
-            C.Data[i][j] = A.Data[i][j] + B.Data[i][j];
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] + B.m_dataTable[i][j];
         }
     }
 
@@ -540,7 +541,7 @@ bool LMatrix<Type>::DOTDIV(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B,
     {
         for (unsigned int j = 0; j < C.ColumnLen; j++)
         {
-            C.Data[i][j] = A.Data[i][j] / B.Data[i][j];
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] / B.m_dataTable[i][j];
         }
     }
 
@@ -554,7 +555,7 @@ LTEMPLATE
     for (unsigned int i = 0; i < A.RowLen; i++)
     {
         for (unsigned int j = 0; j < A.ColumnLen; j++)
-            B.Data[j][i] = A.Data[i][j];
+            B.m_dataTable[j][i] = A.m_dataTable[i][j];
     }
 
     return true;

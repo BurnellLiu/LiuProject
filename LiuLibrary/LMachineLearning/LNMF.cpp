@@ -16,7 +16,7 @@ static void RandNMFMatrix(INOUT LNMFMatrix& m)
     {
         for (unsigned int j = 0; j < m.ColumnLen; j++)
         {
-            m.Data[i][j] = RandFloat();
+            m[i][j] = RandFloat();
         }
     }
 }

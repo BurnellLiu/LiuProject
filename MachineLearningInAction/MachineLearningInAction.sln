@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NMF", "NMF\NMF.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ANN", "ANN\ANN.vcxproj", "{70D684E4-B34E-4F91-9152-9D6B480F98AB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatrixDet", "MatrixDet\MatrixDet.vcxproj", "{17CDE909-79B9-49CA-AAA8-DF9E83A3CF4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,10 @@ Global
 		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Debug|Win32.Build.0 = Debug|Win32
 		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Release|Win32.ActiveCfg = Release|Win32
 		{70D684E4-B34E-4F91-9152-9D6B480F98AB}.Release|Win32.Build.0 = Release|Win32
+		{17CDE909-79B9-49CA-AAA8-DF9E83A3CF4F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{17CDE909-79B9-49CA-AAA8-DF9E83A3CF4F}.Debug|Win32.Build.0 = Debug|Win32
+		{17CDE909-79B9-49CA-AAA8-DF9E83A3CF4F}.Release|Win32.ActiveCfg = Release|Win32
+		{17CDE909-79B9-49CA-AAA8-DF9E83A3CF4F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
