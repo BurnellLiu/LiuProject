@@ -18,9 +18,15 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\LiuLibrary\LDataStruct\LMatrix.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

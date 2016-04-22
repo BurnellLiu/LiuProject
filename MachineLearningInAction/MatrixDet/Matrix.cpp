@@ -632,7 +632,7 @@ void printMatrix( const Matrix& m, ostream& out )
     int wid = n + pre + 3;  // 控制字符宽度=n+pre+符号位+小数点位
 
     out<<std::showpoint;
-    out<<std::setiosflags(std::<a href="http://lib.csdn.net/base/1" class="replace_word" title="Swift知识库" target="_blank" style="color:#df3434; font-weight:bold;">ios</a>::fixed);
+    //out<<std::setiosflags(std::<a href="http://lib.csdn.net/base/1" class="replace_word" title="Swift知识库" target="_blank" style="color:#df3434; font-weight:bold;">ios</a>::fixed);
     out<<std::setprecision( pre );
     for ( int i = 0; i < r; ++i )
     {

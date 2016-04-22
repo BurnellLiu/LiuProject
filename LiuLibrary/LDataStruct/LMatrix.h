@@ -1,3 +1,10 @@
+/// @file LMatrix.h
+/// @brief 矩阵模板头文件
+/// 
+/// Detail:
+/// @author Burnell Liu Email:burnell_liu@outlook.com
+/// @version   
+/// @date 2016:4:21
 
 #ifndef _DATASTRUCT_LMATRIX_H_
 #define _DATASTRUCT_LMATRIX_H_
@@ -136,14 +143,22 @@ public:
     LMatrix<Type> operator + (IN const LMatrix<Type>& B) const;
 
     /// @brief []操作符
-    ///
     /// @param[in] row 矩阵行
     Type*& operator[](IN unsigned int row);
 
     /// @brief []操作符
-    ///
     /// @param[in] row 矩阵行
     const Type* operator[](IN unsigned int row) const;
+
+    /// @brief 判断矩阵是否为空
+    /// 行数或列数为0的矩阵为空
+    /// @return true, false
+    bool Empty() const;
+
+    /// @brief 判断是否是方阵
+    /// 非空以及行数列数相等的矩阵为方阵
+    /// @return true, false
+    bool Square() const;
 
     /// @brief 矩阵转置
     /// @return 转置后的结果矩阵
@@ -328,6 +343,27 @@ LTEMPLATE
 const Type* LMatrix<Type>::operator[](IN unsigned int row) const
 {
     return this->m_dataTable[row];
+}
+
+LTEMPLATE
+bool LMatrix<Type>::Empty() const
+{
+    if (this->m_columnLen == 0 || this->m_rowLen == 0)
+        return true;
+
+    return false;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::Square() const
+{
+    if (this->m_columnLen == this->m_rowLen)
+    {
+        if (this->m_columnLen != 0)
+            return true;
+    }
+
+    return false;
 }
 
 LTEMPLATE
