@@ -19,6 +19,8 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
 
      this->LoadQSS();
 
+     this->setWindowIcon(QIcon(".\\Image\\Main.png"));
+
     // 获取当前系统DPI, 当前系统DPI除以设计时DPI值, 则得到UI放大系数
     const float DESIGN_DPI = 96.0f; // 设计时DPI
     QPainter painter(this);
@@ -62,6 +64,9 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
 
     ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
 
+
+    
+
 }
 
 MainPage::~MainPage()
@@ -82,6 +87,25 @@ MainPage::~MainPage()
     {
         delete m_pTestItemPage;
         m_pTestItemPage = NULL;
+    }
+}
+
+void MainPage::showEvent(QShowEvent* e)
+{
+    static bool sInitDone = false;
+    if (!sInitDone)
+    {
+        sInitDone = true;
+
+        QSize iconSize(64 * m_uiRatio, 64 * m_uiRatio);
+        ui.toolButtonTempManagement->setIconSize(iconSize);
+        ui.toolButtonTempManagement->setIcon(QIcon(".\\Image\\Temperature.png"));
+
+        ui.toolButtonHardware->setIconSize(iconSize);
+        ui.toolButtonHardware->setIcon(QIcon(".\\Image\\Computer.png"));
+
+        ui.toolButtonTestItem->setIconSize(iconSize);
+        ui.toolButtonTestItem->setIcon(QIcon(".\\Image\\TestItem"));
     }
 }
 

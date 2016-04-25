@@ -91,6 +91,9 @@
           <property name="text">
            <string>Temperature</string>
           </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextUnderIcon</enum>
+          </property>
          </widget>
         </item>
         <item>
@@ -112,6 +115,9 @@
           </property>
           <property name="text">
            <string>TestItem</string>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextUnderIcon</enum>
           </property>
          </widget>
         </item>
