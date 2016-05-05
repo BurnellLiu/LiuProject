@@ -3,54 +3,73 @@
 
 import urllib2
 from bs4 import BeautifulSoup
-from urlparse import urljoin
-import sys 
 
-def Crawl(pagesList, depth = 2):
-    for i in range(depth):
-        newPages = set()
-        for page in pagesList:
-            try:
-                c = urllib2.urlopen(page)
-            except:
-                print 'Could not open %s' % page
-                continue
-            
-            try:
-                soup = BeautifulSoup(c.read())
-            except:
-                print "Can't Paser"
-                continue
-                
-            links = soup('a')
-            for link in links:
-                if ('href' in dict(link.attrs)):
-                    url = urljoin(page, link['href'])
-                    #print link
-                    print url
-                    if url[0:4] == 'http':
-                        newPages.add(url)
-
-        pagesList = newPages
+class CarePeoplePage:
+    def __init__(self, url, cookie):
+        self.url = url
         
+        header = { 
+                   'Connection' : 'keep-alive', 
+                   'cookie' : cookie, 
+                   'User-Agent' : 'JUC (Linux; U; 2.3.7; zh-cn; MB200; 320*480) UCWEB7.9.3.103/139/999' 
+                 }
+        self.headers = header
+        
+        request = urllib2.Request(url, headers=self.headers) 
+    
+        try:
+            content =urllib2.urlopen(request)
+        except:
+            print('Open Fail')
+            return
+    
+        pageContent = content.read()
+        soup = BeautifulSoup(pageContent)
+        pageName = 'CarePeoplePage.txt'
+        fp = open(pageName, 'w')
+        fp.write(soup.prettify().encode('utf-8'))
+        fp.close()
+        
+    def GetPeopleList(self):
+        pass
+    
 
-def GetBlogFromPage(pageContent):
-
+def GetBlogPageTotalNum(pageContent):
     soup = BeautifulSoup(pageContent)
-    
-    fp = open('page.txt', 'w')
-    fp.write(soup.prettify().encode('utf-8'))
-    fp.close()
-    
-    blogDict = []
-    
-    fp = open('xx.txt', 'w')    
-    divList = soup('div')
-    
+    divList = soup('div') 
     for div in divList:
         divAttrs = div.attrs
         
-        if (not divAttrs.has_key(u'class') or not divAttrs.has_key('id')):
+        if (not divAttrs.has_key('class') or not divAttrs.has_key('id')):
+            continue
+        if (divAttrs['class'] != ['pa'] or divAttrs['id'] != 'pagelist'):
+            continue
+        
+        inputList = div('input')
+        for input in inputList:
+            inputAttrs = input.attrs
+            if (not inputAttrs.has_key('name') or 
+                not inputAttrs.has_key('type') or
+                not inputAttrs.has_key('value')):
+                continue
+            
+            num = inputAttrs['value']
+            return int(num)
+            
+    return 0   
+            
+
+def GetBlogsFromPage(pageContent):
+
+    soup = BeautifulSoup(pageContent)
+    
+    blogList = []
+    
+    divList = soup('div') 
+    for div in divList:
+        divAttrs = div.attrs
+        
+        if (not divAttrs.has_key('class') or not divAttrs.has_key('id')):
             continue
         if (divAttrs['class'] != ['c']):
             continue
@@ -73,21 +92,29 @@ def GetBlogFromPage(pageContent):
                     blogText += string
             
             if (spanAttrs['class'] == ['ct']):
-                blogTime = span.string
+                for string in span.strings:
+                    blogTime += string
         
-        fp.write(blogId.encode('utf-8'))
-        fp.write('  ')
-        fp.write(blogText.encode('utf-8'))
-        fp.write('  ')
-        fp.write(blogTime.encode('utf-8'))
-        fp.write('\n')
-        fp.write('\n')    
+        try:
+            blogList.append([blogId.encode('utf-8'), blogText.encode('utf-8'), blogTime.encode('utf-8')])
+        except:
+            continue
+        
+        
             
-    
+    return blogList
        
        
 def WeiboLogin():
-    COOKIE ='_T_WM=34fdb0229023a2bbbd2158fce59ed838; SUB=_2A256Ld3ODeRxGedJ4lYQ8yzFzDyIHXVZ0eOGrDV6PUJbstBeLRH6kW1LHetKQuM-Or4E3fjLmMbCn2CplXbpkA..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p; SUHB=04WvQCvoE3WI_D; SSOLoginState=1462349214; gsid_CTandWM=4uEICpOz5mEXV3zeThpDS7wJCfE'
+
+    #title = soup.title.string
+    #pageName = title
+    #pageName += '_page.txt'
+    #fp = open(pageName, 'w')
+    #fp.write(soup.prettify().encode('utf-8'))
+    #fp.close()
+
+    COOKIE ='_T_WM=34fdb0229023a2bbbd2158fce59ed838; gsid_CTandWM=4ue8CpOz5611twdEuRLtb7wJCfE; SUB=_2A256LteIDeRxGedJ4lYQ8yzFzDyIHXVZ0PnArDV6PUJbstBeLRTdkW1LHeubGRqHxPYch01CanIatWUY7tNOmQ..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p; SUHB=0h1Il6Dnq_KWr0; SSOLoginState=1462413272'
     header = { 
     'Connection' : 'keep-alive', 
     'cookie' : COOKIE, 
@@ -102,7 +129,49 @@ def WeiboLogin():
         print('Open Fail')
         return
     
-    GetBlogFromPage(content.read())
+    pageContent = content.read()
+    
+    weiboName = 'xiena.txt'
+    fp = open(weiboName, 'w')
+    blogList = GetBlogsFromPage(pageContent)
+    for blog in blogList:
+        fp.write(blog[0])
+        fp.write('  ')
+        fp.write(blog[1])
+        fp.write('  ')
+        fp.write(blog[2])
+        fp.write('\n')
+        fp.write('\n')  
+    
+    pageNum = GetBlogPageTotalNum(pageContent)
+    for i in range(2, pageNum + 1):
+        newUrl = url
+        newUrl += '?page='
+        newUrl += str(i)
+        print newUrl
+        request = urllib2.Request(newUrl, headers=header) 
+        try:
+            content =urllib2.urlopen(request)
+        except:
+            continue
+            
+        pageContent = content.read()
+        blogList = GetBlogsFromPage(pageContent)
+        for blog in blogList:
+            fp.write(blog[0])
+            fp.write('  ')
+            fp.write(blog[1])
+            fp.write('  ')
+            fp.write(blog[2])
+            fp.write('\n')
+            fp.write('\n')
+        
+        print i*100/pageNum
+    
+    fp.close()
 
-WeiboLogin()
-                    
+#WeiboLogin()
+COOKIE ='_T_WM=34fdb0229023a2bbbd2158fce59ed838; gsid_CTandWM=4ue8CpOz5611twdEuRLtb7wJCfE; SUB=_2A256LteIDeRxGedJ4lYQ8yzFzDyIHXVZ0PnArDV6PUJbstBeLRTdkW1LHeubGRqHxPYch01CanIatWUY7tNOmQ..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p; SUHB=0h1Il6Dnq_KWr0; SSOLoginState=1462413272'   
+url = 'http://weibo.cn/1192329374/follow'
+carePeoplePage = CarePeoplePage(url, COOKIE)
+             
