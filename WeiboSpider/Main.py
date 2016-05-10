@@ -20,6 +20,7 @@ def SetCurrentUrlId(id):
 def BuidFileName(id, url, name):
     fileName = './WeiboData/'
     fileName += str(id)
+    fileName += '-'
     fileName += name
     temp = url.replace('/', '#')
     temp = temp.replace(':', '#')
@@ -65,7 +66,7 @@ def Main():
                 fp.write('\n')
             print("%s Complete %d" % (name, i * 100/totalNum)) 
         fp.close()
-        
+
         
         #将当前用户的关注用户写入数据库
         carePageUrl = people.GetCarePeoplePageUrl()
