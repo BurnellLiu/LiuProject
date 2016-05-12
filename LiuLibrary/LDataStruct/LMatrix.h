@@ -174,20 +174,20 @@ public:
     /// @return 行向量
     LMatrix<Type> GetRow(IN unsigned int row) const;
 
-	/// @brief 获取矩阵中的一行数据
-	/// @param[in] row 行索引
-	/// @param[out] rowVector 存储行数据
-	void GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const;
+    /// @brief 获取矩阵中的一行数据
+    /// @param[in] row 行索引
+    /// @param[out] rowVector 存储行数据
+    void GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const;
 
     /// @brief 获取矩阵中的一列数据
     /// @param[in] col 列索引
     /// @return 列向量
     LMatrix<Type> GetColumn(IN unsigned int col) const;
 
-	/// @brief 获取矩阵中的一列数据
-	/// @param[in] col 列索引
-	/// @param[out] colVector 存储列数据
-	void GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const;
+    /// @brief 获取矩阵中的一列数据
+    /// @param[in] col 列索引
+    /// @param[out] colVector 存储列数据
+    void GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const;
 
     /// @brief 重置矩阵
     /// 如果row或col中任一项为0, 则矩阵行数和列数都为0
@@ -378,7 +378,7 @@ LTEMPLATE
 LMatrix<Type> LMatrix<Type>::GetRow(IN unsigned int row) const
 {
     LMatrix<Type> rowVector(1, this->m_columnLen);
-	this->GetRow(row, rowVector);
+    this->GetRow(row, rowVector);
 
     return rowVector;
 }
@@ -386,18 +386,18 @@ LMatrix<Type> LMatrix<Type>::GetRow(IN unsigned int row) const
 LTEMPLATE
 void LMatrix<Type>::GetRow(IN unsigned int row, OUT LMatrix<Type>& rowVector) const
 {
-	rowVector.Reset(1, this->m_columnLen);
-	for (unsigned int i = 0; i < this->m_columnLen; i++)
-	{
-		rowVector.m_dataTable[0][i] = this->m_dataTable[row][i];
-	}
+    rowVector.Reset(1, this->m_columnLen);
+    for (unsigned int i = 0; i < this->m_columnLen; i++)
+    {
+        rowVector.m_dataTable[0][i] = this->m_dataTable[row][i];
+    }
 }
 
 LTEMPLATE
 LMatrix<Type> LMatrix<Type>::GetColumn(IN unsigned int col) const
 {
     LMatrix<Type> columnVector(this->m_rowLen, 1);
-	this->GetColumn(col, columnVector);
+    this->GetColumn(col, columnVector);
 
     return columnVector;
 }
@@ -405,11 +405,11 @@ LMatrix<Type> LMatrix<Type>::GetColumn(IN unsigned int col) const
 LTEMPLATE
 void LMatrix<Type>::GetColumn(IN unsigned int col, OUT LMatrix<Type>& colVector) const
 {
-	colVector.Reset(this->m_rowLen, 1);
-	for (unsigned int i = 0; i < this->m_rowLen; i++)
-	{
-		colVector.m_dataTable[i][0] = this->m_dataTable[i][col];
-	}
+    colVector.Reset(this->m_rowLen, 1);
+    for (unsigned int i = 0; i < this->m_rowLen; i++)
+    {
+        colVector.m_dataTable[i][0] = this->m_dataTable[i][col];
+    }
 }
 
 LTEMPLATE
