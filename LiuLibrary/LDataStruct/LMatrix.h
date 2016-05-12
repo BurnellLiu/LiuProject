@@ -585,7 +585,7 @@ bool LMatrix<Type>::DOTDIV(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B,
 }
 
 LTEMPLATE
- bool LMatrix<Type>::T(IN const LMatrix<Type>& A, OUT LMatrix<Type>& B)
+bool LMatrix<Type>::T(IN const LMatrix<Type>& A, OUT LMatrix<Type>& B)
 {
     B.Reset(A.ColumnLen, A.RowLen);
     for (unsigned int i = 0; i < A.RowLen; i++)
