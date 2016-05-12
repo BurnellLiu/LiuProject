@@ -122,4 +122,32 @@ private:
     LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
 };
 
+/// @brief Softmax回归(多分类)
+class LSoftmaxRegression
+{
+public:
+    /// @brief 构造函数
+    LSoftmaxRegression();
+
+    /// @brief 析构函数
+    ~LSoftmaxRegression();
+
+    /// @brief 训练模型
+    /// @param[in] problem 原始问题, 目标向量中的值只能为[1.0f, 2.0f, ..., k.0f]
+    /// @param[in] k 样本的类别数量
+    /// @param[in] learningRate 学习速度, 学习速度必须大于0
+    /// @param[in] trainTimes 训练次数
+    /// @return 成功返回true, 失败返回false(参数错误的情况下会返回失败)
+    bool TrainModel(
+        IN const LRegressionProblem& problem,
+        IN unsigned int k,
+        IN float learningRate,
+        IN unsigned int trainTimes);
+
+private:
+    LRegressionMatrix m_xMatrix; ///< 样本矩阵
+    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
+    LRegressionMatrix m_wMatrix; ///<权重矩阵
+};
+
 #endif
