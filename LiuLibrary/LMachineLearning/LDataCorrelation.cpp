@@ -37,6 +37,8 @@ float LPearsonCorrelation::Calculate(IN const LDCVector& dataVecA, IN const LDCV
         return 0;
 
     unsigned int length = dataVecA.ColumnLen;
+    if (length < 1)
+        return 0;
 
     float sumA = 0.0f;
     float sumB = 0.0f;

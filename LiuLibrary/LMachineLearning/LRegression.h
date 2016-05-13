@@ -34,9 +34,9 @@ struct LRegressionProblem
     const LRegressionMatrix& YVector; ///< 目标向量(列向量)
 };
 
+class CLinearRegression;
+
 /// @brief 线性回归类
-/// 线性函数为 h(x)  =  X * W
-/// W为特征权重的列向量, X为特征的行向量
 class LLinearRegression
 {
 public:
@@ -56,20 +56,19 @@ public:
         IN float learningRate,
         IN unsigned int trainTimes);
 
-    /// @brief 获取权重向量(列向量)
-    /// 权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
-    /// @param[out] weightVector
-    /// @return 模型未训练返回false, 否则返回true
-    bool GetWeightVector(OUT LRegressionMatrix& weightVector);
+    /// @brief 使用训练好的模型预测数据
+    /// @param[in] sampleMatrix 需要预测的样本矩阵
+    /// @param[out] yVector 存储预测的结果向量(列向量)
+    /// @return 成功返回true, 失败返回false(模型未训练或参数错误的情况下会返回失败)
+    bool Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const;
 
-    /// @brief 获取误差值(二乘值)
-    /// @return 模型未训练返回-1.0f, 否则返回误差值
-    float GetErrorValue();
+    /// @brief 训练后预测数据与训练数据的相关度(即模型的优劣程度)
+    /// 相关度越接近1表示模型越好
+    /// @return 相关度, 模型未训练则返回0
+    float GetCorrelation() const;
 
 private:
-    LRegressionMatrix m_xMatrix; ///< 样本矩阵
-    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
-    LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
+    CLinearRegression* m_pLinearRegression; ///< 线性回归实现对象
 };
 
 /// @brief 逻辑回归中的ZERO分类
