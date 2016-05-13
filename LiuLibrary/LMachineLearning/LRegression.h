@@ -1,10 +1,16 @@
 /// @file LRegression.h
 /// @brief 本文件中声明了一些回归算法
-/// 
+/// 线性回归, 逻辑回归, Softmax回归
 /// Detail:
-/// 线性回归
+/// 线性回归:
 /// 优点: 结果易于理解, 计算上不复杂
 /// 缺点: 对非线性数据拟合不好
+/// 线性回归的改进算法有局部加权回归
+/// 
+/// 逻辑回归:
+/// 优点: 计算代价不高, 易于理解和实现
+/// 缺点: 容易欠拟合, 分类精度可能不高
+/// 
 /// @author Burnell_Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 10:10:2015
@@ -25,13 +31,26 @@ struct LRegressionProblem
     /// @brief 构造函数
     /// @param[in] sampleMatrix 样本矩阵, 每一行为一个样本, 每行中的值为样本的特征值, 至少需要两个样本
     /// @param[in] targetVector 目标向量(列向量), 行数为样本矩阵的行数, 列数为1, 每行的值代表样本矩阵中每个样本的目标(输出)
-    LRegressionProblem(IN const LRegressionMatrix& sampleMatrix, IN const LRegressionMatrix& targetVector)
-        : XMatrix(sampleMatrix), YVector(targetVector)
+    /// @param[in] learningRate 学习速度(必须为大于0的数)
+    /// @param[in] trainTimes 训练次数
+    LRegressionProblem(
+        IN const LRegressionMatrix& sampleMatrix, 
+        IN const LRegressionMatrix& targetVector,
+        IN float learningRate,
+        IN unsigned int trainTimes)
+        : 
+        XMatrix(sampleMatrix), 
+        YVector(targetVector), 
+        LearningRate(learningRate), 
+        TrainTimes(trainTimes)
     {
     }
 
     const LRegressionMatrix& XMatrix; ///< 样本矩阵
     const LRegressionMatrix& YVector; ///< 目标向量(列向量)
+
+    float LearningRate; ///< 学习速度
+    unsigned int TrainTimes; ///< 训练次数
 };
 
 class CLinearRegression;
@@ -48,13 +67,8 @@ public:
 
     /// @brief 训练模型
     /// @param[in] problem 原始问题
-    /// @param[in] learningRate 学习速度, 学习速度必须大于0
-    /// @param[in] trainTimes 训练次数
     /// @return 成功返回true, 失败返回false(参数错误的情况下会返回失败)
-    bool TrainModel(
-        IN const LRegressionProblem& problem,
-        IN float learningRate,
-        IN unsigned int trainTimes);
+    bool TrainModel(IN const LRegressionProblem& problem);
 
     /// @brief 使用训练好的模型预测数据
     /// @param[in] sampleMatrix 需要预测的样本矩阵
@@ -81,11 +95,9 @@ private:
 #define REGRESSION_ONE 1.0f
 #endif
 
+class CLogisticRegression;
+
 /// @brief 逻辑回归(分类)
-/// 逻辑函数为 h(x)  =  1/(1 + e^(X * W)) 
-/// W为特征权重的列向量, X为特征的行向量
-/// 原始问题中的目标向量中的值只能为0.0f或1.0f
-/// P(1) = h(x), P(0) = 1-h(x)
 class LLogisticRegression
 {
 public:
@@ -97,28 +109,21 @@ public:
 
     /// @brief 训练模型
     /// @param[in] problem 原始问题, 目标向量中的值只能为0.0f或1.0f
-    /// @param[in] learningRate 学习速度, 学习速度必须大于0
-    /// @param[in] trainTimes 训练次数
     /// @return 成功返回true, 失败返回false(参数错误的情况下会返回失败)
-    bool TrainModel(
-        IN const LRegressionProblem& problem,
-        IN float learningRate,
-        IN unsigned int trainTimes);
+    bool TrainModel(IN const LRegressionProblem& problem);
 
-    /// @brief 获取权重向量(列向量)
-    /// 权重向量的长度为样本特征数目加1, 权重向量的最后一项为常数项值
-    /// @param[out] weightVector
-    /// @return 模型未训练返回false, 否则返回true
-    bool GetWeightVector(OUT LRegressionMatrix& weightVector);
+    /// @brief 使用训练好的模型预测数据
+    /// @param[in] sampleMatrix 需要预测的样本矩阵
+    /// @param[out] yVector 存储预测的结果向量(列向量)
+    /// @return 成功返回true, 失败返回false(模型未训练或参数错误的情况下会返回失败)
+    bool Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const;
 
-    /// @brief 获取当前特征参数的似然值
-    /// @return 似然值, 范围(0~1), 似然值越大表示特征参数越准确, 模型未训练返回-1.0f
-    float GetLikelihood();
+    /// @brief 获取当前训练模型的正确率
+    /// @return 正确率, 模型未训练返回-1.0f
+    float GetAccuracy() const;
 
 private:
-    LRegressionMatrix m_xMatrix; ///< 样本矩阵
-    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
-    LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
+    CLogisticRegression* m_pLogisticRegression; ///< 逻辑回归实现类
 };
 
 /// @brief Softmax回归(多分类)
