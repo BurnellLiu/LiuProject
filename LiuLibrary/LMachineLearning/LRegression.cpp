@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+
 namespace Regression
 {
     /// @brief 样本矩阵中增加常数项, 添加在最后一列, 值为1.0f
@@ -233,9 +234,9 @@ public:
         LRegressionMatrix XT = X.T();
 
         /*
-        h(x)  =  1/(1 + e^(X * W)) 则
-        wj = wj - α * ∑((y - h(x)) * xj)
         如果h(x)  =  1/(1 + e^(X * W)) 则
+        wj = wj - α * ∑((y - h(x)) * xj)
+        如果h(x)  =  1/(1 + e^(-X * W)) 则
         wj = wj + α * ∑((y - h(x)) * xj)
         */
 
@@ -361,4 +362,174 @@ bool LLogisticRegression::Predict(IN const LRegressionMatrix& sampleMatrix, OUT 
 float LLogisticRegression::GetAccuracy() const
 {
     return m_pLogisticRegression->GetAccuracy();
+}
+
+void PrintMatrix(const LMatrix<float>& matrix);
+
+class CSoftmaxRegression
+{
+public:
+    CSoftmaxRegression(IN unsigned int m, IN unsigned int n, IN unsigned int k)
+    {
+        m_M = m;
+        m_N = n;
+        m_K = k;
+
+        m_wMatrix.Reset(n + 1, k, 0.0f);
+    }
+
+    ~CSoftmaxRegression()
+    {
+
+    }
+
+    /// @brief 训练模型
+    bool TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yMatrix, IN float alpha)
+    {
+        // 检查参数
+        if (m_M < 2 || m_N < 1 || m_K < 2)
+            return false;
+
+        if (xMatrix.RowLen < 1)
+            return false;
+        if (xMatrix.ColumnLen != m_N)
+            return false;
+        if (yMatrix.RowLen != xMatrix.RowLen)
+            return false;
+        if (yMatrix.ColumnLen != m_K)
+            return false;
+
+        if (alpha <= 0.0f)
+            return false;
+
+        // 增加常数项后的样本矩阵
+        LRegressionMatrix X;
+        Regression::SampleAddConstantItem(xMatrix, X);
+
+        // 权重矩阵
+        LRegressionMatrix& W = m_wMatrix;
+
+        // 概率矩阵
+        LRegressionMatrix P(X.RowLen, m_K, 0.0f);
+
+        // 计算概率矩阵
+        this->SampleProbK(X, W, P);
+
+        LRegressionMatrix::SUB(yMatrix, P, P);
+
+        // 权重向量(列向量)
+        LRegressionMatrix dwVec(m_N + 1, 1, 0.0f);
+        for (unsigned int k = 0; k < m_K; k++)
+        {
+            dwVec.Reset(m_N + 1, 1, 0.0f);
+            for (unsigned int row = 0; row < X.RowLen; row++)
+            {
+                for (unsigned int col = 0; col < X.ColumnLen; col++)
+                {
+                    dwVec[col][0] += X[row][col] * P[row][k];
+                }
+            }
+
+            LRegressionMatrix::SCALARDIV(dwVec, (float)m_M, dwVec);
+
+            LRegressionMatrix::SCALARMUL(dwVec, alpha, dwVec);
+
+            for (unsigned int row = 0; row < m_wMatrix.RowLen; row++)
+            {
+                m_wMatrix[row][k] += dwVec[row][0];
+            }
+        }
+
+        return true;
+    }
+
+    /// @brief 使用训练好的模型预测数据
+    bool Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yMatrix) const
+    {
+        // 检查参数
+        if (m_M < 2 || m_N < 1 || m_K < 2)
+            return false;
+
+        if (xMatrix.RowLen < 1)
+            return false;
+        if (xMatrix.ColumnLen != m_N)
+            return false;
+
+        yMatrix.Reset(xMatrix.RowLen, m_K, 0.0f);
+
+        LRegressionMatrix X;
+        Regression::SampleAddConstantItem(xMatrix, X);
+
+        this->SampleProbK(X, m_wMatrix, yMatrix);
+
+        return true;
+    }
+
+private:
+    /// @brief 计算样本属于K个分类的各个概率
+    /// @param[in] sampleMatrix 样本矩阵, m * n
+    /// @param[in] weightMatrix 权重矩阵, n * k, 每一列为一个分类权重
+    /// @param[out] probMatrix 概率矩阵, 存储每个样本属于不同分类的概率
+    /// @return 成功返回true, 失败返回false(参数错误的情况下会返回失败)
+    void SampleProbK(
+        IN const LRegressionMatrix& sampleMatrix, 
+        IN const LRegressionMatrix& weightMatrix, 
+        OUT LRegressionMatrix& probMatrix) const
+    {
+        LRegressionMatrix::MUL(sampleMatrix, weightMatrix, probMatrix);
+
+        for (unsigned int row = 0; row < probMatrix.RowLen; row++)
+        {
+            for (unsigned int col = 0; col < probMatrix.ColumnLen; col++)
+            {
+                probMatrix[row][col] = exp(probMatrix[row][col]);
+            }
+        }
+
+        for (unsigned int row = 0; row < probMatrix.RowLen; row++)
+        {
+            float sum = 0.0f;
+            for (unsigned int col = 0; col < probMatrix.ColumnLen; col++)
+            {
+                sum += probMatrix[row][col];
+            }
+
+            for (unsigned int col = 0; col < probMatrix.ColumnLen; col++)
+            {
+                probMatrix[row][col] = probMatrix[row][col]/sum;
+            }
+        }
+    }
+private:
+    unsigned int m_M; ///< 样本总个数
+    unsigned int m_N; ///< 样本特征值个数
+    unsigned int m_K; ///< 样本类别个数
+
+    LRegressionMatrix m_wMatrix; ///<权重矩阵, 每一列则为一个分类的权重向量
+};
+
+LSoftmaxRegression::LSoftmaxRegression(IN unsigned int m, IN unsigned int n, IN unsigned int k)
+    :m_pSoftmaxRegression(0)
+{
+    m_pSoftmaxRegression = new CSoftmaxRegression(m, n ,k);
+}
+
+LSoftmaxRegression::~LSoftmaxRegression()
+{
+    if (m_pSoftmaxRegression != 0)
+    {
+        delete m_pSoftmaxRegression;
+        m_pSoftmaxRegression = 0;
+    }
+}
+
+
+bool LSoftmaxRegression::TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yMatrix, IN float alpha)
+{
+    return m_pSoftmaxRegression->TrainModel(xMatrix, yMatrix, alpha);
+}
+
+bool LSoftmaxRegression::Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yMatrix) const
+{
+    return m_pSoftmaxRegression->Predict(xMatrix, yMatrix);
 }
