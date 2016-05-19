@@ -30,43 +30,13 @@ LTEMPLATE
 class LMatrix
 {
 public:
-    /// @brief 矩阵乘法
-    /// 要求矩阵A的列数等于矩阵B的行数
-    /// @param[in] A 被乘数
-    /// @param[in] B 乘数
+    /// @brief 矩阵加法
+    /// 要求矩阵A的大小等于矩阵B的大小
+    /// @param[in] A 被加数
+    /// @param[in] B 加数
     /// @param[out] C 结果矩阵
     /// @return 参数错误返回false
-    static bool MUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
-
-    /// @brief 矩阵点乘
-    /// 要求矩阵A的大小等于矩阵B的大小
-    /// @param[in] A 被乘数
-    /// @param[in] B 乘数
-    /// @param[out] C 结果矩阵
-    /// @return 参数错误返回false
-    static bool DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
-
-    /// @brief 矩阵点乘
-    /// 要求矩阵A的大小等于矩阵B的大小
-    /// @param[in] A 被乘数
-    /// @param[in] B 乘数
-    /// @return 结果矩阵
-    static LMatrix<Type> DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B);
-
-    /// @brief 矩阵数乘
-    /// @param[in] A 被乘数
-    /// @param[in] B 乘数
-    /// @param[out] C 结果矩阵
-    /// @return 返回true
-    static bool SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C);
-
-    /// @brief 矩阵点除
-    /// 要求矩阵A的大小等于矩阵B的大小
-    /// @param[in] A 被除数
-    /// @param[in] B 除数
-    /// @param[out] C 结果矩阵
-    /// @return 参数错误返回false
-    static bool DOTDIV(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+    static bool ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
 
     /// @brief 矩阵减法
     /// 要求矩阵A的大小等于矩阵B的大小
@@ -76,19 +46,69 @@ public:
     /// @return 参数错误返回false
     static bool SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
 
-    /// @brief 矩阵加法
-    /// 要求矩阵A的大小等于矩阵B的大小
-    /// @param[in] A 被加数
-    /// @param[in] B 加数
+    /// @brief 矩阵乘法
+    /// 要求矩阵A的列数等于矩阵B的行数
+    /// 注意: 该操作会改变矩阵的结构, 所以C不能和A或B是相同矩阵的引用
+    /// @param[in] A 被乘数
+    /// @param[in] B 乘数
     /// @param[out] C 结果矩阵
     /// @return 参数错误返回false
-    static bool ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+    static bool MUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵数乘
+    /// @param[in] A 被乘数
+    /// @param[in] B 乘数
+    /// @param[out] C 结果矩阵
+    /// @return 返回true
+    static bool SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵点乘
+    /// 要求矩阵A的大小等于矩阵B的大小
+    /// @param[in] A 被乘数
+    /// @param[in] B 乘数
+    /// @param[out] C 结果矩阵
+    /// @return 参数错误返回false
+    static bool DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵数除
+    /// @param[in] A 被除数
+    /// @param[in] B 除数
+    /// @param[out] C 结果矩阵
+    /// @return 返回true
+    static bool SCALARDIV(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C);
+
+    /// @brief 矩阵点除
+    /// 要求矩阵A的大小等于矩阵B的大小
+    /// @param[in] A 被除数
+    /// @param[in] B 除数
+    /// @param[out] C 结果矩阵
+    /// @return 参数错误返回false
+    static bool DOTDIV(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C);
 
     /// @brief 矩阵转置
+    /// 注意: 该操作会改变矩阵的结构, 所以B不能和A是相同矩阵的引用
     /// @param[in] A 需要转置的矩阵
     /// @param[out] B 转置后的结果矩阵
     /// @return 返回true
     static bool T(IN const LMatrix<Type>& A, OUT LMatrix<Type>& B);
+
+    /// @brief 子矩阵
+    /// 该操作只能取得连续的子矩阵
+    /// 注意: 该操作会改变矩阵的结构, 所以D不能和S是相同矩阵的引用
+    /// @param[in] S 源矩阵
+    /// @param[in] rowStart 子矩阵开始行
+    /// @param[in] rowLen 子矩阵行长度
+    /// @param[in] colStart 子矩阵开始列
+    /// @param[in] colLen 子矩阵列长度
+    /// @param[out] D 存储子矩阵
+    /// @return 参数错误返回false
+    static bool SUBMATRIX(
+        IN const LMatrix<Type>& S, 
+        IN unsigned int rowStart, 
+        IN unsigned int rowLen, 
+        IN unsigned int colStart, 
+        IN unsigned int colLen, 
+        OUT LMatrix<Type>& D);
 
 public:
     /// @brief 默认构造函数
@@ -124,11 +144,16 @@ public:
     /// @brief 赋值操作符
     LMatrix<Type>& operator = (IN const LMatrix<Type>& rhs);
 
-    /// @brief 矩阵乘法
-    /// 要求自身矩阵的列数等于矩阵B的行数
-    /// @param[in] B 乘数
+    /// @brief 矩阵加法
+    /// 要求自身矩阵大小等于矩阵B的大小
+    /// @param[in] B 加数
     /// @return 结果矩阵
-    LMatrix<Type> operator * (IN const LMatrix<Type>& B) const;
+    LMatrix<Type> operator + (IN const LMatrix<Type>& B) const;
+
+    /// @brief 矩阵自加
+    /// 要求自身矩阵大小等于矩阵B的大小
+    /// @param[in] B 加数
+    LMatrix<Type>& operator += (IN const LMatrix<Type>& B);
 
     /// @brief 矩阵减法
     /// 要求自身矩阵大小等于矩阵B的大小
@@ -136,11 +161,31 @@ public:
     /// @return 结果矩阵
     LMatrix<Type> operator - (IN const LMatrix<Type>& B) const;
 
-    /// @brief 矩阵加法
+    /// @brief 矩阵自减
     /// 要求自身矩阵大小等于矩阵B的大小
-    /// @param[in] B 加数
+    /// @param[in] B 减数
+    LMatrix<Type>& operator -= (IN const LMatrix<Type>& B);
+
+    /// @brief 矩阵乘法
+    /// 要求自身矩阵的列数等于矩阵B的行数
+    /// @param[in] B 乘数
     /// @return 结果矩阵
-    LMatrix<Type> operator + (IN const LMatrix<Type>& B) const;
+    LMatrix<Type> operator * (IN const LMatrix<Type>& B) const;
+
+    /// @brief 矩阵自乘
+    /// 要求自身矩阵的列数等于矩阵B的行数
+    /// @param[in] B 乘数
+    LMatrix<Type>& operator *= (IN const LMatrix<Type>& B);
+
+    /// @brief 矩阵数乘
+    /// @param[in] B 乘数
+    /// @return 结果矩阵
+    LMatrix<Type> ScalarMul(IN const Type& B) const;
+
+    /// @brief 矩阵数除
+    /// @param[in] B 除数
+    /// @return 结果矩阵
+    LMatrix<Type> ScalarDiv(IN const Type& B) const;
 
     /// @brief []操作符
     /// @param[in] row 矩阵行
@@ -164,10 +209,21 @@ public:
     /// @return 转置后的结果矩阵
     LMatrix<Type> T() const;
 
-    /// @brief 矩阵数乘
-    /// @param[in] B 乘数
-    /// @return 结果矩阵
-    LMatrix<Type> ScalarMul(IN const Type& B) const;
+    /// @brief 获取子矩阵
+    /// @param[in] rowStart 子矩阵开始行
+    /// @param[in] rowLen 子矩阵行长度
+    /// @param[in] colStart 子矩阵开始列
+    /// @param[in] colLen 子矩阵列长度
+    /// @return 子矩阵
+    LMatrix<Type> SubMatrix(IN unsigned int rowStart, IN unsigned int rowLen, IN unsigned int colStart, IN unsigned int colLen) const;
+
+    /// @brief 获取子矩阵
+    /// @param[in] rowStart 子矩阵开始行
+    /// @param[in] rowLen 子矩阵行长度
+    /// @param[in] colStart 子矩阵开始列
+    /// @param[in] colLen 子矩阵列长度
+    /// @param[out] D 存储子矩阵
+    void SubMatrix(IN unsigned int rowStart, IN unsigned int rowLen, IN unsigned int colStart, IN unsigned int colLen, OUT LMatrix<Type>& D) const;
 
     /// @brief 获取矩阵中的一行数据
     /// @param[in] row 行索引
@@ -221,6 +277,25 @@ LMatrix<Type>::LMatrix()
 }
 
 LTEMPLATE
+LMatrix<Type>::~LMatrix()
+{
+    if (this->m_dataTable)
+    {
+        delete[] this->m_dataTable;
+        this->m_dataTable = 0;
+    }
+
+    if (this->m_dataList)
+    {
+        delete[] this->m_dataList;
+        this->m_dataList = 0;
+    }
+
+    this->m_rowLen = 0;
+    this->m_columnLen = 0;
+}
+
+LTEMPLATE
 LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col)
 : m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
@@ -255,25 +330,6 @@ LMatrix<Type>::LMatrix(IN unsigned int row, IN unsigned int col, IN const Type* 
 }
 
 LTEMPLATE
-LMatrix<Type>::~LMatrix()
-{
-    if (this->m_dataTable)
-    {
-        delete[] this->m_dataTable;
-        this->m_dataTable = 0;
-    }
-
-    if (this->m_dataList)
-    {
-        delete[] this->m_dataList;
-        this->m_dataList = 0;
-    }
-
-    this->m_rowLen = 0;
-    this->m_columnLen = 0;
-}
-
-LTEMPLATE
 LMatrix<Type>::LMatrix(IN const LMatrix<Type>& rhs)
 : m_rowLen(0), m_columnLen(0), RowLen(m_rowLen), ColumnLen(m_columnLen), m_dataTable(0), m_dataList(0)
 {
@@ -302,11 +358,18 @@ LMatrix<Type>& LMatrix<Type>::operator = (IN const LMatrix<Type>& rhs)
 }
 
 LTEMPLATE
-LMatrix<Type> LMatrix<Type>::operator * (IN const LMatrix<Type>& B) const
+LMatrix<Type> LMatrix<Type>::operator + (IN const LMatrix<Type>& B) const
 {
     LMatrix<Type> C;
-    MUL(*this, B, C);
+    ADD(*this, B, C);
     return C;
+}
+
+LTEMPLATE
+LMatrix<Type>& LMatrix<Type>::operator += (IN const LMatrix<Type>& B)
+{
+    ADD(*this, B, *this);
+    return *this;
 }
 
 LTEMPLATE
@@ -318,11 +381,27 @@ LMatrix<Type> LMatrix<Type>::operator - (IN const LMatrix<Type>& B) const
 }
 
 LTEMPLATE
-LMatrix<Type> LMatrix<Type>::operator + (IN const LMatrix<Type>& B) const
+LMatrix<Type>& LMatrix<Type>::operator -= (IN const LMatrix<Type>& B)
+{
+    SUB(*this, B, *this);
+    return *this;
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::operator * (IN const LMatrix<Type>& B) const
 {
     LMatrix<Type> C;
-    ADD(*this, B, C);
+    MUL(*this, B, C);
     return C;
+}
+
+LTEMPLATE
+LMatrix<Type>& LMatrix<Type>::operator *= (IN const LMatrix<Type>& B)
+{
+    LMatrix<Type> C;
+    MUL(*this, B, C);
+    (*this) = C;
+    return *this;
 }
 
 LTEMPLATE
@@ -330,6 +409,14 @@ LMatrix<Type> LMatrix<Type>::ScalarMul(IN const Type& B) const
 {
     LMatrix<Type> C;
     SCALARMUL(*this, B, C);
+    return C;
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::ScalarDiv(IN const Type& B) const
+{
+    LMatrix<Type> C;
+    SCALARDIV(*this, B, C);
     return C;
 }
 
@@ -372,6 +459,20 @@ LMatrix<Type> LMatrix<Type>::T() const
     LMatrix<Type> B;
     T(*this, B);
     return B;
+}
+
+LTEMPLATE
+LMatrix<Type> LMatrix<Type>::SubMatrix(IN unsigned int rowStart, IN unsigned int rowLen, IN unsigned int colStart, IN unsigned int colLen) const
+{
+    LMatrix<Type> D;
+    SUBMATRIX(*this, rowStart, rowLen, colStart, colLen, D);
+    return D;
+}
+
+LTEMPLATE
+void LMatrix<Type>::SubMatrix(IN unsigned int rowStart, IN unsigned int rowLen, IN unsigned int colStart, IN unsigned int colLen, OUT LMatrix<Type>& D) const
+{
+    SUBMATRIX(*this, rowStart, rowLen, colStart, colLen, D);
 }
 
 LTEMPLATE
@@ -463,6 +564,46 @@ void LMatrix<Type>::Reset(IN unsigned int row, IN unsigned int col, IN const Typ
 }
 
 LTEMPLATE
+bool LMatrix<Type>::ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
+{
+    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
+        return false;
+
+    C.Reset(A.RowLen, A.ColumnLen);
+
+    for (unsigned int i = 0; i < C.RowLen; i++)
+    {
+        for (unsigned int j = 0; j < C.ColumnLen; j++)
+        {
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] + B.m_dataTable[i][j];
+        }
+    }
+
+    return true;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
+{
+    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
+        return false;
+
+    C.Reset(A.RowLen, A.ColumnLen);
+
+    for (unsigned int i = 0; i < C.RowLen; i++)
+    {
+        for (unsigned int j = 0; j < C.ColumnLen; j++)
+        {
+            C.m_dataTable[i][j] = A.m_dataTable[i][j] - B.m_dataTable[i][j];
+        }
+    }
+
+    return true;
+}
+
+
+
+LTEMPLATE
 bool LMatrix<Type>::MUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
 {
     if (A.ColumnLen != B.RowLen)
@@ -479,6 +620,21 @@ bool LMatrix<Type>::MUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OU
             {
                 C.m_dataTable[i][j] += A.m_dataTable[i][k] * B.m_dataTable[k][j];
             }
+        }
+    }
+
+    return true;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C)
+{
+    C.Reset(A.RowLen, A.ColumnLen);
+    for (unsigned int row = 0; row < A.RowLen; row++)
+    {
+        for (unsigned int col = 0; col < A.ColumnLen; col++)
+        {
+            C.m_dataTable[row][col] = A.m_dataTable[row][col] * B;
         }
     }
 
@@ -505,60 +661,14 @@ bool LMatrix<Type>::DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B,
 }
 
 LTEMPLATE
-LMatrix<Type> LMatrix<Type>::DOTMUL(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B)
-{
-    LMatrix<Type> C;
-    DOTMUL(A, B, C);
-    return C;
-}
-
-LTEMPLATE
-bool LMatrix<Type>::SCALARMUL(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C)
+bool LMatrix<Type>::SCALARDIV(IN const LMatrix<Type>& A, IN const Type& B, OUT LMatrix<Type>& C)
 {
     C.Reset(A.RowLen, A.ColumnLen);
     for (unsigned int row = 0; row < A.RowLen; row++)
     {
         for (unsigned int col = 0; col < A.ColumnLen; col++)
         {
-            C.m_dataTable[row][col] = A.m_dataTable[row][col] * B;
-        }
-    }
-
-    return true;
-}
-
-LTEMPLATE
-bool LMatrix<Type>::SUB(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
-{
-    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
-        return false;
-
-    C.Reset(A.RowLen, A.ColumnLen);
-
-    for (unsigned int i = 0; i < C.RowLen; i++)
-    {
-        for (unsigned int j = 0; j < C.ColumnLen; j++)
-        {
-            C.m_dataTable[i][j] = A.m_dataTable[i][j] - B.m_dataTable[i][j];
-        }
-    }
-
-    return true;
-}
-
-LTEMPLATE
-bool LMatrix<Type>::ADD(IN const LMatrix<Type>& A, IN const LMatrix<Type>& B, OUT LMatrix<Type>& C)
-{
-    if ((A.RowLen != B.RowLen) || (A.ColumnLen != B.ColumnLen))
-        return false;
-
-    C.Reset(A.RowLen, A.ColumnLen);
-
-    for (unsigned int i = 0; i < C.RowLen; i++)
-    {
-        for (unsigned int j = 0; j < C.ColumnLen; j++)
-        {
-            C.m_dataTable[i][j] = A.m_dataTable[i][j] + B.m_dataTable[i][j];
+            C.m_dataTable[row][col] = A.m_dataTable[row][col] / B;
         }
     }
 
@@ -592,6 +702,37 @@ bool LMatrix<Type>::T(IN const LMatrix<Type>& A, OUT LMatrix<Type>& B)
     {
         for (unsigned int j = 0; j < A.ColumnLen; j++)
             B.m_dataTable[j][i] = A.m_dataTable[i][j];
+    }
+
+    return true;
+}
+
+LTEMPLATE
+bool LMatrix<Type>::SUBMATRIX(
+IN const LMatrix<Type>& S, 
+IN unsigned int rowStart, 
+IN unsigned int rowLen, 
+IN unsigned int colStart, 
+IN unsigned int colLen, 
+OUT LMatrix<Type>& D)
+{
+    if ((rowStart + rowLen) > S.RowLen)
+        return false;
+
+    if ((colStart + colLen) > S.ColumnLen)
+        return false;
+
+    if (rowLen < 1 || colLen < 1)
+        return false;
+
+    D.Reset(rowLen, colLen);
+
+    for (unsigned int row = 0; row < D.RowLen; row++)
+    {
+        for (unsigned int col = 0; col < D.ColumnLen; col++)
+        {
+            D[row][col] = S[rowStart + row][colStart + col];
+        }
     }
 
     return true;
