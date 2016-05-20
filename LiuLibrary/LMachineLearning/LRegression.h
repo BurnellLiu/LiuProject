@@ -172,7 +172,7 @@ class LLinearRegression
 {
 public:
     /// @brief 构造函数
-    /// @param[in] m 样本总个数, 不能小于2
+    /// @param[in] m 训练样本总个数, 不能小于2
     /// @param[in] n 样本特征值个数, 不能小于1
     LLinearRegression(IN unsigned int m, IN unsigned int n);
 
@@ -216,7 +216,7 @@ class LLogisticRegression
 {
 public:
     /// @brief 构造函数
-    /// @param[in] m 样本总个数, 不能小于2
+    /// @param[in] m 训练样本总个数, 不能小于2
     /// @param[in] n 样本特征值个数, 不能小于1
     LLogisticRegression(IN unsigned int m, IN unsigned int n);
 
@@ -251,7 +251,7 @@ class LSoftmaxRegression
 {
 public:
     /// @brief 构造函数
-    /// @param[in] m 样本总个数, 不能小于2
+    /// @param[in] m 训练样本总个数, 不能小于2
     /// @param[in] n 样本特征值个数, 不能小于1
     /// @param[in] k 样本类别个数, 不能小于2
     LSoftmaxRegression(IN unsigned int m, IN unsigned int n, IN unsigned int k);
