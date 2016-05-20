@@ -30,9 +30,12 @@ namespace Regression
 class CLinearRegression
 {
 public:
-    CLinearRegression()
+    CLinearRegression(IN unsigned int m, IN unsigned int n)
     {
+        m_M = m;
+        m_N = n;
 
+        m_wVector.Reset(n + 1, 1, 0.0f);
     }
 
     ~CLinearRegression()
@@ -41,117 +44,79 @@ public:
     }
 
     /// @brief 训练模型
-    bool TrainModel(IN const LRegressionProblem& problem)
+    bool TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yVector, IN float alpha)
     {
         // 检查参数
-        if (problem.XMatrix.RowLen < 2)
-            return false;
-        if (problem.XMatrix.ColumnLen < 1)
-            return false;
-        if (problem.YVector.ColumnLen != 1)
-            return false;
-        if (problem.YVector.RowLen != problem.XMatrix.RowLen)
-            return false;
-        if (problem.LearningRate <= 0.0f)
+        if (m_M < 2 || m_N < 1)
             return false;
 
-        Regression::SampleAddConstantItem(problem.XMatrix, m_xMatrix);
-        m_yVector = problem.YVector;
+        if (xMatrix.RowLen < 1)
+            return false;
+        if (xMatrix.ColumnLen != m_N)
+            return false;
 
-        // 初始化权重向量
-        m_wVector.Reset(m_xMatrix.ColumnLen, 1, 0.0f);
+        if (yVector.ColumnLen != 1)
+            return false;
+        if (yVector.RowLen != xMatrix.RowLen)
+            return false;
 
-        const LRegressionMatrix& X = m_xMatrix;
-        const LRegressionMatrix& Y = m_yVector;
+        if (alpha <= 0.0f)
+            return false;
+
+        LRegressionMatrix X;
+        Regression::SampleAddConstantItem(xMatrix, X);
+
+        const LRegressionMatrix& Y = yVector;
         LRegressionMatrix& W = m_wVector;
-        float A = problem.LearningRate;
 
         LRegressionMatrix XT = X.T();
 
         LRegressionMatrix XW;
-        LRegressionMatrix O;
+        LRegressionMatrix DW;
 
-        for (unsigned int i = 0; i < problem.TrainTimes; i++)
-        {
-            XW = X * W;
-            O = XT * (XW - Y);
-            W = W - O.ScalarMul(A);
-        }
+        /*
+        h(x) = X * W
+        wj = wj - α * ∑((h(x)-y) * xj)
+        */
+        LRegressionMatrix::MUL(X, W, XW);
+        LRegressionMatrix::SUB(XW, Y, XW);
+        LRegressionMatrix::MUL(XT, XW, DW);
+        LRegressionMatrix::SCALARMUL(DW, -1.0f * alpha, DW);
+        LRegressionMatrix::ADD(W, DW, W);
 
         return true;
     }
 
     /// @brief 使用训练好的模型预测数据
-    bool Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const
+    bool Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yVector) const
     {
-        // 模型未训练
-        if (m_wVector.RowLen < 1)
+        // 检查参数
+        if (m_M < 2 || m_N < 1)
             return false;
 
-        if (sampleMatrix.ColumnLen != m_xMatrix.ColumnLen-1)
+        if (xMatrix.RowLen < 1)
             return false;
-
-        if (sampleMatrix.RowLen < 1)
+        if (xMatrix.ColumnLen != m_N)
             return false;
 
         LRegressionMatrix X;
-        Regression::SampleAddConstantItem(sampleMatrix, X);
+        Regression::SampleAddConstantItem(xMatrix, X);
 
-        yVector = X * m_wVector;
+        LRegressionMatrix::MUL(X, m_wVector, yVector);
 
         return true;
     }
 
-    /// @brief 训练后预测数据与训练数据的相关度(即模型的优劣程度)
-    float GetCorrelation() const
-    {
-        // 模型未训练
-        if (m_wVector.RowLen < 1)
-            return 0.0f;
-
-        LRegressionMatrix Y = m_xMatrix * m_wVector;
-
-        unsigned int length = Y.RowLen;
-
-        float sumA = 0.0f;
-        float sumB = 0.0f;
-        float sqrSumA = 0.0f;
-        float sqrSumB = 0.0f;
-        float proSum = 0.0f;
-        for (unsigned int i = 0; i < length; i++)
-        {
-            const float& a = m_yVector[i][0];
-            const float& b = Y[i][0];
-
-            sumA += a;
-            sumB += b;
-
-            sqrSumA += a * a;
-            sqrSumB += b * b;
-
-            proSum += a * b;
-        }
-
-        // 计算皮尔逊相关系数
-        float num = proSum - (sumA * sumB/length);
-        float den = sqrtf((sqrSumA - sumA * sumA/length) * (sqrSumB - sumB * sumB/length));
-
-        if (den == 0)
-            return 0;
-
-        return num/den;
-    }
-
 private:
-    LRegressionMatrix m_xMatrix; ///< 样本矩阵
-    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
+    unsigned int m_M; ///< 样本总个数
+    unsigned int m_N; ///< 样本特征值个数
     LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
 };
 
-LLinearRegression::LLinearRegression()
+LLinearRegression::LLinearRegression(IN unsigned int m, IN unsigned int n)
     : m_pLinearRegression(0)
 {
-    m_pLinearRegression = new CLinearRegression();
+    m_pLinearRegression = new CLinearRegression(m, n);
 }
 
 LLinearRegression::~LLinearRegression()
@@ -163,19 +128,14 @@ LLinearRegression::~LLinearRegression()
     }
 }
 
-bool LLinearRegression::TrainModel(IN const LRegressionProblem& problem)
+bool LLinearRegression::TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yVector, IN float alpha)
 {
-    return m_pLinearRegression->TrainModel(problem);
+    return m_pLinearRegression->TrainModel(xMatrix, yVector, alpha);
 }
 
-bool LLinearRegression::Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const
+bool LLinearRegression::Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yVector) const
 {
-    return m_pLinearRegression->Predict(sampleMatrix, yVector);
-}
-
-float LLinearRegression::GetCorrelation() const
-{
-    return m_pLinearRegression->GetCorrelation();
+    return m_pLinearRegression->Predict(xMatrix, yVector);
 }
 
 /// @brief 逻辑回归(分类)实现类
@@ -187,9 +147,11 @@ class CLogisticRegression
 {
 public:
     /// @brief 构造函数
-    CLogisticRegression()
+    CLogisticRegression(IN unsigned int m, IN unsigned int n)
     {
-
+        m_M = m;
+        m_N = n;
+        m_wVector.Reset(n + 1, 1, 0.0f);
     }
 
     /// @brief 析构函数
@@ -199,38 +161,38 @@ public:
     }
 
     /// @brief 训练模型
-    bool TrainModel(IN const LRegressionProblem& problem)
+    bool TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yVector, IN float alpha)
     {
         // 检查参数
-        if (problem.XMatrix.RowLen < 2)
-            return false;
-        if (problem.XMatrix.ColumnLen < 1)
-            return false;
-        if (problem.YVector.ColumnLen != 1)
-            return false;
-        if (problem.YVector.RowLen != problem.XMatrix.RowLen)
-            return false;
-        if (problem.LearningRate <= 0.0f)
+        if (m_M < 2 || m_N < 1)
             return false;
 
-        for (unsigned int i = 0; i < problem.YVector.RowLen; i++)
+        if (xMatrix.RowLen < 1)
+            return false;
+        if (xMatrix.ColumnLen != m_N)
+            return false;
+
+        if (yVector.ColumnLen != 1)
+            return false;
+        if (yVector.RowLen != xMatrix.RowLen)
+            return false;
+
+        if (alpha <= 0.0f)
+            return false;
+
+        for (unsigned int i = 0; i < yVector.RowLen; i++)
         {
-            if (problem.YVector[i][0] != REGRESSION_ONE &&
-                problem.YVector[i][0] != REGRESSION_ZERO)
+            if (yVector[i][0] != REGRESSION_ONE &&
+                yVector[i][0] != REGRESSION_ZERO)
                 return false;
         }
 
-        Regression::SampleAddConstantItem(problem.XMatrix, m_xMatrix);
+        LRegressionMatrix X;
+        Regression::SampleAddConstantItem(xMatrix, X);
 
-        m_yVector = problem.YVector;
+        const LRegressionMatrix& Y = yVector;
 
-        // 初始化权重向量
-        m_wVector.Reset(m_xMatrix.ColumnLen, 1, 0.0f);
-
-        const LRegressionMatrix& X = m_xMatrix;
-        const LRegressionMatrix& Y = m_yVector;
         LRegressionMatrix& W = m_wVector;
-        float A = problem.LearningRate;
         LRegressionMatrix XT = X.T();
 
         /*
@@ -241,82 +203,48 @@ public:
         */
 
         LRegressionMatrix XW(X.RowLen, 1);
-        LRegressionMatrix HX(X.RowLen, 1);
-        LRegressionMatrix O;
+        LRegressionMatrix DW;
 
-        for (unsigned int i = 0; i < problem.TrainTimes; i++)
+        LRegressionMatrix::MUL(X, W, XW);
+        for (unsigned int m = 0; m < XW.RowLen; m++)
         {
-            XW = X * W;
-            for (unsigned int m = 0; m < XW.RowLen; m++)
-            {
-                this->Sigmoid(XW[m][0], HX[m][0]);
-            }
-            O = XT * (Y - HX);
-            W = W - O.ScalarMul(A);
+            this->Sigmoid(XW[m][0], XW[m][0]);
         }
+
+        LRegressionMatrix::SUB(Y, XW, XW);
+        LRegressionMatrix::MUL(XT, XW, DW);
+
+        LRegressionMatrix::SCALARMUL(DW, -1.0f * alpha, DW);
+        LRegressionMatrix::ADD(W, DW, W);
 
         return true;
     }
 
     /// @brief 使用训练好的模型预测数据
-    bool Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const
+    bool Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yVector) const
     {
-        if (m_wVector.RowLen < 1)
+        // 检查参数
+        if (m_M < 2 || m_N < 1)
             return false;
 
-        if (sampleMatrix.ColumnLen != m_xMatrix.ColumnLen-1)
+        if (xMatrix.RowLen < 1)
             return false;
-
-        if (sampleMatrix.RowLen < 1)
+        if (xMatrix.ColumnLen != m_N)
             return false;
 
         LRegressionMatrix X;
-        Regression::SampleAddConstantItem(sampleMatrix, X);
+        Regression::SampleAddConstantItem(xMatrix, X);
 
-        yVector.Reset(X.RowLen, 1);
+        yVector.Reset(X.RowLen, 1, 0.0f);
+        LRegressionMatrix::MUL(X, m_wVector, yVector);
 
-        LRegressionMatrix XW(X.RowLen, 1);
-        XW = X * m_wVector;
-        for (unsigned int m = 0; m < XW.RowLen; m++)
+        for (unsigned int m = 0; m < yVector.RowLen; m++)
         {
-            this->Sigmoid(XW[m][0], XW[m][0]);
-
-            if (XW[m][0] >= 0.5f)
-                yVector[m][0] = REGRESSION_ONE;
-            else
-                yVector[m][0] = REGRESSION_ZERO;
+            this->Sigmoid(yVector[m][0], yVector[m][0]);
         }
 
         return true;
 
-    }
-
-    /// @brief 获取当前训练模型的正确率
-    float GetAccuracy() const
-    {
-        if (m_wVector.RowLen < 1)
-            return -1.0f;
-
-        LRegressionMatrix XW(m_xMatrix.RowLen, 1);
-        LRegressionMatrix HX(m_xMatrix.RowLen, 1);
-        LRegressionMatrix Y(m_xMatrix.RowLen, 1);
-        XW = m_xMatrix * m_wVector;
-
-        unsigned int rightCount = 0;
-        for (unsigned int m = 0; m < XW.RowLen; m++)
-        {
-            this->Sigmoid(XW[m][0], HX[m][0]);
-
-            if (HX[m][0] >= 0.5f)
-                Y[m][0] = REGRESSION_ONE;
-            else
-                Y[m][0] = REGRESSION_ZERO;
-
-            if (Y[m][0] == m_yVector[m][0])
-                rightCount++;
-        }
-
-        return rightCount * 1.0f/Y.RowLen;
     }
 
 private:
@@ -329,15 +257,15 @@ private:
     }
 
 private:
-    LRegressionMatrix m_xMatrix; ///< 样本矩阵
-    LRegressionMatrix m_yVector; ///< 目标向量(列向量)
+    unsigned int m_M; ///< 样本总个数
+    unsigned int m_N; ///< 样本特征值个数
     LRegressionMatrix m_wVector; ///<权重矩阵(列向量)
 };
 
-LLogisticRegression::LLogisticRegression()
+LLogisticRegression::LLogisticRegression(IN unsigned int m, IN unsigned int n)
     : m_pLogisticRegression(0)
 {
-    m_pLogisticRegression = new CLogisticRegression(); 
+    m_pLogisticRegression = new CLogisticRegression(m, n); 
 }
 
 LLogisticRegression::~LLogisticRegression()
@@ -349,19 +277,14 @@ LLogisticRegression::~LLogisticRegression()
     }
 }
 
-bool LLogisticRegression::TrainModel(IN const LRegressionProblem& problem)
+bool LLogisticRegression::TrainModel(IN const LRegressionMatrix& xMatrix, IN const LRegressionMatrix& yVector, IN float alpha)
 {
-    return m_pLogisticRegression->TrainModel(problem);
+    return m_pLogisticRegression->TrainModel(xMatrix, yVector, alpha);
 }
 
-bool LLogisticRegression::Predict(IN const LRegressionMatrix& sampleMatrix, OUT LRegressionMatrix& yVector) const
+bool LLogisticRegression::Predict(IN const LRegressionMatrix& xMatrix, OUT LRegressionMatrix& yVector) const
 {
-    return m_pLogisticRegression->Predict(sampleMatrix, yVector);
-}
-
-float LLogisticRegression::GetAccuracy() const
-{
-    return m_pLogisticRegression->GetAccuracy();
+    return m_pLogisticRegression->Predict(xMatrix, yVector);
 }
 
 void PrintMatrix(const LMatrix<float>& matrix);
