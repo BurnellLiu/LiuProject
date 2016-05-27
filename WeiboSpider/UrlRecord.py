@@ -30,14 +30,18 @@ class UrlRecord:
             print e
         
     def Get(self, rowid):
-        cu = self.__sqlConn.execute("SELECT * FROM UrlList Where rowid = ?", (str(rowid)))
+        strId = str(rowid)
+        sql = "SELECT * FROM UrlList Where rowid = "
+        sql += "'"
+        sql += strId
+        sql += "'"
+        cu = self.__sqlConn.execute(sql)
         urlList = cu.fetchall()
         cu.close()
         if (len(urlList) != 0):
             return urlList[0]
         else:
             return None
-        
-        
+
     def __del__(self):
         self.__sqlConn.close()
