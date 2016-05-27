@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <windows.h>
 
-#include "LMNISTParser.h"
+#include "LMNIST/LMNISTParser.h"
 #include "LMachineLearning/LRegression.h"
 
 int main()

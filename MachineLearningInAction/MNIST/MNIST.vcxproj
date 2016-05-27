@@ -113,12 +113,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LRegression.cpp" />
-    <ClCompile Include="LMNISTParser.cpp" />
+    <ClCompile Include="..\..\LiuLibrary\LMNIST\LMNISTParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LRegression.h" />
-    <ClInclude Include="LMNISTParser.h" />
+    <ClInclude Include="..\..\LiuLibrary\LMNIST\LMNISTParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

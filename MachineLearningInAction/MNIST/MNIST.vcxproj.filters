@@ -21,7 +21,7 @@
     <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LRegression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LMNISTParser.cpp">
+    <ClCompile Include="..\..\LiuLibrary\LMNIST\LMNISTParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LRegression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LMNISTParser.h">
+    <ClInclude Include="..\..\LiuLibrary\LMNIST\LMNISTParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
