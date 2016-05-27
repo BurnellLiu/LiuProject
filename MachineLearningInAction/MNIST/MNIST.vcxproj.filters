@@ -7,7 +7,7 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -15,16 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LRegression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LDataCorrelation.cpp">
+    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LRegression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\LiuLibrary\LFile\LFile.cpp">
+    <ClCompile Include="LMNISTParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +29,7 @@
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LRegression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LDataCorrelation.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\LiuLibrary\LFile\LFile.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\LiuLibrary\LDataStruct\LString.h">
+    <ClInclude Include="LMNISTParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
