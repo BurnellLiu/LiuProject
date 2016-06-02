@@ -216,16 +216,16 @@ class CBPNetwork
 {
 public:
     /// @brief 构造函数
-    CBPNetwork()
+    CBPNetwork(IN const LBPNetworkPogology& pogology)
     {
         m_networkPogology.InputNumber = 0;
         m_networkPogology.OutputNumber = 0;
         m_networkPogology.HiddenLayerNumber = 0;
         m_networkPogology.NeuronsOfHiddenLayer = 0;
 
-        m_learnRate = 0.5f;
-
         m_bInitDone = false;
+
+        this->Init(pogology);
     }
 
     /// @brief 析构函数
@@ -234,68 +234,9 @@ public:
         this->CleanUp();
     }
 
-    /// @brief 初始化BP网络
-    /// 详细解释见头文件LBPNetwork中的声明
-    bool Init(IN const LBPNetworkPogology& pogology)
-    {
-        if (pogology.InputNumber < 1 || pogology.OutputNumber < 1 ||
-            pogology.HiddenLayerNumber < 1 || pogology.NeuronsOfHiddenLayer < 1)
-            return false;
-
-        m_networkPogology = pogology;
-
-        this->CleanUp();
-
-        m_layerOutList.resize(pogology.HiddenLayerNumber + 1);
-        m_layerErrorList.resize(pogology.HiddenLayerNumber + 2);
-        m_inputVectorForTrain.Reset(1, pogology.InputNumber);
-        m_outputVectorForTrain.Reset(1, pogology.OutputNumber);
-        m_inputVectorForActive.Reset(1, pogology.InputNumber);
-
-        m_layerErrorList[0].resize(pogology.InputNumber);
-
-
-        // 创建第一个隐藏层
-        CBPNeuronLayer* pFirstHiddenLayer = new CBPNeuronLayer(pogology.InputNumber, pogology.NeuronsOfHiddenLayer);
-        m_layerList.push_back(pFirstHiddenLayer);
-        m_layerOutList[0].Reset(1, pogology.NeuronsOfHiddenLayer);
-        m_layerErrorList[1].resize(pogology.NeuronsOfHiddenLayer);
-
-        // 创建剩余的隐藏层
-        for (unsigned int i = 1; i < pogology.HiddenLayerNumber; i++)
-        {
-            CBPNeuronLayer* pHiddenLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.NeuronsOfHiddenLayer);
-            m_layerList.push_back(pHiddenLayer);
-            m_layerOutList[i].Reset(1, pogology.NeuronsOfHiddenLayer);
-            m_layerErrorList[i + 1].resize(pogology.NeuronsOfHiddenLayer);
-        }
-
-        // 创建输出层
-        CBPNeuronLayer* pOutputLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.OutputNumber);
-        m_layerList.push_back(pOutputLayer);
-        m_layerOutList[pogology.HiddenLayerNumber].Reset(1, pogology.OutputNumber);
-        m_layerErrorList[pogology.HiddenLayerNumber + 1].resize(pogology.OutputNumber);
-
-
-        m_bInitDone = true;
-        return true;
-    }
-
-    /// @brief 设置学习速率
-    /// 详细解释见头文件LBPNetwork中的声明
-    bool SetLearnRate(IN float rate)
-    {
-        if (rate <= 0.0f)
-            return false;
-
-        m_learnRate = rate;
-
-        return true;
-    }
-
     /// @brief 训练BP网络
     /// 详细解释见头文件LBPNetwork中的声明
-    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix)
+    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix, IN float rate)
     {
         if (!m_bInitDone)
             return false;
@@ -331,7 +272,7 @@ public:
             // 从后向前进行反向训练
             for (int i = int(m_layerList.size()-1); i >= 0; i--)
             {
-                m_layerList[i]->BackTrain(m_layerErrorList[i + 1], m_learnRate, &m_layerErrorList[i]);
+                m_layerList[i]->BackTrain(m_layerErrorList[i + 1], rate, &m_layerErrorList[i]);
             }
 
         }
@@ -381,6 +322,52 @@ public:
     }
 
 private:
+    /// @brief 初始化BP网络
+    bool Init(IN const LBPNetworkPogology& pogology)
+    {
+        if (pogology.InputNumber < 1 || pogology.OutputNumber < 1 ||
+            pogology.HiddenLayerNumber < 1 || pogology.NeuronsOfHiddenLayer < 1)
+            return false;
+
+        m_networkPogology = pogology;
+
+        this->CleanUp();
+
+        m_layerOutList.resize(pogology.HiddenLayerNumber + 1);
+        m_layerErrorList.resize(pogology.HiddenLayerNumber + 2);
+        m_inputVectorForTrain.Reset(1, pogology.InputNumber);
+        m_outputVectorForTrain.Reset(1, pogology.OutputNumber);
+        m_inputVectorForActive.Reset(1, pogology.InputNumber);
+
+        m_layerErrorList[0].resize(pogology.InputNumber);
+
+
+        // 创建第一个隐藏层
+        CBPNeuronLayer* pFirstHiddenLayer = new CBPNeuronLayer(pogology.InputNumber, pogology.NeuronsOfHiddenLayer);
+        m_layerList.push_back(pFirstHiddenLayer);
+        m_layerOutList[0].Reset(1, pogology.NeuronsOfHiddenLayer);
+        m_layerErrorList[1].resize(pogology.NeuronsOfHiddenLayer);
+
+        // 创建剩余的隐藏层
+        for (unsigned int i = 1; i < pogology.HiddenLayerNumber; i++)
+        {
+            CBPNeuronLayer* pHiddenLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.NeuronsOfHiddenLayer);
+            m_layerList.push_back(pHiddenLayer);
+            m_layerOutList[i].Reset(1, pogology.NeuronsOfHiddenLayer);
+            m_layerErrorList[i + 1].resize(pogology.NeuronsOfHiddenLayer);
+        }
+
+        // 创建输出层
+        CBPNeuronLayer* pOutputLayer = new CBPNeuronLayer(pogology.NeuronsOfHiddenLayer, pogology.OutputNumber);
+        m_layerList.push_back(pOutputLayer);
+        m_layerOutList[pogology.HiddenLayerNumber].Reset(1, pogology.OutputNumber);
+        m_layerErrorList[pogology.HiddenLayerNumber + 1].resize(pogology.OutputNumber);
+
+
+        m_bInitDone = true;
+        return true;
+    }
+
     /// @brief 清理资源
     void CleanUp()
     {
@@ -401,7 +388,6 @@ private:
 
 private:
     bool m_bInitDone; ///< 标识是否初始化网络完成
-    float m_learnRate; ///< 学习速率
     LBPNetworkPogology m_networkPogology; ///< 网络拓扑结构
     vector<CBPNeuronLayer*> m_layerList; ///< 神经元层列表
 
@@ -415,10 +401,10 @@ private:
     LNNMatrix m_inputVectorForActive; ///< 输入向量Active函数使用
 };
 
-LBPNetwork::LBPNetwork()
+LBPNetwork::LBPNetwork(IN const LBPNetworkPogology& pogology)
 {
     m_pBPNetwork = 0;
-    m_pBPNetwork = new CBPNetwork();
+    m_pBPNetwork = new CBPNetwork(pogology);
 }
 
 LBPNetwork::~LBPNetwork()
@@ -430,19 +416,9 @@ LBPNetwork::~LBPNetwork()
     }
 }
 
-bool LBPNetwork::Init(IN const LBPNetworkPogology& pogology)
+bool LBPNetwork::Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix, IN float rate)
 {
-    return m_pBPNetwork->Init(pogology);
-}
-
-bool LBPNetwork::SetLearnRate(IN float rate)
-{
-    return m_pBPNetwork->SetLearnRate(rate);
-}
-
-bool LBPNetwork::Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix)
-{
-    return m_pBPNetwork->Train(inputMatrix, outputMatrix);
+    return m_pBPNetwork->Train(inputMatrix, outputMatrix, rate);
 }
 
 bool LBPNetwork::Active(IN const LNNMatrix& inputMatrix, OUT LNNMatrix* pOutputMatrix)

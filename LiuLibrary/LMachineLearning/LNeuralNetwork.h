@@ -20,9 +20,7 @@ pogology.OutputNumber = 1;
 pogology.NeuronsOfHiddenLayer = 2;
 
 // 初始化神经网络并且设置学习速率
-LBPNetwork bpNetwork;
-bpNetwork.Init(pogology);
-bpNetwork.SetLearnRate(2.1f);
+LBPNetwork bpNetwork(pogology);
 
 // 定义输入矩阵
 float inputList[8] = 
@@ -45,7 +43,7 @@ targetOutput[3][0] = 0.0f;
 // 训练1000次
 for (int i = 0; i < 1000; i++)
 {
-    bpNetwork.Train(input, targetOutput); 
+    bpNetwork.Train(input, targetOutput, 2.1f); 
 }
 
 // 观察训练后的结果
@@ -81,28 +79,19 @@ class LBPNetwork
 {
 public:
     /// @brief 构造函数
-    LBPNetwork();
+    /// @param[in] pogology BP网络拓扑结构
+    explicit LBPNetwork(IN const LBPNetworkPogology& pogology);
 
     /// @brief 析构函数
     ~LBPNetwork();
 
-    /// @brief 初始化BP网络
-    /// @param[in] pogology BP网络拓扑结构
-    /// @return 成功返回true, 失败返回false, 参数有误会失败
-    bool Init(IN const LBPNetworkPogology& pogology);
-
-    /// @brief 设置学习速率
-    /// @param[in] rate 学习速率为大于0的数, 默认值为0.5f
-    /// @return 成功返回true, 失败返回false, 参数错误会失败
-    bool SetLearnRate(IN float rate);
-
     /// @brief 训练BP网络
-    /// 
     /// 输入数据最好归一化(即输入数据全部调整为0~1之间的值), 目标输出数据必须归一化
     /// @param[in] inputMatrix 输入数据矩阵, 每一行为一个输入, 矩阵的列数必须等于BP网络的输入个数
     /// @param[in] outputMatrix 目标输出数据矩阵, 每一行为一个目标输出, 输出矩阵的行数必须等于数据矩阵的行数, 输出矩阵的列数必须等于BP网络的输出个数
+    /// @param[in] rate 学习速率为大于0的数
     /// @return 成功训练返回true, , 失败返回false, 参数有误或者网络未初始化会失败
-    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix);
+    bool Train(IN const LNNMatrix& inputMatrix, IN const LNNMatrix& outputMatrix, IN float rate);
 
     /// @brief 激活神经网络
     /// 

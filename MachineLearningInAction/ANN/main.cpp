@@ -30,9 +30,7 @@ int main()
     pogology.NeuronsOfHiddenLayer = 2;
 
     // 初始化神经网络并且设置学习速率
-    LBPNetwork bpNetwork;
-    bpNetwork.Init(pogology);
-    bpNetwork.SetLearnRate(2.1f);
+    LBPNetwork bpNetwork(pogology);
 
     // 定义输入矩阵
     float inputList[8] = 
@@ -55,7 +53,7 @@ int main()
     // 训练1000
     for (int i = 0; i < 1000; i++)
     {
-        bpNetwork.Train(input, targetOutput); 
+        bpNetwork.Train(input, targetOutput, 2.1f); 
     }
 
     // 观察训练后的结果
