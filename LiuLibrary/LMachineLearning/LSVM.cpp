@@ -229,7 +229,8 @@ public:
         if (this->m_pProblem == 0)
             return 0.0f;
 
-        LSVMMatrix AY = LSVMMatrix::DOTMUL(this->m_pSolution->AVector, this->m_pProblem->YVector); // 列向量
+        LSVMMatrix AY;
+        LSVMMatrix::DOTMUL(this->m_pSolution->AVector, this->m_pProblem->YVector, AY); // 列向量
         LSVMMatrix AYT = AY.T(); // 行向量
 
         LSVMMatrix sampleA;
@@ -327,7 +328,8 @@ private:
     /// @return 误差值
     void CalculateError(IN const LSVMProblem& problem, IN const LSVMSolution& solution, OUT LSVMMatrix& errorVector)
     {
-        LSVMMatrix AY = LSVMMatrix::DOTMUL(solution.AVector, problem.YVector); // 列向量
+        LSVMMatrix AY;
+        LSVMMatrix::DOTMUL(solution.AVector, problem.YVector, AY); // 列向量
         LSVMMatrix AYT = AY.T(); // 行向量
         for (unsigned int i = 0; i < problem.XMatrix.RowLen; i++)
         {
@@ -378,7 +380,9 @@ private:
 
                 // 计算权重
                 // w = sum for i = 1 to m (alpha(i) * y(i) * x(i))
-                LSVMMatrix W = LSVMMatrix::DOTMUL(alphaVector, classVector).T() * sampleMatrix;// 计算出的权重为行向量
+                LSVMMatrix W;
+                LSVMMatrix::DOTMUL(alphaVector, classVector, W);
+                W = W.T() * sampleMatrix;// 计算出的权重为行向量
 
                 // 根据权重计算间隔
                 // margin = y(i) * (W * X(i) + b)
