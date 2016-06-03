@@ -1,6 +1,9 @@
 
 #include <cmath>
 
+#include <vector>
+using std::vector;
+
 #include "LKDTree.h"
 #include "LDataStruct/LOrderedList.h"
 
@@ -35,18 +38,73 @@ struct LKDTreeNodeDistance
     }
 };
 
+typedef vector<LKDTreeNode*> LKDTreeNodeList; ///< 树节点列表
 
-LKDTree::LKDTree()
+/// @brief KD树
+class CKDTree
+{
+public:
+    /// @brief 构造函数
+    CKDTree();
+
+    /// @brief 析构函数
+    ~CKDTree();
+
+    /// @brief 构造KD树
+    void BuildTree(IN const LKDTreeMatrix& dataSet);
+
+    /// @brief 在数据集中搜索与指定数据最邻近的数据索引
+    int SearchNearestNeighbor(IN const LKDTreeMatrix& data);
+
+    /// @brief 在数据集中搜索与指定数据最邻近的K个数据索引
+    int SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList);
+
+private:
+    /// @brief 构造KD树
+    /// @param[in] pParent 父节点
+    /// @param[in] pNode 当前节点
+    /// @param[in] dataIndexList 数据索引列表
+    void BuildTree(
+        IN LKDTreeNode* pParent,
+        IN LKDTreeNode* pNode,
+        IN const vector<unsigned int>& dataIndexList);
+
+    /// @brief 遍历树
+    /// @param[in] pNode 树节点
+    /// @param[out] nodeList 遍历出来的节点列表
+    void TraverseTree(IN LKDTreeNode* pNode, OUT LKDTreeNodeList& nodeList);
+
+    /// @brief 搜索树
+    /// @param[in] data 源数据
+    /// @param[out] searchPath 搜索出的路径
+    void SearchTree(IN const LKDTreeMatrix& data, OUT LKDTreeNodeList& searchPath);
+
+    /// @brief 计算指定数据与数据集中一个数据的距离值
+    /// @param[in] data 指定的数据
+    /// @param[in] index 数据集中的数据索引
+    /// @return 返回距离值(欧几里得距离), 使用前请保证参数正确
+    float CalculateDistance(IN const LKDTreeMatrix& data, IN unsigned int index);
+
+    /// @brief 清理树
+    /// @param[in] pNode 需要清理的节点
+    void ClearTree(IN LKDTreeNode*& pNode);
+private:
+    LKDTreeNode* m_pRootNode; ///< 根节点
+    LKDTreeMatrix m_dataSet; ///< 数据集
+};
+
+
+CKDTree::CKDTree()
 {
     this->m_pRootNode = 0;
 }
 
-LKDTree::~LKDTree()
+CKDTree::~CKDTree()
 {
     this->ClearTree(m_pRootNode);
 }
 
-void LKDTree::BuildTree(IN const LKDTreeDataSet& dataSet)
+void CKDTree::BuildTree(IN const LKDTreeMatrix& dataSet)
 {
     // 清理树
     if (this->m_pRootNode != 0)
@@ -61,7 +119,7 @@ void LKDTree::BuildTree(IN const LKDTreeDataSet& dataSet)
 
     // 递归构建树
     this->m_pRootNode = new LKDTreeNode();
-    LKDTreeDataIndexList dataIndexList(dataSet.RowLen);
+    vector<unsigned int> dataIndexList(dataSet.RowLen);
     for (unsigned int i = 0; i < dataIndexList.size(); i++)
     {
         dataIndexList[i] = i;
@@ -69,7 +127,7 @@ void LKDTree::BuildTree(IN const LKDTreeDataSet& dataSet)
     this->BuildTree(0, this->m_pRootNode, dataIndexList);
 }
 
-int LKDTree::SearchNearestNeighbor(IN const LKDTreeData& data)
+int CKDTree::SearchNearestNeighbor(IN const LKDTreeMatrix& data)
 {
     const int ERROR_RET = -1; // 错误返回
 
@@ -138,10 +196,7 @@ int LKDTree::SearchNearestNeighbor(IN const LKDTreeData& data)
     return (int)currentNearestNode->DataIndex;
 }
 
-int LKDTree::SearchKNearestNeighbors(
-    IN const LKDTreeData& data, 
-    IN unsigned int k, 
-    OUT LKDTreeDataIndexList& indexList)
+int CKDTree::SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList)
 {
     const int ERROR_RET = -1; // 错误返回
 
@@ -232,22 +287,26 @@ int LKDTree::SearchKNearestNeighbors(
         return ERROR_RET;
 
     
-    indexList.clear();
+    indexList.Reset(1, k, -1);
 
     const LOrderedListNode<LKDTreeNodeDistance>* pCurrentNode = nearestNodesDistanceList.Begin();
+
+    int col = 0;
     while (pCurrentNode)
     {
-        indexList.push_back(pCurrentNode->Data.DataIndex);
+        indexList[0][col] = pCurrentNode->Data.DataIndex;
+        col++;
+
         pCurrentNode = pCurrentNode->PNext;
     }
 
     return k;
 }
 
-void LKDTree::BuildTree(
+void CKDTree::BuildTree(
     IN LKDTreeNode* pParent, 
     IN LKDTreeNode* pNode, 
-    IN const LKDTreeDataIndexList& dataIndexList)
+    IN const vector<unsigned int>& dataIndexList)
 {
     if (pNode == 0)
         return;
@@ -309,9 +368,9 @@ void LKDTree::BuildTree(
     pNode->DataIndex = dataIndexList[bestListIndex];
 
     // 将数据分为左右两部分
-    LKDTreeDataIndexList leftDataIndexList;
+    vector<unsigned int> leftDataIndexList;
 	leftDataIndexList.reserve(dataIndexList.size() * 2 / 3); // 预先分配好内存, 防止在push_back过程中多次重复分配提高效率
-    LKDTreeDataIndexList rightDataIndexList;
+    vector<unsigned int> rightDataIndexList;
 	rightDataIndexList.reserve(dataIndexList.size() * 2 / 3); // 预先分配好内存, 防止在push_back过程中多次重复分配提高效率
     for (unsigned int i = 0; i < dataIndexList.size(); i++)
     {
@@ -349,7 +408,7 @@ void LKDTree::BuildTree(
     }
 }
 
-void LKDTree::TraverseTree(IN LKDTreeNode* pNode, OUT LKDTreeNodeList& nodeList)
+void CKDTree::TraverseTree(IN LKDTreeNode* pNode, OUT LKDTreeNodeList& nodeList)
 {
     if (pNode == 0)
         return;
@@ -360,7 +419,7 @@ void LKDTree::TraverseTree(IN LKDTreeNode* pNode, OUT LKDTreeNodeList& nodeList)
     this->TraverseTree(pNode->RightChildren, nodeList);
 }
 
-void LKDTree::SearchTree(IN const LKDTreeData& data, OUT LKDTreeNodeList& searchPath)
+void CKDTree::SearchTree(IN const LKDTreeMatrix& data, OUT LKDTreeNodeList& searchPath)
 {
     searchPath.clear();
 
@@ -391,7 +450,7 @@ void LKDTree::SearchTree(IN const LKDTreeData& data, OUT LKDTreeNodeList& search
     }
 }
 
-float LKDTree::CalculateDistance(IN const LKDTreeData& data, IN unsigned int index)
+float CKDTree::CalculateDistance(IN const LKDTreeMatrix& data, IN unsigned int index)
 {
     float sqrSum = 0.0f;
     for (unsigned int i = 0; i < data.ColumnLen; i++)
@@ -404,7 +463,7 @@ float LKDTree::CalculateDistance(IN const LKDTreeData& data, IN unsigned int ind
     return sqrSum;
 }
 
-void LKDTree::ClearTree(IN LKDTreeNode*& pNode)
+void CKDTree::ClearTree(IN LKDTreeNode*& pNode)
 {
     if (pNode == 0)
         return;
@@ -414,4 +473,34 @@ void LKDTree::ClearTree(IN LKDTreeNode*& pNode)
 
     delete pNode;
     pNode = 0;
+}
+
+LKDTree::LKDTree()
+    : m_pKDTree(0)
+{
+    m_pKDTree = new CKDTree();
+}
+
+LKDTree::~LKDTree()
+{
+    if (m_pKDTree != 0)
+    {
+        delete m_pKDTree;
+        m_pKDTree = 0;
+    }
+}
+
+void LKDTree::BuildTree(IN const LKDTreeMatrix& dataSet)
+{
+    m_pKDTree->BuildTree(dataSet);
+}
+
+int LKDTree::SearchNearestNeighbor(IN const LKDTreeMatrix& data)
+{
+    return m_pKDTree->SearchNearestNeighbor(data);
+}
+
+int LKDTree::SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList)
+{
+    return m_pKDTree->SearchKNearestNeighbors(data, k, indexList);
 }

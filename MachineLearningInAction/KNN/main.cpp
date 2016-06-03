@@ -20,14 +20,14 @@ float RandFloat(float min, float max)
 int main()
 {
     srand((int)time(0));
-    LKDTreeDataSet dataSet(1000, 3);
-    LKDTreeData data(1, 3);
+    LKDTreeMatrix dataSet(10, 3);
+    LKDTreeMatrix data(1, 3);
     data[0][0] = 3.0f;
     data[0][1] = 2.5f;
     data[0][2] = -5.0f;
     LKDTree tree;
 
-    int testTimes = 100;
+    int testTimes = 1000;
     while (testTimes > 0)
     {
         testTimes--;
@@ -42,10 +42,10 @@ int main()
 
         tree.BuildTree(dataSet);
 
-        LKDTreeDataIndexList indexList;
-        //tree.SearchKNearestNeighbors(data, 3, indexList);
-        //int forecastNearestDataIndex = indexList[0];
-        int forecastNearestDataIndex = tree.SearchNearestNeighbor(data);
+        LKDTreeList indexList;
+        tree.SearchKNearestNeighbors(data, 3, indexList);
+        int forecastNearestDataIndex = indexList[0][0];
+        //int forecastNearestDataIndex = tree.SearchNearestNeighbor(data);
         printf("Forecast Nearest Index: %d\n", forecastNearestDataIndex);
         float forecastNearestDistance = 0.0f;
         for (unsigned int i = 0; i < dataSet.ColumnLen; i++)
