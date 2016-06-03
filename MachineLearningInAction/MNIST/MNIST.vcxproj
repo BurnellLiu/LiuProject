@@ -112,11 +112,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LNeuralNetwork.cpp" />
     <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LRegression.cpp" />
     <ClCompile Include="..\..\LiuLibrary\LMNIST\LMNISTParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LNeuralNetwork.h" />
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LRegression.h" />
     <ClInclude Include="..\..\LiuLibrary\LMNIST\LMNISTParser.h" />
   </ItemGroup>

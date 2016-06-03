@@ -24,12 +24,18 @@
     <ClCompile Include="..\..\LiuLibrary\LMNIST\LMNISTParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\LiuLibrary\LMachineLearning\LNeuralNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LRegression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\LiuLibrary\LMNIST\LMNISTParser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\LiuLibrary\LMachineLearning\LNeuralNetwork.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
