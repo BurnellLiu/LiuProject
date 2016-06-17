@@ -52,8 +52,8 @@ public:
     /// @param[in] data 源数据(行向量)
     /// @param[in] k 需要搜索的最邻近的个数(k要求大于0的整数)
     /// @param[out] indexList 存储最邻近数据索引的列表(行向量, 1 * k), 从近到远
-    /// @return 成功返回获取到的最邻近的数据个数(k), 失败返回-1(参数错误)
-    int SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList);
+    /// @return 成功返回true, 失败返回false
+    bool SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList);
 
 private:
     CKDTree* m_pKDTree; ///< KD树实现对象
