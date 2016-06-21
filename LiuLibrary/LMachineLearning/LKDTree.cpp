@@ -81,10 +81,123 @@ public:
 	}
 
     /// @brief 在数据集中搜索与指定数据最邻近的数据索引
-    int SearchNearestNeighbor(IN const LKDTreeMatrix& data);
+	int SearchNearestNeighbor(IN const LKDTreeMatrix& data)
+	{
+		LKDTreeList indexList;
+		bool bRet = this->SearchKNearestNeighbors(data, 1, indexList);
+		if (!bRet)
+		{
+			return -1;
+		}
+
+		return indexList[0][0];
+	}
 
     /// @brief 在数据集中搜索与指定数据最邻近的K个数据索引
-    bool SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList);
+	bool SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList)
+	{
+		// 检查参数
+		if (data.RowLen != 1 || data.ColumnLen != m_dataSet.ColumnLen)
+			return false;
+		if (k < 1)
+			return false;
+
+		LKDTreeNodeList searchPath;
+		this->SearchTree(data, searchPath);
+		if (searchPath.size() < 1)
+			return false;
+
+		LOrderedList<LKDTreeNodeDistance> nearestDistanceList;
+
+		// 在搜索路径中查找是否存在比当前最近点还近的点
+		for (int i = (int)searchPath.size() - 1; i >= 0; i--)
+		{
+			LKDTreeNode* node = searchPath[i];
+
+			if (nearestDistanceList.Size() < k)
+			{
+				LKDTreeNodeList nodeList;
+				this->TraverseTree(node, nodeList);
+				if (nodeList.size() >= k)
+				{
+					LKDTreeNodeDistance nodeDistance;
+					for (unsigned int n = 0; n < nodeList.size(); n++)
+					{
+						nodeDistance.DataIndex = nodeList[n]->DataIndex;
+						nodeDistance.Distance = this->CalculateDistance(data, nodeDistance.DataIndex);
+						nearestDistanceList.Insert(nodeDistance);
+					}
+				}
+				continue;
+			}
+
+			while (nearestDistanceList.Size() > k)
+			{
+				nearestDistanceList.PopBack();
+			}
+
+
+			LKDTreeNodeDistance currentNearestDistanceMax = nearestDistanceList.End()->Data;
+			// 以目标点和当前最近点的距离为半径作的圆如果和分割超面相交则搜索分割面的另一边区域
+			float dif = data[0][node->Split] - m_dataSet[node->DataIndex][node->Split];
+			dif = abs(dif);
+			if (dif >= currentNearestDistanceMax.Distance)
+			{
+				continue;
+			}
+
+			LKDTreeNodeList nodeList;
+			nodeList.push_back(node);
+			if (m_dataSet[currentNearestDistanceMax.DataIndex][node->Split] < m_dataSet[node->DataIndex][node->Split])
+			{
+				this->TraverseTree(node->RightChildren, nodeList);
+			}
+			else if (m_dataSet[currentNearestDistanceMax.DataIndex][node->Split] > m_dataSet[node->DataIndex][node->Split])
+			{
+				this->TraverseTree(node->LeftChildren, nodeList);
+			}
+			else
+			{
+				this->TraverseTree(node->RightChildren, nodeList);
+				this->TraverseTree(node->LeftChildren, nodeList);
+			}
+
+			for (unsigned int n = 0; n < nodeList.size(); n++)
+			{
+				float distance = this->CalculateDistance(data, nodeList[n]->DataIndex);
+				LKDTreeNodeDistance nodeDistance;
+				if (distance < currentNearestDistanceMax.Distance)
+				{
+					nodeDistance.Distance = distance;
+					nodeDistance.DataIndex = nodeList[n]->DataIndex;
+					nearestDistanceList.Insert(nodeDistance);
+					nearestDistanceList.PopBack();
+					currentNearestDistanceMax = nearestDistanceList.End()->Data;
+				}
+			}
+
+
+		}
+
+		if (nearestDistanceList.Size() < k)
+			return false;
+
+
+		indexList.Reset(1, k, -1);
+
+		const LOrderedListNode<LKDTreeNodeDistance>* pCurrentNode = nearestDistanceList.Begin();
+
+		int col = 0;
+		while (pCurrentNode)
+		{
+			indexList[0][col] = pCurrentNode->Data.DataIndex;
+			col++;
+
+			pCurrentNode = pCurrentNode->PNext;
+		}
+
+		return true;
+	}
 
 private:
     /// @brief 构造KD树
@@ -333,179 +446,6 @@ private:
     LKDTreeMatrix m_dataSet; ///< 数据集
 };
 
-int CKDTree::SearchNearestNeighbor(IN const LKDTreeMatrix& data)
-{
-    const int ERROR_RET = -1; // 错误返回
-
-    // 检查参数
-    if (data.RowLen != 1 || data.ColumnLen != m_dataSet.ColumnLen)
-        return ERROR_RET;
-
-    // 获取搜索路径
-    LKDTreeNodeList searchPath;
-    this->SearchTree(data, searchPath);
-
-    if (searchPath.size() < 1)
-        return ERROR_RET;
-
-    // 假设搜索路径中的最后一项为当前最近点
-    LKDTreeNode* currentNearestNode = searchPath[searchPath.size()-1];
-    float currentNearestDistance = this->CalculateDistance(data, currentNearestNode->DataIndex);
-
-
-    // 在搜索路径中查找是否存在比当前最近点还近的点
-    for (int i = (int)searchPath.size() - 1; i >=0; i--)
-    {
-        LKDTreeNode* node = searchPath[i];
-
-        // 叶子节点直接跳过, 只有最后一个点有可能为叶子节点
-        if (node->Split == LKDTreeNode::UNDEFINE_SPLIT)
-            continue;
-
-        // 以目标点和当前最近点的距离为半径作的圆如果和分割超面相交则搜索分割面的另一边区域
-        float dif = data[0][node->Split] - m_dataSet[node->DataIndex][node->Split];
-        dif = abs(dif);
-        if (dif >= currentNearestDistance)
-        {
-            continue;
-        }
-
-        LKDTreeNodeList nodeList;
-        nodeList.push_back(node);
-        if (m_dataSet[currentNearestNode->DataIndex][node->Split] < m_dataSet[node->DataIndex][node->Split])
-        {
-            this->TraverseTree(node->RightChildren, nodeList);
-        }
-        else if (m_dataSet[currentNearestNode->DataIndex][node->Split] > m_dataSet[node->DataIndex][node->Split])
-        {
-            this->TraverseTree(node->LeftChildren, nodeList);
-        }
-        else
-        {
-            this->TraverseTree(node->RightChildren, nodeList);
-            this->TraverseTree(node->LeftChildren, nodeList);
-        }
-
-        for (unsigned int k = 0; k < nodeList.size(); k++)
-        {
-            float distance = this->CalculateDistance(data, nodeList[k]->DataIndex);
-            if (distance < currentNearestDistance)
-            {
-                currentNearestDistance = distance;
-                currentNearestNode = nodeList[k];
-            }
-        }
-
-
-    }
-
-    return (int)currentNearestNode->DataIndex;
-}
-
-bool CKDTree::SearchKNearestNeighbors(IN const LKDTreeMatrix& data, IN unsigned int k, OUT LKDTreeList& indexList)
-{
-    // 检查参数
-    if (data.RowLen != 1 || data.ColumnLen != m_dataSet.ColumnLen)
-        return false;
-    if (k < 1)
-        return false;
-
-    LKDTreeNodeList searchPath;
-    this->SearchTree(data, searchPath);
-    if (searchPath.size() < 1)
-        return false;
-
-    LOrderedList<LKDTreeNodeDistance> nearestDistanceList;
-
-    // 在搜索路径中查找是否存在比当前最近点还近的点
-    for (int i = (int)searchPath.size() - 1; i >=0; i--)
-    {
-        LKDTreeNode* node = searchPath[i];
-
-        if (nearestDistanceList.Size() < k)
-        {
-            LKDTreeNodeList nodeList;
-            this->TraverseTree(node, nodeList);
-            if (nodeList.size() >= k)
-            {
-                LKDTreeNodeDistance nodeDistance;
-                for (unsigned int n = 0; n < nodeList.size(); n++)
-                {
-                    nodeDistance.DataIndex = nodeList[n]->DataIndex;
-                    nodeDistance.Distance = this->CalculateDistance(data, nodeDistance.DataIndex);
-                    nearestDistanceList.Insert(nodeDistance);
-                }
-            }
-            continue;
-        }
-
-        while (nearestDistanceList.Size() > k)
-        {
-            nearestDistanceList.PopBack();
-        }
-
-
-        LKDTreeNodeDistance currentNearestDistanceMax = nearestDistanceList.End()->Data;
-        // 以目标点和当前最近点的距离为半径作的圆如果和分割超面相交则搜索分割面的另一边区域
-        float dif = data[0][node->Split] - m_dataSet[node->DataIndex][node->Split];
-        dif = abs(dif);
-        if (dif >= currentNearestDistanceMax.Distance)
-        {
-            continue;
-        }
-
-        LKDTreeNodeList nodeList;
-        nodeList.push_back(node);
-        if (m_dataSet[currentNearestDistanceMax.DataIndex][node->Split] < m_dataSet[node->DataIndex][node->Split])
-        {
-            this->TraverseTree(node->RightChildren, nodeList);
-        }
-        else if (m_dataSet[currentNearestDistanceMax.DataIndex][node->Split] > m_dataSet[node->DataIndex][node->Split])
-        {
-            this->TraverseTree(node->LeftChildren, nodeList);
-        }
-        else
-        {
-            this->TraverseTree(node->RightChildren, nodeList);
-            this->TraverseTree(node->LeftChildren, nodeList);
-        }
-
-        for (unsigned int n = 0; n < nodeList.size(); n++)
-        {
-            float distance = this->CalculateDistance(data, nodeList[n]->DataIndex);
-            LKDTreeNodeDistance nodeDistance;
-            if (distance < currentNearestDistanceMax.Distance)
-            {
-                nodeDistance.Distance = distance;
-                nodeDistance.DataIndex = nodeList[n]->DataIndex;
-                nearestDistanceList.Insert(nodeDistance);
-                nearestDistanceList.PopBack();
-                currentNearestDistanceMax = nearestDistanceList.End()->Data;
-            }
-        }
-
-
-    }
-
-    if (nearestDistanceList.Size() < k)
-        return false;
-
-    
-    indexList.Reset(1, k, -1);
-
-    const LOrderedListNode<LKDTreeNodeDistance>* pCurrentNode = nearestDistanceList.Begin();
-
-    int col = 0;
-    while (pCurrentNode)
-    {
-        indexList[0][col] = pCurrentNode->Data.DataIndex;
-        col++;
-
-        pCurrentNode = pCurrentNode->PNext;
-    }
-
-    return true;
-}
 
 LKDTree::LKDTree()
     : m_pKDTree(0)

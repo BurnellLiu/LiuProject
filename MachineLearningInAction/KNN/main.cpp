@@ -80,19 +80,21 @@ int main()
 
     LKDTree tree;
 
-	LKDTreeList indexList;
-
-	for (unsigned int i = 0; i < 700; i++)
+	for (unsigned int i = 0; i < 500; i++)
 	{
 		printf("Test Index: %u\n", i);
 
 		RandMatrix(dataSet, -10.0f, 10.0f);
 
+		if (i == 739)
+		{
+			printf("Stop\n");
+		}
+
 		tree.BuildTree(dataSet);
 
 		
-		tree.SearchKNearestNeighbors(data, 3, indexList);
-		int predictNN = indexList[0][0];
+		int predictNN = tree.SearchNearestNeighbor(data);
 
 		int actualNN = FindNearestNeighbor(dataSet, data);
 
