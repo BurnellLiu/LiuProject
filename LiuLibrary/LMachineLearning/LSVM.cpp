@@ -16,15 +16,6 @@
 #define LMIN(a,b)    (((a) < (b)) ? (a) : (b))
 #endif
 
-/// @brief SVM参数结构
-struct LSVMParam
-{
-    float C; ///< 常数C, C越大表明模型对离群点越敏感(即越大的C表明越不希望有离群点)
-    float Toler; ///< 容错率
-    float MinAlphaChange; ///< alpha值改变的最小量
-    unsigned int MaxIterCount; ///< 最大遍历次数
-};
-
 /// @brief SVM解结构
 struct LSVMSolution
 {
@@ -46,9 +37,9 @@ struct LSVMSolution
     LSVMMatrix AVector; ///< alpha向量(列向量)
 };
 
-LSVMKRBF::LSVMKRBF()
+LSVMKRBF::LSVMKRBF(IN float gamma)
 {
-    m_gamma = 0.1f;
+    m_gamma = gamma;
 }
 
 LSVMKRBF::~LSVMKRBF()
@@ -56,23 +47,13 @@ LSVMKRBF::~LSVMKRBF()
 
 }
 
-void LSVMKRBF::SetGamma(IN float gamma)
+float LSVMKRBF::Translate(IN const LSVMMatrix& vectorA, IN const LSVMMatrix& vectorB) 
 {
-    m_gamma = gamma;
-}
+	LSVMMatrix::SUB(vectorA, vectorB, m_deltaRow);
+	LSVMMatrix::T(m_deltaRow, m_deltaRowT);
+	LSVMMatrix::MUL(m_deltaRow, m_deltaRowT, m_k);
 
-float LSVMKRBF::Translate(IN const LSVMMatrix& vectorA, IN const LSVMMatrix& vectorB) const 
-{
-    LSVMMatrix deltaRow(1, vectorA.ColumnLen);
-
-    for (unsigned int i = 0; i < vectorA.ColumnLen; i++)
-    {
-        deltaRow[0][i] = vectorA[0][i] - vectorB[0][i];
-    }
-
-    LSVMMatrix K = deltaRow * deltaRow.T();
-
-    return exp(K[0][0]/(-2 * m_gamma * m_gamma));
+    return exp(m_k[0][0]/(-2 * m_gamma * m_gamma));
 }
 
 /// @brief 原始函数(不使用核函数, 直接计算内积)
@@ -92,11 +73,21 @@ public:
     }
 
     /// @brief 转换函数
-    virtual float Translate(IN const LSVMMatrix& vectorA, IN const LSVMMatrix& vectorB) const
+    virtual float Translate(IN const LSVMMatrix& vectorA, IN const LSVMMatrix& vectorB)
     {
-        LSVMMatrix ABT = vectorA * vectorB.T();
-        return ABT[0][0];
+		LSVMMatrix::T(vectorB, m_bT);
+		LSVMMatrix::MUL(vectorA, m_bT, m_abT);
+        return m_abT[0][0];
     }
+
+private:
+
+	/*
+	以下变量被设为成员变量为优化程序效率目的
+	*/
+	LSVMMatrix m_bT;
+	LSVMMatrix m_ab;
+	LSVMMatrix m_abT;
 };
 
 /// @brief 支持向量机实现类
@@ -104,7 +95,7 @@ class CSVM
 {
 public:
     /// @brief 构造函数
-    CSVM()
+    explicit CSVM(IN const LSVMParam& param)
     {
         srand((unsigned int)time(0));
 
@@ -114,10 +105,17 @@ public:
         m_pKernelFunc = NULL;
 
         m_pParam = new LSVMParam;
-        m_pParam->C = 50.0f;
-        m_pParam->Toler = 0.01f;
-        m_pParam->MinAlphaChange = 0.00001f;
-        m_pParam->MaxIterCount = 40;
+		(*m_pParam) = param;
+
+		// 获取核函数接口
+		if (m_pParam->PKernelFunc != 0)
+		{
+			m_pKernelFunc = m_pParam->PKernelFunc;
+		}
+		else
+		{
+			m_pKernelFunc = &m_kOriginal;
+		}
     }
 
     /// @brief 析构函数
@@ -143,7 +141,7 @@ public:
     }
 
     /// @brief 训练模型
-    bool TrainModel(IN const LSVMProblem& problem, IN const ISVMKernelFunc* pKernelFunc)
+    bool TrainModel(IN const LSVMProblem& problem, OUT LSVMResult& result)
     {
         // 进行参数检查
         if (problem.XMatrix.ColumnLen < 1)
@@ -156,16 +154,6 @@ public:
             return false;
 
         m_pProblem = &problem;
-
-        // 获取核函数接口
-        if (pKernelFunc != 0)
-        {
-            m_pKernelFunc = pKernelFunc;
-        }
-        if (pKernelFunc == 0)
-        {
-            m_pKernelFunc = &m_kOriginal;
-        }
 
         // 初始化解结构
         if (m_pSolution != 0)
@@ -186,16 +174,16 @@ public:
         LSVMMatrix sampleB;
         for (unsigned int i = 0; i < problem.XMatrix.RowLen; i++)
         {
-            sampleA = problem.XMatrix.GetRow(i);
+            problem.XMatrix.GetRow(i, sampleA);
             for (unsigned int j = 0; j < problem.XMatrix.RowLen; j++)
             {
-                sampleB = problem.XMatrix.GetRow(j);
+                problem.XMatrix.GetRow(j, sampleB);
                 (*m_pKMatrix)[i][j] = m_pKernelFunc->Translate(sampleA, sampleB);
             }
         }
 
         // 训练模型
-        this->SMOTrainModel(*m_pProblem, *m_pParam, *m_pSolution);
+        result.IterCount = this->SMOTrainModel(*m_pProblem, *m_pSolution);
 
         // 获取支持向量的索引
         unsigned int supportVectorNum = 0;
@@ -210,55 +198,63 @@ public:
         {
             if (m_pSolution->AVector[i][0] != 0.0f)
             {
-                m_supportVectorIndex[j][0] = (float)i;
+                m_supportVectorIndex[j][0] = i;
                 j++;
             }
         }
+
+		result.SupportVevtorNum = supportVectorNum;
+
 
         return true;
     }
 
     /// @brief 使用训练好的模型进行预测
-    float Predict(const LSVMMatrix& sample)
+	bool Predict(IN const LSVMMatrix& sampleSet, OUT LSVMMatrix& yVector)
     {
         // 检查参数
-        if (sample.RowLen != 1)
-            return 0.0f;
-        if (sample.ColumnLen != this->m_pProblem->XMatrix.ColumnLen)
-            return 0.0f;
-        if (this->m_pProblem == 0)
-            return 0.0f;
+		if (this->m_pProblem == 0)
+			return false;
+        if (sampleSet.RowLen < 1)
+            return false;
+        if (sampleSet.ColumnLen != this->m_pProblem->XMatrix.ColumnLen)
+            return false;
+
+		yVector.Reset(sampleSet.RowLen, 1);
+       
 
         LSVMMatrix AY;
         LSVMMatrix::DOTMUL(this->m_pSolution->AVector, this->m_pProblem->YVector, AY); // 列向量
         LSVMMatrix AYT = AY.T(); // 行向量
 
         LSVMMatrix sampleA;
+		LSVMMatrix sampleB;
         LSVMMatrix KColumn(this->m_pProblem->XMatrix.RowLen, 1); // 列向量
 
-        // 只对支持向量做内积, 节省时间
-        for (unsigned int i = 0; i < KColumn.RowLen; i++)
-        {
-            KColumn[i][0] = 0.0f;
-        }
-        for (unsigned int i = 0; i < m_supportVectorIndex.RowLen; i++)
-        {
-            unsigned int j = (unsigned int)m_supportVectorIndex[i][0];
-            sampleA = this->m_pProblem->XMatrix.GetRow(j);
-            KColumn[j][0] = m_pKernelFunc->Translate(sampleA, sample);
-        }
-        LSVMMatrix AYTK = AYT * KColumn;
-        if (AYTK[0][0] + this->m_pSolution->B >= 0.0f)
-            return 1.0f;
-        else
-            return -1.0f;
+		for (unsigned int row = 0; row < sampleSet.RowLen; row++)
+		{
+			sampleSet.GetRow(row, sampleB);
 
-    }
+			// 只对支持向量做内积, 节省时间
+			for (unsigned int i = 0; i < KColumn.RowLen; i++)
+			{
+				KColumn[i][0] = 0.0f;
+			}
+			for (unsigned int i = 0; i < m_supportVectorIndex.RowLen; i++)
+			{
+				unsigned int j = m_supportVectorIndex[i][0];
+				sampleA = this->m_pProblem->XMatrix.GetRow(j);
+				KColumn[j][0] = m_pKernelFunc->Translate(sampleA, sampleB);
+			}
+			LSVMMatrix AYTK = AYT * KColumn;
+			if (AYTK[0][0] + this->m_pSolution->B >= 0.0f)
+				yVector[row][0] = 1.0f;
+			else
+				yVector[row][0] = -1.0f;
+		}
+        
+		return true;
 
-    /// @brief 获取支持向量数
-    unsigned int GetSupportVectorNumber()
-    {
-        return m_supportVectorIndex.RowLen;
     }
 
 private:
@@ -322,176 +318,31 @@ private:
     }
 
     /// @brief 根据解计算出所有样本的误差
-    /// @param[in] problem 原始问题
     /// @param[in] solution 解
     /// @param[in] k 样本索引
     /// @return 误差值
-    void CalculateError(IN const LSVMProblem& problem, IN const LSVMSolution& solution, OUT LSVMMatrix& errorVector)
+    void CalculateError(IN const LSVMSolution& solution, OUT LSVMMatrix& errorVector)
     {
         LSVMMatrix AY;
-        LSVMMatrix::DOTMUL(solution.AVector, problem.YVector, AY); // 列向量
+        LSVMMatrix::DOTMUL(solution.AVector, m_pProblem->YVector, AY); // 列向量
         LSVMMatrix AYT = AY.T(); // 行向量
-        for (unsigned int i = 0; i < problem.XMatrix.RowLen; i++)
+
+		LSVMMatrix KColumn;
+		LSVMMatrix AYTK;
+        for (unsigned int i = 0; i < m_pProblem->XMatrix.RowLen; i++)
         {
-            LSVMMatrix KColumn = this->m_pKMatrix->GetColumn(i); // 列向量
-            LSVMMatrix AYTK = AYT * KColumn;
-            float E = AYTK[0][0] + solution.B - problem.YVector[i][0]; // 样本i标签的误差
+            m_pKMatrix->GetColumn(i, KColumn); // 列向量
+			LSVMMatrix::MUL(AYT, KColumn, AYTK);
+            float E = AYTK[0][0] + solution.B - m_pProblem->YVector[i][0]; // 样本i标签的误差
             errorVector[i][0] = E;
         }
     }
 
-    /// @brief SMO训练算法(示例)
-    ///  
-    /// 该示例代码没有使用启发式的方法选择alpha, 也没有使用核函数, 该函数仅用来参考用
-    /// @param[in] sampleMatrix 样本矩阵, 每一行为一个样本, 每行中的值为样本的特征值
-    /// @param[in] classVector 类别向量(列向量), 行数为样本矩阵的行数, 列数为1, 只能为-1.0f或1.0f
-    /// @param[in] C 常数C
-    /// @param[in] toler 容错率
-    /// @param[out] b 超平面截距
-    /// @param[out] alphaVector alpha向量
-    void SMOTrainModelExample(
-        IN const LSVMMatrix& sampleMatrix, 
-        IN const LSVMMatrix& classVector, 
-        IN float C,
-        IN float toler, 
-        OUT float& b, 
-        OUT LSVMMatrix& alphaVector)
-    {
-        unsigned int sampleNum = sampleMatrix.RowLen; // 样本数量
-        unsigned int featureNum = sampleMatrix.ColumnLen; // 样本的特征数量
-
-        float B = 0.0f; // 分割超平面的截距
-
-        // 将alpha向量初始化为0向量(列向量)
-        alphaVector.Reset(sampleNum, 1);
-        for (unsigned int i = 0; i < alphaVector.RowLen; i++)
-        {
-            alphaVector[i][0] = 0.0f;
-        }
-
-        int iter = 0;
-        while (iter < 40)
-        {
-            bool alphaChanged = false;
-            // 循环扫描每一个alpha, 对可优化的alpha进行优化
-            for (unsigned int i = 0; i < sampleNum; i++)
-            {
-                // 根据现有alpha计算出第i个样本的间隔, 计算出的值不符合KKT条件表明需要优化
-
-                // 计算权重
-                // w = sum for i = 1 to m (alpha(i) * y(i) * x(i))
-                LSVMMatrix W;
-                LSVMMatrix::DOTMUL(alphaVector, classVector, W);
-                W = W.T() * sampleMatrix;// 计算出的权重为行向量
-
-                // 根据权重计算间隔
-                // margin = y(i) * (W * X(i) + b)
-                LSVMMatrix Xi = sampleMatrix.GetRow(i); // 行向量
-                LSVMMatrix XiT = Xi.T(); // 列向量
-                LSVMMatrix WXi = W * XiT;
-                float Ei = WXi[0][0] + B - classVector[i][0]; // 样本i标签的误差
-                float marginXi = classVector[i][0] * (WXi[0][0] + B); // 样本i的间隔
-
-                // KKT条件::
-                //alpha如果小于C, 那么margin应该大于等于1, 如不符合那么违反KKT条件, 则需要优化
-                //alpha如果大于0, 那么margin应该小于等于1, 如不符合那么违反KKT条件, 则需要优化
-                if (((alphaVector[i][0] < C) && (marginXi < 1 - toler)) ||
-                    ((alphaVector[i][0] > 0) && (marginXi > 1 + toler)))
-                {
-                    // 随机选择另一个alpha j
-                    int j = this->SelectRand(i, sampleNum-1);
-                    LSVMMatrix Xj = sampleMatrix.GetRow(j); // 行向量
-                    LSVMMatrix XjT = Xj.T(); // 列向量
-                    LSVMMatrix WXj = W * XjT;
-                    float Ej = WXj[0][0] + B - classVector[j][0]; // 样本j标签的误差
-                    float marginXj = classVector[j][0] * (WXj[0][0] + B); // 样本j的间隔
-
-                    float LAj = 0.0f; // alpha j 的下届
-                    float HAj = 0.0f; // alpha j 的上届
-                    // 计算alpha j 的上下界
-                    if (classVector[i][0] != classVector[j][0])
-                    {
-                        LAj = LMAX(0, alphaVector[j][0] - alphaVector[i][0]);
-                        HAj = LMIN(C, C + alphaVector[j][0] - alphaVector[i][0]);
-                    }
-                    if (classVector[i][0] == classVector[j][0])
-                    {
-                        LAj = LMAX(0, alphaVector[j][0] - alphaVector[i][0] - C);
-                        HAj = LMIN(C, alphaVector[j][0] - alphaVector[i][0]);
-                    }
-
-
-                    if (LAj == HAj)
-                    {
-                        continue;
-                    }
-
-                    // 计算eta = 2 * Xi * Xj - Xi * Xi - Xj * Xj
-                    LSVMMatrix XiXj = Xi * XjT;
-                    LSVMMatrix XiXi = Xi * XiT;
-                    LSVMMatrix XjXj = Xj * XjT;
-
-                    float eta = 2 * XiXj[0][0] - XiXi[0][0] - XjXj[0][0];
-                    if (eta == 0.0f)
-                    {
-                        continue;
-                    }
-
-
-                    // 计算新的alpha j 
-                    float AjOld = alphaVector[j][0];
-                    alphaVector[j][0] -= classVector[j][0] * (Ei - Ej) / eta;
-                    // 裁剪alpha j
-                    alphaVector[j][0] = this->ClipAlpha(alphaVector[j][0], LAj, HAj);
-
-                    // 如果alpha j 改变量太小, 则退出
-                    if (abs(alphaVector[j][0] - AjOld) < 0.00001)
-                    {
-                        continue;
-                    }
-
-                    // 计算新的alpha i
-                    float AiOld = alphaVector[i][0];
-                    alphaVector[i][0] += classVector[i][0] * classVector[j][0] * (AjOld - alphaVector[j][0]);
-
-                    // 计算截距B的值
-                    float B1 = B - Ei - classVector[i][0] * (alphaVector[i][0] - AiOld) * XiXi[0][0] - 
-                        classVector[j][0] * (alphaVector[j][0] - AjOld) * XiXj[0][0];
-                    float B2 = B - Ej - classVector[i][0] * (alphaVector[i][0] - AiOld) * XiXj[0][0] -
-                        classVector[j][0] * (alphaVector[j][0] - AjOld) * XjXj[0][0];
-
-                    if (alphaVector[i][0] > 0 && alphaVector[i][0] < C)
-                    {
-                        B = B1;
-                    }
-                    else if (alphaVector[j][0] > 0 && alphaVector[j][0] < C)
-                    {
-                        B = B1;
-                    }
-                    else
-                    {
-                        B = (B1 + B2)/2;
-                    }
-
-                    alphaChanged = true;
-
-                }
-            }
-
-            if (alphaChanged)
-                iter = 0;
-            else
-                iter++;
-        }
-
-        b = B;
-    }
-
     /// @brief SMO训练算法
     /// @param[in] problem 原始问题
-    /// @param[in] param 参数
     /// @param[out] solution 问题的解
-    void SMOTrainModel(IN const LSVMProblem& problem, IN const LSVMParam& param, OUT LSVMSolution& solution)
+	/// @return 遍历次数
+    unsigned int SMOTrainModel(IN const LSVMProblem& problem, OUT LSVMSolution& solution)
     {
         const unsigned int M = problem.XMatrix.RowLen; // 样本数量
 
@@ -501,7 +352,7 @@ private:
             E[i][0] = 0.0f;
         }
 
-        this->CalculateError(problem, solution, E);
+        this->CalculateError(solution, E);
 
         bool entireSet = true;
         bool alphaChanged = false;
@@ -516,11 +367,11 @@ private:
             {
                 for (unsigned int i = 0; i < M; i++)
                 {
-                    if (!this->SMOOptimizeAlpha(i, problem, param, E, solution))
+                    if (!this->SMOOptimizeAlpha(i, E, solution))
                         continue;
 
                     alphaChanged = true;
-                    this->CalculateError(problem, solution, E);
+                    this->CalculateError(solution, E);
                 }
 
             }
@@ -530,14 +381,14 @@ private:
             {
                 for (unsigned int i = 0; i < M; i++)
                 {
-                    if (solution.AVector[i][0] == 0 || solution.AVector[i][0] == param.C)
+                    if (solution.AVector[i][0] == 0 || solution.AVector[i][0] == m_pParam->C)
                         continue;
 
-                    if (!this->SMOOptimizeAlpha(i, problem, param, E, solution))
+                    if (!this->SMOOptimizeAlpha(i, E, solution))
                         continue;
 
                     alphaChanged = true;
-                    this->CalculateError(problem, solution, E);
+                    this->CalculateError(solution, E);
                 }
             }
 
@@ -560,31 +411,27 @@ private:
                 entireSet = true;
         }
 
+		return iter;
+
     }
 
     /// @brief SMO优化Alpha 
     /// @param[in] fristAlpha 需要优化的alpha的索引
-    /// @param[in] problem 原始问题
-    /// @param[in] param 参数
     /// @param[in] error 误差缓存向量
     /// @param[out] solution 问题的解
     /// @return 成功优化返回true, 优化失败返回false
     bool SMOOptimizeAlpha(
-        IN unsigned int fristAlpha, 
-        IN const LSVMProblem& problem, 
-        IN const LSVMParam& param, 
+        IN unsigned int fristAlpha,   
         IN const LSVMMatrix& error, 
         OUT LSVMSolution& solution)
     {
         const unsigned int i = fristAlpha;
-        const LSVMMatrix& X = problem.XMatrix; // 样本矩阵
-        const LSVMMatrix& Y = problem.YVector; // 标签向量(列向量)
+        const LSVMMatrix& X = m_pProblem->XMatrix; // 样本矩阵
+        const LSVMMatrix& Y = m_pProblem->YVector; // 标签向量(列向量)
         const unsigned int M = X.RowLen; // 样本数量
         const LSVMMatrix& K = *m_pKMatrix; // K矩阵
 
-        const float C = param.C; // 常数C
-        const float Toler = param.Toler; // 容错率
-        const float MinAlphaChange = param.MinAlphaChange;
+        const float C = m_pParam->C; // 常数C
 
         float& B = solution.B; // 分割超平面的截距
         LSVMMatrix& A = solution.AVector; // alpha向量(列向量)
@@ -596,8 +443,8 @@ private:
         // KKT条件::
         // alpha如果小于C, 那么margin应该大于等于1, 如不符合那么违反KKT条件, 则需要优化
         // alpha如果大于0, 那么margin应该小于等于1, 如不符合那么违反KKT条件, 则需要优化
-        if (((A[i][0] < C) && (marginXi < 1 - Toler)) ||
-            ((A[i][0] > 0) && (marginXi > 1 + Toler)))
+        if (((A[i][0] < C) && (marginXi < 1)) ||
+            ((A[i][0] > 0) && (marginXi > 1)))
         {
             unsigned int j = this->SelectSecondAlpha(i, E);
 
@@ -622,7 +469,7 @@ private:
 
             float eta = 2 * K[i][j] - K[i][i] - K[j][j];
 
-            if (eta >= 0.0f)
+            if (eta == 0.0f)
             {
                 return false;
             }
@@ -633,11 +480,11 @@ private:
             // 裁剪alpha j
             A[j][0] = this->ClipAlpha(A[j][0], LAj, HAj);
 
-            // 如果alpha j 改变量太小, 则退出
-            if (abs(A[j][0] - AjOld) < MinAlphaChange)
-            {
-                return false;
-            }
+			// 如果alpha j 改变量太小, 则退出
+			if (abs(A[j][0] - AjOld) < 0.0001)
+			{
+				return false;
+			}
 
             // 计算新的alpha i
             float AiOld = A[i][0];
@@ -674,14 +521,14 @@ private:
     LSVMParam* m_pParam; ///< 参数
     LSVMSolution* m_pSolution; ///< SVM的解
     LSVMMatrix* m_pKMatrix; ///< K矩阵
-    const ISVMKernelFunc* m_pKernelFunc; ///< 核函数接口
+    ISVMKernelFunc* m_pKernelFunc; ///< 核函数接口
     LSVMKOriginal m_kOriginal; ///< 原始核函数
-    LSVMMatrix m_supportVectorIndex; ///< 记录支持向量的样本的索引(列向量)
+    LMatrix<unsigned int> m_supportVectorIndex; ///< 记录支持向量的样本的索引(列向量)
 };
 
-LSVM::LSVM()
+LSVM::LSVM(IN const LSVMParam& param)
 {
-    m_pSVM = new CSVM();
+    m_pSVM = new CSVM(param);
 }
 
 LSVM::~LSVM()
@@ -692,21 +539,15 @@ LSVM::~LSVM()
     }
 }
 
-bool LSVM::TrainModel(IN const LSVMProblem& problem, IN const ISVMKernelFunc* pKernelFunc)
+bool LSVM::TrainModel(IN const LSVMProblem& problem, OUT LSVMResult& result)
 {
-    return m_pSVM->TrainModel(problem, pKernelFunc);
+    return m_pSVM->TrainModel(problem, result);
 }
 
-float LSVM::Predict(IN const LSVMMatrix& sample)
+bool LSVM::Predict(IN const LSVMMatrix& sampleSet, OUT LSVMMatrix& yVector)
 {
-    return m_pSVM->Predict(sample);
+    return m_pSVM->Predict(sampleSet, yVector);
 }
-
-unsigned int LSVM::GetSupportVectorNumber()
-{
-    return m_pSVM->GetSupportVectorNumber();
-}
-
 
 
 

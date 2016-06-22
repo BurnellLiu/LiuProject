@@ -30,7 +30,7 @@ int main()
     fileReader.Close();
 
 
-    LSVM svm;
+    
     LSVMMatrix sampleMatrix(lineList.size(), 2);
     LSVMMatrix classVector(lineList.size(), 1);
 
@@ -44,26 +44,33 @@ int main()
     }
     
 
-    LSVMProblem problem(sampleMatrix, classVector);
-    LSVMKRBF rbf;
-    rbf.SetGamma(0.9f);
-    svm.TrainModel(problem, &rbf);
+	LSVMKRBF rbf(0.8f);
+	LSVMParam param;
+	param.C = 50;
+	param.MaxIterCount = 40;
+	param.PKernelFunc = &rbf;
 
-    printf("Support Vector Number: %u\n", svm.GetSupportVectorNumber());
+	LSVM svm(param);
+    LSVMProblem problem(sampleMatrix, classVector);
+	LSVMResult result;
+
+    svm.TrainModel(problem, result);
+
+    printf("Support Vector Number: %u\n", result.SupportVevtorNum);
+	printf("Iter Count: %u\n", result.IterCount);
+
+	LSVMMatrix yVector;
+	svm.Predict(sampleMatrix, yVector);
 
     int errorCount = 0;
-    LSVMMatrix sample;
     for (unsigned int i = 0; i < sampleMatrix.RowLen; i++)
     {
-        sample = sampleMatrix.GetRow(i);
-        if (svm.Predict(sample) != classVector[i][0])
-        {
-            errorCount++;
-        }
+		if (yVector[i][0] != classVector[i][0])
+			errorCount++;
     }
 
     printf("ErrorRate: %f\n", (float)errorCount/(float)sampleMatrix.RowLen);
    
-    system("pause");
+    //system("pause");
 	return 0;
 }
