@@ -5,6 +5,7 @@
 #include "LMNIST/LMNISTParser.h"
 #include "LMachineLearning/LRegression.h"
 #include "LMachineLearning/LNeuralNetwork.h"
+#include "LMachineLearning/LSVM.h"
 
 void PrintMatrix(const LMatrix<float>& matrix)
 {
@@ -318,10 +319,172 @@ int TrainMNISTWithBPNetwork()
     return 0;
 }
 
+int TrainMNISTWithSVM()
+{
+	// 加载训练数据集
+	LMNISTImageFile trainImageFile("./Data/train-images.idx3-ubyte");
+	LMNISTLabelFile trainLabelFile("./Data/train-labels.idx1-ubyte");
+
+	unsigned int trainImageNum = 0;
+	unsigned int imageRow = 0;
+	unsigned int imageCol = 0;
+	unsigned int imageSize = 0;
+	unsigned int trainLabelNum = 0;
+
+	trainImageFile.GetImageNum(trainImageNum);
+	trainImageFile.GetImageSize(imageRow, imageCol);
+	trainLabelFile.GetLabelNum(trainLabelNum);
+	imageSize = imageRow * imageCol;
+
+	printf("Train Image Total Number: %u\n", trainImageNum);
+	printf("Train Image Size: Row(%u) Col(%u)\n", imageRow, imageCol);
+	printf("Train Label Total Number: %u\n", trainLabelNum);
+	if (0 == trainImageNum || trainLabelNum != trainImageNum)
+	{
+		printf("MNIST Train Data Error!!\n");
+		return 0;
+	}
+	printf("\n");
+
+	// 加载测试数据集
+	LMNISTImageFile testImageFile("./Data/t10k-images.idx3-ubyte");
+	LMNISTLabelFile testLabelFile("./Data/t10k-labels.idx1-ubyte");
+
+	unsigned int testImageNum = 0;
+	unsigned int testLabelNum = 0;
+	unsigned int testImageRow = 0;
+	unsigned int testImageCol = 0;
+
+	testImageFile.GetImageNum(testImageNum);
+	testImageFile.GetImageSize(testImageRow, testImageCol);
+	testLabelFile.GetLabelNum(testLabelNum);
+
+	printf("Tset Image Total Number: %u\n", testImageNum);
+	printf("Test Image Size: Row(%u) Col(%u)\n", testImageRow, testImageCol);
+	printf("Test Label Total Number: %u\n", testLabelNum);
+	if (0 == testImageNum ||
+		testLabelNum != testImageNum ||
+		testImageRow != imageRow ||
+		testImageCol != imageCol)
+	{
+		printf("MNIST Test Data Error!!\n");
+		return 0;
+	}
+	printf("\n");
+
+	// 只对0和1做二分类
+	unsigned int trainSampleNum = 400;
+	printf("Train 0 And 1 Num: %u\n", trainSampleNum);
+
+	// 加载训练样本集
+	LSVMMatrix trainSampleSet(trainSampleNum, imageSize);
+	LSVMMatrix trainLabelVector(trainSampleNum, 1);
+
+	unsigned int iter = 0;
+	unsigned char* pImageBuffer = new unsigned char[imageSize];
+	for (unsigned int i = 0; i < trainLabelNum; i++)
+	{
+		unsigned char label = 2;
+		trainLabelFile.GetLabel(i, label);
+		if (label != 0 && label != 1)
+			continue;
+
+		if (label == 1)
+		{
+			trainLabelVector[iter][0] = 1.0f;
+		}
+
+		if (label == 0)
+		{
+			trainLabelVector[iter][0] = -1.0f;
+		}
+
+		trainImageFile.GetImage(i, pImageBuffer);
+		for (unsigned int col = 0; col < trainSampleSet.ColumnLen; col++)
+		{
+			trainSampleSet[iter][col] = (float)pImageBuffer[col] / 255.0f;
+		}
+
+		iter++;
+
+		if (iter >= trainSampleNum)
+			break;
+	}
+
+	// 定义核函数
+	LSVMKRBF svmRBF(20.0f);
+
+	// 定义SVM参数
+	LSVMParam svmParam;
+	svmParam.C = 40.0f;
+	svmParam.MaxIterCount = 40;
+	svmParam.PKernelFunc = &svmRBF;
+	LSVMProblem svmProblem(trainSampleSet, trainLabelVector);
+
+	// 定义SVM
+	LSVM svm(svmParam);
+
+	// 训练SVM
+	LSVMResult svmResult;
+	svm.TrainModel(svmProblem, svmResult);
+	printf("Train Result:\n");
+	printf("\tSupport Vector Num: %u\n", svmResult.SupportVectorNum);
+	printf("\tIter Count: %u\n", svmResult.IterCount);
+
+	LSVMMatrix trainYVector;
+	svm.Predict(trainSampleSet, trainYVector);
+
+	unsigned int errorCount = 0;
+	for (unsigned int i = 0; i < trainSampleSet.RowLen; i++)
+	{
+		if (trainLabelVector[i][0] != trainYVector[i][0])
+			errorCount++;
+	}
+	printf("Train Error Rate: %.2f%%\n", errorCount * 100.0f / trainSampleSet.RowLen);
+
+
+	// 使用测试集测试模型
+	LSVMMatrix testSample(1, imageSize);
+	LSVMMatrix testLabel(1, 1);
+	errorCount = 0;
+	unsigned int totalCount = 0;
+	for (unsigned int i = 0; i < testLabelNum; i++)
+	{
+		unsigned char label = 2;
+		testLabelFile.GetLabel(i, label);
+		if (label != 0 && label != 1)
+			continue;
+
+		totalCount++;
+		testImageFile.GetImage(i, pImageBuffer);
+		for (unsigned int col = 0; col < testSample.ColumnLen; col++)
+		{
+			testSample[0][col] = (float)pImageBuffer[col]/255.0f;
+		}
+
+		svm.Predict(testSample, testLabel);
+		if (label == 0)
+		{
+			if (testLabel[0][0] == 1.0f)
+				errorCount++;
+		}
+		if (label == 1)
+		{
+			if (testLabel[0][0] == -1.0f)
+				errorCount++;
+		}
+	}
+
+	printf("Test 0 And 1 Num: %u\n", totalCount);
+	printf("Test Error Rate: %.2f%%\n", errorCount * 100.0f / totalCount);
+
+	return 0;
+}
+
 int main()
 {
     
-    TrainMNISTWithBPNetwork();
+    TrainMNISTWithSVM();
     system("pause");
 
     return 0;
