@@ -48,7 +48,7 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     width = ui.stackedWidget->width() * m_uiRatio;
     height = ui.stackedWidget->height() * m_uiRatio;
 
-    m_pHardwareInforPage = new HardwareInforPage();
+    m_pHardwareInforPage = new HardwareInforPage(m_uiRatio);
     m_pHardwareInforPage->setFixedSize(width, height);
     ui.stackedWidget->addWidget(m_pHardwareInforPage);
     
@@ -57,9 +57,8 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     m_pTempManagementPage->setFixedSize(width, height);
     ui.stackedWidget->addWidget(m_pTempManagementPage);
 
-    m_pTestItemPage = new TestItemPage();
+    m_pTestItemPage = new TestItemPage(m_uiRatio);
     m_pTestItemPage->setFixedSize(width, height);
-    m_pTestItemPage->SetUIRatio(m_uiRatio);
     ui.stackedWidget->addWidget(m_pTestItemPage);
 
     ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);

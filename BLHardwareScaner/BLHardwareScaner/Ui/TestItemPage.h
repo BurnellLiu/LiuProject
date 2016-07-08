@@ -26,13 +26,10 @@ class TestItemPage : public QWidget
     Q_OBJECT
 
 public:
-    TestItemPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
+    /// @brief 构造函数
+    /// @param[in] uiRatio UI放大系数
+    TestItemPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~TestItemPage();
-
-    /// @brief 设置UI调整比例
-    void SetUIRatio(IN float ratio);
-
-
 
 protected:
     /// @brief 窗口显示事件

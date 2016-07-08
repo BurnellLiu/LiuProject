@@ -11,9 +11,11 @@
 #define STRING_TESTITEM_DISK_SPEED QObject::tr("DiskSpeed")
 #define STRING_TESTITEM_CAMERA_VIEW QObject::tr("CameraView")
 
-TestItemPage::TestItemPage(QWidget *parent, Qt::WFlags flags)
+TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
+    m_uiRatio = uiRatio;
+
     ui.setupUi(this);
     this->LoadQSS();
 
@@ -30,7 +32,7 @@ TestItemPage::TestItemPage(QWidget *parent, Qt::WFlags flags)
     m_pDiskSpeedPage = 0;
     m_pCameraViewPage = 0;
 
-    m_pDiskSpeedPage = new DiskSpeedPage();
+    m_pDiskSpeedPage = new DiskSpeedPage(uiRatio);
     if (m_bCameraExist)
     {
         m_pCameraViewPage = new CameraViewPage();   
@@ -50,11 +52,6 @@ TestItemPage::~TestItemPage()
         delete m_pCameraViewPage;
         m_pCameraViewPage = 0;
     }
-}
-
-void TestItemPage::SetUIRatio(IN float ratio)
-{
-    m_uiRatio = ratio;
 }
 
 
@@ -109,7 +106,6 @@ void TestItemPage::LoadQSS()
     {  
         QString qss = qssFile.readAll();
         qssFile.close();  
-
         this->setStyleSheet(qss);
     } 
 }

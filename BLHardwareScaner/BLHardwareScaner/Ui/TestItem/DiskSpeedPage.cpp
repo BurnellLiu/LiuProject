@@ -15,11 +15,11 @@
 #define SEQ_TEST_FILENAME QString::fromStdWString(L"SquenceTest.temp");
 #define RANDOM_4K_TEST_FILENAME QString::fromStdWString(L"Random4KTest.temp");
 
-DiskSpeedPage::DiskSpeedPage(QWidget *parent, Qt::WFlags flags)
+DiskSpeedPage::DiskSpeedPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
 {
     ui.setupUi(this);
-    this->LoadQSS();
+    this->LoadQSS(uiRatio);
 
     m_pSeqTest = new LDiskSequenceTest();
     m_p4KRandTest = new LDisk4KRandomTest();
@@ -306,7 +306,7 @@ bool DiskSpeedPage::SelectLogicalDrive(
     return true;
 }
 
-void DiskSpeedPage::LoadQSS()
+void DiskSpeedPage::LoadQSS(IN float uiRatio)
 {
     QListView* pListView = new QListView();
     ui.comboBoxDiskList->setView(pListView);
@@ -317,6 +317,16 @@ void DiskSpeedPage::LoadQSS()
     {  
         QString qss = qssFile.readAll();
         qssFile.close();  
+
+        // 下拉框每项的高度需要动态设置, 不能在QSS文件中写死
+        QString comboxItemHeightQss = QString::fromAscii(
+            "QComboBox QAbstractItemView::item\
+             {\
+                color: black;\
+                min-height: %1px;\
+             }").arg((int)(35 * uiRatio));
+
+        qss += comboxItemHeightQss;
 
         this->setStyleSheet(qss);
     } 

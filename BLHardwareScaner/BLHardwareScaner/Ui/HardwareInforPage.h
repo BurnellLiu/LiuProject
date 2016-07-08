@@ -27,7 +27,9 @@ class HardwareInforPage : public QWidget
     Q_OBJECT
 
 public:
-    HardwareInforPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
+    /// @brief 构造函数
+    /// @param[in] uiRatio UI放大系数
+    HardwareInforPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~HardwareInforPage();
 
 protected:
@@ -42,7 +44,8 @@ private:
     void InitHardwareInfor();
 
     /// @brief 加载UI样式
-    void LoadQSS();
+    /// @param[in] uiRatio UI放大系数
+    void LoadQSS(IN float uiRatio);
 
 private:
     Ui::HardwareInforForm ui;

@@ -29,7 +29,8 @@ class DiskSpeedPage : public QDialog
 
 public:
     /// @brief 构造函数
-    DiskSpeedPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
+    /// @param[in] uiRatio UI放大系数
+    DiskSpeedPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
 
     /// @brief 析构函数
     ~DiskSpeedPage();
@@ -64,7 +65,8 @@ private:
         OUT unsigned long long* pDriveFreeSpace);
 
     /// @brief 加载UI样式
-    void LoadQSS();
+    /// @param[in] uiRatio UI放大系数
+    void LoadQSS(IN float uiRatio);
 
 private:
     Ui::DiskSpeedForm ui;

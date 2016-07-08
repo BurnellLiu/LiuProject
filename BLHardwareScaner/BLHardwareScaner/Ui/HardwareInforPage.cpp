@@ -8,12 +8,12 @@
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
 
-HardwareInforPage::HardwareInforPage(QWidget *parent, Qt::WFlags flags)
+HardwareInforPage::HardwareInforPage(float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
     ui.setupUi(this);
 
-    this->LoadQSS();
+    this->LoadQSS(uiRatio);
 
     QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));    
 }
@@ -157,7 +157,7 @@ void HardwareInforPage::InitHardwareInfor()
     }
 }
 
-void HardwareInforPage::LoadQSS()
+void HardwareInforPage::LoadQSS(IN float uiRatio)
 {
     QFile qssFile(".\\Qss\\Default\\HardwareInforPage.qss");  
     qssFile.open(QFile::ReadOnly);  
@@ -165,6 +165,16 @@ void HardwareInforPage::LoadQSS()
     if(qssFile.isOpen())  
     {  
         QString qss = qssFile.readAll();
+
+        // 列表框每项的高度需要动态设置, 不能在QSS文件中写死
+        QString listItemHeightQss = QString::fromAscii(
+            "QListWidget#listWidgetHWItem::item\
+             {\
+                min-height: %1px;\
+             }").arg((int)(30 * uiRatio));
+
+        qss += listItemHeightQss;
+
         qssFile.close();  
 
         this->setStyleSheet(qss);
