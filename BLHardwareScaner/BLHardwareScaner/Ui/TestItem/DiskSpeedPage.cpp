@@ -132,8 +132,18 @@ void DiskSpeedPage::TestButtonClicked()
 void DiskSpeedPage::SeqTestMonitorTimer()
 {
     LDiskSpeedTestState state = m_pSeqTest->GetState();
-    QString readSpeed = QString::number(state.ReadSpeed, 'f', 2);
-    QString writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+    QString readSpeed;
+    QString writeSpeed;
+    if (state.ReadSpeed >= 1000.0f)
+        readSpeed = QString::number(state.ReadSpeed, 'f', 1);
+    else
+        readSpeed = QString::number(state.ReadSpeed, 'f', 2);
+
+    if (state.WriteSpeed >= 1000.0f)
+        writeSpeed = QString::number(state.WriteSpeed, 'f', 1);
+    else
+        writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+
     ui.labelSeqRSpeed->setText(readSpeed);
     ui.labelSeqWSpeed->setText(writeSpeed);
 
@@ -180,8 +190,19 @@ void DiskSpeedPage::SeqTestMonitorTimer()
 void DiskSpeedPage::Rand4KTestMonitorTimer()
 {
     LDiskSpeedTestState state = m_p4KRandTest->GetState();
-    QString readSpeed = QString::number(state.ReadSpeed, 'f', 2);
-    QString writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+
+    QString readSpeed;
+    QString writeSpeed;
+    if (state.ReadSpeed >= 1000.0f)
+        readSpeed = QString::number(state.ReadSpeed, 'f', 1);
+    else
+        readSpeed = QString::number(state.ReadSpeed, 'f', 2);
+
+    if (state.WriteSpeed >= 1000.0f)
+        writeSpeed = QString::number(state.WriteSpeed, 'f', 1);
+    else
+        writeSpeed = QString::number(state.WriteSpeed, 'f', 2);
+
     ui.label4KRandRSpeed->setText(readSpeed);
     ui.label4KRandWSpeed->setText(writeSpeed);
 

@@ -14,13 +14,13 @@
 TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
-    m_uiRatio = uiRatio;
+    
 
     ui.setupUi(this);
     this->LoadQSS();
 
+    m_uiRatio = uiRatio;
     m_bInitDone = false;
-    m_uiRatio = 1.0f;
 
     m_bCameraExist = false;
     const CameraInforArray& cameraInfor = LHardwareInfor::GetCameraInfor();
