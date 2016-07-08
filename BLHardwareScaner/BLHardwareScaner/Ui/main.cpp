@@ -42,8 +42,15 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MainPage mainPage;
 
-    QPixmap splashMap(".\\Image\\Background\\splash.png");
-    QSplashScreen splashScreen(splashMap);
+    // Ëõ·ÅÆô¶¯Í¼Æ¬
+    float uiRatio = mainPage.GetUiResizeRatio();
+    QPixmap originalImage(".\\Image\\Background\\splash.png");
+    QSize imageSize(originalImage.width() * uiRatio, originalImage.height() * uiRatio);
+    QPixmap scaledImage = originalImage.scaled(imageSize, Qt::KeepAspectRatio);
+
+
+    QSplashScreen splashScreen(scaledImage);
+
     splashScreen.show();
     splashScreen.showMessage(QObject::tr("Getting Hardware Information..."), Qt::AlignLeft | Qt::AlignTop, Qt::red);
     mainPage.show();

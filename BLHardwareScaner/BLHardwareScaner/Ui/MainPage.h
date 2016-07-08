@@ -16,6 +16,10 @@ public:
     MainPage(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainPage();
 
+    /// @brief 获取UI调整比例
+    /// @return 比例
+    float GetUiResizeRatio();
+
 protected:
     /// @brief 窗口显示事件
     void showEvent(QShowEvent* e);

@@ -90,6 +90,11 @@ MainPage::~MainPage()
     }
 }
 
+float MainPage::GetUiResizeRatio()
+{
+    return m_uiRatio;
+}
+
 void MainPage::showEvent(QShowEvent* e)
 {
     static bool sInitDone = false;
