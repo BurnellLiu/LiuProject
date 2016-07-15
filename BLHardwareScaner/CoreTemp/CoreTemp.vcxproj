@@ -71,6 +71,10 @@
     <ClInclude Include="LCpuTemp.h" />
     <ClInclude Include="LGpuTemp.h" />
     <ClInclude Include="LWinRing0.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CoreTemp.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
