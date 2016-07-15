@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// “ú–{Œê resources
+// Japanese (Japan) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
-#ifdef _WIN32
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 #pragma code_page(932)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -53,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,3,1,19
- PRODUCTVERSION 1,3,1,19
+ FILEVERSION 1,3,1,20
+ PRODUCTVERSION 1,3,1,20
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,12 +70,12 @@ BEGIN
             VALUE "Comments", "The modified BSD license"
             VALUE "CompanyName", "OpenLibSys.org"
             VALUE "FileDescription", "WinRing0"
-            VALUE "FileVersion", "1.3.1.19"
+            VALUE "FileVersion", "1.3.1.20"
             VALUE "InternalName", "WinRing0.dll"
             VALUE "LegalCopyright", "Copyright 2007-2009 OpenLibSys.org. All rights reserved."
             VALUE "OriginalFilename", "WinRing0.dll"
             VALUE "ProductName", "WinRing0"
-            VALUE "ProductVersion", "1.3.1.19"
+            VALUE "ProductVersion", "1.3.1.20"
         END
     END
     BLOCK "VarFileInfo"
@@ -86,7 +84,7 @@ BEGIN
     END
 END
 
-#endif    // “ú–{Œê resources
+#endif    // Japanese (Japan) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
