@@ -96,6 +96,7 @@ float MainPage::GetUiResizeRatio()
 
 void MainPage::showEvent(QShowEvent* e)
 {
+    PrintLogW((L"Start MainPage::showEvent()"));
     static bool sInitDone = false;
     if (!sInitDone)
     {
@@ -111,6 +112,7 @@ void MainPage::showEvent(QShowEvent* e)
         ui.toolButtonTestItem->setIconSize(iconSize);
         ui.toolButtonTestItem->setIcon(QIcon(".\\Image\\TestItem"));
     }
+    PrintLogW((L"End MainPage::showEvent()"));
 }
 
 void MainPage::HardwareInforClicked()

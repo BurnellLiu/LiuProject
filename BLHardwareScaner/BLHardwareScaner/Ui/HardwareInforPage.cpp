@@ -29,6 +29,7 @@ HardwareInforPage::~HardwareInforPage()
 
 void HardwareInforPage::showEvent(QShowEvent* e)
 {
+    PrintLogW((L"Start HardwareInforPage::showEvent()"));
     static bool s_initDone = false;
     if (!s_initDone)
     {
@@ -36,6 +37,7 @@ void HardwareInforPage::showEvent(QShowEvent* e)
         ui.listWidgetHWItem->setCurrentRow(0);
         s_initDone = true;
     }
+    PrintLogW((L"End HardwareInforPage::showEvent()"));
 }
 
 void HardwareInforPage::CurrentItemChanged()
@@ -54,6 +56,8 @@ void HardwareInforPage::CurrentItemChanged()
 
 void HardwareInforPage::InitHardwareInfor()
 {
+    PrintLogW(L"Start HardwareInforPage::InitHardwareInfor()");
+
     ui.listWidgetHWItem->clear();
     for (int i = 0; i < m_hwItemVec.size(); i++)
     {
@@ -155,6 +159,8 @@ void HardwareInforPage::InitHardwareInfor()
     {
         m_hwItemVec[i]->LoadHWInfor();
     }
+
+    PrintLogW(L"End HardwareInforPage::InitHardwareInfor()");
 }
 
 void HardwareInforPage::LoadQSS(IN float uiRatio)
