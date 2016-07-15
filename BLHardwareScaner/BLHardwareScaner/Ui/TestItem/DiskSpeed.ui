@@ -21,7 +21,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_6">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,10,1">
+    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,40,4">
      <property name="spacing">
       <number>10</number>
      </property>
