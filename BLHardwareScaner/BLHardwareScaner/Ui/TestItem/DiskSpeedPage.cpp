@@ -345,7 +345,7 @@ void DiskSpeedPage::LoadQSS(IN float uiRatio)
              {\
                 color: black;\
                 min-height: %1px;\
-             }").arg((int)(35 * uiRatio));
+             }").arg((int)(30 * uiRatio));
 
         qss += comboxItemHeightQss;
 

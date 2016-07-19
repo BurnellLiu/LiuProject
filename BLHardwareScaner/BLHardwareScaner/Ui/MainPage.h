@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <QtGui/QSplashScreen>
 #include "ui_Main.h"
 
 class HardwareInforPage;
@@ -15,10 +16,6 @@ class MainPage : public QMainWindow
 public:
     MainPage(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainPage();
-
-    /// @brief 获取UI调整比例
-    /// @return 比例
-    float GetUiResizeRatio();
 
 protected:
     /// @brief 窗口显示事件
@@ -36,6 +33,7 @@ private:
 
 private:
     Ui::MainForm ui;
+    QSplashScreen m_splashScreen;
 
     HardwareInforPage* m_pHardwareInforPage;
     TempManagementPage* m_pTempManagementPage;

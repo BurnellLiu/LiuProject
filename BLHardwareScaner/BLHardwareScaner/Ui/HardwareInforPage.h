@@ -4,6 +4,7 @@
 #define _HARDWAREINFORPAGE_H_
 
 #include <QtCore/QVector>
+#include <QtGui/QSplashScreen>
 
 #include "ui_HardwareInfor.h"
 
@@ -32,6 +33,11 @@ public:
     HardwareInforPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~HardwareInforPage();
 
+public:
+    /// @brief 设置启动画面指针
+    /// @param[in] pSplashScrren 启动画面指针
+    void SetSplashScreen(IN QSplashScreen* pSplashScrren);
+
 protected:
     void showEvent(QShowEvent* e);
 
@@ -47,8 +53,13 @@ private:
     /// @param[in] uiRatio UI放大系数
     void LoadQSS(IN float uiRatio);
 
+    /// @brief 启动画面显示消息
+    /// @param[in] msg 消息
+    void SplashScreenShow(IN const QString& msg);
+
 private:
     Ui::HardwareInforForm ui;
+    QSplashScreen* m_pSplashScrreen; ///< 启动画面
 
     QVector<HWItemInfor*> m_hwItemVec; ///< 硬件项列表
 };

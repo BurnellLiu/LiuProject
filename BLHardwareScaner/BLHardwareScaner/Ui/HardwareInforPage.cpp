@@ -11,6 +11,8 @@
 HardwareInforPage::HardwareInforPage(float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
 {
+    m_pSplashScrreen = NULL;
+
     ui.setupUi(this);
 
     this->LoadQSS(uiRatio);
@@ -25,6 +27,11 @@ HardwareInforPage::~HardwareInforPage()
         delete m_hwItemVec[i];
         m_hwItemVec[i] = 0;
     }
+}
+
+void HardwareInforPage::SetSplashScreen(IN QSplashScreen* pSplashScrren)
+{
+    m_pSplashScrreen = pSplashScrren;
 }
 
 void HardwareInforPage::showEvent(QShowEvent* e)
@@ -70,40 +77,54 @@ void HardwareInforPage::InitHardwareInfor()
     ui.listWidgetHWItem->addItem(tr("Computer"));
     HWItemInfor* pComputerItem = new ComputerItemInfor();
     m_hwItemVec.push_back(pComputerItem);
+    
 
+    this->SplashScreenShow(tr("Loading MotherBoard Information..."));
     ui.listWidgetHWItem->addItem(tr("MotherBoard"));
     HWItemInfor* pMotherBoardItem = new MotherBoardItemInfor();
     m_hwItemVec.push_back(pMotherBoardItem);
 
+    this->SplashScreenShow(tr("Loading Processor Information..."));
     ui.listWidgetHWItem->addItem(tr("Processor"));
     HWItemInfor* pProcessorItem = new ProcessorItemInfor();
     m_hwItemVec.push_back(pProcessorItem);
+    pProcessorItem->LoadHWInfor();
 
+    this->SplashScreenShow(tr("Loading VideoCard Information..."));
     ui.listWidgetHWItem->addItem(tr("VideoCard"));
     HWItemInfor* pVideoCardItem = new VideoCardItemInfor();
     m_hwItemVec.push_back(pVideoCardItem);
+    pVideoCardItem->LoadHWInfor();
 
+    this->SplashScreenShow(tr("Loading Memory Information..."));
     ui.listWidgetHWItem->addItem(tr("Memory"));
     HWItemInfor* pMemoryItem = new MemoryItemInfor();
     m_hwItemVec.push_back(pMemoryItem);
+    pMemoryItem->LoadHWInfor();
 
-
+    this->SplashScreenShow(tr("Loading Disk Information..."));
     ui.listWidgetHWItem->addItem(tr("Disk"));
     HWItemInfor* pDiskItem = new DiskItemInfor();
     m_hwItemVec.push_back(pDiskItem);
+    pDiskItem->LoadHWInfor();
 
+    this->SplashScreenShow(tr("Loading Network Card Information..."));
     const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
     if (networkCardInforArray.Count >= 1)
     {
         ui.listWidgetHWItem->addItem(tr("Network Card"));
         HWItemInfor* pNetworkCardItem = new NetworkCardItemInfor();
         m_hwItemVec.push_back(pNetworkCardItem);
+        pNetworkCardItem->LoadHWInfor();
     }
 
+    this->SplashScreenShow(tr("Loading Monitor Information..."));
     ui.listWidgetHWItem->addItem(tr("Monitor"));
     HWItemInfor* pMonitorItem = new MonitorItemInfor();
     m_hwItemVec.push_back(pMonitorItem);
+    pMonitorItem->LoadHWInfor();
 
+    this->SplashScreenShow(tr("Loading Battery Information..."));
     const BatteryStaticInfor& batteryStaticInfor = LHardwareInfor::GetBatteryStaticInfor();
     const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
     if (batteryStaticInfor.Exist || 
@@ -113,24 +134,30 @@ void HardwareInforPage::InitHardwareInfor()
         ui.listWidgetHWItem->addItem(tr("Battery"));
         HWItemInfor* pBatteryItem = new BatteryItemInfor();
         m_hwItemVec.push_back(pBatteryItem);
+        pBatteryItem->LoadHWInfor();
     }
 
+    this->SplashScreenShow(tr("Loading Camera Information..."));
     const CameraInforArray& cameraInfor = LHardwareInfor::GetCameraInfor();
     if (cameraInfor.Count > 0)
     {
         ui.listWidgetHWItem->addItem(tr("Camera"));
         HWItemInfor* pCameraItem = new CameraItemInfor();
         m_hwItemVec.push_back(pCameraItem);
+        pCameraItem->LoadHWInfor();
     }
 
+    this->SplashScreenShow(tr("Loading CDRomDrive Information..."));
     const CDRomDriveInforArray& cdRomInfor = LHardwareInfor::GetCDRomDriveInfor();
     if (cdRomInfor.Count > 0)
     {
         ui.listWidgetHWItem->addItem(tr("CDRomDrive"));
         HWItemInfor* pCDRomDriveItem = new CDRomDriveItemInfor();
         m_hwItemVec.push_back(pCDRomDriveItem);
+        pCDRomDriveItem->LoadHWInfor();
     }
 
+    this->SplashScreenShow(tr("Loading Sensors Information..."));
     LSensorObject sensorObject;
     SAccelerometer3DInforArray accelerometerSensor;
     sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
@@ -151,14 +178,11 @@ void HardwareInforPage::InitHardwareInfor()
         ui.listWidgetHWItem->addItem(tr("Sensors"));
         HWItemInfor* pSensorsItem = new SensorsItemInfor();
         m_hwItemVec.push_back(pSensorsItem);
+        pSensorsItem->LoadHWInfor();
     }
 
-
-
-    for (int i = 0; i < m_hwItemVec.size(); i++)
-    {
-        m_hwItemVec[i]->LoadHWInfor();
-    }
+    // 计算机整体信息延后加载, 等待各个硬件信息加载完成再加载
+    pComputerItem->LoadHWInfor();
 
     PrintLogW(L"End HardwareInforPage::InitHardwareInfor()");
 }
@@ -185,6 +209,14 @@ void HardwareInforPage::LoadQSS(IN float uiRatio)
 
         this->setStyleSheet(qss);
     }  
+}
+
+void HardwareInforPage::SplashScreenShow(IN const QString& msg)
+{
+    if (NULL == m_pSplashScrreen)
+        return;
+
+    m_pSplashScrreen->showMessage(msg, Qt::AlignLeft | Qt::AlignTop, Qt::red);
 }
 
 HWItemInfor::HWItemInfor()
