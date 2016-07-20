@@ -1,5 +1,5 @@
 
-QMainWindow#MainForm
+QWidget#mainWidget
 {
     background-color: rgb(115, 176, 255);
 }
@@ -35,4 +35,39 @@ QToolButton#toolButtonTestItem:hover
 QStackedWidget#stackedWidget
 {
     background-color: rgb(255, 255, 255);
+}
+
+QPushButton#pushButtonMin
+{
+    border-image: url(:/ControlImage/Min.png);
+}
+
+QPushButton#pushButtonMin:hover
+{
+    border-image: url(:/ControlImage/Min-on.png);
+}
+
+QPushButton#pushButtonClose
+{
+    border-image: url(:/ControlImage/Close.png);
+}
+
+QPushButton#pushButtonClose:hover
+{
+    border-image: url(:/ControlImage/Close-on.png);
+}
+
+QPushButton#pushButtonUpdate
+{
+    border-image: url(:/ControlImage/Update.png);
+}
+
+QPushButton#pushButtonUpdate:hover
+{
+    border-image: url(:/ControlImage/Update-on.png);
+}
+
+QLabel#labelIcon
+{
+    border-image: url(:/ControlImage/Main.png);
 }

@@ -12,14 +12,30 @@
 
 #include "..\\Src\\Log\\LLog.h"
 
+#define MAIN_TITLE "BLHWScaner-V1.1.2"
+
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
-{
+{   
      ui.setupUi(this);
 
      this->LoadQSS();
 
-     this->setWindowIcon(QIcon(".\\Image\\Main.png"));
+     QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));
+     QObject::connect(ui.toolButtonTempManagement, SIGNAL(clicked()), this, SLOT(TemperatureClicked()));
+     QObject::connect(ui.toolButtonTestItem, SIGNAL(clicked()), this, SLOT(TestItemClicked()));
+
+     QObject::connect(ui.pushButtonMin, SIGNAL(clicked()), this, SLOT(MinButtonClicked()));
+     QObject::connect(ui.pushButtonClose, SIGNAL(clicked()), this, SLOT(CloseButtonClicked()));
+
+     // 隐藏默认窗口边框和标题栏
+     this->setWindowFlags(Qt::Window|Qt::FramelessWindowHint|Qt::WindowSystemMenuHint
+         |Qt::WindowMinimizeButtonHint|Qt::WindowMaximizeButtonHint);
+
+     this->setWindowIcon(QIcon(":/ControlImage/Main.png"));
+
+     this->ui.labelTitle->setText(MAIN_TITLE);
+     this->ui.pushButtonUpdate->setVisible(false);
 
     // 获取当前系统DPI, 当前系统DPI除以设计时DPI值, 则得到UI放大系数
     const float DESIGN_DPI = 96.0f; // 设计时DPI
@@ -39,11 +55,6 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     this->setFixedSize(width, height);
     QDesktopWidget* pDesk = QApplication::desktop();
     this->move((pDesk->width() - width) / 2, (pDesk->height() - height) / 2);
-
-    
-    QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));
-    QObject::connect(ui.toolButtonTempManagement, SIGNAL(clicked()), this, SLOT(TemperatureClicked()));
-    QObject::connect(ui.toolButtonTestItem, SIGNAL(clicked()), this, SLOT(TestItemClicked()));
 
     // 显示启动画面
     QPixmap originalImage(".\\Image\\Background\\splash.png");
@@ -124,6 +135,25 @@ void MainPage::showEvent(QShowEvent* e)
     PrintLogW((L"End MainPage::showEvent()"));
 }
 
+void MainPage::mousePressEvent(QMouseEvent *e)
+{
+    m_mouseLastPos = e->globalPos();  
+}
+
+void MainPage::mouseMoveEvent(QMouseEvent *e)  
+{  
+    int dx = e->globalX() - m_mouseLastPos.x();  
+    int dy = e->globalY() - m_mouseLastPos.y();  
+    m_mouseLastPos = e->globalPos();  
+    move(this->x() + dx, this->y() + dy);  
+}  
+void MainPage::mouseReleaseEvent(QMouseEvent *e)  
+{  
+    int dx = e->globalX() - m_mouseLastPos.x();  
+    int dy = e->globalY() - m_mouseLastPos.y();  
+    move(this->x() + dx, this->y() + dy);  
+}  
+
 void MainPage::HardwareInforClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
@@ -137,6 +167,16 @@ void MainPage::TemperatureClicked()
 void MainPage::TestItemClicked()
 {
     ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
+}
+
+void MainPage::MinButtonClicked()
+{
+    this->showMinimized();
+}
+
+void MainPage::CloseButtonClicked()
+{
+    this->close();
 }
 
 void MainPage::LoadQSS()

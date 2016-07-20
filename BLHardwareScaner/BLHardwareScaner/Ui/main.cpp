@@ -6,7 +6,7 @@
 #include "MainPage.h"
 #include "..\\Src\\Log\\LLog.h"
 
-#define MAIN_TITLE "BLHardwareScaner(V1.1.1)"
+
 #define LOG_PATH ".\\Log"
 
 /// @brief 检查路径, 路径不存在则创建
@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MainPage mainPage;
 
-	mainPage.setWindowTitle(MAIN_TITLE);
     mainPage.show();
 
     app.exec();

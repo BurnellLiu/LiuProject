@@ -77,12 +77,16 @@ void HardwareInforPage::InitHardwareInfor()
     ui.listWidgetHWItem->addItem(tr("Computer"));
     HWItemInfor* pComputerItem = new ComputerItemInfor();
     m_hwItemVec.push_back(pComputerItem);
+    /*
+    计算机整体信息延后加载
+    */
     
 
     this->SplashScreenShow(tr("Loading MotherBoard Information..."));
     ui.listWidgetHWItem->addItem(tr("MotherBoard"));
     HWItemInfor* pMotherBoardItem = new MotherBoardItemInfor();
     m_hwItemVec.push_back(pMotherBoardItem);
+    pMotherBoardItem->LoadHWInfor();
 
     this->SplashScreenShow(tr("Loading Processor Information..."));
     ui.listWidgetHWItem->addItem(tr("Processor"));
