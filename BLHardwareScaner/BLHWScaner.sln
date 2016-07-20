@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLHWScaner", "BLHardwareSca
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreTemp", "CoreTemp\CoreTemp.vcxproj", "{987949E6-41A9-42B7-940F-DA94DB749C43}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLScanerUpdate", "BLScanerUpdate\BLHWScanerUpdate.vcxproj", "{DE9B3073-4551-4B5D-BF46-8599FA92BC67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{987949E6-41A9-42B7-940F-DA94DB749C43}.Debug|Win32.Build.0 = Debug|Win32
 		{987949E6-41A9-42B7-940F-DA94DB749C43}.Release|Win32.ActiveCfg = Release|Win32
 		{987949E6-41A9-42B7-940F-DA94DB749C43}.Release|Win32.Build.0 = Release|Win32
+		{DE9B3073-4551-4B5D-BF46-8599FA92BC67}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE9B3073-4551-4B5D-BF46-8599FA92BC67}.Debug|Win32.Build.0 = Debug|Win32
+		{DE9B3073-4551-4B5D-BF46-8599FA92BC67}.Release|Win32.ActiveCfg = Release|Win32
+		{DE9B3073-4551-4B5D-BF46-8599FA92BC67}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
