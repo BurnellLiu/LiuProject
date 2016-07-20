@@ -9,6 +9,7 @@ OS Support: Windows7/8/8.1/10 Desktop
 2016/07/20 V1.1.2 Release
 1. 取消原始标题栏和边框
 2. 自定义边框, 最小化按钮和关闭按钮
+3. 修改主程序名, 原始: BLHardwareScaner, 新: BLHWScaner.exe
 
 2016/07/19 V1.1.1 Release
 1. 更换启动画面图片

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLHardwareScaner", "BLHardwareScaner\BLHardwareScaner.vcxproj", "{C554EE12-094A-44E9-8F09-A4486F5C1035}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLHWScaner", "BLHardwareScaner\BLHardwareScaner.vcxproj", "{C554EE12-094A-44E9-8F09-A4486F5C1035}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreTemp", "CoreTemp\CoreTemp.vcxproj", "{987949E6-41A9-42B7-940F-DA94DB749C43}"
 EndProject

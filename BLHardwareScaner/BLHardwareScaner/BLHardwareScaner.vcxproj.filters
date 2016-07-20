@@ -258,9 +258,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BLHardwareScaner.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Ui\ControlImage\DropDown.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -282,5 +279,8 @@
     <None Include="Ui\ControlImage\Update-on.png">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BLHWScaner.rc" />
   </ItemGroup>
 </Project>
