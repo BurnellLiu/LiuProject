@@ -176,10 +176,10 @@
     <CustomBuild Include="Ui\TestItem\CameraViewPage.h">
       <Filter>Ui\TestItem</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\Main.ui">
+    <CustomBuild Include="Ui\UIControlImage.qrc">
       <Filter>Ui</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\UIControlImage.qrc">
+    <CustomBuild Include="Ui\Main.ui">
       <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>

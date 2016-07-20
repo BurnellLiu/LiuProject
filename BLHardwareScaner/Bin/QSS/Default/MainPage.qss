@@ -1,5 +1,5 @@
 
-QWidget#mainWidget
+QMainWindow#MainForm
 {
     background-color: rgb(115, 176, 255);
 }
