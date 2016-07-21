@@ -44,6 +44,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,12 +65,14 @@
     <ClCompile Include="CoreTemp.cpp" />
     <ClCompile Include="LCpuTemp.cpp" />
     <ClCompile Include="LGpuTemp.cpp" />
+    <ClCompile Include="LLock.cpp" />
     <ClCompile Include="LWinRing0.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoreTemp.h" />
     <ClInclude Include="LCpuTemp.h" />
     <ClInclude Include="LGpuTemp.h" />
+    <ClInclude Include="LLock.h" />
     <ClInclude Include="LWinRing0.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

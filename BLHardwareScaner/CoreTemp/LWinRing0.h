@@ -42,12 +42,19 @@ namespace LWinRing0
         OUT unsigned long* ecx, 
         OUT unsigned long* edx);
 
-    /// @brief 
-    /// @param[in] index
-    /// @param[out] eax
-    /// @param[out] edx
+    /// @brief 读写模式指定寄存器值
     /// @return 成功返回1, 失败返回0
     int Rdmsr(IN unsigned long index, OUT unsigned long* eax, OUT unsigned long* edx);
+
+    /// @brief 从指定I/O端口地址读4个字节
+    /// @param[in] address 端口地址
+    /// @return 读取到的数据
+    unsigned long ReadIoPortDword(IN unsigned short address);
+
+    /// @brief 写一个值到指定的I/O端口地址
+    /// @param[in] address 端口地址
+    /// @param[in] value 要写的值
+    void WriteIoPortDword(IN unsigned short address, IN unsigned long value);
 };
 
 #endif

@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 
+#include "LLock.h"
+
 // DLL
 typedef DWORD (WINAPI *_GetDllStatus) ();
 typedef DWORD (WINAPI *_GetDllVersion) (PBYTE major, PBYTE minor, PBYTE revision, PBYTE release);
@@ -79,7 +81,9 @@ typedef DWORD (WINAPI *_FindPciDeviceByClass) (BYTE baseClass, BYTE subClass, BY
 
 namespace LWinRing0
 {
-    static HMODULE s_hModule = NULL; ///< 动态库模块句柄
+    static HMODULE ghModule = NULL; ///< 动态库模块句柄
+    static int gReferenceCount = 0; ///< 记录动态库被引用的次数
+    static LManualLock gManualLock; ///< 手动锁, 用于同步
 
     // DLL
     _GetDllStatus GetDllStatus = NULL;
@@ -119,7 +123,7 @@ namespace LWinRing0
     // I/O
     _ReadIoPortByte ReadIoPortByte = NULL;
     _ReadIoPortWord ReadIoPortWord = NULL;
-    _ReadIoPortDword ReadIoPortDword = NULL;
+    static _ReadIoPortDword ReadIoPortDwordFunc = NULL;
 
     _ReadIoPortByteEx ReadIoPortByteEx = NULL;
     _ReadIoPortWordEx ReadIoPortWordEx = NULL;
@@ -127,7 +131,7 @@ namespace LWinRing0
 
     _WriteIoPortByte WriteIoPortByte = NULL;
     _WriteIoPortWord WriteIoPortWord = NULL;
-    _WriteIoPortDword WriteIoPortDword = NULL;
+    static _WriteIoPortDword WriteIoPortDwordFunc = NULL;
 
     _WriteIoPortByteEx WriteIoPortByteEx = NULL;
     _WriteIoPortWordEx WriteIoPortWordEx = NULL;
@@ -155,164 +159,276 @@ namespace LWinRing0
     _FindPciDeviceById FindPciDeviceById = NULL;
     _FindPciDeviceByClass FindPciDeviceByClass = NULL;
 
-    bool InitializeWinRing0(const wstring& filePath)
+    void InitWinRing0Func()
     {
-        bool bRet = false;
+        // DLL
+        GetDllStatus =         NULL;
+        GetDllVersion =        NULL;
+        GetDriverVersion =     NULL;
+        GetDriverType =        NULL;
 
-        s_hModule = LoadLibraryW(filePath.c_str());
-        if (s_hModule == NULL)
-        {
-            goto SAFE_EXIT;
-            bRet = false;
-        }
+        InitializeOls =        NULL;
+        DeinitializeOls =      NULL;
+
+        // CPU             
+        IsCpuid =              NULL;
+        IsMsr =                NULL;
+        IsTsc =                NULL;
+        Hlt =                  NULL;
+        RdmsrFun =             NULL;
+        Wrmsr =                NULL;
+        Rdpmc =                NULL;
+        CpuidFun =             NULL;
+        Rdtsc =                NULL;
+        HltTx =                NULL;
+        RdmsrTx =              NULL;
+        WrmsrTx =              NULL;
+        RdpmcTx =              NULL;
+        CpuidTx =              NULL;
+        RdtscTx =              NULL;
+        HltPx =                NULL;
+        RdmsrPx =              NULL;
+        WrmsrPx =              NULL;
+        RdpmcPx =              NULL;
+        CpuidPx =              NULL;
+        RdtscPx =              NULL;
+
+        // I/O                      
+        ReadIoPortByte =       NULL;
+        ReadIoPortWord =       NULL;
+        ReadIoPortDwordFunc =  NULL;
+        ReadIoPortByteEx =     NULL;
+        ReadIoPortWordEx =     NULL;
+        ReadIoPortDwordEx =    NULL;
+        WriteIoPortByte =      NULL;
+        WriteIoPortWord =      NULL;
+        WriteIoPortDwordFunc = NULL;
+        WriteIoPortByteEx =    NULL;
+        WriteIoPortWordEx =    NULL;
+        WriteIoPortDwordEx =   NULL;
+
+        // PCI                    
+        SetPciMaxBusIndex =    NULL;
+        ReadPciConfigByte =    NULL;
+        ReadPciConfigWord =    NULL;
+        ReadPciConfigDword =   NULL;
+        ReadPciConfigByteEx =  NULL;
+        ReadPciConfigWordEx =  NULL;
+        ReadPciConfigDwordEx = NULL;
+        WritePciConfigByte =   NULL;
+        WritePciConfigWord =   NULL;
+        WritePciConfigDword =  NULL;
+        WritePciConfigByteEx = NULL;
+        WritePciConfigWordEx = NULL;
+        WritePciConfigDwordEx= NULL;
+
+        FindPciDeviceById =    NULL;
+        FindPciDeviceByClass = NULL;
+    }
+
+    void GetWinRing0Func()
+    {
+        if (NULL == ghModule)
+            return;
 
         //-----------------------------------------------------------------------------
         // GetProcAddress
         //-----------------------------------------------------------------------------
         // DLL
-        GetDllStatus =			(_GetDllStatus)			GetProcAddress (s_hModule, "GetDllStatus");
-        GetDllVersion =			(_GetDllVersion)		GetProcAddress (s_hModule, "GetDllVersion");
-        GetDriverVersion =		(_GetDriverVersion)		GetProcAddress (s_hModule, "GetDriverVersion");
-        GetDriverType =			(_GetDriverType)		GetProcAddress (s_hModule, "GetDriverType");
+        GetDllStatus =          (_GetDllStatus)         GetProcAddress (ghModule, "GetDllStatus");
+        GetDllVersion =         (_GetDllVersion)        GetProcAddress (ghModule, "GetDllVersion");
+        GetDriverVersion =      (_GetDriverVersion)     GetProcAddress (ghModule, "GetDriverVersion");
+        GetDriverType =         (_GetDriverType)        GetProcAddress (ghModule, "GetDriverType");
 
-        InitializeOls =			(_InitializeOls)		GetProcAddress (s_hModule, "InitializeOls");
-        DeinitializeOls =		(_DeinitializeOls)		GetProcAddress (s_hModule, "DeinitializeOls");
+        InitializeOls =         (_InitializeOls)        GetProcAddress (ghModule, "InitializeOls");
+        DeinitializeOls =       (_DeinitializeOls)      GetProcAddress (ghModule, "DeinitializeOls");
 
         // CPU
-        IsCpuid =				(_IsCpuid)				GetProcAddress (s_hModule, "IsCpuid");
-        IsMsr =					(_IsMsr)				GetProcAddress (s_hModule, "IsMsr");
-        IsTsc =					(_IsTsc)				GetProcAddress (s_hModule, "IsTsc");
-        Hlt =					(_Hlt)					GetProcAddress (s_hModule, "Hlt");
-        RdmsrFun =					(_Rdmsr)				GetProcAddress (s_hModule, "Rdmsr");
-        Wrmsr =					(_Wrmsr)				GetProcAddress (s_hModule, "Wrmsr");
-        Rdpmc =					(_Rdpmc)				GetProcAddress (s_hModule, "Rdpmc");
-        CpuidFun =					(_Cpuid)				GetProcAddress (s_hModule, "Cpuid");
-        Rdtsc =					(_Rdtsc)				GetProcAddress (s_hModule, "Rdtsc");
-        HltTx =					(_HltTx)				GetProcAddress (s_hModule, "HltTx");
-        RdmsrTx =				(_RdmsrTx)				GetProcAddress (s_hModule, "RdmsrTx");
-        WrmsrTx =				(_WrmsrTx)				GetProcAddress (s_hModule, "WrmsrTx");
-        RdpmcTx =				(_RdpmcTx)				GetProcAddress (s_hModule, "RdpmcTx");
-        CpuidTx =				(_CpuidTx)				GetProcAddress (s_hModule, "CpuidTx");
-        RdtscTx =				(_RdtscTx)				GetProcAddress (s_hModule, "RdtscTx");
-        HltPx =					(_HltPx)				GetProcAddress (s_hModule, "HltPx");
-        RdmsrPx =				(_RdmsrPx)				GetProcAddress (s_hModule, "RdmsrPx");
-        WrmsrPx =				(_WrmsrPx)				GetProcAddress (s_hModule, "WrmsrPx");
-        RdpmcPx =				(_RdpmcPx)				GetProcAddress (s_hModule, "RdpmcPx");
-        CpuidPx =				(_CpuidPx)				GetProcAddress (s_hModule, "CpuidPx");
-        RdtscPx =				(_RdtscPx)				GetProcAddress (s_hModule, "RdtscPx");
+        IsCpuid =               (_IsCpuid)              GetProcAddress (ghModule, "IsCpuid");
+        IsMsr =                 (_IsMsr)                GetProcAddress (ghModule, "IsMsr");
+        IsTsc =                 (_IsTsc)                GetProcAddress (ghModule, "IsTsc");
+        Hlt =                   (_Hlt)                  GetProcAddress (ghModule, "Hlt");
+        RdmsrFun =              (_Rdmsr)                GetProcAddress (ghModule, "Rdmsr");
+        Wrmsr =                 (_Wrmsr)                GetProcAddress (ghModule, "Wrmsr");
+        Rdpmc =                 (_Rdpmc)                GetProcAddress (ghModule, "Rdpmc");
+        CpuidFun =              (_Cpuid)                GetProcAddress (ghModule, "Cpuid");
+        Rdtsc =                 (_Rdtsc)                GetProcAddress (ghModule, "Rdtsc");
+        HltTx =                 (_HltTx)                GetProcAddress (ghModule, "HltTx");
+        RdmsrTx =               (_RdmsrTx)              GetProcAddress (ghModule, "RdmsrTx");
+        WrmsrTx =               (_WrmsrTx)              GetProcAddress (ghModule, "WrmsrTx");
+        RdpmcTx =               (_RdpmcTx)              GetProcAddress (ghModule, "RdpmcTx");
+        CpuidTx =               (_CpuidTx)              GetProcAddress (ghModule, "CpuidTx");
+        RdtscTx =               (_RdtscTx)              GetProcAddress (ghModule, "RdtscTx");
+        HltPx =                 (_HltPx)                GetProcAddress (ghModule, "HltPx");
+        RdmsrPx =               (_RdmsrPx)              GetProcAddress (ghModule, "RdmsrPx");
+        WrmsrPx =               (_WrmsrPx)              GetProcAddress (ghModule, "WrmsrPx");
+        RdpmcPx =               (_RdpmcPx)              GetProcAddress (ghModule, "RdpmcPx");
+        CpuidPx =               (_CpuidPx)              GetProcAddress (ghModule, "CpuidPx");
+        RdtscPx =               (_RdtscPx)              GetProcAddress (ghModule, "RdtscPx");
 
         // I/O
-        ReadIoPortByte =		(_ReadIoPortByte)		GetProcAddress (s_hModule, "ReadIoPortByte");
-        ReadIoPortWord =		(_ReadIoPortWord)		GetProcAddress (s_hModule, "ReadIoPortWord");
-        ReadIoPortDword =		(_ReadIoPortDword)		GetProcAddress (s_hModule, "ReadIoPortDword");
+        ReadIoPortByte =        (_ReadIoPortByte)       GetProcAddress (ghModule, "ReadIoPortByte");
+        ReadIoPortWord =        (_ReadIoPortWord)       GetProcAddress (ghModule, "ReadIoPortWord");
+        ReadIoPortDwordFunc =   (_ReadIoPortDword)      GetProcAddress (ghModule, "ReadIoPortDword");
 
-        ReadIoPortByteEx =		(_ReadIoPortByteEx)		GetProcAddress (s_hModule, "ReadIoPortByteEx");
-        ReadIoPortWordEx =		(_ReadIoPortWordEx)		GetProcAddress (s_hModule, "ReadIoPortWordEx");
-        ReadIoPortDwordEx =		(_ReadIoPortDwordEx)	GetProcAddress (s_hModule, "ReadIoPortDwordEx");
+        ReadIoPortByteEx =      (_ReadIoPortByteEx)     GetProcAddress (ghModule, "ReadIoPortByteEx");
+        ReadIoPortWordEx =      (_ReadIoPortWordEx)     GetProcAddress (ghModule, "ReadIoPortWordEx");
+        ReadIoPortDwordEx =     (_ReadIoPortDwordEx)    GetProcAddress (ghModule, "ReadIoPortDwordEx");
 
-        WriteIoPortByte =		(_WriteIoPortByte)		GetProcAddress (s_hModule, "WriteIoPortByte");
-        WriteIoPortWord =		(_WriteIoPortWord)		GetProcAddress (s_hModule, "WriteIoPortWord");
-        WriteIoPortDword =		(_WriteIoPortDword)		GetProcAddress (s_hModule, "WriteIoPortDword");
+        WriteIoPortByte =       (_WriteIoPortByte)      GetProcAddress (ghModule, "WriteIoPortByte");
+        WriteIoPortWord =       (_WriteIoPortWord)      GetProcAddress (ghModule, "WriteIoPortWord");
+        WriteIoPortDwordFunc =  (_WriteIoPortDword)     GetProcAddress (ghModule, "WriteIoPortDword");
 
-        WriteIoPortByteEx =		(_WriteIoPortByteEx)	GetProcAddress (s_hModule, "WriteIoPortByteEx");
-        WriteIoPortWordEx =		(_WriteIoPortWordEx)	GetProcAddress (s_hModule, "WriteIoPortWordEx");
-        WriteIoPortDwordEx =	(_WriteIoPortDwordEx)	GetProcAddress (s_hModule, "WriteIoPortDwordEx");
+        WriteIoPortByteEx =     (_WriteIoPortByteEx)    GetProcAddress (ghModule, "WriteIoPortByteEx");
+        WriteIoPortWordEx =     (_WriteIoPortWordEx)    GetProcAddress (ghModule, "WriteIoPortWordEx");
+        WriteIoPortDwordEx =    (_WriteIoPortDwordEx)   GetProcAddress (ghModule, "WriteIoPortDwordEx");
 
         // PCI
-        SetPciMaxBusIndex =		(_SetPciMaxBusIndex)	GetProcAddress (s_hModule, "SetPciMaxBusIndex");
+        SetPciMaxBusIndex =     (_SetPciMaxBusIndex)    GetProcAddress (ghModule, "SetPciMaxBusIndex");
 
-        ReadPciConfigByte =		(_ReadPciConfigByte)	GetProcAddress (s_hModule, "ReadPciConfigByte");
-        ReadPciConfigWord =		(_ReadPciConfigWord)	GetProcAddress (s_hModule, "ReadPciConfigWord");
-        ReadPciConfigDword =	(_ReadPciConfigDword)	GetProcAddress (s_hModule, "ReadPciConfigDword");
+        ReadPciConfigByte =     (_ReadPciConfigByte)    GetProcAddress (ghModule, "ReadPciConfigByte");
+        ReadPciConfigWord =     (_ReadPciConfigWord)    GetProcAddress (ghModule, "ReadPciConfigWord");
+        ReadPciConfigDword =    (_ReadPciConfigDword)   GetProcAddress (ghModule, "ReadPciConfigDword");
 
-        ReadPciConfigByteEx =	(_ReadPciConfigByteEx)	GetProcAddress (s_hModule, "ReadPciConfigByteEx");
-        ReadPciConfigWordEx =	(_ReadPciConfigWordEx)	GetProcAddress (s_hModule, "ReadPciConfigWordEx");
-        ReadPciConfigDwordEx =	(_ReadPciConfigDwordEx)	GetProcAddress (s_hModule, "ReadPciConfigDwordEx");
+        ReadPciConfigByteEx =   (_ReadPciConfigByteEx)  GetProcAddress (ghModule, "ReadPciConfigByteEx");
+        ReadPciConfigWordEx =   (_ReadPciConfigWordEx)  GetProcAddress (ghModule, "ReadPciConfigWordEx");
+        ReadPciConfigDwordEx =  (_ReadPciConfigDwordEx) GetProcAddress (ghModule, "ReadPciConfigDwordEx");
 
-        WritePciConfigByte =	(_WritePciConfigByte)	GetProcAddress (s_hModule, "WritePciConfigByte");
-        WritePciConfigWord =	(_WritePciConfigWord)	GetProcAddress (s_hModule, "WritePciConfigWord");
-        WritePciConfigDword =	(_WritePciConfigDword)	GetProcAddress (s_hModule, "WritePciConfigDword");
+        WritePciConfigByte =    (_WritePciConfigByte)   GetProcAddress (ghModule, "WritePciConfigByte");
+        WritePciConfigWord =    (_WritePciConfigWord)   GetProcAddress (ghModule, "WritePciConfigWord");
+        WritePciConfigDword =   (_WritePciConfigDword)  GetProcAddress (ghModule, "WritePciConfigDword");
 
-        WritePciConfigByteEx =	(_WritePciConfigByteEx)	GetProcAddress (s_hModule, "WritePciConfigByteEx");
-        WritePciConfigWordEx =	(_WritePciConfigWordEx)	GetProcAddress (s_hModule, "WritePciConfigWordEx");
-        WritePciConfigDwordEx =	(_WritePciConfigDwordEx)GetProcAddress (s_hModule, "WritePciConfigDwordEx");
+        WritePciConfigByteEx =  (_WritePciConfigByteEx) GetProcAddress (ghModule, "WritePciConfigByteEx");
+        WritePciConfigWordEx =  (_WritePciConfigWordEx) GetProcAddress (ghModule, "WritePciConfigWordEx");
+        WritePciConfigDwordEx = (_WritePciConfigDwordEx)GetProcAddress (ghModule, "WritePciConfigDwordEx");
 
-        FindPciDeviceById =		(_FindPciDeviceById)	GetProcAddress (s_hModule, "FindPciDeviceById");
-        FindPciDeviceByClass =	(_FindPciDeviceByClass)	GetProcAddress (s_hModule, "FindPciDeviceByClass");
+        FindPciDeviceById =     (_FindPciDeviceById)    GetProcAddress (ghModule, "FindPciDeviceById");
+        FindPciDeviceByClass =  (_FindPciDeviceByClass) GetProcAddress (ghModule, "FindPciDeviceByClass");
+    }
 
+    bool CheckWinRing0Func()
+    {
         //-----------------------------------------------------------------------------
         // Check Functions
         //-----------------------------------------------------------------------------
         if(!(
-                    GetDllStatus
-            &&	GetDllVersion
-            &&	GetDriverVersion
-            &&	GetDriverType
-            &&	InitializeOls
-            &&	DeinitializeOls
-            &&	IsCpuid
-            &&	IsMsr
-            &&	IsTsc
-            &&	Hlt
-            &&	HltTx
-            &&	HltPx
-            &&	RdmsrFun
-            &&	RdmsrTx
-            &&	RdmsrPx
-            &&	Wrmsr
-            &&	WrmsrTx
-            &&	WrmsrPx
-            &&	Rdpmc
-            &&	RdpmcTx
-            &&	RdpmcPx
-            &&	CpuidFun
-            &&	CpuidTx
-            &&	CpuidPx
-            &&	Rdtsc
-            &&	RdtscTx
-            &&	RdtscPx
-            &&	ReadIoPortByte
-            &&	ReadIoPortWord
-            &&	ReadIoPortDword
-            &&	ReadIoPortByteEx
-            &&	ReadIoPortWordEx
-            &&	ReadIoPortDwordEx
-            &&	WriteIoPortByte
-            &&	WriteIoPortWord
-            &&	WriteIoPortDword
-            &&	WriteIoPortByteEx
-            &&	WriteIoPortWordEx
-            &&	WriteIoPortDwordEx
-            &&	SetPciMaxBusIndex
-            &&	ReadPciConfigByte
-            &&	ReadPciConfigWord
-            &&	ReadPciConfigDword
-            &&	ReadPciConfigByteEx
-            &&	ReadPciConfigWordEx
-            &&	ReadPciConfigDwordEx
-            &&	WritePciConfigByte
-            &&	WritePciConfigWord 
-            &&	WritePciConfigDword
-            &&	WritePciConfigByteEx
-            &&	WritePciConfigWordEx 
-            &&	WritePciConfigDwordEx
-            &&	FindPciDeviceById
-            &&	FindPciDeviceByClass
+                GetDllStatus
+            &&  GetDllVersion
+            &&  GetDriverVersion
+            &&  GetDriverType
+            &&  InitializeOls
+            &&  DeinitializeOls
+            &&  IsCpuid
+            &&  IsMsr
+            &&  IsTsc
+            &&  Hlt
+            &&  HltTx
+            &&  HltPx
+            &&  RdmsrFun
+            &&  RdmsrTx
+            &&  RdmsrPx
+            &&  Wrmsr
+            &&  WrmsrTx
+            &&  WrmsrPx
+            &&  Rdpmc
+            &&  RdpmcTx
+            &&  RdpmcPx
+            &&  CpuidFun
+            &&  CpuidTx
+            &&  CpuidPx
+            &&  Rdtsc
+            &&  RdtscTx
+            &&  RdtscPx
+            &&  ReadIoPortByte
+            &&  ReadIoPortWord
+            &&  ReadIoPortDwordFunc
+            &&  ReadIoPortByteEx
+            &&  ReadIoPortWordEx
+            &&  ReadIoPortDwordEx
+            &&  WriteIoPortByte
+            &&  WriteIoPortWord
+            &&  WriteIoPortDwordFunc
+            &&  WriteIoPortByteEx
+            &&  WriteIoPortWordEx
+            &&  WriteIoPortDwordEx
+            &&  SetPciMaxBusIndex
+            &&  ReadPciConfigByte
+            &&  ReadPciConfigWord
+            &&  ReadPciConfigDword
+            &&  ReadPciConfigByteEx
+            &&  ReadPciConfigWordEx
+            &&  ReadPciConfigDwordEx
+            &&  WritePciConfigByte
+            &&  WritePciConfigWord 
+            &&  WritePciConfigDword
+            &&  WritePciConfigByteEx
+            &&  WritePciConfigWordEx 
+            &&  WritePciConfigDwordEx
+            &&  FindPciDeviceById
+            &&  FindPciDeviceByClass
             ))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool InitializeWinRing0(const wstring& filePath)
+    {
+        // 申请锁对象, 用于同步
+        LAutoLock autoLock(&gManualLock);
+
+        bool bRet = false;
+
+        // 已经完成初始化, 则退出
+        if (NULL != ghModule)
+        {
+            bRet = true;
+            goto SAFE_EXIT;
+        }
+
+        ghModule = LoadLibraryW(filePath.c_str());
+        if (ghModule == NULL)
         {
             bRet = false;
             goto SAFE_EXIT;
         }
 
-        if (InitializeOls() == TRUE)
-            bRet = true;
-        else
+        GetWinRing0Func();
+
+        if (CheckWinRing0Func() == false)
+        {
             bRet = false;
+            goto SAFE_EXIT;
+        }
+        
+
+        if (InitializeOls() == TRUE)
+        {
+            bRet = true;
+        }
+        else
+        {
+            bRet = false;
+        }
+
+
 
 SAFE_EXIT:
         if (!bRet)
         {
-            DeinitializeWinRing0();
+            InitWinRing0Func();
+
+            if (ghModule != NULL)
+            {
+                FreeLibrary(ghModule);
+                ghModule = NULL;
+            }
+        }
+        else
+        {
+            gReferenceCount++;
         }
 
 
@@ -321,80 +437,30 @@ SAFE_EXIT:
 
     void DeinitializeWinRing0()
     {
+        // 申请锁对象, 用于同步
+        LAutoLock autoLock(&gManualLock);
+
+        if (0 == gReferenceCount)
+            return;
+
+        gReferenceCount -= 1;
+
+        if (gReferenceCount > 0)
+            return;
+
+
+
         if (DeinitializeOls != NULL)
         {
             DeinitializeOls();
         }
 
-        // DLL
-        GetDllStatus =			                         NULL;
-        GetDllVersion =		                             NULL;
-        GetDriverVersion =	                             NULL;
-        GetDriverType =		                             NULL;
+        InitWinRing0Func();
 
-        InitializeOls =		                             NULL;
-        DeinitializeOls =		                             NULL;
-
-        // CPU                                           
-        IsCpuid =				                             NULL;
-        IsMsr =					                             NULL;
-        IsTsc =					                             NULL;
-        Hlt =				                                     NULL;
-        RdmsrFun =				                         NULL;
-        Wrmsr =				                             NULL;
-        Rdpmc =				                             NULL;
-        CpuidFun =					                     NULL;
-        Rdtsc =					                             NULL;
-        HltTx =					                             NULL;
-        RdmsrTx =				                             NULL;
-        WrmsrTx =			                             NULL;
-        RdpmcTx =			                             NULL;
-        CpuidTx =				                             NULL;
-        RdtscTx =				                             NULL;
-        HltPx =					                             NULL;
-        RdmsrPx =				                             NULL;
-        WrmsrPx =				                             NULL;
-        RdpmcPx =			                             NULL;
-        CpuidPx =				                             NULL;
-        RdtscPx =				                             NULL;
-
-        // I/O                                                
-        ReadIoPortByte =	                             NULL;
-        ReadIoPortWord =	                             NULL;
-        ReadIoPortDword =	                             NULL;
-        ReadIoPortByteEx =		                     NULL;
-        ReadIoPortWordEx =		                     NULL;
-        ReadIoPortDwordEx =		                     NULL;
-        WriteIoPortByte =		                         NULL;
-        WriteIoPortWord =		                         NULL;
-        WriteIoPortDword =	                         NULL;
-        WriteIoPortByteEx =	                         NULL;
-        WriteIoPortWordEx =	                         NULL;
-        WriteIoPortDwordEx =	                         NULL;
-
-        // PCI                                          
-        SetPciMaxBusIndex =		                     NULL;
-        ReadPciConfigByte =		                     NULL;
-        ReadPciConfigWord =		                     NULL;
-        ReadPciConfigDword =	                     NULL;
-        ReadPciConfigByteEx =	                     NULL;
-        ReadPciConfigWordEx =	                     NULL;
-        ReadPciConfigDwordEx =                     NULL;
-        WritePciConfigByte =	                         NULL;
-        WritePciConfigWord =	                     NULL;
-        WritePciConfigDword =	                     NULL;
-        WritePciConfigByteEx =	                     NULL;
-        WritePciConfigWordEx =	                     NULL;
-        WritePciConfigDwordEx=                     NULL;
-
-        FindPciDeviceById =		                     NULL;
-        FindPciDeviceByClass =	                     NULL;
-     
-
-        if (s_hModule != NULL)
+        if (ghModule != NULL)
         {
-            FreeLibrary(s_hModule);
-            s_hModule = NULL;
+            FreeLibrary(ghModule);
+            ghModule = NULL;
         }
     }
 
@@ -412,5 +478,21 @@ SAFE_EXIT:
             return 0;
 
         return RdmsrFun(index, eax, edx);
+    }
+
+    unsigned long ReadIoPortDword(IN unsigned short address)
+    {
+        if (NULL == ReadIoPortDwordFunc)
+            return 0;
+
+        return ReadIoPortDwordFunc(address);
+    }
+
+    void WriteIoPortDword(IN unsigned short address, IN unsigned long value)
+    {
+        if (NULL == WriteIoPortDwordFunc)
+            return;
+
+        WriteIoPortDwordFunc(address, value);
     }
 }

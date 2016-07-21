@@ -6,9 +6,14 @@
 
 #include "LWinRing0.h"
 
+
+
 /// @brief CPU温度实现接口
 class CCpuTemp
 {
+public:
+    static bool gInitWinRing0Success; ///< 标志是否成功初始化WinRing0
+
 public:
     /// @brief 虚析构函数
     virtual ~CCpuTemp() = 0{}
@@ -75,26 +80,22 @@ SAFE_EXIT:
     }
 };
 
+bool CCpuTemp::gInitWinRing0Success = false;
+
 /// @brief IntelCPU温度类
 class CIntelCpuTemp : public CCpuTemp
 {
 public:
     /// @brief 构造函数
-    /// @param[in] winRing0Path WinRing0 DLL 路径
-    explicit CIntelCpuTemp(IN const wstring& winRing0Path)
+    CIntelCpuTemp()
     {
-        m_bInitWinRing0Success = false;
 
-        bool bRet = LWinRing0::InitializeWinRing0(winRing0Path);
-        if (bRet)
-            m_bInitWinRing0Success = true;
     }
 
     /// @brief 析构函数
     ~CIntelCpuTemp()
     {
-        if (m_bInitWinRing0Success)
-            LWinRing0::DeinitializeWinRing0();
+
     }
 
     /// @brief 获取CPU温度
@@ -103,7 +104,7 @@ public:
     /// @return 成功返回true, 失败返回false
     virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
     {
-        if (!m_bInitWinRing0Success)
+        if (!gInitWinRing0Success)
             return false;
 
         ZeroMemory(temp, sizeof(unsigned int) * MAX_PROCESSOR_PHYSICAL_CORE_NUM);
@@ -184,14 +185,141 @@ public:
 
         return true;
     }
+};
 
-private:
-    bool m_bInitWinRing0Success; ///< 标识是否初始化WinRing0成功
+
+/// @brief AMDCPU温度类
+class CAMDCpuTemp : public CCpuTemp
+{
+public:
+    /// @brief 构造函数
+    CAMDCpuTemp()
+    {
+
+    }
+
+    /// @brief 析构函数
+    ~CAMDCpuTemp()
+    {
+
+    }
+
+    /// @brief 获取CPU温度
+    /// @param[out] coreNum 存储CPU物理核心数
+    /// @param[out] temp 存储温度
+    /// @return 成功返回true, 失败返回false
+    virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
+    {
+        if (!gInitWinRing0Success)
+            return false;
+
+        unsigned long physicalCoreNum = 0;
+        unsigned long logicalCoreNum = 0;
+        this->GetProcessorCoreNumber(physicalCoreNum, logicalCoreNum);
+
+        coreNum = physicalCoreNum;
+
+        unsigned int coreTemp = 0;
+
+        const WORD PCI_CONFIG_ADDRESS = 0XCF8;
+        const WORD PCI_CONFIG_DATA = 0XCFC;
+
+        // 扫描所有PCI设备找到设备: VID 0x1022 DID 0x141D
+        for(unsigned int bus = 0; bus <= 255; bus++)
+        {
+            for(unsigned int dev = 0; dev < 32; dev++)
+            {
+                for(unsigned int func = 0; func < 8; func++)
+                {
+                    DWORD dwAddr=0X80000000+(bus<<16)+(dev<<11)+(func<<8);
+
+                    // 读取设备ID和厂商ID
+                    LWinRing0::WriteIoPortDword(PCI_CONFIG_ADDRESS, dwAddr);
+                    DWORD dwData = LWinRing0::ReadIoPortDword(PCI_CONFIG_DATA);
+
+                    // 值为0XFFFFFFFF表示不存在该PCI设备
+                    if(dwData==0XFFFFFFFF)
+                    {
+                        continue;
+                    }
+
+                    DWORD vid=dwData&0XFFFF;
+                    DWORD did=(dwData>>16)&0XFFFF;
+
+                    if (vid == 0X1022 &&
+                        did == 0X141D)
+                    {
+                        // 寄存器的值高8位为温度值
+                        LWinRing0::WriteIoPortDword(PCI_CONFIG_ADDRESS, dwAddr|0XA4);
+                        DWORD dwTemp = LWinRing0::ReadIoPortDword(PCI_CONFIG_DATA);
+                        dwTemp = dwTemp >> 24;
+                        dwTemp = dwTemp & 0XFF;
+                        coreTemp = (int)dwTemp;
+
+                        break;
+
+                    }
+                }
+
+                if (coreTemp != 0)
+                    break;
+            }
+
+            if (coreTemp != 0)
+                break;
+        }
+
+        for (unsigned int i = 0; i < coreNum; i++)
+        {
+            temp[i] = coreTemp;
+        }
+
+        if (coreTemp != 0)
+            return true;
+
+        return false;
+    }
 };
 
 LCpuTemp::LCpuTemp(IN const wstring& winRing0Path)
 {
-    m_pCpuTemp = new CIntelCpuTemp(winRing0Path);
+    m_pCpuTemp = NULL;
+
+    if (!CCpuTemp::gInitWinRing0Success)
+    {
+        CCpuTemp::gInitWinRing0Success = LWinRing0::InitializeWinRing0(winRing0Path);
+        if (!CCpuTemp::gInitWinRing0Success)
+            return;
+    }
+
+    // 获取CPU厂商信息
+    char vendorBuffer[20] = {0};
+    int iRet = LWinRing0::Cpuid(
+        0, 
+        (unsigned long*)&vendorBuffer[0], 
+        (unsigned long *)&vendorBuffer[4], 
+        (unsigned long*)&vendorBuffer[8], 
+        (unsigned long*)&vendorBuffer[12]);
+
+    if (0 == iRet)
+        return;
+
+    //AMD:      "AuthenticAMD"
+    //Intel:    "GenuineIntel"
+    //注意这里：edx与 ecx的顺序和字符串中二者的顺序是反的, 所以调换后两个寄存器
+    unsigned long ecx = *((unsigned long *)&vendorBuffer[8]);
+    unsigned long edx = *((unsigned long *)&vendorBuffer[12]);
+    *((unsigned long *)&vendorBuffer[12]) = ecx;
+    *((unsigned long *)&vendorBuffer[8]) = edx;
+
+    if (0 == strcmp((char*)(&vendorBuffer[4]), "GenuineIntel"))
+    {
+        m_pCpuTemp = new CIntelCpuTemp();
+    }
+    else if (0 == strcmp((char*)(&vendorBuffer[4]), "AuthenticAMD"))
+    {
+        m_pCpuTemp = new CAMDCpuTemp();
+    }
 }
 
 LCpuTemp::~LCpuTemp()
@@ -205,5 +333,10 @@ LCpuTemp::~LCpuTemp()
 
 bool LCpuTemp::Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
 {
+    if (NULL == m_pCpuTemp)
+        return false;
+
+
     return m_pCpuTemp->Get(coreNum, temp);
 }
+
