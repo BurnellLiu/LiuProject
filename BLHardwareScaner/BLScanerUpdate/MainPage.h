@@ -3,6 +3,7 @@
 
 #include <QtGui/QDialog>
 #include <QtNetwork/QFtp>
+#include <QtCore/QFile>
 
 #include "ui_Main.h"
 
@@ -21,6 +22,7 @@ private:
     Ui::MainForm ui;
 
     QFtp m_ftp;
+    QFile m_downloadFile;
 };
 
 #endif // MAINPAGE_H
