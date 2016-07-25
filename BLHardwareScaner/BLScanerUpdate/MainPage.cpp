@@ -1,36 +1,96 @@
 #include "MainPage.h"
 
-#include <QtCore/QUrl>
+#include <QtCore/QDir>
 
-#include <QtCore/QFileInfo>
 
-MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
+#define FTP_USER "bxu2359840588"
+#define FTP_PWD ""
+
+#define CHECK_VERSION_URL "ftp://bxu2359840588@bxu2359840588.my3w.com/myfolder/SoftRelease/BLHWScaner/Version"
+#define UPDATE_FILE_URL   "ftp://bxu2359840588@bxu2359840588.my3w.com/myfolder/SoftRelease/BLHWScaner/BLHWScaner.rar"
+
+#define UPDATE_PATH ".\\Temp\\Update\\"
+
+#define WITH_ERROR 0
+#define WITH_NEW_VERSION 1
+#define WITHOUT_NEW_VERSION 2
+
+
+MainPage::MainPage(int mode, QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
 {
     ui.setupUi(this);
 
-    connect(&m_ftp, SIGNAL(done(bool)), this, SLOT(FtpDone(bool)));
+    ui.progressBar->setRange(0, 100);
 
-    QUrl url("ftp://bxu2359840588@bxu2359840588.my3w.com/myfolder/SoftRelease/BLHWScaner/Version");
-    QString fileName = QFileInfo(url.path()).fileName();
-    m_downloadFile.setFileName(fileName);
-    m_downloadFile.open(QIODevice::WriteOnly);
+    m_mode = mode;
 
-    m_ftp.connectToHost(url.host(), url.port(21));
+    m_pDownloadProgressTimer = new QTimer();
+    m_pDownloadProgressTimer->setInterval(1000);
+    QObject::connect(m_pDownloadProgressTimer, SIGNAL(timeout()), this, SLOT(DownloadProgressTimerTimeout()));
 
-    m_ftp.login("bxu2359840588", "");
-    m_ftp.get(url.path(), &m_downloadFile);
+    if (AP_CHECK == m_mode)
+        m_pFtpDownload = new LFtpDownload(CHECK_VERSION_URL);
+    else if (AP_UPDATE == m_mode)
+        m_pFtpDownload = new LFtpDownload(UPDATE_FILE_URL);
 
-    m_ftp.close();
+    m_pFtpDownload->SetLogin(FTP_USER, FTP_PWD);
+    m_pFtpDownload->SetFilePath(UPDATE_PATH);
 
+    this->CheckPath(UPDATE_PATH);
 }
 
 MainPage::~MainPage()
 {
+    if (NULL != m_pFtpDownload)
+    {
+        delete m_pFtpDownload;
+        m_pFtpDownload = NULL;
+    }
 
+    if (m_pDownloadProgressTimer != NULL)
+    {
+        delete m_pDownloadProgressTimer;
+        m_pDownloadProgressTimer = NULL;
+    }
 }
 
-void MainPage::FtpDone(bool bError)
+void MainPage::showEvent(QShowEvent* e)
 {
-    m_downloadFile.close();
+    m_pFtpDownload->StartDownloadAsync();
+
+    m_pDownloadProgressTimer->start();
+}
+
+void MainPage::DownloadProgressTimerTimeout()
+{
+    const DownloadState& state = m_pFtpDownload->GetDownloadState();
+
+    if (state.TotalSize != 0)
+    {
+        qint64 percent = state.DoneSize * 100/state.TotalSize;
+
+        ui.progressBar->setValue(percent);
+    }
+
+    if (state.IsDone)
+    {
+        m_pDownloadProgressTimer->stop();   
+    }
+
+    if (state.IsDone && state.IsError)
+    {
+        this->done(WITH_ERROR);
+    }
+}
+
+bool MainPage::CheckPath(IN const QString& qstrPath)
+{
+    QDir logDir;
+    if (!logDir.exists(qstrPath))
+    {
+        return logDir.mkpath(qstrPath);
+    }
+
+    return true;
 }
