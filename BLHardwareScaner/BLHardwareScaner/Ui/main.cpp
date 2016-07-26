@@ -7,7 +7,7 @@
 #include "..\\Src\\Log\\LLog.h"
 
 
-#define LOG_PATH ".\\Log"
+#define LOG_PATH ".\\Temp\\Log"
 
 /// @brief 检查路径, 路径不存在则创建
 /// @param[in] qstrPath 路径
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     LLog::ShowThreadId(true);
     LLog::ShowTime(true);
-    LLog::Open(L".\\Log\\TraceLog.txt");
+    LLog::Open(L".\\Temp\\Log\\TraceLog.txt");
 
     PrintLogW(L"Log Start");
     PrintLogA("Program Path: %s", argv[0]);

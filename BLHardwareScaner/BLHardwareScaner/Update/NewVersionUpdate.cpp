@@ -68,6 +68,7 @@ CHECKNEW_RESULT CheckNew::GetResult()
 
     if (state.IsError)
     {
+        QFile::remove(CHECK_NEW_FILE_PATH);
         return CHECKNEW_WITH_ERROR;
     }
 
