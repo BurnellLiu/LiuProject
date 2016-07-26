@@ -59,7 +59,7 @@ public:
     void SetFilePath(IN const QString& path);
 
     /// @brief 开始下载
-    /// 该方法为异步方法
+    /// 该方法为异步方法, 该方法必须运行在UI线程中
     void StartDownloadAsync();
 
     /// @brief 获取下载状态

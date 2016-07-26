@@ -62,8 +62,11 @@
           <property name="font">
            <font>
             <family>Microsoft YaHei UI</family>
-            <pointsize>9</pointsize>
+            <pointsize>10</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(255, 0, 0);</string>
           </property>
           <property name="text">
            <string/>
@@ -90,6 +93,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>Update</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -109,6 +115,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>Min</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -127,6 +136,9 @@
             <width>10</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>Max</string>
           </property>
           <property name="text">
            <string/>

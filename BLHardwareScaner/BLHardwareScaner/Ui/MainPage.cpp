@@ -12,7 +12,8 @@
 
 #include "..\\Src\\Log\\LLog.h"
 
-#define MAIN_TITLE "BLHWScaner-V1.1.2"
+#define MAIN_TITLE "BLHWScaner"
+#define CURRENT_VERSION "V1.1.2"
 
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
@@ -27,6 +28,10 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
 
      QObject::connect(ui.pushButtonMin, SIGNAL(clicked()), this, SLOT(MinButtonClicked()));
      QObject::connect(ui.pushButtonClose, SIGNAL(clicked()), this, SLOT(CloseButtonClicked()));
+     QObject::connect(ui.pushButtonUpdate, SIGNAL(clicked()), this, SLOT(UpdateButtonClicked()));
+
+     QObject::connect(&m_checkNewTimer, SIGNAL(timeout()), this, SLOT(CheckNewTimerTimeout()));
+     QObject::connect(&m_downloadNewTimer, SIGNAL(timeout()), this, SLOT(DownloadNewTimerTimeout()));
 
      // 隐藏默认窗口边框和标题栏
      this->setWindowFlags(Qt::Window|Qt::FramelessWindowHint|Qt::WindowSystemMenuHint
@@ -34,7 +39,10 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
 
      this->setWindowIcon(QIcon(":/ControlImage/Main.png"));
 
-     this->ui.labelTitle->setText(MAIN_TITLE);
+     QString title = MAIN_TITLE;
+     title += CURRENT_VERSION;
+     this->ui.labelTitle->setText(title);
+
      this->ui.pushButtonUpdate->setVisible(false);
 
     // 获取当前系统DPI, 当前系统DPI除以设计时DPI值, 则得到UI放大系数
@@ -127,6 +135,13 @@ void MainPage::showEvent(QShowEvent* e)
 
         ui.toolButtonTestItem->setIconSize(iconSize);
         ui.toolButtonTestItem->setIcon(QIcon(".\\Image\\TestItem"));
+
+        // 开启检查新版本线程
+        m_checkNew.SetCurrentVersion(CURRENT_VERSION);
+        m_checkNew.StartCheckAsync();
+
+        m_checkNewTimer.setInterval(1000);
+        m_checkNewTimer.start();
     }
 
     // 结束启动画面
@@ -177,6 +192,62 @@ void MainPage::MinButtonClicked()
 void MainPage::CloseButtonClicked()
 {
     this->close();
+}
+
+void MainPage::UpdateButtonClicked()
+{
+    m_downloadNew.StartDownloadAsync();
+
+    m_downloadNewTimer.setInterval(1000);
+    m_downloadNewTimer.start();
+
+    ui.pushButtonUpdate->setEnabled(false);
+}
+
+void MainPage::CheckNewTimerTimeout()
+{
+    CHECKNEW_RESULT result = m_checkNew.GetResult();
+
+    if (CHECKNEW_RUNNING == result)
+    {
+        return;
+    }
+
+    m_checkNewTimer.stop();
+
+    
+    if (CHECKNEW_WITH_NEW == result)
+    {
+        ui.pushButtonUpdate->setVisible(true);
+        ui.labelUpdate->setText("New Version!!");
+    }
+
+}
+
+void MainPage::DownloadNewTimerTimeout()
+{
+    int iRet = m_downloadNew.GetResult();
+
+    if (DOWNLOADNEW_ERROR == iRet)
+    {
+        ui.labelUpdate->setText("Download Error!");
+        ui.pushButtonUpdate->setEnabled(true);
+
+        m_downloadNewTimer.stop();
+        return;
+    }
+
+    if (DOWNLOADNEW_DONE == iRet)
+    {
+        ui.labelUpdate->setText("Download Completed!");
+        m_downloadNewTimer.stop();
+        return;
+    }
+
+    if (iRet >= 0 && iRet <= 100)
+    {
+        ui.labelUpdate->setText(QObject::tr("Downloading: %1%").arg(iRet));
+    }
 }
 
 void MainPage::LoadQSS()

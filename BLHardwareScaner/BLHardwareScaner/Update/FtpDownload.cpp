@@ -13,7 +13,7 @@ LFtpDownload::LFtpDownload(IN const QString& url)
 
     m_downloadState.IsDone = true;
     m_downloadState.DoneSize = 0;
-    m_downloadState.TotalSize = 0;
+    m_downloadState.TotalSize = 1;
     m_downloadState.IsError = false;
     m_downloadState.ErrorMsg = "";
 
@@ -41,7 +41,7 @@ void LFtpDownload::StartDownloadAsync()
 {
     m_downloadState.IsDone = false;
     m_downloadState.DoneSize = 0;
-    m_downloadState.TotalSize = 0;
+    m_downloadState.TotalSize = 1;
     m_downloadState.IsError = false;
     m_downloadState.ErrorMsg = "";
 

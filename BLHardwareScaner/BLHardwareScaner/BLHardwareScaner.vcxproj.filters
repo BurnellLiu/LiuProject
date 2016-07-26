@@ -48,6 +48,9 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Update">
+      <UniqueIdentifier>{20d9ae9b-046e-40d9-98e6-bb3043a5bc53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -141,6 +144,15 @@
     <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Update\FtpDownload.cpp">
+      <Filter>Update</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_FtpDownload.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Update\NewVersionUpdate.cpp">
+      <Filter>Update</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -181,6 +193,12 @@
     </CustomBuild>
     <CustomBuild Include="Ui\Main.ui">
       <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Update\FtpDownload.h">
+      <Filter>Update</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Update\NewVersionUpdate.h">
+      <Filter>Update</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
