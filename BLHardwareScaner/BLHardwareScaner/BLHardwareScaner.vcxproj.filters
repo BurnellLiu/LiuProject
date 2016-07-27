@@ -299,6 +299,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BLHWScaner.rc" />
+    <ResourceCompile Include="BLHWScaner.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
