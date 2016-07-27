@@ -291,12 +291,6 @@
     <None Include="Ui\ControlImage\Min-on.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Ui\ControlImage\Update.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Ui\ControlImage\Update-on.png">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BLHWScaner.rc">

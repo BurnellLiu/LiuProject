@@ -10,9 +10,36 @@ using std::string;
 
 #pragma comment(lib, "unrar.lib")
 
-int main()
+/// @brief 关闭主进程
+void KillBLHWScaner()
 {
-    printf("Rar Dll Version: %d\n", RARGetDllVersion());
+    // 找到主窗口
+    HWND hWnd = FindWindow(NULL, "BLHWScaner");
+    if (NULL == hWnd)
+        return;
+
+    // 获取进程ID
+    DWORD dwProcessID;
+    GetWindowThreadProcessId(hWnd, &dwProcessID);
+
+    // 打开进程句柄
+    HANDLE hHandle = OpenProcess(PROCESS_TERMINATE, FALSE, dwProcessID);
+
+    // 关闭进程
+    if (FALSE != TerminateProcess(hHandle, 0))
+    {
+        WaitForSingleObject(hHandle, INFINITE);
+    }
+
+    CloseHandle(hHandle);
+    hHandle = NULL;
+}
+
+/// @brief 解压压缩文件
+/// @return 成功返回true, 失败返回false
+bool DecompressionRarFile()
+{
+    bool bRet = true;
 
     RAROpenArchiveData archiveData = {0};
     archiveData.ArcName = "..\\Temp\\Update\\BLHWScaner.rar";
@@ -20,9 +47,10 @@ int main()
 
     HANDLE hRarFile = RAROpenArchive(&archiveData);
     if (0 == hRarFile)
+    {
+        bRet = false;
         goto SAFE_EXIT;
-
-    int i = 0;
+    }
 
     while (true)
     {
@@ -31,23 +59,32 @@ int main()
         RARHeaderData headerData = {0};
         iRet = RARReadHeader(hRarFile, &headerData);
         if (0 != iRet)
+        {
+            bRet = false;
             break;
+        }
 
-        printf("Extract File: %s\n", headerData.FileName);
+        // 将文件解压到上级目录中
         string fileName = "..\\";
-        fileName += headerData.FileName;
+
+        // 如果压缩文件包含自身程序, 则修改文件名称: 文件名最后加上N
+        if ((0 == strcmp(headerData.FileName, "Update\\UpdateInstall.exe")) ||
+            (0 == strcmp(headerData.FileName, "Update\\unrar.dll")))
+        {
+            fileName +=headerData.FileName;
+            fileName += "N";
+        }
+        else
+        {
+            fileName += headerData.FileName;
+        }
+
 
         char fileNameBuffer[260] = {0};
         strcpy_s(fileNameBuffer, fileName.c_str());
-        printf("New File: %s\n", fileNameBuffer);
-
-        iRet = RARProcessFile(hRarFile, RAR_EXTRACT, NULL, fileNameBuffer);
-        if (iRet == 0)
-            printf("Success\n");
-        else
-            printf("Fail\n");
+        RARProcessFile(hRarFile, RAR_EXTRACT, NULL, fileNameBuffer);
     }
-    
+
 
 
 SAFE_EXIT:
@@ -55,8 +92,41 @@ SAFE_EXIT:
     {
         RARCloseArchive(hRarFile);
         hRarFile = 0;
+
+        remove("..\\Temp\\Update\\BLHWScaner.rar");
     }
 
-    system("pause");
+    return bRet;
+}
+
+/// @brief 启动主程序
+void StartBLHWScaner()
+{
+    STARTUPINFO si; //一些必备参数设置  
+    memset(&si, 0, sizeof(STARTUPINFO));  
+    si.cb = sizeof(STARTUPINFO);  
+    si.dwFlags = STARTF_USESHOWWINDOW;  
+    si.wShowWindow = SW_SHOW;  
+
+    PROCESS_INFORMATION pi; //必备参数设置结束
+
+    CreateProcess(NULL, "..\\BLHWScaner.exe", NULL, NULL, FALSE, 0, NULL, "..\\", &si, &pi);
+}
+
+int main()
+{
+    printf("Installing New Version...");
+
+
+    KillBLHWScaner();
+
+    Sleep(200);
+
+    DecompressionRarFile();
+
+    Sleep(200);
+
+    StartBLHWScaner();
+
     return 0;
 }

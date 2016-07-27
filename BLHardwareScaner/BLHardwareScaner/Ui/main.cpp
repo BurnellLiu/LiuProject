@@ -2,6 +2,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QApplication>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "MainPage.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -12,7 +13,7 @@
 /// @brief 检查路径, 路径不存在则创建
 /// @param[in] qstrPath 路径
 /// @return 成功返回true, 失败返回false
-bool CheckPath(IN const QString& qstrPath)
+static bool CheckPath(IN const QString& qstrPath)
 {
     QDir logDir;
     if (!logDir.exists(qstrPath))
@@ -23,11 +24,31 @@ bool CheckPath(IN const QString& qstrPath)
     return true;
 }
 
+/// @brief 检查是否有新的更新程序的可执行文件
+/// 如果有则删除旧文件, 重命名新文件
+/// unrar.dllN变更为unrar.dll
+/// UpdateInstall.exeN变更为UpdateInstall.exe
+static void CheckNewUpdateExeFile()
+{
+    bool bRet = QFile::exists(".\\Update\\unrar.dllN");
+    if (bRet)
+    {
+        QFile::remove(".\\Update\\unrar.dll");
+        QFile::rename(".\\Update\\unrar.dllN", ".\\Update\\unrar.dll");
+    }
+
+    bRet = QFile::exists(".\\Update\\UpdateInstall.exeN");
+    if (bRet)
+    {
+        QFile::remove(".\\Update\\UpdateInstall.exe");
+        QFile::rename(".\\Update\\UpdateInstall.exeN", ".\\Update\\UpdateInstall.exe");
+    }
+}
+
 int main(int argc, char *argv[])
 {
-   
+    // 打开LOG档
     CheckPath(LOG_PATH);
-
     LLog::ShowThreadId(true);
     LLog::ShowTime(true);
     LLog::Open(L".\\Temp\\Log\\TraceLog.txt");
@@ -38,6 +59,9 @@ int main(int argc, char *argv[])
     {
         PrintLogA("Command Argument%d: %s", i, argv[i]);
     }
+
+
+    CheckNewUpdateExeFile();
    
     QApplication app(argc, argv);
     MainPage mainPage;

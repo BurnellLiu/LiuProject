@@ -59,12 +59,19 @@ QPushButton#pushButtonClose:hover
 
 QPushButton#pushButtonUpdate
 {
-    border-image: url(:/ControlImage/Update.png);
+    border-style: none;
+    color: rgb(255, 255, 255);
+    background-color: rgb(115, 176, 255);
 }
 
 QPushButton#pushButtonUpdate:hover
 {
-    border-image: url(:/ControlImage/Update-on.png);
+    background-color: rgb(167, 205, 255);
+}
+
+QLabel#labelUpdate
+{
+    color: rgb(255, 0, 0);
 }
 
 QLabel#labelIcon

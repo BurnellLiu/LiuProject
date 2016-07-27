@@ -5,8 +5,6 @@
         <file>ControlImage/Close-on.png</file>
         <file>ControlImage/Min.png</file>
         <file>ControlImage/Min-on.png</file>
-        <file>ControlImage/Update.png</file>
-        <file>ControlImage/Update-on.png</file>
         <file>ControlImage/Main.png</file>
     </qresource>
 </RCC>
