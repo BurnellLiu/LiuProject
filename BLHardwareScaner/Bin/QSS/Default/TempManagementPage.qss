@@ -23,6 +23,16 @@ QProgressBar#progressBarMemUsage::chunk
      background-color: rgb(100, 160, 255);
 }
 
+QProgressBar#progressBarDiskUsage 
+{
+     border: 1px solid grey;
+}
+ 
+QProgressBar#progressBarDiskUsage::chunk 
+{
+     background-color: rgb(100, 160, 255);
+}
+
 QProgressBar#progressBarCpuTemp
 {
      border: 1px solid grey;

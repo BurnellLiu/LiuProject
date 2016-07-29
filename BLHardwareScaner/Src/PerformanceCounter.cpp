@@ -6,19 +6,23 @@
 
 #include "Memory\\LMemory.h"
 
+#include "Pdh\\LPdh.h"
+
 /// @brief 性能计数器实现类
 class CPerformanceCounter
 {
 public:
+    /// @brief 构造函数
     CPerformanceCounter()
     {
 
     }
+
+    /// @brief 析构函数
     ~CPerformanceCounter()
     {
 
     }
-
 
     /// @brief 获取内存性能
     /// @param[out] memoryPerformance 存储内存性能
@@ -59,6 +63,59 @@ public:
 
         return true;
     }
+
+    /// @brief 获取磁盘性能
+    /// @param[in] diskPerformance 存储磁盘性能
+    /// @return 成功返回true, 失败返回false
+    bool GetDiskPerformance(OUT DiskPerformance& diskPerformance)
+    {
+        unsigned int fixedDiskCount = 0;
+
+        LWMI::LDiskDriveManager diskDriveManager;
+
+        for (int i = 0; i < diskDriveManager.GetDiskCount(); i++)
+        {
+            LWMI::LDiskDriveManager::LDISK_TYPE diskType;
+            diskDriveManager.GetDiskType(i, diskType);
+            if (diskType != LWMI::LDiskDriveManager::FIXED_DISK)
+            {
+                continue;
+            }
+
+            wstring deviceId; 
+            diskDriveManager.GetDiskDeviceID(i, deviceId);
+            diskPerformance.DiskDriveID[fixedDiskCount] = deviceId;
+            
+            wstring logicalName;
+            diskDriveManager.GetDiskLogicalName(i, logicalName);
+
+            wchar_t idIndex = deviceId[deviceId.length()-1];
+            for (unsigned int j = 0; j < logicalName.length(); j++)
+            {
+                if (L';' == logicalName[j])
+                    logicalName[j] = L' ';
+            }
+
+            // Path Sample: "\\PhysicalDisk(0 C: D:)\\% Disk Time"
+            wstring counterPath = L"\\PhysicalDisk(";
+            counterPath += idIndex;
+            counterPath += L' ';
+            counterPath += logicalName;
+            counterPath += L")\\% Disk Time";
+
+            LPdh pdh(counterPath);
+
+            long value = 0;
+            pdh.CollectDataLong(200, value);
+            diskPerformance.UsageRate[fixedDiskCount] = (unsigned int)value;
+
+            fixedDiskCount++;
+        }
+
+        diskPerformance.Count = fixedDiskCount;
+
+        return true;
+    }
     
 };
 
@@ -85,4 +142,9 @@ bool PerformanceCounter::GetMemoryPerformance(OUT MemoryPerformance& memoryPerfo
 bool PerformanceCounter::GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance)
 {
     return m_pCPerformanceCounter->GetProcessorPerformance(processorPerformance);
+}
+
+bool PerformanceCounter::GetDiskPerformance(OUT DiskPerformance& diskPerformance)
+{
+    return m_pCPerformanceCounter->GetDiskPerformance(diskPerformance);
 }

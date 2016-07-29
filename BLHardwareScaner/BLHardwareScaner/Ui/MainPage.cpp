@@ -14,7 +14,7 @@
 #include "..\\Src\\Log\\LLog.h"
 
 #define MAIN_TITLE "BLHWScaner"
-#define CURRENT_VERSION "V1.2.0"
+#define CURRENT_VERSION "V1.2.1"
 
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)

@@ -97,6 +97,11 @@ public:
         return s_processorPerformance;
     }
 
+    const DiskPerformance& GetDiskPerformance() const
+    {
+        return s_diskPerformance;
+    }
+
 private:
 
     void SetMemoryPerformance(IN MemoryPerformance& memoryPerf)
@@ -109,15 +114,22 @@ private:
         s_processorPerformance = processorPerf;
     }
 
+    void SetDiskPerformance(IN DiskPerformance& diskPerf)
+    {
+        s_diskPerformance = diskPerf;
+    }
+
 private:
     static MemoryPerformance s_memoryPerformance; ///< 内存性能
     static ProcessorPerformance s_processorPerformance; ///< 处理器性能
+    static DiskPerformance s_diskPerformance; ///< 磁盘性能
 
     friend class ScanPerformanceThread;
 };
 
 MemoryPerformance PerformanceHouse::s_memoryPerformance = {0};
 ProcessorPerformance PerformanceHouse::s_processorPerformance = {0};
+DiskPerformance PerformanceHouse::s_diskPerformance = {0};
 
 ScanTempThread::ScanTempThread()
 {
@@ -207,6 +219,7 @@ void ScanPerformanceThread::run()
     PerformanceCounter perfCounter;
     MemoryPerformance memoryPerf = {0};
     ProcessorPerformance processorPerf = {0};
+    DiskPerformance diskPerf = {0};
 
     PerformanceHouse perfHouse;
 
@@ -221,6 +234,8 @@ void ScanPerformanceThread::run()
         perfCounter.GetProcessorPerformance(processorPerf);
         perfHouse.SetProcessorPerformance(processorPerf);
         
+        perfCounter.GetDiskPerformance(diskPerf);
+        perfHouse.SetDiskPerformance(diskPerf);
 
         this->msleep(500);
 
@@ -255,6 +270,7 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
 
     ui.progressBarCpuUsage->setValue(0);
     ui.progressBarMemUsage->setValue(0);
+    ui.progressBarDiskUsage->setValue(0);
     ui.progressBarCpuTemp->setValue(0);
     ui.progressBarGpuTemp->setValue(0);
     ui.progressBarDiskTemp->setValue(0);
@@ -376,9 +392,18 @@ void TempManagementPage::RefreshUi()
     PerformanceHouse perfHouse;
     MemoryPerformance memoryPerf = perfHouse.GetMemoryPerformance();
     ProcessorPerformance processorPerf = perfHouse.GetProcessorPerformance();
+    DiskPerformance diskPerf = perfHouse.GetDiskPerformance();
 
     ui.progressBarCpuUsage->setValue(processorPerf.LoadPercentage);
     ui.progressBarMemUsage->setValue(memoryPerf.LoadPercentage);
+    for (unsigned int i = 0; i < diskPerf.Count; i++)
+    {
+        if (diskPerf.DiskDriveID[i].find(L"0") != wstring::npos)
+        {
+            ui.progressBarDiskUsage->setValue(diskPerf.UsageRate[i]);
+            break;
+        }
+    }
    
 }
 

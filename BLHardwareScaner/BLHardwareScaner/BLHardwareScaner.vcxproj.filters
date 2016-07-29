@@ -51,6 +51,9 @@
     <Filter Include="Update">
       <UniqueIdentifier>{20d9ae9b-046e-40d9-98e6-bb3043a5bc53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Pdh">
+      <UniqueIdentifier>{5387770d-f4b1-4eec-86b2-3edc7e2cd024}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -152,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="Update\NewVersionUpdate.cpp">
       <Filter>Update</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Pdh\LPdh.cpp">
+      <Filter>Src\Pdh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +279,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_Main.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Pdh\LPdh.h">
+      <Filter>Src\Pdh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

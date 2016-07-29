@@ -91,6 +91,7 @@
     </ClCompile>
     <ClCompile Include="..\Src\LSensorObject.cpp" />
     <ClCompile Include="..\Src\Memory\LMemory.cpp" />
+    <ClCompile Include="..\Src\Pdh\LPdh.cpp" />
     <ClCompile Include="..\Src\PerformanceCounter.cpp" />
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="..\Src\Log\LLog.h" />
     <ClInclude Include="..\Src\LSensorObject.h" />
     <ClInclude Include="..\Src\Memory\LMemory.h" />
+    <ClInclude Include="..\Src\Pdh\LPdh.h" />
     <ClInclude Include="..\Src\PerformanceCounter.h" />
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
