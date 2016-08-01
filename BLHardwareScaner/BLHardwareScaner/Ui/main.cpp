@@ -6,9 +6,13 @@
 
 #include "MainPage.h"
 #include "..\\Src\\Log\\LLog.h"
+#include "..\\Src\\LAppInstance.h"
 
 
 #define LOG_PATH ".\\Temp\\Log"
+
+// 应用程序实例名称
+#define APP_INSTANCE_NAME L"Global\\BLHWScaner{EB83918F-DAFD-47E6-A363-9B874F2CF2AF}"
 
 /// @brief 检查路径, 路径不存在则创建
 /// @param[in] qstrPath 路径
@@ -47,6 +51,12 @@ static void CheckNewUpdateExeFile()
 
 int main(int argc, char *argv[])
 {
+    // 检测程序是否已经在运行, 如果已经有一个实例在运行, 则退出当前实例
+    LAppInstance appInstance(APP_INSTANCE_NAME);
+    if (appInstance.IsAlreadyExist())
+        return 0;
+
+
     // 打开LOG档
     CheckPath(LOG_PATH);
     LLog::ShowThreadId(true);
