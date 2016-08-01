@@ -22,8 +22,6 @@
 
 
 
-
-
 namespace LWMI
 {
     /// @brief COM初始化类
@@ -34,8 +32,11 @@ namespace LWMI
         LInitCom()
         {
             this->bSuccess = false;
+
+            // CoInitialize调用后返回S_FALSE或S_OK后都需调用CoUninitialize
+            // CoInitialize调用后返回RPC_E_CHANGE_MODE, 表明当前线程已被初始化(且和当前模式不同),不需要调用CoUninitialize
             HRESULT hr = CoInitialize(NULL);
-            if (hr == S_OK)
+            if (hr == S_OK || hr == S_FALSE)
             {
                 this->bSuccess = true;
             }
