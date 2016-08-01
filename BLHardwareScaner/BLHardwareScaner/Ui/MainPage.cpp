@@ -137,6 +137,9 @@ void MainPage::showEvent(QShowEvent* e)
         ui.toolButtonTestItem->setIconSize(iconSize);
         ui.toolButtonTestItem->setIcon(QIcon(".\\Image\\TestItem"));
 
+        // 首次显示, 获取焦点
+        this->setFocus(Qt::ActiveWindowFocusReason);
+
         // 检查新版本
         m_checkNew.SetCurrentVersion(CURRENT_VERSION);
         m_checkNew.StartCheckAsync();
