@@ -308,9 +308,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BLHWScaner.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="Ui\UIControlImage.qrc">
       <FileType>Document</FileType>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FullPath);.\Ui\ControlImage\DropDown.png;.\Ui\ControlImage\Close.png;.\Ui\ControlImage\Close-on.png;.\Ui\ControlImage\Min.png;.\Ui\ControlImage\Min-on.png;.\Ui\ControlImage\Update.png;.\Ui\ControlImage\Update-on.png;%(AdditionalInputs)</AdditionalInputs>
@@ -355,6 +352,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BLHWScaner.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

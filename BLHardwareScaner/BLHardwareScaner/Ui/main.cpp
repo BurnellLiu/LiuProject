@@ -56,6 +56,11 @@ int main(int argc, char *argv[])
     if (appInstance.IsAlreadyExist())
         return 0;
 
+    QApplication app(argc, argv);
+
+    // 不管程序以什么样的方式运行, 都设置程序的工作路径为程序本身所在的路径
+    QString appPath = app.applicationDirPath();
+    QDir::setCurrent(appPath);
 
     // 打开LOG档
     CheckPath(LOG_PATH);
@@ -73,7 +78,8 @@ int main(int argc, char *argv[])
 
     CheckNewUpdateExeFile();
    
-    QApplication app(argc, argv);
+    
+  
     MainPage mainPage;
 
     mainPage.show();
