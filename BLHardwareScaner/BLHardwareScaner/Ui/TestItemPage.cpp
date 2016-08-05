@@ -5,11 +5,13 @@
 
 #include "TestItem\\DiskSpeedPage.h"
 #include "TestItem\\CameraViewPage.h"
+#include "TestItem\\RestartAgingPage.h"
 
 #include "..\\Src\\LHardwareInfor.h"
 
 #define STRING_TESTITEM_DISK_SPEED QObject::tr("DiskSpeed")
 #define STRING_TESTITEM_CAMERA_VIEW QObject::tr("CameraView")
+#define STRING_TESTITEM_RESTAT_AGING QObject::tr("RestartAging")
 
 TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
@@ -37,6 +39,7 @@ TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     {
         m_pCameraViewPage = new CameraViewPage();   
     }
+    m_pRestartAgingPage = new RestartAgingPage();
     
 }
 
@@ -51,6 +54,11 @@ TestItemPage::~TestItemPage()
     {
         delete m_pCameraViewPage;
         m_pCameraViewPage = 0;
+    }
+    if (m_pRestartAgingPage != 0)
+    {
+        delete m_pRestartAgingPage;
+        m_pRestartAgingPage = 0;
     }
 }
 
@@ -81,6 +89,9 @@ void TestItemPage::Init()
         this->AddTestItem(STRING_TESTITEM_CAMERA_VIEW, QIcon(".\\Image\\TestItem\\CameraView.png"));
         ui.stackedWidget->addWidget(m_pCameraViewPage);
     }
+
+    this->AddTestItem(STRING_TESTITEM_RESTAT_AGING, QIcon(".\\Image\\TestItem\\RestartAging.png"));
+    ui.stackedWidget->addWidget(m_pRestartAgingPage);
     
 
     ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
@@ -123,5 +134,10 @@ void TestItemPage::TestItemClicked(QListWidgetItem* pItem)
     if (pItem->text() == STRING_TESTITEM_CAMERA_VIEW)
     {
         ui.stackedWidget->setCurrentWidget(m_pCameraViewPage);
+    }
+
+    if (pItem->text() == STRING_TESTITEM_RESTAT_AGING)
+    {
+        ui.stackedWidget->setCurrentWidget(m_pRestartAgingPage);
     }
 }

@@ -4,7 +4,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "MainPage.h"
+#include "Ui\\MainPage.h"
 #include "..\\Src\\Log\\LLog.h"
 #include "..\\Src\\LAppInstance.h"
 

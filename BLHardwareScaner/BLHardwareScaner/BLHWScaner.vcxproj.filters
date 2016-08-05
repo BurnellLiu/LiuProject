@@ -143,10 +143,6 @@
     <ClCompile Include="Ui\TestItem\CameraViewPage.cpp">
       <Filter>Ui\TestItem</Filter>
     </ClCompile>
-    <ClCompile Include="Ui\main.cpp" />
-    <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="Update\FtpDownload.cpp">
       <Filter>Update</Filter>
     </ClCompile>
@@ -162,6 +158,16 @@
     <ClCompile Include="..\Src\LAppInstance.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\TestItem\RestartAgingPage.cpp">
+      <Filter>Ui\TestItem</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_RestartAgingPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -197,9 +203,6 @@
     <CustomBuild Include="Ui\TestItem\CameraViewPage.h">
       <Filter>Ui\TestItem</Filter>
     </CustomBuild>
-    <CustomBuild Include="Ui\UIControlImage.qrc">
-      <Filter>Ui</Filter>
-    </CustomBuild>
     <CustomBuild Include="Ui\Main.ui">
       <Filter>Ui</Filter>
     </CustomBuild>
@@ -208,6 +211,15 @@
     </CustomBuild>
     <CustomBuild Include="Update\NewVersionUpdate.h">
       <Filter>Update</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\RestartAging.ui">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\RestartAgingPage.h">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResourceFiles\UIControlImage.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +301,9 @@
     <ClInclude Include="..\Src\LAppInstance.h">
       <Filter>Src</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_RestartAging.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Ui\ControlImage\DropDown.png">
@@ -306,9 +321,27 @@
     <None Include="Ui\ControlImage\Min-on.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ResourceFiles\ControlImage\DropDown.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\ControlImage\Close.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\ControlImage\Close-on.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\ControlImage\Min.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\ControlImage\Min-on.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\ControlImage\Main.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BLHWScaner.rc">
+    <ResourceCompile Include="ResourceFiles\BLHWScaner.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
