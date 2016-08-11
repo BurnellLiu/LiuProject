@@ -85,6 +85,7 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     m_pHardwareInforPage = new HardwareInforPage(m_uiRatio);
     m_pHardwareInforPage->SetSplashScreen(&m_splashScreen);
     m_pHardwareInforPage->setFixedSize(width, height);
+    m_pHardwareInforPage->InitHardwareInfor();
     ui.stackedWidget->addWidget(m_pHardwareInforPage);
     
     m_splashScreen.showMessage(QObject::tr("Creating Temperature Page..."), Qt::AlignLeft | Qt::AlignTop, Qt::red);

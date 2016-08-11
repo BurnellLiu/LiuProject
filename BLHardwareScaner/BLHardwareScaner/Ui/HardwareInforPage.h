@@ -38,6 +38,9 @@ public:
     /// @param[in] pSplashScrren 启动画面指针
     void SetSplashScreen(IN QSplashScreen* pSplashScrren);
 
+    /// @brief 初始化硬件信息
+    void InitHardwareInfor();
+
 protected:
     void showEvent(QShowEvent* e);
 
@@ -46,9 +49,6 @@ private slots:
     void CurrentItemChanged();
 
 private:
-    /// @brief 初始化硬件信息
-    void InitHardwareInfor();
-
     /// @brief 加载UI样式
     /// @param[in] uiRatio UI放大系数
     void LoadQSS(IN float uiRatio);
