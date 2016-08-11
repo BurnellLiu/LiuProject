@@ -101,10 +101,51 @@ public:
         this->Clear();
     }
 
-    /// @brief 打开文件
+    /// @brief 追加打开文件
+    /// 如果文件存在则定位到文件未进行写
     /// @param[in] fileName 文件名
     /// @return 成功返回true, 失败返回false
-    bool Open(IN const wstring& fileName)
+    bool AppendOpen(IN const wstring& fileName)
+    {
+        this->Clear();
+
+        // 打开文件
+        m_hFile = CreateFileW(
+            fileName.c_str(), 
+            GENERIC_READ | GENERIC_WRITE, 
+            FILE_SHARE_READ, 
+            NULL, 
+            OPEN_EXISTING, 
+            FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, 
+            NULL);
+        if (0 == m_hFile || INVALID_HANDLE_VALUE == m_hFile)
+        {
+            // 如果文件不存在则创建新文件
+            return this->NewOpen(fileName);
+        }
+
+        m_pWriteBuffer = new unsigned char[m_bufferTotalSize];
+        if (0 == m_pWriteBuffer)
+        {
+            this->Clear();
+            return false;
+        }
+
+        memset(m_pWriteBuffer, m_fillChar, m_bufferTotalSize);
+
+        // 移动到文件尾
+        SetFilePointer(m_hFile, 0, 0, FILE_END);
+        // 换行
+        this->Write(L"\r\n", 4);
+
+        return true;
+    }
+
+    /// @brief 新打开文件
+    /// 如果文件已经存在, 则替换原有文件
+    /// @param[in] fileName 文件名
+    /// @return 成功返回true, 失败返回false
+    bool NewOpen(IN const wstring& fileName)
     {
         this->Clear();
 
@@ -270,11 +311,13 @@ namespace LLog
         CDebugLog* DebugLog; ///< 文件指针
         bool ShowThreadId; ///< 标识是否显示线程Id
         bool ShowTime; ///< 标识是否显示当前时间
+        bool IsAppendOpen; ///< 标志是否以追加方法打开LOG
     };
 
     static SLogProperty s_logProperty = 
     {
         0,
+        false,
         false,
         false
     };
@@ -348,7 +391,11 @@ namespace LLog
         }
 
         s_logProperty.DebugLog = new CDebugLog();
-        bool bRet = s_logProperty.DebugLog->Open(szFileName);
+        bool bRet = false;
+        if (s_logProperty.IsAppendOpen)
+            bRet = s_logProperty.DebugLog->AppendOpen(szFileName);
+        else
+            bRet = s_logProperty.DebugLog->NewOpen(szFileName);
 
         return bRet;
     }
@@ -360,6 +407,11 @@ namespace LLog
             delete s_logProperty.DebugLog;
             s_logProperty.DebugLog = 0;
         }
+    }
+
+    void SetAppendOpen(IN bool bFlag)
+    {
+        s_logProperty.IsAppendOpen = bFlag;
     }
 
     void ShowThreadId(IN bool bFlag)

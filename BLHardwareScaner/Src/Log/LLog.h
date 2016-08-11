@@ -40,6 +40,11 @@ namespace LLog
     /// @param[in] bFlag 标识是否在每行LOG前显示当前时间
     void ShowTime(IN bool bFlag);
 
+    /// @brief 设置是否追加打开LOG档
+    /// 默认新创建LOG档
+    /// @param[in] bFlag true(追加方式打开LOG档) fale(新创建LOG档)
+    void SetAppendOpen(IN bool bFlag);
+
     /// @brief 写一行LOG, 自动换行, 每行最多1024个字符
     /// @param[in] szFormat 需要写入LOG的格式化字符串
     void WriteLineW(IN const wchar_t* szFormat, ...);
