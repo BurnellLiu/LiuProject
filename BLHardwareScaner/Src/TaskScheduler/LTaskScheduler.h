@@ -3,6 +3,10 @@
 #ifndef _LTASKSCHEDULER_H_
 #define _LTASKSCHEDULER_H_
 
+#include <string>
+using std::string;
+using std::wstring;
+
 
 #ifndef IN
 #define IN
