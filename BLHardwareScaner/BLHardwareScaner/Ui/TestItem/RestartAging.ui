@@ -32,6 +32,11 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Reset</string>
          </property>
@@ -78,7 +83,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Interva lTime(S):</string>
+            <string>Interval Time(S):</string>
            </property>
           </widget>
          </item>
@@ -209,12 +214,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Complete Times:</string>
+            <string>Completed Times:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="labelCompleteTimes">
+          <widget class="QLabel" name="labelCompletedTimes">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -328,6 +333,11 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>StartTest</string>

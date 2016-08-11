@@ -7,6 +7,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
 
+#include "App\\App.h"
+
 #include "HardwareInforPage.h"
 #include "TempManagementPage.h"
 #include "TestItemPage.h"
@@ -16,7 +18,7 @@
 #define MAIN_TITLE "BLHWScaner"
 
 // 修改版本时请同时修改资源文件中的版本信息
-#define CURRENT_VERSION "V1.2.2"
+#define CURRENT_VERSION "V1.3.0"
 
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
@@ -95,7 +97,13 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     m_pTestItemPage->setFixedSize(width, height);
     ui.stackedWidget->addWidget(m_pTestItemPage);
 
-    ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
+
+    if (APP_NORMAL == LAppStartMode::Get())
+        ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
+    else if (APP_RESTARTAGING == LAppStartMode::Get())
+        ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
+    else
+        ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
     
 }
 

@@ -97,12 +97,15 @@
     <ClCompile Include="..\Src\SetupApi\LSetupAPI.cpp" />
     <ClCompile Include="..\Src\SMARTPaser\LSMARTParser.cpp" />
     <ClCompile Include="..\Src\SMBiosPaser\LSMBiosPaser.cpp" />
+    <ClCompile Include="..\Src\TaskScheduler\LTaskScheduler.cpp" />
     <ClCompile Include="..\Src\TemperatureProbe.cpp" />
     <ClCompile Include="..\Src\Webcam\LWebcam.cpp" />
     <ClCompile Include="..\Src\WifiNetwork\LWifiNetwork.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp" />
+    <ClCompile Include="App\App.cpp" />
+    <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="GeneratedFiles\moc_CameraViewPage.cpp" />
     <ClCompile Include="GeneratedFiles\moc_DiskSpeedPage.cpp" />
     <ClCompile Include="GeneratedFiles\moc_FtpDownload.cpp" />
@@ -117,7 +120,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Ui\HardwareInforPage.cpp" />
     <ClCompile Include="Ui\MainPage.cpp" />
     <ClCompile Include="Ui\TempManagementPage.cpp" />
@@ -154,12 +156,14 @@
     <ClInclude Include="..\Src\SetupApi\LSetupAPI.h" />
     <ClInclude Include="..\Src\SMARTPaser\LSMARTPaser.h" />
     <ClInclude Include="..\Src\SMBiosPaser\LSMBiosPaser.h" />
+    <ClInclude Include="..\Src\TaskScheduler\LTaskScheduler.h" />
     <ClInclude Include="..\Src\TemperatureProbe.h" />
     <ClInclude Include="..\Src\Webcam\LWebcam.h" />
     <ClInclude Include="..\Src\WifiNetwork\LWifiNetwork.h" />
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h" />
+    <ClInclude Include="App\App.h" />
     <ClInclude Include="GeneratedFiles\ui_CameraView.h" />
     <ClInclude Include="GeneratedFiles\ui_DiskSpeed.h" />
     <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h" />

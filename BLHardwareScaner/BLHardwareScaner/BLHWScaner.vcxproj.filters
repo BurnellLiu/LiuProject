@@ -54,6 +54,12 @@
     <Filter Include="Src\Pdh">
       <UniqueIdentifier>{5387770d-f4b1-4eec-86b2-3edc7e2cd024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{6313920c-cbb0-426c-bdda-d47f95388dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\TaskScheduler">
+      <UniqueIdentifier>{84d70c82-a4ba-46e8-a605-7048e67f38ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -167,7 +173,15 @@
     <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="App\App.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="App\Main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\TaskScheduler\LTaskScheduler.cpp">
+      <Filter>Src\TaskScheduler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -303,6 +317,12 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_RestartAging.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="App\App.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\TaskScheduler\LTaskScheduler.h">
+      <Filter>Src\TaskScheduler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@
 
 #include <QtCore/QFile>
 
+#include "App\\App.h"
+
 #include "TestItem\\DiskSpeedPage.h"
 #include "TestItem\\CameraViewPage.h"
 #include "TestItem\\RestartAgingPage.h"
@@ -94,7 +96,12 @@ void TestItemPage::Init()
     ui.stackedWidget->addWidget(m_pRestartAgingPage);
     
 
-    ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
+    if (APP_NORMAL == LAppStartMode::Get())
+        ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
+    else if (APP_RESTARTAGING == LAppStartMode::Get())
+        ui.stackedWidget->setCurrentWidget(m_pRestartAgingPage);
+    else
+        ui.stackedWidget->setCurrentWidget(m_pDiskSpeedPage);
 }
 
 void TestItemPage::AddTestItem(IN const QString& name, IN const QIcon& icon)
