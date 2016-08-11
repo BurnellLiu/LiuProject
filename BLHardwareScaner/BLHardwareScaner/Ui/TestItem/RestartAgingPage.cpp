@@ -5,9 +5,11 @@
 #include <QtGui/QApplication>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
+#include <QtCore/QDateTime>
 
 #include "App\\App.h"
 
+#include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\TaskScheduler\\LTaskScheduler.h"
 
 // 默认间隔时间60秒
@@ -26,8 +28,11 @@
 #define RESTARTAGING_AGINGTIMES "Test/AgingTimes"
 #define RESTARTAGING_COMPLETETIMES "Test/CompleteTimes"
 #define RESTARTAGING_BSODTIMES "Test/BSODTimes"
+#define RESTARTAGING_LASTRESTARTTIME "Test/LastRestartTime"
 
 #define RESTARTAGING_TASK_NAME L"BLHWScaner RestartAging"
+
+#define RESTARTAGING_DATA_FORMAT "yyyy-MM-dd hh:mm:ss"
 
 
 RestartAgingPage::RestartAgingPage(IN QWidget *parent /* = 0 */, IN Qt::WFlags flags /* = 0 */)
@@ -83,18 +88,14 @@ void RestartAgingPage::showEvent(QShowEvent* e)
     {
         // 从配置文件中读取信息
         RestartAgingParam testParam;
-        QSettings* pConfigIniWrite = new QSettings(RESTARTAGING_TTEST_CONFIG_FILE, QSettings::IniFormat);   
-        testParam.IntervalTime =  pConfigIniWrite->value(RESTARTAGING_INTERVALTIMES, DEFAULT_INTERVALTIME).toInt();    
-        testParam.AgingTimes = pConfigIniWrite->value(RESTARTAGING_AGINGTIMES, DEFAULT_AGINGTIMES).toInt();  
-        testParam.CompletedTimes = pConfigIniWrite->value(RESTARTAGING_COMPLETETIMES, 0).toInt();  
-        testParam.BSODTimes = pConfigIniWrite->value(RESTARTAGING_BSODTIMES, 0).toInt();
-        if (NULL != pConfigIniWrite)
-        {
-            delete pConfigIniWrite;
-            pConfigIniWrite = NULL;
-        }
+        this->GetTestParamFromFile(testParam);
 
         testParam.CompletedTimes += 1;
+
+        if (this->IsBSODHappened(testParam.LastRestartTime))
+        {
+            testParam.BSODTimes += 1;
+        }
 
         ui.lineEditIntervalTime->setText(QObject::tr("%1").arg(testParam.IntervalTime));
         ui.lineEditAgingTimes->setText(QObject::tr("%1").arg(testParam.AgingTimes));
@@ -121,26 +122,8 @@ void RestartAgingPage::TestButtonClicked()
         ui.lineEditAgingTimes->setEnabled(false);
         ui.pushButtonReset->setEnabled(false);
 
-        RestartAgingParam testParam;
-        testParam.IntervalTime = ui.lineEditIntervalTime->text().toInt();
-        testParam.AgingTimes = ui.lineEditAgingTimes->text().toInt();
-        testParam.CompletedTimes = ui.labelCompletedTimes->text().toInt();
-        testParam.BSODTimes = ui.labelBSODTimes->text().toInt();
-
-        m_currentCountDown = testParam.IntervalTime;
+        m_currentCountDown = ui.lineEditIntervalTime->text().toInt();
         m_countDownTimer.start();
-
-        // 将当前测试信息保存在配置文件中
-        QSettings* pConfigIniWrite = new QSettings(RESTARTAGING_TTEST_CONFIG_FILE, QSettings::IniFormat);   
-        pConfigIniWrite->setValue(RESTARTAGING_INTERVALTIMES, testParam.IntervalTime);    
-        pConfigIniWrite->setValue(RESTARTAGING_AGINGTIMES, testParam.AgingTimes);  
-        pConfigIniWrite->setValue(RESTARTAGING_COMPLETETIMES, testParam.CompletedTimes);  
-        pConfigIniWrite->setValue(RESTARTAGING_BSODTIMES, testParam.BSODTimes);
-        if (NULL != pConfigIniWrite)
-        {
-            delete pConfigIniWrite;
-            pConfigIniWrite = NULL;
-        }
 
         this->RegisterTaskScheduler();
 
@@ -180,6 +163,17 @@ void RestartAgingPage::CountDownTimerTimeout()
     {
         m_countDownTimer.stop();
 
+        // 重启前保存测试参数
+        RestartAgingParam testParam;
+        testParam.IntervalTime = ui.lineEditIntervalTime->text().toInt();
+        testParam.AgingTimes = ui.lineEditAgingTimes->text().toInt();
+        testParam.CompletedTimes = ui.labelCompletedTimes->text().toInt();
+        testParam.BSODTimes = ui.labelBSODTimes->text().toInt();
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+        testParam.LastRestartTime = currentDateTime.toString(RESTARTAGING_DATA_FORMAT);
+
+        this->SaveTestParamToFile(testParam);
+
         system("shutdown -r -f -t 0");
         return;
     }
@@ -207,6 +201,95 @@ void RestartAgingPage::DeleteTaskScheduler()
     LTaskScheduler::Delete(NULL, RESTARTAGING_TASK_NAME);
 }
 
+void RestartAgingPage::SaveTestParamToFile(IN const RestartAgingParam& param)
+{
+    QSettings* pConfigIniWrite = new QSettings(RESTARTAGING_TTEST_CONFIG_FILE, QSettings::IniFormat);   
+    pConfigIniWrite->setValue(RESTARTAGING_INTERVALTIMES, param.IntervalTime);    
+    pConfigIniWrite->setValue(RESTARTAGING_AGINGTIMES, param.AgingTimes);  
+    pConfigIniWrite->setValue(RESTARTAGING_COMPLETETIMES, param.CompletedTimes);  
+    pConfigIniWrite->setValue(RESTARTAGING_BSODTIMES, param.BSODTimes);
+    pConfigIniWrite->setValue(RESTARTAGING_LASTRESTARTTIME, param.LastRestartTime);
+    if (NULL != pConfigIniWrite)
+    {
+        delete pConfigIniWrite;
+        pConfigIniWrite = NULL;
+    }
+}
+
+void RestartAgingPage::GetTestParamFromFile(OUT RestartAgingParam& param)
+{
+    QSettings* pConfigIniRead = new QSettings(RESTARTAGING_TTEST_CONFIG_FILE, QSettings::IniFormat);   
+    param.IntervalTime =  pConfigIniRead->value(RESTARTAGING_INTERVALTIMES, DEFAULT_INTERVALTIME).toInt();    
+    param.AgingTimes = pConfigIniRead->value(RESTARTAGING_AGINGTIMES, DEFAULT_AGINGTIMES).toInt();  
+    param.CompletedTimes = pConfigIniRead->value(RESTARTAGING_COMPLETETIMES, 0).toInt();  
+    param.BSODTimes = pConfigIniRead->value(RESTARTAGING_BSODTIMES, 0).toInt();
+    param.LastRestartTime = pConfigIniRead->value(RESTARTAGING_LASTRESTARTTIME, "").toString();
+    if (NULL != pConfigIniRead)
+    {
+        delete pConfigIniRead;
+        pConfigIniRead = NULL;
+    }
+}
+
+bool RestartAgingPage::IsBSODHappened(IN const QString& lastRestartTime)
+{
+    if (lastRestartTime.isEmpty())
+        return false;
+
+    // 获取当前时间
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    QString currentTime = currentDateTime.toString(RESTARTAGING_DATA_FORMAT);
+
+    // 获取Windows目录
+    OperatingSystemInfor osInfor = LHardwareInfor::GetOperatingSystemInfor();
+    QString windowsPath = QString::fromStdWString(osInfor.SystemDrive);
+    windowsPath += "\\Windows\\";
+
+    // 检查是否存在完整DUMP文件
+    QString dumpFile = windowsPath + "MEMORY.DMP";
+    if (QFile::exists(dumpFile))
+    {
+        QFileInfo fileInfo(dumpFile);
+        QDateTime fileDateTime = fileInfo.lastModified();
+        QString fileTime = fileDateTime.toString(RESTARTAGING_DATA_FORMAT);
+
+        // 修改日期在上次重启后, 则表示发生蓝屏
+        if (fileTime >= lastRestartTime &&
+            fileTime <= currentTime)
+        {
+            return true;
+        }
+    }
+
+    // 检查Minidump文件
+    QString minidumpPath = windowsPath + "Minidump";
+    QDir minidumpDir(minidumpPath);
+    if (!minidumpDir.exists())
+        return false;
+
+    minidumpDir.setFilter(QDir::Files);
+    QFileInfoList fileList = minidumpDir.entryInfoList();
+    for (int i = 0; i < fileList.size(); i++)
+    {
+        QFileInfo fileInfo = fileList[i];
+        if (!fileInfo.fileName().contains(".dmp", Qt::CaseInsensitive))
+            continue;
+
+        QDateTime fileDateTime = fileInfo.lastModified();
+        QString fileTime = fileDateTime.toString(RESTARTAGING_DATA_FORMAT);
+
+        // 修改日期在上次重启后, 则表示发生蓝屏
+        if (fileTime >= lastRestartTime &&
+            fileTime <= currentTime)
+        {
+            return true;
+        }
+
+    }
+
+
+    return false;
+}
 
 bool RestartAgingPage::CheckPath(IN const QString& qstrPath)
 {

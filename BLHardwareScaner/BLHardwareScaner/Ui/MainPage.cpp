@@ -18,7 +18,7 @@
 #define MAIN_TITLE "BLHWScaner"
 
 // 修改版本时请同时修改资源文件中的版本信息
-#define CURRENT_VERSION "V1.3.0"
+#define CURRENT_VERSION "V1.3.1"
 
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)

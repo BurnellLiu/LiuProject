@@ -30,6 +30,7 @@ struct RestartAgingParam
     int AgingTimes; ///< 测试次数
     int CompletedTimes; ///< 已完成测试次数
     int BSODTimes; ///< 发生蓝屏的次数
+    QString LastRestartTime; ///< 最新重开机时间, 格式"yyyy-MM-dd hh:mm:ss"
 };
 
 /// @brief 重复开机测试页面
@@ -61,6 +62,17 @@ private:
 
     /// @brief 删除任务计划
     void DeleteTaskScheduler();
+
+    /// @brief 保存测试参数到文件中
+    void SaveTestParamToFile(IN const RestartAgingParam& param);
+
+    /// @brief 从文件中获取测试参数
+    void GetTestParamFromFile(OUT RestartAgingParam& param);
+
+    /// @brief 判断是否发生蓝屏
+    /// @param[in] lastRestartTime 上次关机时间
+    /// @return 发生蓝屏返回true, 未发生蓝屏返回false
+    bool IsBSODHappened(IN const QString& lastRestartTime);
 
     /// @brief 检查路径, 路径不存在则创建
     /// @param[in] qstrPath 路径
