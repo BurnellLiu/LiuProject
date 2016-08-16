@@ -16,8 +16,8 @@ class UrlRecord:
             )''')
             self.__sqlConn.commit()
             
-            frist_url =['http://weibo.cn/xiena', u'谢娜']
-            self.__sqlConn.execute("INSERT INTO UrlList(Url, Name) VALUES (?, ?)", (frist_url[0], frist_url[1]))
+            first_url =['http://weibo.cn/xiena', u'谢娜']
+            self.__sqlConn.execute("INSERT INTO UrlList(Url, Name) VALUES (?, ?)", (first_url[0], first_url[1]))
             self.__sqlConn.commit()
         except Exception, e:
             print e

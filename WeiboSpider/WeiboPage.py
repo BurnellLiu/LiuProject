@@ -120,7 +120,7 @@ class PeoplePage:
                            'Chrome/35.0.1916.153 Safari/537.36 SE 2.X MetaSr 1.0')
         }
 
-        self.__frist_page_url = url
+        self.__first_page_url = url
         self.__headers = header
         self.__blog_page_total_num = 0
         self.__care_people_page_url = ''
@@ -162,9 +162,9 @@ class PeoplePage:
 
         url = ''
         if page_index == 1:
-            url = self.__frist_page_url
+            url = self.__first_page_url
         else:
-            url = self.__frist_page_url
+            url = self.__first_page_url
             url += '?page='
             url += str(page_index)
 
@@ -275,7 +275,7 @@ class PeoplePage:
 
                 link = subDiv.a
                 if 'href' in dict(link.attrs):
-                    url = urljoin(self.__frist_page_url, link['href'])
+                    url = urljoin(self.__first_page_url, link['href'])
                     return url.encode('utf-8')
 
         return url
