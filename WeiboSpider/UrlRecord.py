@@ -16,30 +16,30 @@ class UrlRecord:
             )''')
             self.__sqlConn.commit()
             
-            fristUrl =['http://weibo.cn/xiena', u'谢娜']
-            self.__sqlConn.execute("INSERT INTO UrlList(Url, Name) VALUES (?, ?)", (fristUrl[0], fristUrl[1]))
+            frist_url =['http://weibo.cn/xiena', u'谢娜']
+            self.__sqlConn.execute("INSERT INTO UrlList(Url, Name) VALUES (?, ?)", (frist_url[0], frist_url[1]))
             self.__sqlConn.commit()
         except Exception, e:
             print e
             
-    def Add(self, url, name):
+    def add(self, url, name):
         try:
             self.__sqlConn.execute("INSERT INTO UrlList(Url, Name) VALUES (?, ?)", (url, name))
             self.__sqlConn.commit()
         except Exception, e:
             print e
         
-    def Get(self, rowid):
-        strId = str(rowid)
+    def get(self, rowid):
+        str_id = str(rowid)
         sql = "SELECT * FROM UrlList Where rowid = "
         sql += "'"
-        sql += strId
+        sql += str_id
         sql += "'"
         cu = self.__sqlConn.execute(sql)
-        urlList = cu.fetchall()
+        url_list = cu.fetchall()
         cu.close()
-        if (len(urlList) != 0):
-            return urlList[0]
+        if len(url_list) != 0:
+            return url_list[0]
         else:
             return None
 
