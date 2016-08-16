@@ -57,8 +57,9 @@ public:
     /// 该方法为异步方法, 开始测试后使用GetState可以获得测试结果
     /// 注意: 针对系统盘目录需要管理员权限
     /// @param[in] filePath 测试文件完整路径
+    /// @param[in] fileSize 测试文件大小, 单位为M
     /// @return 成功返回true, 失败返回false, 测试正在进行则会失败
-    virtual bool Start(IN const wstring& filePath) = 0;
+    virtual bool Start(IN const wstring& filePath, IN unsigned int fileSize) = 0;
 
     /// @brief 获取测试状态
     /// @return 测试状态
@@ -71,7 +72,7 @@ public:
 
 
 /// @brief 磁盘顺序测试
-/// 磁盘顺序测速要求磁盘最少有2G的剩余空间
+/// 磁盘顺序测速要求文件大小大于等于16
 class LDiskSequenceTest : public IDiskSpeedTest
 {
 public:
@@ -82,7 +83,7 @@ public:
     ~LDiskSequenceTest();
 
     /// @brief 开始测试
-    bool Start(IN const wstring& filePath);
+    bool Start(IN const wstring& filePath, IN unsigned int fileSize);
 
     /// @brief 获取测试状态
     LDiskSpeedTestState GetState();
@@ -97,7 +98,6 @@ private:
 
 
 /// @brief 磁盘4KB随机测试
-/// 磁盘4K随机测试要求磁盘至少有1G的剩余空间
 class LDisk4KRandomTest : public IDiskSpeedTest
 {
 public:
@@ -108,7 +108,7 @@ public:
     ~LDisk4KRandomTest();
 
     /// @brief 开始测试
-    bool Start(IN const wstring& filePath);
+    bool Start(IN const wstring& filePath, IN unsigned int fileSize);
 
     /// @brief 获取测试状态
     LDiskSpeedTestState GetState();

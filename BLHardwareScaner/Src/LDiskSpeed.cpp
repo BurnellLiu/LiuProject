@@ -111,7 +111,7 @@ public:
     }
 
     /// @brief 开始测试
-    bool Start(IN const wstring& filePath)
+    bool Start(IN const wstring& filePath, IN unsigned int fileSize)
     {
         if (false == m_testState.TestDone)
             return false;
@@ -121,7 +121,7 @@ public:
 
         // 测试文件设置为2G大小
         m_testFile.Path = filePath;
-        m_testFile.Size = (unsigned long)(2)  * 1024 * 1024 * 1024;
+        m_testFile.Size = (unsigned long)fileSize * 1024 * 1024;
 
         m_testState.TestDone = false;
         m_testState.Error = DST_NO_ERROR;
@@ -321,7 +321,7 @@ public:
     }
 
     /// @brief 开始测试
-    bool Start(IN const wstring& filePath)
+    bool Start(IN const wstring& filePath, IN unsigned int fileSize)
     {
         if (false == m_testState.TestDone)
             return false;
@@ -334,8 +334,7 @@ public:
         m_testFile.Path = filePath;
 
         // 做乘法时遇到整型常量溢出,只需要把第一个乘数强制转换为无符号32位数
-        // 测试文件总大小1G
-        m_testFile.Size = (unsigned long)(1)  * 1024 * 1024 * 1024;
+        m_testFile.Size = (unsigned long)fileSize * 1024 * 1024;
 
         m_testState.TestDone = false;
         m_testState.Error = DST_NO_ERROR;
@@ -693,9 +692,9 @@ LDiskSequenceTest::~LDiskSequenceTest()
     }
 }
 
-bool LDiskSequenceTest::Start(IN const wstring& filePath)
+bool LDiskSequenceTest::Start(IN const wstring& filePath, IN unsigned int fileSize)
 {
-    return m_pDiskSequenceTest->Start(filePath);
+    return m_pDiskSequenceTest->Start(filePath, fileSize);
 }
 
 LDiskSpeedTestState LDiskSequenceTest::GetState()
@@ -723,9 +722,9 @@ LDisk4KRandomTest::~LDisk4KRandomTest()
     }
 }
 
-bool LDisk4KRandomTest::Start(IN const wstring& filePath)
+bool LDisk4KRandomTest::Start(IN const wstring& filePath, IN unsigned int fileSize)
 {
-    return m_pDisk4KRandomTest->Start(filePath);
+    return m_pDisk4KRandomTest->Start(filePath, fileSize);
 }
 
 LDiskSpeedTestState LDisk4KRandomTest::GetState()

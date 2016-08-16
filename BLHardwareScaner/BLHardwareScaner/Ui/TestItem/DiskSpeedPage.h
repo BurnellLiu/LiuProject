@@ -43,6 +43,9 @@ private slots:
     /// @brief 测试按钮单击槽函数
     void TestButtonClicked();
 
+    /// @brief 更新按钮单击槽函数
+    void UpdateButtonClicked();
+
     /// @brief 顺序测试监测计时器超时回调函数
     void SeqTestMonitorTimer();
 

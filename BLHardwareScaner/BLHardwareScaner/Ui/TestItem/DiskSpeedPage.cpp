@@ -25,6 +25,7 @@ DiskSpeedPage::DiskSpeedPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags
     m_p4KRandTest = new LDisk4KRandomTest();
 
     QObject::connect(ui.pushButtonTest, SIGNAL(clicked()), this, SLOT(TestButtonClicked()));
+    QObject::connect(ui.pushButtonUpdate, SIGNAL(clicked()), this, SLOT(UpdateButtonClicked()));
 
     m_seqTestTimer.setInterval(500);
     m_rand4KTestTimer.setInterval(500);
@@ -97,6 +98,9 @@ void DiskSpeedPage::TestButtonClicked()
         ui.pushButtonTest->setText(DISK_TEST_STOP);
         ui.labelTestState->setText("Sequence Test Is Running...");
         ui.comboBoxDiskList->setEnabled(false);
+        ui.pushButtonUpdate->setEnabled(false);
+        ui.lineEditSeqSize->setEnabled(false);
+        ui.lineEditRandSize->setEnabled(false);
   
         PrintLogW(L"Start Disk Speed Test");
         
@@ -105,7 +109,7 @@ void DiskSpeedPage::TestButtonClicked()
         testFilePath += SEQ_TEST_FILENAME;
         PrintLogW(L"Sequence Test File Path: %s", testFilePath.toStdWString().c_str());
 
-        m_pSeqTest->Start(testFilePath.toStdWString());
+        m_pSeqTest->Start(testFilePath.toStdWString(), 50240);
         m_seqTestTimer.start();
 
         PrintLogW(L"Start Disk Sequence Test");
@@ -116,6 +120,9 @@ void DiskSpeedPage::TestButtonClicked()
         ui.pushButtonTest->setText(DISK_TEST_START);
         ui.labelTestState->setText("");
         ui.comboBoxDiskList->setEnabled(true);
+        ui.pushButtonUpdate->setEnabled(true);
+        ui.lineEditSeqSize->setEnabled(true);
+        ui.lineEditRandSize->setEnabled(true);
 
         PrintLogW(L"User Stop Disk Speed Test");
 
@@ -127,6 +134,17 @@ void DiskSpeedPage::TestButtonClicked()
 
         
     }
+}
+
+void DiskSpeedPage::UpdateButtonClicked()
+{
+    ui.comboBoxDiskList->setEnabled(false);
+    ui.pushButtonTest->setEnabled(false);
+
+    this->UpdateDiskInformation();
+
+    ui.comboBoxDiskList->setEnabled(true);
+    ui.pushButtonTest->setEnabled(true);
 }
 
 void DiskSpeedPage::SeqTestMonitorTimer()
@@ -168,7 +186,7 @@ void DiskSpeedPage::SeqTestMonitorTimer()
         testFilePath += RANDOM_4K_TEST_FILENAME;
         PrintLogW(L"Disk 4K Random Test File Path: %s", testFilePath.toStdWString().c_str());
 
-        m_p4KRandTest->Start(testFilePath.toStdWString());
+        m_p4KRandTest->Start(testFilePath.toStdWString(), 1024);
         m_rand4KTestTimer.start();
         
         PrintLogW(L"Start Disk 4K Random Test");
@@ -180,6 +198,9 @@ void DiskSpeedPage::SeqTestMonitorTimer()
         ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
         ui.pushButtonTest->setText(DISK_TEST_START);
         ui.comboBoxDiskList->setEnabled(true);
+        ui.pushButtonUpdate->setEnabled(true);
+        ui.lineEditSeqSize->setEnabled(true);
+        ui.lineEditRandSize->setEnabled(true);
 
         PrintLogW(L"Disk Sequence Test Error, Message: %s", state.ErrorMsg.c_str());
         PrintLogW(L"Disk Sequence Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
@@ -213,6 +234,9 @@ void DiskSpeedPage::Rand4KTestMonitorTimer()
 
     ui.pushButtonTest->setText(DISK_TEST_START);
     ui.comboBoxDiskList->setEnabled(true);
+    ui.pushButtonUpdate->setEnabled(true);
+    ui.lineEditSeqSize->setEnabled(true);
+    ui.lineEditRandSize->setEnabled(true);
 
     if (state.Error == DST_NO_ERROR)
     {
@@ -240,28 +264,53 @@ void DiskSpeedPage::UpdateDiskInformation()
     for (unsigned int i = 0; i < diskInforArray.Count; i++)
     {
         DISK_TYPE diskType = diskInforArray.DiskType[i];
-        if (diskType != FIXED_DISK)
-            continue;
 
         m_diskLogicalNameList.push_back(QString::fromStdWString(diskInforArray.LogicalName[i]));
         QString modelName;
-        switch (diskInforArray.FixedDiskType[i])
+
+        if (FIXED_DISK == diskType)
         {
-        case FIXED_DISK_HDD:
-            modelName += "(HDD)";
-            break;
-        case FIXED_DISK_SSD:
-            modelName += "(SSD)";
-            break;
-        case FIXED_DISK_EMMC:
-            modelName += "(EMMC)";
-            break;
-        case FIXED_DISK_RAID:
-            modelName += "(RAID)";
-            break;
-        default:
-            break;
+            switch (diskInforArray.FixedDiskType[i])
+            {
+            case FIXED_DISK_HDD:
+                modelName += "(HDD)";
+                break;
+            case FIXED_DISK_SSD:
+                modelName += "(SSD)";
+                break;
+            case FIXED_DISK_EMMC:
+                modelName += "(EMMC)";
+                break;
+            case FIXED_DISK_RAID:
+                modelName += "(RAID)";
+                break;
+            default:
+                modelName += "(Unknown)";
+                break;
+            }
         }
+
+        if (USB_FLASH_DISK == diskType ||
+            EXTERNAL_USB_DISK == diskType)
+        {
+            modelName += "(USB)";
+        }
+
+        if (SD_CARD_DISK == diskType)
+        {
+            modelName += "(SD)";
+        }
+
+        if (VIRTUAL_DISK == diskType)
+        {
+            modelName += "(Virtual)";
+        }
+
+        if (UNKNOWN_DISK == diskType)
+        {
+            modelName += "(Unknown)";
+        }
+        
    
 
         modelName += QString::fromStdWString(diskInforArray.Model[i]);
