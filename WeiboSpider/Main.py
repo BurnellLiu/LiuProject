@@ -94,5 +94,6 @@ def main():
         current_url_id += 1
         set_current_url_id(current_url_id)
 
-
-main()
+        
+if __name__ == '__main__':
+    main()
