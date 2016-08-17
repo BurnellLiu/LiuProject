@@ -67,12 +67,18 @@ private:
         OUT QString* pDrive, 
         OUT unsigned long long* pDriveFreeSpace);
 
+    /// @brief 获取测试文件大小
+    void GetTestFileSize();
+
     /// @brief 加载UI样式
     /// @param[in] uiRatio UI放大系数
     void LoadQSS(IN float uiRatio);
 
 private:
     Ui::DiskSpeedForm ui;
+
+    unsigned long m_seqSize; ///< 顺序测试文件大小, 单位M
+    unsigned long m_randSize; ///< 随机测试文件大小, 单位M
 
     QTimer m_seqTestTimer; ///< 顺序测试监测定时器
     QTimer m_rand4KTestTimer; ///< 4K随机测试监测定时器

@@ -1,4 +1,9 @@
 
+QLabel#labelTestState
+{
+    color: rgb(255, 0, 0);
+}
+
 
 QPushButton#pushButtonTest
 {
@@ -8,6 +13,49 @@ QPushButton#pushButtonTest
 QPushButton#pushButtonTest:hover
 {
     background-color: rgb(115, 176, 255)
+}
+
+QPushButton#pushButtonUpdate
+{
+	border-style: none;
+    color: black;
+    background-color: rgb(167, 205, 255)
+}
+QPushButton#pushButtonUpdate:hover
+{
+    background-color: rgb(115, 176, 255)
+}
+
+QComboBox#comboBoxSeqSize
+{
+    border: 1px solid gray;
+}
+
+QComboBox#comboBoxSeqSize::drop-down
+{       
+    border-image: url(:/ControlImage/DropDown.png);
+}
+
+QComboBox#comboBoxSeqSize QAbstractItemView
+{
+    border: 1px solid gray;
+    outline: 0px;
+}
+
+QComboBox#comboBoxRandSize
+{
+    border: 1px solid gray;
+}
+
+QComboBox#comboBoxRandSize::drop-down
+{       
+    border-image: url(:/ControlImage/DropDown.png);
+}
+
+QComboBox#comboBoxRandSize QAbstractItemView
+{
+    border: 1px solid gray;
+    outline: 0px;
 }
 
 QComboBox#comboBoxDiskList

@@ -7,7 +7,7 @@
 
 
 #define FTP_USER "bxu2359840588"
-#define FTP_PWD "ttlovelj911"
+#define FTP_PWD ""
 
 #define CHECK_NEW_URL "ftp://bxu2359840588@bxu2359840588.my3w.com/myfolder/SoftRelease/BLHWScaner/Version"
 #define DOWNLOAD_NEW_URL   "ftp://bxu2359840588@bxu2359840588.my3w.com/myfolder/SoftRelease/BLHWScaner/BLHWScaner.rar"

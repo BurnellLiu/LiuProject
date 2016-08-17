@@ -15,6 +15,15 @@
 #define SEQ_TEST_FILENAME QString::fromStdWString(L"SquenceTest.temp");
 #define RANDOM_4K_TEST_FILENAME QString::fromStdWString(L"Random4KTest.temp");
 
+#define SIZE_32M  "32M"
+#define SIZE_64M  "64M"
+#define SIZE_128M "128M"
+#define SIZE_256M "256M"
+#define SIZE_512M "512M"
+#define SIZE_1G   "1G"
+#define SIZE_2G   "2G"
+#define SIZE_4G   "4G"
+
 DiskSpeedPage::DiskSpeedPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QDialog(parent, flags)
 {
@@ -32,6 +41,28 @@ DiskSpeedPage::DiskSpeedPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags
 
     QObject::connect(&m_seqTestTimer, SIGNAL(timeout()), this, SLOT(SeqTestMonitorTimer()));
     QObject::connect(&m_rand4KTestTimer, SIGNAL(timeout()), this, SLOT(Rand4KTestMonitorTimer()));
+
+    ui.comboBoxSeqSize->clear();
+    ui.comboBoxSeqSize->addItem(SIZE_32M);
+    ui.comboBoxSeqSize->addItem(SIZE_64M);
+    ui.comboBoxSeqSize->addItem(SIZE_128M);
+    ui.comboBoxSeqSize->addItem(SIZE_256M);
+    ui.comboBoxSeqSize->addItem(SIZE_512M);
+    ui.comboBoxSeqSize->addItem(SIZE_1G);
+    ui.comboBoxSeqSize->addItem(SIZE_2G);
+    ui.comboBoxSeqSize->addItem(SIZE_4G);
+    ui.comboBoxSeqSize->setCurrentIndex(6);
+
+    ui.comboBoxRandSize->clear();
+    ui.comboBoxRandSize->addItem(SIZE_32M);
+    ui.comboBoxRandSize->addItem(SIZE_64M);
+    ui.comboBoxRandSize->addItem(SIZE_128M);
+    ui.comboBoxRandSize->addItem(SIZE_256M);
+    ui.comboBoxRandSize->addItem(SIZE_512M);
+    ui.comboBoxRandSize->addItem(SIZE_1G);
+    ui.comboBoxRandSize->addItem(SIZE_2G);
+    ui.comboBoxRandSize->addItem(SIZE_4G);
+    ui.comboBoxRandSize->setCurrentIndex(5);
 
     // 如果在showEvent中更新磁盘信息, 那么第一次显示测速UI的时候有卡顿现象
     this->UpdateDiskInformation();
@@ -77,6 +108,7 @@ void DiskSpeedPage::TestButtonClicked()
     if (ui.pushButtonTest->text() == DISK_TEST_START)
     {
         int diskIndex = ui.comboBoxDiskList->currentIndex();
+        this->GetTestFileSize();
 
         unsigned long long driveFreeSpace = 0;
         this->SelectLogicalDrive(m_diskLogicalNameList[diskIndex], &m_currentTestLogicalDrive, &driveFreeSpace);
@@ -84,10 +116,11 @@ void DiskSpeedPage::TestButtonClicked()
         PrintLogW(L"Current Test Logical Drive: %s, Free Space: %I64u", 
             m_currentTestLogicalDrive.toStdWString().c_str(),
             driveFreeSpace);
-        if (driveFreeSpace < (unsigned long long)(4) * 1024 * 1024 * 1024)
+        if (driveFreeSpace < (unsigned long long)(m_randSize) * 1024 * 1024 ||
+            driveFreeSpace < (unsigned long long)(m_seqSize) * 1024 * 1024)
         {
             ui.labelTestState->setText(QString::fromStdWString(L"Disk Free Size Is Tool Small"));
-            PrintLogW(L"Disk Free Size Is Tool Small, 4G Is Needed");
+            PrintLogW(L"Disk Free Size Is Tool Small");
             return;
         }
 
@@ -99,8 +132,8 @@ void DiskSpeedPage::TestButtonClicked()
         ui.labelTestState->setText("Sequence Test Is Running...");
         ui.comboBoxDiskList->setEnabled(false);
         ui.pushButtonUpdate->setEnabled(false);
-        ui.lineEditSeqSize->setEnabled(false);
-        ui.lineEditRandSize->setEnabled(false);
+        ui.comboBoxSeqSize->setEnabled(false);
+        ui.comboBoxRandSize->setEnabled(false);
   
         PrintLogW(L"Start Disk Speed Test");
         
@@ -109,7 +142,7 @@ void DiskSpeedPage::TestButtonClicked()
         testFilePath += SEQ_TEST_FILENAME;
         PrintLogW(L"Sequence Test File Path: %s", testFilePath.toStdWString().c_str());
 
-        m_pSeqTest->Start(testFilePath.toStdWString(), 50240);
+        m_pSeqTest->Start(testFilePath.toStdWString(), m_seqSize);
         m_seqTestTimer.start();
 
         PrintLogW(L"Start Disk Sequence Test");
@@ -121,8 +154,8 @@ void DiskSpeedPage::TestButtonClicked()
         ui.labelTestState->setText("");
         ui.comboBoxDiskList->setEnabled(true);
         ui.pushButtonUpdate->setEnabled(true);
-        ui.lineEditSeqSize->setEnabled(true);
-        ui.lineEditRandSize->setEnabled(true);
+        ui.comboBoxSeqSize->setEnabled(true);
+        ui.comboBoxRandSize->setEnabled(true);
 
         PrintLogW(L"User Stop Disk Speed Test");
 
@@ -186,7 +219,7 @@ void DiskSpeedPage::SeqTestMonitorTimer()
         testFilePath += RANDOM_4K_TEST_FILENAME;
         PrintLogW(L"Disk 4K Random Test File Path: %s", testFilePath.toStdWString().c_str());
 
-        m_p4KRandTest->Start(testFilePath.toStdWString(), 1024);
+        m_p4KRandTest->Start(testFilePath.toStdWString(), m_randSize);
         m_rand4KTestTimer.start();
         
         PrintLogW(L"Start Disk 4K Random Test");
@@ -199,8 +232,8 @@ void DiskSpeedPage::SeqTestMonitorTimer()
         ui.pushButtonTest->setText(DISK_TEST_START);
         ui.comboBoxDiskList->setEnabled(true);
         ui.pushButtonUpdate->setEnabled(true);
-        ui.lineEditSeqSize->setEnabled(true);
-        ui.lineEditRandSize->setEnabled(true);
+        ui.comboBoxSeqSize->setEnabled(true);
+        ui.comboBoxRandSize->setEnabled(true);
 
         PrintLogW(L"Disk Sequence Test Error, Message: %s", state.ErrorMsg.c_str());
         PrintLogW(L"Disk Sequence Test Error, Detailed Message: %s", state.ErrorMsgWindows.c_str());
@@ -235,8 +268,8 @@ void DiskSpeedPage::Rand4KTestMonitorTimer()
     ui.pushButtonTest->setText(DISK_TEST_START);
     ui.comboBoxDiskList->setEnabled(true);
     ui.pushButtonUpdate->setEnabled(true);
-    ui.lineEditSeqSize->setEnabled(true);
-    ui.lineEditRandSize->setEnabled(true);
+    ui.comboBoxSeqSize->setEnabled(true);
+    ui.comboBoxRandSize->setEnabled(true);
 
     if (state.Error == DST_NO_ERROR)
     {
@@ -376,10 +409,86 @@ bool DiskSpeedPage::SelectLogicalDrive(
     return true;
 }
 
+void DiskSpeedPage::GetTestFileSize()
+{
+    m_seqSize = 0;
+    m_randSize = 0;
+
+    QString seqSizeStr = ui.comboBoxSeqSize->currentText();
+    if (SIZE_32M == seqSizeStr)
+    {
+        m_seqSize = 32;
+    }
+    if (SIZE_64M == seqSizeStr)
+    {
+        m_seqSize = 64;
+    }
+    if (SIZE_128M == seqSizeStr)
+    {
+        m_seqSize = 128;
+    }
+    if (SIZE_256M == seqSizeStr)
+    {
+        m_seqSize = 256;
+    }
+    if (SIZE_512M == seqSizeStr)
+    {
+        m_seqSize = 512;
+    }
+    if (SIZE_1G == seqSizeStr)
+    {
+        m_seqSize = 1024;
+    }
+    if (SIZE_2G == seqSizeStr)
+    {
+        m_seqSize = 2048;
+    }
+    if (SIZE_4G == seqSizeStr)
+    {
+        m_seqSize = 4095;
+    }
+
+    QString randSizeStr = ui.comboBoxRandSize->currentText();
+    if (SIZE_32M == randSizeStr)
+    {
+        m_randSize = 32;
+    }
+    if (SIZE_64M == randSizeStr)
+    {
+        m_randSize = 64;
+    }
+    if (SIZE_128M == randSizeStr)
+    {
+        m_randSize = 128;
+    }
+    if (SIZE_256M == randSizeStr)
+    {
+        m_randSize = 256;
+    }
+    if (SIZE_512M == randSizeStr)
+    {
+        m_seqSize = 512;
+    }
+    if (SIZE_1G == randSizeStr)
+    {
+        m_randSize = 1024;
+    }
+    if (SIZE_2G == randSizeStr)
+    {
+        m_randSize = 2048;
+    }
+    if (SIZE_4G == randSizeStr)
+    {
+        m_randSize = 4095;
+    }
+}
+
 void DiskSpeedPage::LoadQSS(IN float uiRatio)
 {
-    QListView* pListView = new QListView();
-    ui.comboBoxDiskList->setView(pListView);
+    ui.comboBoxDiskList->setView(new QListView());
+    ui.comboBoxSeqSize->setView(new QListView());
+    ui.comboBoxRandSize->setView(new QListView());
+
     QFile qssFile(".\\Qss\\Default\\DiskSpeedPage.qss");  
     qssFile.open(QFile::ReadOnly);  
 
@@ -394,7 +503,7 @@ void DiskSpeedPage::LoadQSS(IN float uiRatio)
              {\
                 color: black;\
                 min-height: %1px;\
-             }").arg((int)(30 * uiRatio));
+             }").arg((int)(25 * uiRatio));
 
         qss += comboxItemHeightQss;
 
