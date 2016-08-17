@@ -72,7 +72,7 @@ public:
 
 
 /// @brief 磁盘顺序测试
-/// 磁盘顺序测速要求文件大小大于等于16
+/// 磁盘顺序测速要求文件大小大于等于16M, 小于4G
 class LDiskSequenceTest : public IDiskSpeedTest
 {
 public:
@@ -98,6 +98,7 @@ private:
 
 
 /// @brief 磁盘4KB随机测试
+/// 磁盘顺序测速要求文件小于等于4G
 class LDisk4KRandomTest : public IDiskSpeedTest
 {
 public:

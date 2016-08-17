@@ -7,8 +7,6 @@
 
 #include <vector>
 using std::vector;
-#include <bitset>
-using std::bitset;
 
 #include <Windows.h>
 
@@ -48,21 +46,6 @@ static char* CreateRandomBuffer(unsigned long bufferSize)
     }
 
     return pBuffer;
-}
-
-/// @brief 随机产生256K范围内的值
-/// @return 随机值范围[0, 256K-1]
-static unsigned long RandValueFrom256K()
-{
-    bitset<32> set(0);
-    for (unsigned int i = 0; i < 18; i++)
-    {
-        if (RandInt(0, 1) == 1)
-            set[i] = 1;
-    }
-
-    unsigned long randValue = set.to_ulong();
-    return randValue;
 }
 
 /// @brief 获取Windows错误码
@@ -115,11 +98,14 @@ public:
     {
         if (false == m_testState.TestDone)
             return false;
+
+        // 文件大小超出范围16M~4G
+        if (fileSize < 16 || fileSize >= 4096)
+            return false;
        
 
         m_bStopTest = false;
 
-        // 测试文件设置为2G大小
         m_testFile.Path = filePath;
         m_testFile.Size = (unsigned long)fileSize * 1024 * 1024;
 
@@ -159,7 +145,7 @@ private:
     {
         /*
         测试算法:
-        先以16M的尺寸为单位, 持续向受测分区写入生产1个达到2GB大小的文件,
+        先以16M的尺寸为单位, 持续向受测分区写入生产1个达到指定大小的文件,
         然后再以同样的单位尺寸读取
         */
 
@@ -292,8 +278,6 @@ public:
     /// @brief 构造函数
     CDisk4KRandomTest()
     {
-        m_testTime = 0;
-
         m_bStopTest = false;
 
         m_testState.Error = DST_NO_ERROR;
@@ -326,8 +310,9 @@ public:
         if (false == m_testState.TestDone)
             return false;
 
-        // 测试时间设置为20秒
-        m_testTime = 20000;
+        // 文件要求小于等于4G
+        if (fileSize > 4096)
+            return false;
 
         m_bStopTest = false;
 
@@ -349,6 +334,24 @@ public:
             CloseHandle(m_testFileHandle);
             m_testFileHandle = 0;
         }
+
+        // 创建读写地址列表, 以4K为每个读写单位
+        m_rwAddressList.clear();
+        m_rwAddressList.resize(m_testFile.Size/(4 * 1024));
+        for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
+        {
+            m_rwAddressList[i] = i;
+        }
+        // 打乱读写地址中的顺序
+        for (int j = 0; j < 3; j++)
+        {
+            for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
+            {
+                int randIndex = RandInt(0, m_rwAddressList.size()-1);
+                m_rwAddressList[i] = m_rwAddressList[randIndex];
+            }
+        }
+        
 
         _beginthread(Disk4KRandomTestThread, 0, (void*)this);
 
@@ -381,8 +384,6 @@ private:
 
         // 标识函数返回值
         bool bRet = false;
-
-        unsigned int rwCount = 0;
         
         // 计时开始变量
         clock_t clockBegin;
@@ -406,13 +407,9 @@ private:
         // 进行写测试
         clockBegin = clock();
         clockEnd = clock();
-        rwCount = 0;
-        while ((clockEnd - clockBegin) < (long)m_testTime)
+        for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
         {
-            rwCount++;
-
-            // 4K * 256K = 1G
-            unsigned long randAddr = RandValueFrom256K();
+            unsigned long randAddr = m_rwAddressList[i];
             SetFilePointer(m_testFileHandle, randAddr * WRITE_BUFFER_SIZE, 0, FILE_BEGIN);
 
             unsigned long count = 0;
@@ -441,7 +438,7 @@ private:
             // 经历时间, 换算成秒, 计算写入速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            m_testState.WriteSpeed = (float)WRITE_BUFFER_SIZE/1024.0f/1024.0f * rwCount/time;
+            m_testState.WriteSpeed = (float)WRITE_BUFFER_SIZE/1024.0f/1024.0f * (i + 1)/time;
         }
 
         bRet = true;
@@ -466,8 +463,6 @@ SAFE_EXIT:
         // 标识函数返回值
         bool bRet = false;
 
-        unsigned int rwCount = 0;
-
         // 计时开始变量
         clock_t clockBegin;
         // 计时结束变量
@@ -490,13 +485,10 @@ SAFE_EXIT:
         // 进行读测试
         clockBegin = clock();
         clockEnd = clock();
-        rwCount = 0;
-        while ((clockEnd - clockBegin) < (long)m_testTime)
+        for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
         {
-            rwCount++;
-
             // 4K * 256K = 1G
-            unsigned long randAddr = RandValueFrom256K();
+            unsigned long randAddr = m_rwAddressList[i];
             SetFilePointer(m_testFileHandle, randAddr * READ_BUFFER_LEN, 0, FILE_BEGIN);
 
             unsigned long count = 0;
@@ -525,7 +517,7 @@ SAFE_EXIT:
             // 经历时间, 换算成秒, 计算读取速度
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
-            m_testState.ReadSpeed = (float)READ_BUFFER_LEN/1024.0f/1024.0f * rwCount/time;
+            m_testState.ReadSpeed = (float)READ_BUFFER_LEN/1024.0f/1024.0f * (i + 1)/time;
         }
 
         bRet = true;
@@ -556,7 +548,7 @@ SAFE_EXIT:
             GENERIC_WRITE | GENERIC_READ, 
             0, 
             NULL, 
-            CREATE_ALWAYS, 
+            CREATE_ALWAYS,
             FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_DELETE_ON_CLOSE, 
             NULL);
         if (0 == m_testFileHandle || INVALID_HANDLE_VALUE == m_testFileHandle)
@@ -581,7 +573,7 @@ SAFE_EXIT:
 
        
         // 生成测试文件
-        for (unsigned long long i = 0; i < m_testFile.Size/WRITE_BUFFER_SIZE; i++)
+        for (unsigned long i = 0; i < m_testFile.Size/WRITE_BUFFER_SIZE; i++)
         {
             unsigned long count = 0;
             BOOL ret = WriteFile(m_testFileHandle, (LPCVOID)pWriteBuffer, WRITE_BUFFER_SIZE, &count, NULL);
@@ -628,10 +620,10 @@ SAFE_EXIT:
     }
 
 private:
-    unsigned long m_testTime; ///< 单项测试的时间, 单位毫秒
     LDiskSpeedTestState m_testState; ///< 测试状态
     LDiskSpeedTestFile m_testFile; ///< 测试文件
     bool m_bStopTest; ///< 标识是否停止测试
+    vector<unsigned long> m_rwAddressList; ///< 随机读写地址列表, 以4K为每个读写单位
 
     HANDLE m_testFileHandle; ///< 测试文件句柄
 
@@ -642,7 +634,7 @@ private:
     {
         /*
         测试算法:
-        先以512KB的单位尺寸生成1GB大小的测试文件,
+        先以512KB的单位尺寸生成指定大小的测试文件,
         然后在其地址范围内进行随机4KB单位尺寸进行写入及读取测试
         */
 
