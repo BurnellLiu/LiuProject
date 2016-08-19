@@ -5,7 +5,6 @@ from __future__ import division
 import nltk
 from nltk.book import *
 
-
 text1.concordance('monstrous')
 
 
@@ -24,6 +23,11 @@ text4.dispersion_plot(['citizens', 'democracy', 'freedom', 'duties', 'America'])
 # 导入精确除法后，若要执行截断除法，可以使用"//"操作符
 len(text3)/len(set(text3))
 
-freq_dist = FreqDist(text1)
-words = freq_dist.keys()
-words[:50]
+# 定义词语的频率分布
+freq_dist1 = FreqDist(text1)
+
+# 绘制最频繁的前10个词语的计数
+freq_dist1.plot(10)
+
+# 获取低频词
+freq_dist1.hapaxes()
