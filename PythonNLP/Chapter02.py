@@ -57,7 +57,7 @@ cfdist1 < cfdist2 测试样本在cfdist1  中出现次数是否小于在cfdist2 
 """
 
 
-def exercise1():
+def exercise_gutenberg():
     # 打印古腾堡项目的文件列表
     print gutenberg.fileids()
 
@@ -71,8 +71,6 @@ def exercise1():
     emma_text = nltk.Text(emma)
     emma_text.concordance("surprize")
 
-
-def exercise2():
     for file_id in gutenberg.fileids():
         chars_list = gutenberg.raw(file_id)
         words_list = gutenberg.words(file_id)
@@ -90,20 +88,20 @@ def exercise2():
         print num_chars/num_words, num_words/num_sents, num_words/num_vocab, file_id
 
 
-def exercise3():
+def exercise_webtext():
     # 打印网络文本的文件名
     for file_id in webtext.fileids():
         print file_id
 
 
-def exercise4():
+def exercise_nps_chat():
     # 打印聊天室文本名， 名称由日期，年龄，包含的帖子数量注册
     # 如： 10-19-20s_706posts.xml，包含10月19号从20多岁聊天室收集的706个帖子
     for file_id in nps_chat.fileids():
         print file_id
 
 
-def exercise5():
+def exercise_brown():
     # 打印布朗语料库中的分类
     print brown.categories()
     # 打印分类为新闻的文本词汇
@@ -113,8 +111,6 @@ def exercise5():
     # 打印句子
     print brown.sents(categories=['news', 'reviews'])
 
-
-def exercise6():
     """比较不同文体中的情态动词的用法"""
     # 获取文本
     news_text = brown.words(categories='news')
@@ -126,7 +122,7 @@ def exercise6():
         print m + ':', fdist[m]
 
 
-def exercise7():
+def exercise_brown2():
     """带条件的频率分布函数"""
     cfd = nltk.ConditionalFreqDist((genre, word)
                                    for genre in brown.categories()
@@ -137,7 +133,7 @@ def exercise7():
     cfd.tabulate(conditions=genres, samples=modals)
 
 
-def exercise8():
+def exercise_reuters():
     print reuters.fileids()
     print reuters.categories()
     # 查看单个文档的主题
@@ -158,7 +154,7 @@ def exercise8():
     print reuters.words(categories=['barley', 'corn'])
 
 
-def exercise9():
+def exercise_inaugural():
     print inaugural.fileids()
     # 提取每个演讲文本的年代名
     print [file_id[:4] for file_id in inaugural.fileids()]
@@ -172,7 +168,7 @@ def exercise9():
     cfd.plot()
 
 
-def exercise10():
+def exercise_udhr():
     print udhr.fileids()
 
     # 查看不同语言的世界人权宣言的字长差异
@@ -184,4 +180,21 @@ def exercise10():
     cfd.plot()
 
 
-exercise10()
+def exercise_cfd():
+    """
+    cfd = nltk.ConditionalFreqDist((genre, word)
+                                   for genre in brown.categories()
+                                   for word in brown.words(categories=genre))
+    """
+    genre_word = [(genre, word)
+                  for genre in ['news', 'romance']
+                  for word in brown.words(categories=genre)]
+    print len(genre_word)
+    cfd = nltk.ConditionalFreqDist(genre_word)
+    print cfd.conditions()
+
+    print cfd['romance']
+    list(cfd['romance'])
+    print cfd['romance']['could']
+
+exercise_cfd()
