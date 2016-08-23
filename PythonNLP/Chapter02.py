@@ -23,6 +23,12 @@ from nltk.corpus import inaugural
 # 世界人权宣言语料库, 包含不同语言版本
 from nltk.corpus import udhr
 
+# 英语词典语料库, 包含所有的英文单词
+from nltk.corpus import words
+
+# 停用词语料库, 就是那些高频词汇, 如: the, to
+from nltk.corpus import stopwords
+
 """
 语料库函数:
 fileids()                 语料库中的文件
@@ -202,4 +208,39 @@ def exercise_bigrams():
     sent = ['In', 'the', 'beginning', 'God', 'created', 'the heaven', 'and', 'the earth']
     print list(nltk.bigrams(sent))
 
-exercise_bigrams()
+    text = nltk.corpus.genesis.words('english-kjv.txt')
+    bigrams = nltk.bigrams(text)
+    cfd = nltk.ConditionalFreqDist(bigrams)
+
+    word = 'living'
+    for i in range(15):
+        print word
+        word = cfd[word].max()
+
+
+def exercise_unusual_words():
+    text = gutenberg.words('austen-sense.txt')
+
+    # 取出文本中的词汇, 去除数字, 转换为小写
+    text_vocab = set(w.lower() for w in text if w.isalpha())
+
+    # 取出词典中的词汇
+    english_vocab = set(w.lower() for w in words.words())
+
+    # 找出文本中的非常用词汇(错误词汇)
+    unusual_vocab = text_vocab.difference(english_vocab)
+
+    print sorted(unusual_vocab)
+
+
+def exercise_stopwords():
+    stop_words = stopwords.words('english')
+    print stop_words
+
+    text_words = reuters.words()
+
+    # 过滤文本中的停用词
+    content = [w for w in text_words if w.lower() not in stop_words]
+
+
+exercise_stopwords()
