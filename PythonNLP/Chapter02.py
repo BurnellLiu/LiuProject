@@ -197,4 +197,9 @@ def exercise_cfd():
     list(cfd['romance'])
     print cfd['romance']['could']
 
-exercise_cfd()
+
+def exercise_bigrams():
+    sent = ['In', 'the', 'beginning', 'God', 'created', 'the heaven', 'and', 'the earth']
+    print list(nltk.bigrams(sent))
+
+exercise_bigrams()
