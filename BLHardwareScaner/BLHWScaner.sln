@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UpdateInstall", "UpdateInst
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BLHWScaner", "BLHardwareScaner\BLHWScaner.vcxproj", "{22AD6959-3793-4F0C-A59F-E6025B1AA954}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BLHWScanerSetup", "BLHardwareScanerSetup\BLHWScanerSetup.vdproj", "{61B1C475-9AA9-4937-AF70-3654065B2A78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{22AD6959-3793-4F0C-A59F-E6025B1AA954}.Debug|Win32.Build.0 = Debug|Win32
 		{22AD6959-3793-4F0C-A59F-E6025B1AA954}.Release|Win32.ActiveCfg = Release|Win32
 		{22AD6959-3793-4F0C-A59F-E6025B1AA954}.Release|Win32.Build.0 = Release|Win32
+		{61B1C475-9AA9-4937-AF70-3654065B2A78}.Debug|Win32.ActiveCfg = Debug
+		{61B1C475-9AA9-4937-AF70-3654065B2A78}.Debug|Win32.Build.0 = Debug
+		{61B1C475-9AA9-4937-AF70-3654065B2A78}.Release|Win32.ActiveCfg = Release
+		{61B1C475-9AA9-4937-AF70-3654065B2A78}.Release|Win32.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
