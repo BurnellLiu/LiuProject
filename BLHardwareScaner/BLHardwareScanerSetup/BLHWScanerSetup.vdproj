@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:BLHWScanerSetup"
-"LanguageId" = "3:2052"
-"CodePage" = "3:936"
-"UILanguageId" = "3:2052"
+"LanguageId" = "3:1033"
+"CodePage" = "3:1252"
+"UILanguageId" = "3:1033"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -81,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4C80372E60B745B0ACA4A6C156C50683"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_504FD37B83FE46699F5E0D2F8003BFC9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -100,6 +106,12 @@
         "Entry"
         {
         "MsmKey" = "8:_55EAAE0DC8E743D0B845EC838AD0698B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -212,6 +224,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -219,7 +244,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\BLHWScaner.msi"
+        "OutputFilename" = "8:Release\\BLHWScaner_1.3.2.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -231,7 +256,7 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:TRUE"
+            "Enabled" = "11:FALSE"
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
@@ -491,6 +516,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C80372E60B745B0ACA4A6C156C50683"
+            {
+            "SourcePath" = "8:Src\\BLHWScaner.ico"
+            "TargetName" = "8:BLHWScaner.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_3FB0FE1B9A08483EB8AD2ECB4059BCEE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_504FD37B83FE46699F5E0D2F8003BFC9"
             {
             "SourcePath" = "8:..\\Bin\\Update\\UpdateInstall.exe"
@@ -555,6 +600,26 @@
             {
             "SourcePath" = "8:..\\Bin\\QtGui4.dll"
             "TargetName" = "8:QtGui4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
+            {
+            "SourcePath" = "8:Src\\msiexec.exe"
+            "TargetName" = "8:msiexec.exe"
             "Tag" = "8:"
             "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
             "Condition" = "8:"
@@ -877,6 +942,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_A4C762042AF1491EA2D3FDA51C3C6F16"
+                    {
+                    "Name" = "8:BLHWScaner"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_64AB780774F24CCA8046CA83945730AF"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_F7626FD2F6A34102B724CF786EE5787B"
@@ -988,28 +1064,28 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:2052"
+        "LangId" = "3:1033"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:BLHWScanerSetup"
-        "ProductCode" = "8:{13DF8869-2854-413F-AF24-AAC97AD8E27C}"
-        "PackageCode" = "8:{6330AE5B-4708-4BB8-B069-BA7602FF02E2}"
+        "ProductName" = "8:BLHWScaner"
+        "ProductCode" = "8:{13DF8869-2854-413F-AF24-AAC97AD8E27B}"
+        "PackageCode" = "8:{132B1126-852B-48A2-8D06-9FF4EF6E9B44}"
         "UpgradeCode" = "8:{8E41EF3B-3DF6-4B2F-BE30-8A6F064B72EF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Microsoft"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:1.3.2"
+        "Manufacturer" = "8:BL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:BLHWScanerSetup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Microsoft"
+        "ARPCONTACT" = "8:BurnellLiu"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -1116,6 +1192,48 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_08D12F29A55544E38E9C1F2AF5313F36"
+            {
+            "Name" = "8:BLHWScaner.exe"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_249D3A9FC24243C18F9AF1A6EE2D4C75"
+            "Folder" = "8:_A4C762042AF1491EA2D3FDA51C3C6F16"
+            "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "Icon" = "8:_4C80372E60B745B0ACA4A6C156C50683"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_CB2A66F0A07E48A19CD2CFB46F9FB9F8"
+            {
+            "Name" = "8:Uninstall.exe"
+            "Arguments" = "8:/x {13DF8869-2854-413F-AF24-AAC97AD8E27B}"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
+            "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E18668213C4C4AEF9C4D07B11C1A9B82"
+            {
+            "Name" = "8:Uninstall.exe"
+            "Arguments" = "8:/x {13DF8869-2854-413F-AF24-AAC97AD8E27B}"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
+            "Folder" = "8:_A4C762042AF1491EA2D3FDA51C3C6F16"
+            "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -1135,7 +1253,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_423A8A79E5394DC599891D11F073EC92"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:欢迎使用"
+                    "DisplayName" = "8:Welcome"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
@@ -1183,7 +1301,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8148D65714464DCC8348AD63BE4B81A0"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:确认安装"
+                    "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
@@ -1205,7 +1323,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_82E4D10467B443D384E5AF82819B3101"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:安装文件夹"
+                    "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
@@ -1249,7 +1367,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_447321787B0247389DB3DE469190C0E7"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:进度"
+                    "DisplayName" = "8:Progress"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"
@@ -1299,7 +1417,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8125523807784ECD9C961167FA35CE24"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:进度"
+                    "DisplayName" = "8:Progress"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"
@@ -1343,7 +1461,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8AAE5B07852C458681CD6AF05C08DD39"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:安装文件夹"
+                    "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
@@ -1365,7 +1483,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_ACAE00A873604C70B53B2335FB1CF9BB"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:确认安装"
+                    "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminConfirmDlg.wid"
@@ -1387,7 +1505,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_EE1D2931131C4D84B43ABA822DEED3C6"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:欢迎使用"
+                    "DisplayName" = "8:Welcome"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminWelcomeDlg.wid"
@@ -1444,7 +1562,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_0F6BD3E645D94CD3ADD7E2961AC44C78"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:已完成"
+                    "DisplayName" = "8:Finished"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
@@ -1475,7 +1593,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_D20DDC15A9A14475983EA0FDC527038C"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:已完成"
+                    "DisplayName" = "8:Finished"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFinishedDlg.wid"
