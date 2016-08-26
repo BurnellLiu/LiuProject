@@ -29,7 +29,7 @@ abc$     匹配以abc 结尾的字符串
 [A-Z0-9] 匹配字符一个范围
 107
 ed|ing|s 匹配指定的一个字符串（析取）
-*        前面的项目零个或多个，如a*, [a-z]* (也叫Kleene 闭包)
+*        前面的项目零个或多个，如a*, [a-z]* (也叫Kleene闭包)
 +        前面的项目1 个或多个，如a+, [a-z]+
 ?        前面的项目零个或1 个（即：可选）如：a?, [a-z]?
 {n}      重复n 次，n 为非负整数
@@ -96,4 +96,19 @@ def exercise_re():
     print [w for w in chat_words if re.search('^m*i*n*e*$', w)]
 
 
-exercise_re()
+def exercise_05():
+    # 找出一个单词中的所有元音字符
+    word = 'Hello, world! This is a python program!'
+    print re.findall('[aeiou]', word)
+
+    # 统计文本中两个或两个以上的元音序列的频率
+    words = sorted(set(nltk.corpus.treebank.words()))
+    fd = nltk.FreqDist(vs for word in words
+                       for vs in re.findall('[aeiou]{2,}', word))
+    print fd.items()
+
+    # 使用正则表达式格式话日期
+    print [int(n) for n in re.findall('[0-9]{2,}', '2009-12-31')]
+
+exercise_05()
+
