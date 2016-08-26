@@ -20,6 +20,23 @@ s.upper()       将字符串s 大写
 s.titlecase()   将字符串s 首字母大写
 s.strip()       返回一个没有首尾空白字符的s 的拷贝
 s.replace(t, u) 用u 替换s 中的t
+
+正则表达式基本元字符:
+·       通配符，匹配所有字符
+^abc     匹配以abc 开始的字符串
+abc$     匹配以abc 结尾的字符串
+[abc]    匹配字符集合中的一个
+[A-Z0-9] 匹配字符一个范围
+107
+ed|ing|s 匹配指定的一个字符串（析取）
+*        前面的项目零个或多个，如a*, [a-z]* (也叫Kleene 闭包)
++        前面的项目1 个或多个，如a+, [a-z]+
+?        前面的项目零个或1 个（即：可选）如：a?, [a-z]?
+{n}      重复n 次，n 为非负整数
+{n,}     至少重复n 次
+{,n}     重复不多于n 次
+{m,n}    至少重复m 次不多于n 次
+a(b|c)+  括号表示操作符的范围
 """
 
 
@@ -55,17 +72,28 @@ def exercise_re():
 
     # 使用正则表达式搜索以ed结尾的单词
     # "$" 表示为单词的末尾
-    word_list_ed = [w for w in word_list if re.search('ed$', w)]
-    print word_list_ed
+    print [w for w in word_list if re.search('ed$', w)]
 
     #  "^" 表示单词的开头
     # "." 匹配任何单个字符
-    word_list_2 = [ w for w in word_list if re.search('^..j..t..$', w)]
-    print word_list_2
+    print [w for w in word_list if re.search('^..j..t..$', w)]
 
     # "?" 表示前面的字符是可选的
     # "^e-?mail$" 表示匹配email和e-mail
     print sum(1 for w in word_list if re.search('^e-?mail$', w))
+
+    # "[]" 中括号表示闭包, 表示匹配其中的一个字符
+    # "[a-e]" 表示匹配a到e之间的一个字符
+    print [w for w in word_list if re.search('^[ghi][mno][jlk][def]$', w)]
+
+    # 加载网络聊天语料库中的词汇
+    chat_words = sorted(set(w for w in nltk.corpus.nps_chat.words()))
+
+    # "+" 表示前面的字符为一个或多个
+    print [w for w in chat_words if re.search('^m+i+n+e+$', w)]
+
+    # "*" 表示前面的字符为0个或多个
+    print [w for w in chat_words if re.search('^m*i*n*e*$', w)]
 
 
 exercise_re()
