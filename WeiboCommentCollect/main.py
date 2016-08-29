@@ -72,7 +72,7 @@ def collect_comment(cookie_index):
 
         file_object.close()
 
-        print 'Complete: ', current_page * 100.0/total_page
+        print 'Complete: ', cookie_index, '  ', i * 100.0/1000
 
         current_page += 1
         set_current_page_index(current_page)
