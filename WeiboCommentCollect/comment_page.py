@@ -1,34 +1,32 @@
 # -*- coding: utf-8 -*-
 
 import urllib2
-import random
 from bs4 import BeautifulSoup
-from urlparse import urljoin
 
 
 class CommentPage:
     """
     微博评论页解析类
     """
-    def __init__(self, url, cookie):
+    def __init__(self, page_url, user_cookie):
         """
         构造函数
-        :param url: 评论首页URL字符串
-        :param cookie: COOKIE字符串
+        :param page_url: 评论首页URL字符串
+        :param user_cookie: COOKIE字符串
         """
         header = {
             'Connection': 'keep-alive',
-            'Cookie': cookie,
+            'Cookie': user_cookie,
             'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; WOW64) '
                            'AppleWebKit/537.36 (KHTML, like Gecko) '
                            'Chrome/48.0.2564.116 Safari/537.36')
         }
 
-        self.__first_page_url = url
+        self.__first_page_url = page_url
         self.__http_headers = header
         self.__pages_total_num = 0
 
-        request = urllib2.Request(url, headers=self.__http_headers)
+        request = urllib2.Request(page_url, headers=self.__http_headers)
         try:
             html_page = urllib2.urlopen(request).read()
         except Exception, e:
@@ -37,10 +35,19 @@ class CommentPage:
 
         self.__pages_total_num = self.__get_total_pages(html_page)
 
-    def change_cookie(self, cookie):
-        self.__http_headers['Cookie'] = cookie
+    def change_cookie(self, user_cookie):
+        """
+        改变COOKIE值
+        :param user_cookie: COOKIE字符串
+        :return: None
+        """
+        self.__http_headers['Cookie'] = user_cookie
 
     def get_pages_total_num(self):
+        """
+        获取评论页面总数
+        :return: 页面总数
+        """
         return self.__pages_total_num
 
     def get_comments(self, page_index):
@@ -150,18 +157,4 @@ class CommentPage:
 
         return 0
 
-
-if __name__ == '__main__':
-    url = 'http://weibo.cn/comment/E3NfT4Eqe?uid=1828817187&rl=0#cmtfrm'
-    cookie = ('_T_WM=2e3b45251243daefa799f7c47085fade; ALF=1475025279; '
-              'SCF=Anm-KLODomQxQvmleOa6CIm3qG1hGw31LDp35qYwxz2N8e2TmlUDT0d_iU-RWJrx9GxLzYPTV-Z4wZySnOmsnmQ.; '
-              'SUB=_2A256x_zCDeTxGedJ4lYQ8yzFzDyIHXVWS4SKrDV6PUJbktBeLULikW0mJDvhjM41pJx_wX1jGSOrfWy5qg..; '
-              'SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p5NHD95QpS0.XeKeE1KM7Ws4DqcjzBcv.'
-              '9-pLdcRt; SUHB=0y0YDoFgs0WtJj; SSOLoginState=1472433298')
-
-    comment_page = CommentPage(url, cookie)
-
-    print comment_page.get_pages_total_num()
-
-    comments = comment_page.get_comments(1)
 

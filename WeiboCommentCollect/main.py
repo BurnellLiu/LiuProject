@@ -10,41 +10,41 @@ from comment_id_record import CommentIdRecord
 
 def get_cookie(index):
     config = ConfigParser.ConfigParser()
-    config.read('./Config.txt')
+    config.read('./config.txt')
     cookie = config.get('default', 'cookie' + str(index))
     return cookie
 
 
 def get_url():
     config = ConfigParser.ConfigParser()
-    config.read('./Config.txt')
+    config.read('./config.txt')
     cookie = config.get('default', 'url')
     return cookie
 
 
 def get_total_page():
     config = ConfigParser.ConfigParser()
-    config.read('./Config.txt')
+    config.read('./config.txt')
     total_index = config.getint('default', 'total_page')
     return total_index
 
 
 def get_current_page_index():
     config = ConfigParser.ConfigParser()
-    config.read('./Config.txt')
+    config.read('./config.txt')
     current_index = config.getint('default', 'current_page')
     return current_index
 
 
 def set_current_page_index(page_index):
     config = ConfigParser.ConfigParser()
-    config.read('./Config.txt')
+    config.read('./config.txt')
     config.set('default', 'current_page', page_index)
     config.write(open("./Config.txt", "w"))
 
 
-def main():
-    cookie = get_cookie(1)
+def collect_comment(cookie_index):
+    cookie = get_cookie(cookie_index)
     total_page = get_total_page()
     current_page = get_current_page_index()
     url = get_url()
@@ -57,11 +57,7 @@ def main():
     id_record = CommentIdRecord('./data/comment_id_record.db')
 
     dif = new_total_page-total_page
-    while current_page < total_page:
-        cookie_index = current_page%4 + 1
-        # cookie = get_cookie(cookie_index)
-        # comment_page.change_cookie(cookie)
-
+    for i in range(1000):
         comment_list = comment_page.get_comments(current_page + dif)
         if len(comment_list) == 0:
             time.sleep(1)
@@ -82,7 +78,12 @@ def main():
         current_page += 1
         set_current_page_index(current_page)
 
-        time.sleep(0.2)
+        time.sleep(0.4)
+
+
+def main():
+    for i in range(1, 5):
+        collect_comment(i)
 
 
 if __name__ == '__main__':
