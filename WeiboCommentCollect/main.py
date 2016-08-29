@@ -2,7 +2,6 @@
 
 import ConfigParser
 import time
-import random
 import hashlib
 from comment_page import CommentPage
 from comment_id_record import CommentIdRecord
