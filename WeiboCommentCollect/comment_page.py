@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib2
+import random
 from bs4 import BeautifulSoup
 from urlparse import urljoin
 
@@ -17,9 +18,10 @@ class CommentPage:
         """
         header = {
             'Connection': 'keep-alive',
-            'cookie': cookie,
-            'User-Agent': ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) '
-                           'Chrome/35.0.1916.153 Safari/537.36 SE 2.X MetaSr 1.0')
+            'Cookie': cookie,
+            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; WOW64) '
+                           'AppleWebKit/537.36 (KHTML, like Gecko) '
+                           'Chrome/48.0.2564.116 Safari/537.36')
         }
 
         self.__first_page_url = url
@@ -35,6 +37,9 @@ class CommentPage:
 
         self.__pages_total_num = self.__get_total_pages(html_page)
 
+    def change_cookie(self, cookie):
+        self.__http_headers['Cookie'] = cookie
+
     def get_pages_total_num(self):
         return self.__pages_total_num
 
@@ -48,21 +53,24 @@ class CommentPage:
             return []
 
         page_url = ''
+        referer_url = ''
         if page_index == 1:
             page_url = self.__first_page_url
         else:
             loc = self.__first_page_url.find('#cmtfrm')
             page_url = self.__first_page_url[:loc]
             page_url += '?page='
+            referer_url = page_url
             page_url += str(page_index)
+            referer_url += str(page_index-1)
 
+        self.__http_headers['Referer'] = referer_url
         print page_url
         request = urllib2.Request(page_url, headers=self.__http_headers)
         try:
             html_page = urllib2.urlopen(request).read()
         except Exception, e:
             print e
-            print('Network Error')
             return []
 
         return self.__get_comments(html_page)
@@ -103,9 +111,8 @@ class CommentPage:
                     continue
 
                 comment = ''.join(span.strings)
-                comment_list.append((div_attrs['id'], comment))
+                comment_list.append(comment)
                 break
-
         return comment_list
 
     @staticmethod

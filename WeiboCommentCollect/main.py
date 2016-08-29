@@ -2,14 +2,16 @@
 
 import ConfigParser
 import time
+import random
+import hashlib
 from comment_page import CommentPage
 from comment_id_record import CommentIdRecord
 
 
-def get_cookie():
+def get_cookie(index):
     config = ConfigParser.ConfigParser()
     config.read('./Config.txt')
-    cookie = config.get('default', 'cookie')
+    cookie = config.get('default', 'cookie' + str(index))
     return cookie
 
 
@@ -42,7 +44,7 @@ def set_current_page_index(page_index):
 
 
 def main():
-    cookie = get_cookie()
+    cookie = get_cookie(1)
     total_page = get_total_page()
     current_page = get_current_page_index()
     url = get_url()
@@ -52,19 +54,25 @@ def main():
     if new_total_page == 0 or new_total_page < total_page:
         return
 
+    id_record = CommentIdRecord('./data/comment_id_record.db')
+
     dif = new_total_page-total_page
     while current_page < total_page:
+        cookie_index = current_page%4 + 1
+        # cookie = get_cookie(cookie_index)
+        # comment_page.change_cookie(cookie)
+
         comment_list = comment_page.get_comments(current_page + dif)
         if len(comment_list) == 0:
             time.sleep(1)
             continue
 
         file_object = open('./data/comments.txt', 'a')
-        id_record = CommentIdRecord('./data/comment_id_record.db')
 
         for comment in comment_list:
-            if id_record.add(comment[0].encode('ascii')):
-                file_object.write(comment[1].encode('utf-8'))
+            md5 = hashlib.md5(comment.encode('utf-8'))
+            if id_record.add(md5.hexdigest()):
+                file_object.write(comment.encode('utf-8'))
                 file_object.write('\r\n')
 
         file_object.close()
