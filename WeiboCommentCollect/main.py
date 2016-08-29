@@ -3,6 +3,7 @@
 import ConfigParser
 import time
 from comment_page import CommentPage
+from comment_id_record import CommentIdRecord
 
 
 def get_cookie():
@@ -55,17 +56,18 @@ def main():
     while current_page < total_page:
         comment_list = comment_page.get_comments(current_page + dif)
         if len(comment_list) == 0:
-            print 'Unknown Error'
             time.sleep(1)
             continue
 
-        file_object = open('comments.txt', 'a')
+        file_object = open('./data/comments.txt', 'a')
+        id_record = CommentIdRecord('./data/comment_id_record.db')
 
         for comment in comment_list:
-            file_object.write(comment.encode('utf-8'))
-            file_object.write('\r\n')
+            if id_record.add(comment[0].encode('ascii')):
+                file_object.write(comment[1].encode('utf-8'))
+                file_object.write('\r\n')
 
-        file_object.close( )
+        file_object.close()
 
         print 'Complete: ', current_page * 100.0/total_page
 

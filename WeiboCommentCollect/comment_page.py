@@ -72,7 +72,7 @@ class CommentPage:
         """
         获取网页中的评论
         :param html_page: HTML格式的文本字符串
-        :return: 评论字符串列表
+        :return: 评论字列表(id, comment)
         """
         comment_list = []
 
@@ -103,7 +103,8 @@ class CommentPage:
                     continue
 
                 comment = ''.join(span.strings)
-                comment_list.append(comment)
+                comment_list.append((div_attrs['id'], comment))
+                break
 
         return comment_list
 
@@ -145,16 +146,15 @@ class CommentPage:
 
 if __name__ == '__main__':
     url = 'http://weibo.cn/comment/E3NfT4Eqe?uid=1828817187&rl=0#cmtfrm'
-    cookie = ('_T_WM=b9f4647c7ae68070b126a5911ef8dfde; ALF=1474959398; '
-              'SCF=Av8kfMFJJbJ0r-aWlj3udPHEJz7K4jPab_SbxuieuQI6y3T1-TplmJjkNjN9sMn4FyJETV8yhm_eGENxCuVU0ls.; '
-              'SUB=_2A256xvz0DeTxGedJ4lYQ8yzFzDyIHXVWSIS8rDV6PUJbktANLVb9kW0qeBrykEMnyDNCfwQ4ra-KagG-Fw..; '
-              'SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p5NHD95QpS0.'
-              'XeKeE1KM7Ws4DqcjzBcv.9-pLdcRt; '
-              'SUHB=0tKrHurYpk1bGd; SSOLoginState=1472367780')
+    cookie = ('_T_WM=2e3b45251243daefa799f7c47085fade; ALF=1475025279; '
+              'SCF=Anm-KLODomQxQvmleOa6CIm3qG1hGw31LDp35qYwxz2N8e2TmlUDT0d_iU-RWJrx9GxLzYPTV-Z4wZySnOmsnmQ.; '
+              'SUB=_2A256x_zCDeTxGedJ4lYQ8yzFzDyIHXVWS4SKrDV6PUJbktBeLULikW0mJDvhjM41pJx_wX1jGSOrfWy5qg..; '
+              'SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W5HzJx-7GkUYjF5QwMzUTFb5JpX5o2p5NHD95QpS0.XeKeE1KM7Ws4DqcjzBcv.'
+              '9-pLdcRt; SUHB=0y0YDoFgs0WtJj; SSOLoginState=1472433298')
 
     comment_page = CommentPage(url, cookie)
 
     print comment_page.get_pages_total_num()
 
-    print comment_page.get_comments(1)
-    print comment_page.get_comments(2)
+    comments = comment_page.get_comments(1)
+
