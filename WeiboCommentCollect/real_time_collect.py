@@ -16,9 +16,12 @@ def get_real_time_comment():
 
     id_record = CommentIdRecord('./data/comment_id_record.db')
 
-    for i in range(1, 30):
+    for i in range(1, 21):
         comment_list = comment_page.get_comments(i)
         file_object = open('./data/comments.txt', 'a')
+
+        if len(comment_list) == 0:
+            print 'Page Error'
 
         valid_comment = 0
         for comment in comment_list:
@@ -31,9 +34,9 @@ def get_real_time_comment():
         file_object.close()
 
         print 'Page total: ', len(comment_list), 'valid: ', valid_comment
-        print 'Complete: ', i * 100.0/30
+        print 'Complete: ', i * 100.0/20
 
-        time.sleep(1)
+        time.sleep(2)
 
 
 if __name__ == '__main__':

@@ -31,7 +31,6 @@ class CommentIdRecord:
             self.__sqlConn.execute("INSERT INTO comment_id(id_name) VALUES (?)", (comment_id,))
             self.__sqlConn.commit()
         except Exception, e:
-            print e
             return False
 
         return True
