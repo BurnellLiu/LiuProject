@@ -27,7 +27,6 @@ s.replace(t, u) 用u 替换s 中的t
 abc$     匹配以abc 结尾的字符串
 [abc]    匹配字符集合中的一个
 [A-Z0-9] 匹配字符一个范围
-107
 ed|ing|s 匹配指定的一个字符串（析取）
 *        前面的项目零个或多个，如a*, [a-z]* (也叫Kleene闭包)
 +        前面的项目1 个或多个，如a+, [a-z]+
@@ -110,5 +109,28 @@ def exercise_05():
     # 使用正则表达式格式话日期
     print [int(n) for n in re.findall('[0-9]{2,}', '2009-12-31')]
 
-exercise_05()
+    rotokas_words = nltk.corpus.toolbox.words('rotokas.dic')
+    cvs = [cv for w in rotokas_words for cv in re.findall('[ptksvr][aeiou]', w)]
+    cfd = nltk.ConditionalFreqDist(cvs)
+    cfd.tabulate()
+
+
+def exercise_06():
+    raw = """DENNIS: Listen, strange women lying in ponds distributing swords
+... is no basis for a system of government. Supreme executive power derives from
+... a mandate from the masses, not from some farcical aquatic ceremony."""
+
+    # 分词
+    tokens = nltk.word_tokenize(raw)
+
+    # Porter词干提取器
+    porter = nltk.PorterStemmer()
+    # Lancaster词干提取器
+    lancaster = nltk.LancasterStemmer()
+
+    print [porter.stem(t) for t in tokens]
+    print [lancaster.stem(t) for t in tokens]
+
+
+exercise_06()
 
