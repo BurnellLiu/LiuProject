@@ -36,7 +36,7 @@ def get_real_time_comment():
         print 'Page total: ', len(comment_list), 'valid: ', valid_comment
         print 'Complete: ', i * 100.0/20
 
-        time.sleep(2)
+        time.sleep(5)
 
 
 if __name__ == '__main__':
