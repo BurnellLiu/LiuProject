@@ -425,18 +425,7 @@ namespace LWMI
 
         if (pDeviceDescriptor->RemovableMedia == TRUE)
         {
-            switch (pDeviceDescriptor->DeviceTypeModifier)
-            {
-            case 13:
-                type = SD_CARD_DISK;
-                break;
-            case 0:
-                type = USB_FLASH_DISK;
-                break;
-            default:
-                type = UNKNOWN_DISK;
-                break;
-            }
+            type = REMOVABLE_DISK;
         }
 
         if (pDeviceDescriptor->RemovableMedia == FALSE)

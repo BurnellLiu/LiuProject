@@ -297,10 +297,7 @@ void DiskSpeedPage::UpdateDiskInformation()
     for (unsigned int i = 0; i < diskInforArray.Count; i++)
     {
         DISK_TYPE diskType = diskInforArray.DiskType[i];
-
-        m_diskLogicalNameList.push_back(QString::fromStdWString(diskInforArray.LogicalName[i]));
         QString modelName;
-
         if (FIXED_DISK == diskType)
         {
             switch (diskInforArray.FixedDiskType[i])
@@ -323,15 +320,14 @@ void DiskSpeedPage::UpdateDiskInformation()
             }
         }
 
-        if (USB_FLASH_DISK == diskType ||
-            EXTERNAL_USB_DISK == diskType)
+        if (EXTERNAL_USB_DISK == diskType)
         {
-            modelName += "(USB)";
+            modelName += "(Exteral USB)";
         }
 
-        if (SD_CARD_DISK == diskType)
+        if (REMOVABLE_DISK == diskType)
         {
-            modelName += "(SD)";
+            modelName += "(Removable)";
         }
 
         if (VIRTUAL_DISK == diskType)
@@ -347,8 +343,12 @@ void DiskSpeedPage::UpdateDiskInformation()
    
 
         modelName += QString::fromStdWString(diskInforArray.Model[i]);
-        diskModelNameList.push_back(modelName);
 
+        if (!diskInforArray.LogicalName[i].empty())
+        {
+            m_diskLogicalNameList.push_back(QString::fromStdWString(diskInforArray.LogicalName[i]));
+            diskModelNameList.push_back(modelName);
+        }
     }
 
     ui.comboBoxDiskList->clear();

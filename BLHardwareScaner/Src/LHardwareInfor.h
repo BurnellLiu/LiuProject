@@ -117,8 +117,7 @@ enum DISK_TYPE
     FIXED_DISK = 1, // 固定磁盘(如本地硬盘)
     EXTERNAL_USB_DISK = 2, // 扩展磁盘(如USB移动硬盘)
     VIRTUAL_DISK = 3, // 虚拟硬盘(如VHD)
-    USB_FLASH_DISK = 4, // U盘
-    SD_CARD_DISK = 5 // SD卡
+    REMOVABLE_DISK = 4, // 可移动盘
 };
 
 /// @brief 固定磁盘类型
