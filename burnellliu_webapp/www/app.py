@@ -11,6 +11,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 def index(request):
+    """
+
+    :param request:
+    :return:
+    """
     return web.Response(body=b'<h1>hello</h1>')
 
 
