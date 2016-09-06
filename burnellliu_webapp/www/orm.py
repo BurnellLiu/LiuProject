@@ -134,39 +134,41 @@ class TextField(Field):
 
 class ModelMetaclass(type):
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(mcs, name, bases, attrs):
         if name == 'Model':
-            return type.__new__(cls, name, bases, attrs)
-        tableName = attrs.get('__table__', None) or name
-        logging.info('found model: %s (table: %s)' % (name, tableName))
+            return type.__new__(mcs, name, bases, attrs)
+
+        table_name = attrs.get('__table__', None) or name
+        logging.info('found model: %s (table: %s)' % (name, table_name))
         mappings = dict()
         fields = []
-        primaryKey = None
+        primary_key = None
         for k, v in attrs.items():
             if isinstance(v, Field):
                 logging.info('  found mapping: %s ==> %s' % (k, v))
                 mappings[k] = v
                 if v.primary_key:
                     # 找到主键:
-                    if primaryKey:
+                    if primary_key:
                         raise StandardError('Duplicate primary key for field: %s' % k)
-                    primaryKey = k
+                    primary_key = k
                 else:
                     fields.append(k)
-        if not primaryKey:
+
+        if not primary_key:
             raise StandardError('Primary key not found.')
         for k in mappings.keys():
             attrs.pop(k)
         escaped_fields = list(map(lambda f: '`%s`' % f, fields))
         attrs['__mappings__'] = mappings # 保存属性和列的映射关系
-        attrs['__table__'] = tableName
-        attrs['__primary_key__'] = primaryKey # 主键属性名
+        attrs['__table__'] = table_name
+        attrs['__primary_key__'] = primary_key # 主键属性名
         attrs['__fields__'] = fields # 除主键外的属性名
-        attrs['__select__'] = 'select `%s`, %s from `%s`' % (primaryKey, ', '.join(escaped_fields), tableName)
-        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (tableName, ', '.join(escaped_fields), primaryKey, create_args_string(len(escaped_fields) + 1))
-        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (tableName, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).name or f), fields)), primaryKey)
-        attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (tableName, primaryKey)
-        return type.__new__(cls, name, bases, attrs)
+        attrs['__select__'] = 'select `%s`, %s from `%s`' % (primary_key, ', '.join(escaped_fields), table_name)
+        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (table_name, ', '.join(escaped_fields), primary_key, create_args_string(len(escaped_fields) + 1))
+        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (table_name, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).name or f), fields)), primary_key)
+        attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (table_name, primary_key)
+        return type.__new__(mcs, name, bases, attrs)
 
 
 class Model(dict, metaclass=ModelMetaclass):
