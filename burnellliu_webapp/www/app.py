@@ -23,7 +23,7 @@ async def init(loop):
     app = web.Application(loop=loop)
     app.router.add_route('GET', '/', index)
     server = await loop.create_server(app.make_handler(), '127.0.0.1', 9000)
-    logging.info('server started at http://127.0.0.1:9000...')
+    logging.info('Server started at http://127.0.0.1:9000...')
     return server
 
 

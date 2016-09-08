@@ -7,6 +7,8 @@ import aiomysql
 
 __author__ = 'Burnell Liu'
 
+logging.basicConfig(level=logging.INFO)
+
 
 def log_sql(sql, args=()):
     logging.info('SQL: [%s] args: %s' % (sql, args or []))
@@ -17,7 +19,7 @@ async def create_pool(loop, **kw):
     创建连接池
     :param loop: 事件循环对象
     """
-    logging.info('create database connection pool...')
+    logging.info('Create database connection pool...')
     # 创建一个全局的连接池，每个HTTP请求都可以从连接池中直接获取数据库连接。
     # 使用连接池的好处是不必频繁地打开和关闭数据库连接，而是能复用就尽量复用。
     # 连接池由全局变量__pool存储，缺省情况下将编码设置为utf8，自动提交事务
@@ -91,8 +93,17 @@ def create_args_string(num):
 
 
 class Field(object):
-
+    """
+    数据库表字段基类
+    """
     def __init__(self, name, column_type, primary_key, default):
+        """
+        表字段构造函数
+        :param name: 字段名称
+        :param column_type: 字段类型
+        :param primary_key: 标记是否为主键
+        :param default: 默认值
+        """
         self.name = name
         self.column_type = column_type
         self.primary_key = primary_key
@@ -103,71 +114,94 @@ class Field(object):
 
 
 class StringField(Field):
-
+    """
+    字符串字段类
+    """
     def __init__(self, name=None, primary_key=False, default=None, ddl='varchar(100)'):
         super().__init__(name, ddl, primary_key, default)
 
 
 class BooleanField(Field):
-
+    """
+    布尔字段类
+    """
     def __init__(self, name=None, default=False):
         super().__init__(name, 'boolean', False, default)
 
 
 class IntegerField(Field):
-
+    """
+    整数字段类
+    """
     def __init__(self, name=None, primary_key=False, default=0):
         super().__init__(name, 'bigint', primary_key, default)
 
 
 class FloatField(Field):
-
+    """
+    浮点数字段类
+    """
     def __init__(self, name=None, primary_key=False, default=0.0):
         super().__init__(name, 'real', primary_key, default)
 
 
 class TextField(Field):
-
+    """
+    文本字段类
+    """
     def __init__(self, name=None, default=None):
         super().__init__(name, 'text', False, default)
 
 
 class ModelMetaclass(type):
-
+    """
+    数据表模型元类
+    """
     def __new__(mcs, name, bases, attrs):
+        """
+        创建类
+        :param mcs: 准备创建的类对象
+        :param name: 类的名字
+        :param bases: 类继承的父类集合
+        :param attrs: 类的属性集合(包括方法)
+        """
         if name == 'Model':
             return type.__new__(mcs, name, bases, attrs)
 
         table_name = attrs.get('__table__', None) or name
-        logging.info('found model: %s (table: %s)' % (name, table_name))
-        mappings = dict()
-        fields = []
-        primary_key = None
+        logging.info('Found model: %s (table: %s)' % (name, table_name))
+
+        field_dict = dict()
+        field_key_list = []
+        field_primary_key = None
         for k, v in attrs.items():
+            # 找出类中的所有字段属性
             if isinstance(v, Field):
-                logging.info('  found mapping: %s ==> %s' % (k, v))
-                mappings[k] = v
+                logging.info('Found mapping: %s ==> %s' % (k, v))
+                field_dict[k] = v
                 if v.primary_key:
                     # 找到主键:
-                    if primary_key:
-                        raise StandardError('Duplicate primary key for field: %s' % k)
-                    primary_key = k
+                    if field_primary_key:
+                        raise BaseException('Duplicate primary key for field: %s' % k)
+                    field_primary_key = k
                 else:
-                    fields.append(k)
+                    field_key_list.append(k)
 
-        if not primary_key:
-            raise StandardError('Primary key not found.')
-        for k in mappings.keys():
+        if not field_primary_key:
+            raise BaseException('Primary key not found.')
+
+        for k in field_dict.keys():
             attrs.pop(k)
-        escaped_fields = list(map(lambda f: '`%s`' % f, fields))
-        attrs['__mappings__'] = mappings # 保存属性和列的映射关系
+
+        escaped_fields = list(map(lambda f: '`%s`' % f, field_key_list))
+        attrs['__mappings__'] = field_dict # 保存属性和列的映射关系
         attrs['__table__'] = table_name
-        attrs['__primary_key__'] = primary_key # 主键属性名
-        attrs['__fields__'] = fields # 除主键外的属性名
-        attrs['__select__'] = 'select `%s`, %s from `%s`' % (primary_key, ', '.join(escaped_fields), table_name)
-        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (table_name, ', '.join(escaped_fields), primary_key, create_args_string(len(escaped_fields) + 1))
-        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (table_name, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).name or f), fields)), primary_key)
-        attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (table_name, primary_key)
+        attrs['__primary_key__'] = field_primary_key # 主键属性名
+        attrs['__fields__'] = field_key_list # 除主键外的属性名
+        attrs['__select__'] = 'select `%s`, %s from `%s`' % (field_primary_key, ', '.join(escaped_fields), table_name)
+        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (table_name, ', '.join(escaped_fields), field_primary_key, create_args_string(len(escaped_fields) + 1))
+        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (table_name, ', '.join(map(lambda f: '`%s`=?' % (field_dict.get(f).name or f), field_key_list)), field_primary_key)
+        attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (table_name, field_primary_key)
         return type.__new__(mcs, name, bases, attrs)
 
 
@@ -264,6 +298,16 @@ class Model(dict, metaclass=ModelMetaclass):
         rows = await execute(self.__delete__, args)
         if rows != 1:
             logging.warn('failed to remove by primary key: affected rows: %s' % rows)
+
+
+class User(Model):
+    __table__ = 'users'
+
+    id = IntegerField(primary_key=True)
+    name = StringField()
+
+
+user = User(id=123, name='Michael')
 
 
 """
