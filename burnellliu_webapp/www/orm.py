@@ -7,8 +7,6 @@ import aiomysql
 
 __author__ = 'Burnell Liu'
 
-logging.basicConfig(level=logging.INFO)
-
 
 def log_sql(sql, args=()):
     logging.info('SQL: [%s] args: %s' % (sql, args or []))
@@ -194,19 +192,25 @@ class ModelMetaclass(type):
             attrs.pop(k)
 
         escaped_fields = list(map(lambda f: '`%s`' % f, field_key_list))
-        attrs['__mappings__'] = field_dict # 保存属性和列的映射关系
+        attrs['__mappings__'] = field_dict  # 保存属性和列的映射关系
         attrs['__table__'] = table_name
-        attrs['__primary_key__'] = field_primary_key # 主键属性名
-        attrs['__fields__'] = field_key_list # 除主键外的属性名
+        attrs['__primary_key__'] = field_primary_key  # 主键属性名
+        attrs['__fields__'] = field_key_list  # 除主键外的属性名
         attrs['__select__'] = 'select `%s`, %s from `%s`' % (field_primary_key, ', '.join(escaped_fields), table_name)
-        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (table_name, ', '.join(escaped_fields), field_primary_key, create_args_string(len(escaped_fields) + 1))
-        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (table_name, ', '.join(map(lambda f: '`%s`=?' % (field_dict.get(f).name or f), field_key_list)), field_primary_key)
+        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % \
+                              (table_name, ', '.join(escaped_fields),
+                               field_primary_key, create_args_string(len(escaped_fields) + 1))
+        attrs['__update__'] = 'update `%s` set %s where `%s`=?' % \
+                              (table_name, ', '.join(map(lambda f: '`%s`=?' % (field_dict.get(f).name or f),
+                                                         field_key_list)), field_primary_key)
         attrs['__delete__'] = 'delete from `%s` where `%s`=?' % (table_name, field_primary_key)
         return type.__new__(mcs, name, bases, attrs)
 
 
 class Model(dict, metaclass=ModelMetaclass):
-
+    """
+    数据表模型类
+    """
     def __init__(self, **kw):
         super(Model, self).__init__(**kw)
 
@@ -219,10 +223,10 @@ class Model(dict, metaclass=ModelMetaclass):
     def __setattr__(self, key, value):
         self[key] = value
 
-    def getValue(self, key):
+    def get_value(self, key):
         return getattr(self, key, None)
 
-    def getValueOrDefault(self, key):
+    def get_value_or_default(self, key):
         value = getattr(self, key, None)
         if value is None:
             field = self.__mappings__[key]
@@ -233,18 +237,24 @@ class Model(dict, metaclass=ModelMetaclass):
         return value
 
     @classmethod
-    async def findAll(cls, where=None, args=None, **kw):
-        ' find objects by where clause. '
+    async def find_all(cls, where=None, args=None, **kw):
+        """
+        Find objects by where clause.
+        :param where:
+        :param args:
+        :param kw:
+        :return:
+        """
         sql = [cls.__select__]
         if where:
             sql.append('where')
             sql.append(where)
         if args is None:
             args = []
-        orderBy = kw.get('orderBy', None)
-        if orderBy:
+        order_by = kw.get('orderBy', None)
+        if order_by:
             sql.append('order by')
-            sql.append(orderBy)
+            sql.append(order_by)
         limit = kw.get('limit', None)
         if limit is not None:
             sql.append('limit')
@@ -260,9 +270,15 @@ class Model(dict, metaclass=ModelMetaclass):
         return [cls(**r) for r in rs]
 
     @classmethod
-    async def findNumber(cls, selectField, where=None, args=None):
-        ' find number by select and where. '
-        sql = ['select %s _num_ from `%s`' % (selectField, cls.__table__)]
+    async def find_number(cls, select_field, where=None, args=None):
+        """
+        Find number by select and where
+        :param select_field:
+        :param where:
+        :param args:
+        :return:
+        """
+        sql = ['select %s _num_ from `%s`' % (select_field, cls.__table__)]
         if where:
             sql.append('where')
             sql.append(where)
@@ -273,28 +289,32 @@ class Model(dict, metaclass=ModelMetaclass):
 
     @classmethod
     async def find(cls, pk):
-        ' find object by primary key. '
+        """
+        Find object by primary key
+        :param pk:
+        :return:
+        """
         rs = await select('%s where `%s`=?' % (cls.__select__, cls.__primary_key__), [pk], 1)
         if len(rs) == 0:
             return None
         return cls(**rs[0])
 
     async def save(self):
-        args = list(map(self.getValueOrDefault, self.__fields__))
-        args.append(self.getValueOrDefault(self.__primary_key__))
+        args = list(map(self.get_value_or_default, self.__fields__))
+        args.append(self.get_value_or_default(self.__primary_key__))
         rows = await execute(self.__insert__, args)
         if rows != 1:
             logging.warn('failed to insert record: affected rows: %s' % rows)
 
     async def update(self):
-        args = list(map(self.getValue, self.__fields__))
-        args.append(self.getValue(self.__primary_key__))
+        args = list(map(self.get_value, self.__fields__))
+        args.append(self.get_value(self.__primary_key__))
         rows = await execute(self.__update__, args)
         if rows != 1:
             logging.warn('failed to update by primary key: affected rows: %s' % rows)
 
     async def remove(self):
-        args = [self.getValue(self.__primary_key__)]
+        args = [self.get_value(self.__primary_key__)]
         rows = await execute(self.__delete__, args)
         if rows != 1:
             logging.warn('failed to remove by primary key: affected rows: %s' % rows)
@@ -308,6 +328,10 @@ class User(Model):
 
 
 user = User(id=123, name='Michael')
+print(user.__select__)
+print(user.__insert__)
+print(user.__update__)
+print(user.__delete__)
 
 
 """
