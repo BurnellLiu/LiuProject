@@ -416,7 +416,8 @@ private:
             if (diskControllerClass.empty())
                 continue;
 
-            if (diskControllerClass.compare(L"hdc") == 0) // Hard Disk Controller
+            if (diskControllerClass.compare(L"hdc") == 0 ||
+                diskControllerClass.compare(L"HDC") == 0) // Hard Disk Controller
             {
                 diskInfor.IsATA[i] = true;
                 wstring deviceID;
