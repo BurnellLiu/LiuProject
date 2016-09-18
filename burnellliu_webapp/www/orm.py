@@ -232,11 +232,11 @@ class Model(dict, metaclass=ModelMetaclass):
     @classmethod
     async def find_all(cls, where=None, args=None, **kw):
         """
-        Find objects by where clause.
+        查找所有对象
         :param where:
         :param args:
         :param kw:
-        :return:
+        :return: 对象字典数组
         """
         sql = [cls.__select__]
         if where:
@@ -260,7 +260,7 @@ class Model(dict, metaclass=ModelMetaclass):
             else:
                 raise ValueError('Invalid limit value: %s' % str(limit))
         rs = await select(' '.join(sql), args)
-        return [cls(**r) for r in rs]
+        return [dict(**r) for r in rs]
 
     @classmethod
     async def find_number(cls, select_field, where=None, args=None):
