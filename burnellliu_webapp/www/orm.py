@@ -13,7 +13,7 @@ async def create_pool(loop, **kw):
     创建连接池
     :param loop: 事件循环对象
     """
-    logging.info('Create database connection pool...')
+    logging.info('create database connection pool...')
     # 创建一个全局的连接池，每个HTTP请求都可以从连接池中直接获取数据库连接。
     # 使用连接池的好处是不必频繁地打开和关闭数据库连接，而是能复用就尽量复用。
     # 连接池由全局变量__pool存储，缺省情况下将编码设置为utf8，自动提交事务
@@ -48,7 +48,7 @@ async def select(sql, args, size=None):
             if size:
                 rs = await cur.fetchmany(size)
             else:
-                rs = await cur.fetcall()
+                rs = await cur.fetchall()
         return rs
 
 

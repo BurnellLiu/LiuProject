@@ -2,10 +2,10 @@ burnellliu_webapp
 
 1. 开发环境：
   Python 3.5.2
-  第3方库：
-    aiohttp
-    jinja2
-    aiomysql
+  第三方库：
+    aiohttp: WEB框架库
+    jinja2: 前端模板引擎库
+    aiomysql: mysql异步驱动库
 
 2. 项目目录结构
   +- backup/              <--备份目录
