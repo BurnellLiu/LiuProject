@@ -36,12 +36,12 @@ class User(Model):
     __table__ = 'users'
 
     id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
-    email = StringField(ddl='varchar(50)')
-    password = StringField(ddl='varchar(50)')
-    admin = BooleanField()
-    name = StringField(ddl='varchar(50)')
-    image = StringField(ddl='varchar(500)')
-    created_at = FloatField(default=time.time)
+    email = StringField(primary_key=False, default=None, ddl='varchar(50)')
+    password = StringField(primary_key=False, default=None, ddl='varchar(50)')
+    admin = BooleanField(default=False)
+    name = StringField(primary_key=False, default=None, ddl='varchar(50)')
+    image = StringField(primary_key=False, default=None, ddl='varchar(500)')
+    created_at = FloatField(primary_key=False, default=time.time)
 
 
 class Blog(Model):
