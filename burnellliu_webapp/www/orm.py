@@ -40,6 +40,7 @@ async def select(sql, args, size=None):
     :param size: 获取指定数量的记录
     :return:
     """
+    logging.info('SQL: %s' % sql)
     global __pool
     async with __pool.get() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cur:
@@ -233,21 +234,27 @@ class Model(dict, metaclass=ModelMetaclass):
     async def find_all(cls, where=None, args=None, **kw):
         """
         查找所有对象
-        :param where:
+        :param where: 条件限制
         :param args:
-        :param kw:
+        :param kw: 关键字参数, 可以指定order_by和limit
         :return: 对象字典数组
         """
         sql = [cls.__select__]
+
+        # 如果存在条件限制，则添加添加限制到SQL语句中
         if where:
             sql.append('where')
             sql.append(where)
+
         if args is None:
             args = []
-        order_by = kw.get('orderBy', None)
+
+        # 如果存在排序限制，则添加排序限制到SQL语句中
+        order_by = kw.get('order_by', None)
         if order_by:
             sql.append('order by')
             sql.append(order_by)
+
         limit = kw.get('limit', None)
         if limit is not None:
             sql.append('limit')
@@ -259,6 +266,7 @@ class Model(dict, metaclass=ModelMetaclass):
                 args.extend(limit)
             else:
                 raise ValueError('Invalid limit value: %s' % str(limit))
+
         rs = await select(' '.join(sql), args)
         return [dict(**r) for r in rs]
 

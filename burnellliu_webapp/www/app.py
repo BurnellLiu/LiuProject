@@ -19,44 +19,63 @@ __author__ = 'Burnell Liu'
 
 async def logger_factory(app, handler):
     """
-    记录URL日志的中间件, 请求被处理前需要被该中间件进行处理
+    记录URL日志的中间件, 请求被处理前进行写日志
     :param app: WEB应用对象
     :param handler: 处理请求对象
-    :return: 中间件处理函数
+    :return: 中间件处理对象
     """
     async def logger(request):
-        logging.info('request: %s %s' % (request.method, request.path))
+        logging.info('request arrived, method: %s, path: %s' % (request.method, request.path))
         return await handler(request)
     return logger
 
 
 async def response_factory(app, handler):
     """
-    处理响应的中间件, 请求被处理后需要被该中间件进行处理
-    :param app:
-    :param handler:
-    :return:
+    处理响应的中间件, 请求被处理后需要转换为web.Response对象再返回, 以保证满足aiohttp的要求
+    :param app: WEB应用对象
+    :param handler: 处理请求对象
+    :return: 中间件处理对象
     """
     async def response(request):
-        logging.info('response handler...')
+
         r = await handler(request)
+
+        logging.info('response handler...')
+
+        # 如果处理后结果已经是web.Response对象, 则直接返回
         if isinstance(r, web.StreamResponse):
             return r
+
+        # 如果处理后结果是字典对象, 则进行如下处理
         if isinstance(r, dict):
-            template = r.get('__template__')
-            if template is None:
-                resp = web.Response(body=json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__).encode('utf-8'))
+            template_file_name = r.get('__template__')
+
+            # 处理结果字典中不包含__template__则表示直接返回数据，所以需要序列化为json数据
+            # 处理结果字典中包含__template__则表示返回HTML页面
+            if template_file_name is None:
+                json_data = json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__)
+                resp = web.Response(body=json_data.encode('utf-8'))
                 resp.content_type = 'application/json;charset=utf-8'
                 return resp
             else:
-                resp = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
+                templating_env = app['__templating__']
+                template = templating_env.get_template(template_file_name)
+                resp = web.Response(body=template.render(**r).encode('utf-8'))
                 resp.content_type = 'text/html;charset=utf-8'
                 return resp
+
     return response
 
 
 def init_jinja2(app, **kw):
+    """
+    初始化前端模板库(jinja2)
+    :param app: WEB应用对象
+    :param kw: 关键字参数
+    """
     logging.info('init jinja2...')
+
     options = dict(
         autoescape=kw.get('autoescape', True),
         block_start_string=kw.get('block_start_string', '{%'),
@@ -65,19 +84,30 @@ def init_jinja2(app, **kw):
         variable_end_string=kw.get('variable_end_string', '}}'),
         auto_reload=kw.get('auto_reload', True)
     )
+
+    # 设置前端模板库路径和其他参数
     path = kw.get('path', None)
     if path is None:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
     logging.info('set jinja2 template path: %s' % path)
     env = Environment(loader=FileSystemLoader(path), **options)
+
+    # 设置jinja2的过滤器
     filters = kw.get('filters', None)
     if filters is not None:
         for name, f in filters.items():
             env.filters[name] = f
+
+    # 保存jinja2环境实例
     app['__templating__'] = env
 
 
 def datetime_filter(t):
+    """
+    时间过滤器, 格式化日期
+    :param t: 日期值, 该值为浮点数
+    :return: 格式化后的日期字符串
+    """
     delta = int(time.time() - t)
     if delta < 60:
         return u'1分钟前'
@@ -108,10 +138,10 @@ async def app_init(event_loop):
     # 创建网站应用对象
     # middlewares 接收一个列表，列表的元素就是拦截器函数
     # aiohttp内部循环里以倒序分别将url处理函数用拦截器装饰一遍
-    # 最后再返回经过全部拦截器装饰过的函数, 这样最终调用 url 处理函数之前或之后就可以进行一些额外的处理啦。
+    # 最后再返回经过全部拦截器装饰过的函数, 这样最终调用url处理函数之前或之后就可以进行一些额外的处理
     web_app = web.Application(loop=event_loop, middlewares=[logger_factory, response_factory])
 
-    # 初始化前端模板
+    # 初始化前端模板, 指定的过滤器函数可以在模板文件中使用
     init_jinja2(web_app, filters=dict(datetime=datetime_filter))
 
     # 添加路由函数
