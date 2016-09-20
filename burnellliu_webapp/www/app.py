@@ -41,7 +41,7 @@ async def response_factory(app, handler):
 
         r = await handler(request)
 
-        logging.info('response handler...')
+        logging.info('response handler: %s' % r)
 
         # 如果处理后结果已经是web.Response对象, 则直接返回
         if isinstance(r, web.StreamResponse):
