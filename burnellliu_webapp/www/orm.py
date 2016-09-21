@@ -38,9 +38,9 @@ async def select(sql, args, size=None):
     :param sql: SQL语句
     :param args: SQL参数
     :param size: 获取指定数量的记录
-    :return:
+    :return: 条目
     """
-    logging.info('SQL: %s' % sql)
+    logging.info('Sql: %s Args: %s Size:%s' % (sql, args, size))
     global __pool
     async with __pool.get() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cur:
@@ -61,6 +61,7 @@ async def execute(sql, args, autocommit=True):
     :param autocommit: 是否自动提交
     :return: 受影响的行数
     """
+    logging.info('Sql: %s Args: %s Autocommit:%s' % (sql, args, autocommit))
     async with __pool.get() as conn:
         if not autocommit:
             await conn.begin()
@@ -218,15 +219,28 @@ class Model(dict, metaclass=ModelMetaclass):
         self[key] = value
 
     def get_value(self, key):
+        """
+        获取指定键对象的属性值, 如果不存在则返回None
+        :param key: 键名称
+        :return: 属性值
+        """
         return getattr(self, key, None)
 
     def get_value_or_default(self, key):
+        """
+        获取指定键对应的属性值, 当没有设置该属性值时, 则使用默认值
+        :param key: 键名称
+        :return: 属性值
+        """
         value = getattr(self, key, None)
+
+        # 未指定则使用默认值
         if value is None:
             field = self.__mappings__[key]
+            # 如果默认值为函数对象, 则调用函数生成默认值
+            # 该机制在生成默认ID时很有用, 可使用函数生成不同的ID
             if field.default is not None:
                 value = field.default() if callable(field.default) else field.default
-                logging.debug('using default value for %s: %s' % (key, str(value)))
                 setattr(self, key, value)
         return value
 
@@ -235,7 +249,7 @@ class Model(dict, metaclass=ModelMetaclass):
         """
         查找所有对象
         :param where: 条件限制
-        :param args:
+        :param args: 参数值
         :param kw: 关键字参数, 可以指定order_by和limit
         :return: 对象字典数组
         """
@@ -301,8 +315,13 @@ class Model(dict, metaclass=ModelMetaclass):
         return cls(**rs[0])
 
     async def save(self):
+        """
+        保存数据到数据库中
+        """
+        # 获取当前实例的属性值或默认属性值
         args = list(map(self.get_value_or_default, self.__fields__))
         args.append(self.get_value_or_default(self.__primary_key__))
+
         rows = await execute(self.__insert__, args)
         if rows != 1:
             logging.warning('failed to insert record: affected rows: %s' % rows)

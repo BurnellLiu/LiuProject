@@ -13,31 +13,34 @@ from aiohttp import web
 
 from config import configs
 from coreweb import get, post
-from models import User, Comment, Blog, next_id
+from models import User, Comment, Blog, generate_id
 from apis import APIError, APIValueError, APIResourceNotFoundError
 
 __author__ = 'Burnell Liu'
 
-COOKIE_NAME = 'awesession'
-_COOKIE_KEY = configs.session.secret
 
-
-def user2cookie(user, max_age):
+def generate_user_cookie(user, max_age):
     """
-    Generate cookie str by user.
-    :param user:
-    :param max_age:
-    :return:
+    根据用户信息生成COOKIE
+    :param user: 用户
+    :param max_age: COOKIE有效时间
+    :return: COOKIE字符串
     """
-    # build cookie string by: id-expires-sha1
+    # 过期时间
     expires = str(int(time.time() + max_age))
-    s = '%s-%s-%s-%s' % (user.id, user.password, expires, _COOKIE_KEY)
-    L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
-    return '-'.join(L)
+    cookie_key = configs.session.secret
+    mix_str = '%s-%s-%s-%s' % (user.id, user.password, expires, cookie_key)
+    items = [user.id, expires, hashlib.sha1(mix_str.encode('utf-8')).hexdigest()]
+    return '-'.join(items)
 
 
 @get('/')
 async def index(request):
+    """
+    WEB APP首页路由函数
+    :param request:
+    :return:
+    """
     summary = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, ' \
               'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     blogs = [
@@ -53,17 +56,28 @@ async def index(request):
 
 @get('/register')
 def register():
+    """
+    用户注册路由函数
+    :return:
+    """
     return {
         '__template__': 'register.html'
     }
 
 
-_RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
-_RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
-
-
 @post('/api/users')
 async def api_register_user(*, email, name, password):
+    """
+    用户注册post数据路由函数
+    :param email: 用户邮箱
+    :param name: 用户名
+    :param password: 密码, 传送过来的密码值为: 用户邮箱混合原始密码进行SHA1加密
+    :return:
+    """
+    _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
+    _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
+
+    # 检查用户数据是否合法
     if not name or not name.strip():
         raise APIValueError('name')
     if not email or not _RE_EMAIL.match(email):
@@ -71,21 +85,30 @@ async def api_register_user(*, email, name, password):
     if not password or not _RE_SHA1.match(password):
         raise APIValueError('password')
 
+    # 检查用户邮箱是否已经被注册
     users = await User.find_all(where='email=?', args=[email])
     if len(users) > 0:
-        raise APIError('register:failed', 'email', 'Email is already in use.')
-    uid = next_id()
-    sha1_password = '%s:%s' % (uid, password)
-    user = User(id=uid,
-                name=name.strip(),
-                email=email,
-                password=hashlib.sha1(sha1_password.encode('utf-8')).hexdigest(),
-                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' %
-                      hashlib.md5(email.encode('utf-8')).hexdigest())
+        raise APIError('register:failed', 'email', u'邮箱已经被使用')
+
+    # 生成用户ID, 并且混合用户ID和密码进行SHA1加密
+    uid = generate_id()
+    uid_password = '%s:%s' % (uid, password)
+    sha1_password = hashlib.sha1(uid_password.encode('utf-8')).hexdigest()
+
+    # 生成头像图片URL
+    gravatar_url = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest()
+
+    # 将新用户数据保存到数据库中
+    user = User(id=uid, name=name.strip(), email=email, password=sha1_password, image=gravatar_url)
     await user.save()
-    # make session cookie:
+
+    # 生成COOKIE
+    cookie = generate_user_cookie(user, 86400)
+    cookie_name = 'BL_TEK_SESSION'
+
+    # 生成响应消息
     r = web.Response()
-    r.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400, httponly=True)
+    r.set_cookie(cookie_name, cookie, max_age=86400, httponly=True)
     user.password = '******'
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
@@ -95,7 +118,7 @@ async def api_register_user(*, email, name, password):
 @get('/api/users')
 async def api_get_user():
     """
-    获取用户数据API路由函数
+    WEB API: 获取用户数据路由函数
     :return: 用户数据字典
     """
     users = await User.find_all(order_by='created_at desc')

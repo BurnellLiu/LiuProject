@@ -125,6 +125,7 @@ class RequestHandler(object):
     """
     请求处理类
     该类实例为可调用对象（函数）
+    该类目的就是从路由函数中分析其需要接收的参数，从request中获取必要的参数，调用路由函数
     """
 
     def __init__(self, fn):
@@ -141,6 +142,8 @@ class RequestHandler(object):
 
     async def __call__(self, request):
         kw = None
+        # 如果路由函数包含关键字参数或者命名关键字参数或者没有默认值的命名关键字参数
+        # 则我们需要组合出参数交给路由函数
         if self._has_var_kw_arg or self._has_named_kw_args or self._required_kw_args:
             if request.method == 'POST':
                 if not request.content_type:
@@ -166,8 +169,8 @@ class RequestHandler(object):
         if kw is None:
             kw = dict(**request.match_info)
         else:
+            # 如果路由函数只包含命名关键字参数, 则我们需要从kw中移除其他参数
             if not self._has_var_kw_arg and self._named_kw_args:
-                # remove all unamed kw:
                 copy = dict()
                 for name in self._named_kw_args:
                     if name in kw:
@@ -180,11 +183,13 @@ class RequestHandler(object):
                 kw[k] = v
         if self._has_request_arg:
             kw['request'] = request
-        # check required kw:
+
+        # 检查是否命名关键字参数都被填充
         if self._required_kw_args:
             for name in self._required_kw_args:
-                if not name in kw:
+                if not (name in kw):
                     return web.HTTPBadRequest('Missing argument: %s' % name)
+
         logging.info('call route with args: %s' % str(kw))
         try:
             r = await self._func(**kw)

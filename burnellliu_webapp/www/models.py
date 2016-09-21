@@ -9,9 +9,9 @@ from orm import Model, StringField, BooleanField, FloatField, TextField
 __author__ = 'Burnell Liu'
 
 
-def next_id():
+def generate_id():
     """
-    创建随机id
+    生成随机id
     """
     return '%015d%s000' % (int(time.time() * 1000), uuid.uuid4().hex)
 
@@ -35,7 +35,7 @@ class User(Model):
     # 定义表名称
     __table__ = 'users'
 
-    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    id = StringField(primary_key=True, default=generate_id, ddl='varchar(50)')
     email = StringField(primary_key=False, default=None, ddl='varchar(50)')
     password = StringField(primary_key=False, default=None, ddl='varchar(50)')
     admin = BooleanField(default=False)
@@ -62,7 +62,7 @@ class Blog(Model):
     """
     __table__ = 'blogs'
 
-    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    id = StringField(primary_key=True, default=generate_id, ddl='varchar(50)')
     user_id = StringField(ddl='varchar(50)')
     user_name = StringField(ddl='varchar(50)')
     user_image = StringField(ddl='varchar(500)')
@@ -89,7 +89,7 @@ class Comment(Model):
     """
     __table__ = 'comments'
 
-    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    id = StringField(primary_key=True, default=generate_id, ddl='varchar(50)')
     blog_id = StringField(ddl='varchar(50)')
     user_id = StringField(ddl='varchar(50)')
     user_name = StringField(ddl='varchar(50)')
