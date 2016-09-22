@@ -16,6 +16,7 @@ configs = {
         'database': 'bdm240853593_db'
     },
     'session': {
-        'secret': 'AwEsOmE'
+        'secret': 'AwEsOmE',
+        'cookie_name': 'BL_TEK_SESSION'
     }
 }
