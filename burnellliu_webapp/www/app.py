@@ -6,15 +6,51 @@ import asyncio
 import os
 import json
 import time
+import hashlib
 
 from aiohttp import web
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
+from config import configs
+from models import User
+
 import orm
 import coreweb
 
 __author__ = 'Burnell Liu'
+
+
+async def parse_cookie(cookie_str):
+    """
+    解析COOKIE字符串
+    :param cookie_str: COOKIE字符串
+    :return: 成功返回user对象, 失败返回None
+    """
+    if not cookie_str:
+        return None
+    try:
+        str_list = cookie_str.split('-')
+        if len(str_list) != 3:
+            return None
+        uid, expires, sha1 = str_list
+        if int(expires) < time.time():
+            return None
+        user = await User.find(uid)
+        if user is None:
+            return None
+
+        cookie_key = configs.session.secret
+        s = '%s-%s-%s-%s' % (uid, user.password, expires,cookie_key)
+        if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest():
+            logging.info('parse cookie fail: invalid sha1')
+            return None
+        user['password'] = '******'
+        return user
+
+    except Exception as e:
+        logging.exception(e)
+        return None
 
 
 async def logger_factory(app, handler):
@@ -28,6 +64,33 @@ async def logger_factory(app, handler):
         logging.info('request arrived, method: %s, path: %s' % (request.method, request.path))
         return await handler(request)
     return logger
+
+
+async def auth_factory(app, handler):
+    """
+    验证登录的中间件, 请求被处理前进行登录验证
+    :param app: WEB英语对象
+    :param handler: 处理请求对象
+    :return: 中间件处理对象
+    """
+    async def auth(request):
+        logging.info('check user: %s %s' % (request.method, request.path))
+        request.__user__ = None
+
+        # 从COOKIE中解析出用户对象, 并且保存在请求对象中
+        cookie_name = configs.session.cookie_name
+        cookie_str = request.cookies.get(cookie_name)
+        if cookie_str:
+            user = await parse_cookie(cookie_str)
+            if user:
+                logging.info('set current user: %s' % user.email)
+                request.__user__ = user
+
+        # 针对管理页面, 需要验证是否是管理员
+        if request.path.startswith('/manage/') and (request.__user__ is None or not request.__user__.admin):
+            return web.HTTPFound('/signin')
+        return await handler(request)
+    return auth
 
 
 async def response_factory(app, handler):
@@ -59,6 +122,8 @@ async def response_factory(app, handler):
                 resp.content_type = 'application/json;charset=utf-8'
                 return resp
             else:
+                # 从请求中取出用户信息
+                r['__user__'] = request.__user__
                 templating_env = app['__templating__']
                 template = templating_env.get_template(template_file_name)
                 resp = web.Response(body=template.render(**r).encode('utf-8'))
@@ -139,7 +204,7 @@ async def app_init(event_loop):
     # middlewares 接收一个列表，列表的元素就是拦截器函数
     # aiohttp内部循环里以倒序分别将url处理函数用拦截器装饰一遍
     # 最后再返回经过全部拦截器装饰过的函数, 这样最终调用url处理函数之前或之后就可以进行一些额外的处理
-    web_app = web.Application(loop=event_loop, middlewares=[logger_factory, response_factory])
+    web_app = web.Application(loop=event_loop, middlewares=[logger_factory, auth_factory,response_factory])
 
     # 初始化前端模板, 指定的过滤器函数可以在模板文件中使用
     init_jinja2(web_app, filters=dict(datetime=datetime_filter))
