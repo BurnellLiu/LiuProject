@@ -305,14 +305,14 @@ class Model(dict, metaclass=ModelMetaclass):
     @classmethod
     async def find(cls, pk):
         """
-        Find object by primary key
-        :param pk:
-        :return:
+        通过主键查找对象
+        :param pk: 主键
+        :return: 属性对象字典
         """
         rs = await select('%s where `%s`=?' % (cls.__select__, cls.__primary_key__), [pk], 1)
         if len(rs) == 0:
             return None
-        return cls(**rs[0])
+        return dict(**rs[0])
 
     async def save(self):
         """

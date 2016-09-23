@@ -14,9 +14,20 @@ from aiohttp import web
 from config import configs
 from coreweb import get, post
 from models import User, Comment, Blog, generate_id
-from apis import APIError, APIValueError, APIResourceNotFoundError
+from apis import Page, APIError, APIValueError, APIResourceNotFoundError, APIPermissionError
 
 __author__ = 'Burnell Liu'
+
+
+def get_page_index(page_str):
+    p = 1
+    try:
+        p = int(page_str)
+    except ValueError as e:
+        pass
+    if p < 1:
+        p = 1
+    return p
 
 
 @get('/')
@@ -75,13 +86,40 @@ def signout(request):
     return r
 
 
+@get('/manage/blogs')
+def manage_blogs(*, page='1'):
+    """
+    管理博客路由函数
+    :param page:
+    :return:
+    """
+    return {
+        '__template__': 'manage_blogs.html',
+        'page_index': get_page_index(page)
+    }
+
+
 @get('/manage/blogs/create')
 def manage_create_blog():
+    """
+    创建博客路由函数
+    :return:
+    """
     return {
         '__template__': 'manage_blog_edit.html',
         'id': '',
         'action': '/api/blogs'
     }
+
+
+def check_admin(request):
+    """
+    检查是否是管理员用户
+    :param request: 请求对象
+    :return: 如果当前用户不是管理员则抛出异常
+    """
+    if request.__user__ is None or not request.__user__['admin']:
+        raise APIPermissionError()
 
 
 def generate_user_cookie(user, max_age):
@@ -202,3 +240,35 @@ async def api_register_user(*, email, name, password):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
 
+
+@get('/api/blogs')
+async def api_blogs(*, page='1'):
+    page_index = get_page_index(page)
+    num = await Blog.find_number('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, blogs=())
+    blogs = await Blog.find_all(orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, blogs=blogs)
+
+
+@post('/api/blogs')
+async def api_create_blog(request, *, name, summary, content):
+    check_admin(request)
+    if not name or not name.strip():
+        raise APIValueError('name', u'博客名不能为空')
+
+    if not summary or not summary.strip():
+        raise APIValueError('summary', u'摘要不能为空')
+
+    if not content or not content.strip():
+        raise APIValueError('content', u'内容不能为空')
+
+    blog = Blog(user_id=request.__user__['id'],
+                user_name=request.__user__['name'],
+                user_image=request.__user__['image'],
+                name=name.strip(),
+                summary=summary.strip(),
+                content=content.strip())
+    await blog.save()
+    return blog

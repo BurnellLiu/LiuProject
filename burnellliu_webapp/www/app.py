@@ -41,7 +41,7 @@ async def parse_cookie(cookie_str):
             return None
 
         cookie_key = configs.session.secret
-        s = '%s-%s-%s-%s' % (uid, user.password, expires,cookie_key)
+        s = '%s-%s-%s-%s' % (uid, user['password'], expires, cookie_key)
         if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest():
             logging.info('parse cookie fail: invalid sha1')
             return None
@@ -83,11 +83,11 @@ async def auth_factory(app, handler):
         if cookie_str:
             user = await parse_cookie(cookie_str)
             if user:
-                logging.info('set current user: %s' % user.email)
+                logging.info('set current user: %s' % user['email'])
                 request.__user__ = user
 
         # 针对管理页面, 需要验证是否是管理员
-        if request.path.startswith('/manage/') and (request.__user__ is None or not request.__user__.admin):
+        if request.path.startswith('/manage/') and (request.__user__ is None or not request.__user__['admin']):
             return web.HTTPFound('/signin')
         return await handler(request)
     return auth
