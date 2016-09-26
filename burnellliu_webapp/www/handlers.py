@@ -11,12 +11,20 @@ import asyncio
 
 from aiohttp import web
 
+import markdown2
+
 from config import configs
 from coreweb import get, post
 from models import User, Comment, Blog, generate_id
 from apis import Page, APIError, APIValueError, APIResourceNotFoundError, APIPermissionError
 
 __author__ = 'Burnell Liu'
+
+
+def text2html(text):
+    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'),
+                filter(lambda s: s.strip() != '', text.split('\n')))
+    return ''.join(lines)
 
 
 def get_page_index(page_str):
@@ -33,7 +41,8 @@ def get_page_index(page_str):
 @get('/')
 async def index(*, page='1'):
     """
-    :param page:
+    WEB APP首页路由函数
+    :param page: 博客页索引
     :return:
     """
     page_index = get_page_index(page)
@@ -42,7 +51,8 @@ async def index(*, page='1'):
     if num == 0:
         blogs = []
     else:
-        blogs = await Blog.find_all(orderBy='created_at desc', limit=(page.offset, page.limit))
+        # 以创建时间降序的方式查找指定的博客
+        blogs = await Blog.find_all(order_by='created_at desc', limit=(page.offset, page.limit))
     return {
         '__template__': 'blogs.html',
         'page': page,
@@ -50,10 +60,32 @@ async def index(*, page='1'):
     }
 
 
+@get('/blog/{blog_id}')
+async def get_blog(blog_id):
+    """
+    博客详细页面路由函数
+    :param blog_id: 博客ID
+    :return:
+    """
+    # 根据博客ID找到博客详细内容
+    blog = await Blog.find(blog_id)
+
+    # 找到指定博客ID的博客的评论
+    comments = await Comment.find_all('blog_id=?', [blog_id], orderBy='created_at desc')
+    for c in comments:
+        c.html_content = text2html(c.content)
+    blog.html_content = markdown2.markdown(blog.content)
+    return {
+        '__template__': 'blog.html',
+        'blog': blog,
+        'comments': comments
+    }
+
+
 @get('/register')
 def register():
     """
-    用户注册路由函数
+    用户注册页面路由函数
     :return:
     """
     return {
@@ -64,7 +96,7 @@ def register():
 @get('/signin')
 def signin():
     """
-    用户登录路由函数
+    用户登录页面路由函数
     """
     return {
         '__template__': 'signin.html'
@@ -86,10 +118,23 @@ def signout(request):
     return r
 
 
+@get('/manage/users')
+def manage_users(*, page='1'):
+    """
+    用户管理页面路由函数
+    :param page:
+    :return:
+    """
+    return {
+        '__template__': 'manage_users.html',
+        'page_index': get_page_index(page)
+    }
+
+
 @get('/manage/blogs')
 def manage_blogs(*, page='1'):
     """
-    管理博客路由函数
+    管理博客页面路由函数
     :param page:
     :return:
     """
@@ -102,13 +147,40 @@ def manage_blogs(*, page='1'):
 @get('/manage/blogs/create')
 def manage_create_blog():
     """
-    创建博客路由函数
+    创建博客页面路由函数
     :return:
     """
     return {
         '__template__': 'manage_blog_edit.html',
         'id': '',
         'action': '/api/blogs'
+    }
+
+
+@get('/manage/blogs/edit')
+def manage_edit_blog(*, id):
+    """
+    编辑博客页面路由函数
+    :param id: 博客ID
+    :return:
+    """
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': id,
+        'action': '/api/blogs/%s' % id
+    }
+
+
+@get('/manage/comments')
+def manage_comments(*, page='1'):
+    """
+    管理评论页面路由函数
+    :param page: 页面索引
+    :return:
+    """
+    return {
+        '__template__': 'manage_comments.html',
+        'page_index': get_page_index(page)
     }
 
 
@@ -242,7 +314,12 @@ async def api_register_user(*, email, name, password):
 
 
 @get('/api/blogs')
-async def api_blogs(*, page='1'):
+async def api_get_blogs(*, page='1'):
+    """
+    获取指定页面的博客数据函数
+    :param page: 页面索引
+    :return:
+    """
     page_index = get_page_index(page)
     num = await Blog.find_number('count(id)')
     p = Page(num, page_index)
@@ -255,7 +332,7 @@ async def api_blogs(*, page='1'):
 @get('/api/blogs/{blog_id}')
 async def api_get_blog(*, blog_id):
     """
-    获取指定id的博客数据
+    获取指定ID的博客数据函数
     :param blog_id: 指定的博客id
     :return: 博客数据
     """
@@ -265,6 +342,14 @@ async def api_get_blog(*, blog_id):
 
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
+    """
+    创建博客API函数
+    :param request: 请求
+    :param name: 博客名称
+    :param summary: 博客摘要
+    :param content: 博客内容
+    :return:
+    """
     check_admin(request)
     if not name or not name.strip():
         raise APIValueError('name', u'博客名不能为空')
@@ -283,3 +368,107 @@ async def api_create_blog(request, *, name, summary, content):
                 content=content.strip())
     await blog.save()
     return blog
+
+
+@post('/api/blogs/{blog_id}')
+async def api_update_blog(blog_id, request, *, name, summary, content):
+    """
+    更新博客API函数
+    :param blog_id: 博客ID
+    :param request: 请求
+    :param name: 博客名
+    :param summary: 博客摘要
+    :param content: 博客内容
+    :return:
+    """
+    check_admin(request)
+    blog = await Blog.find(blog_id)
+    if not name or not name.strip():
+        raise APIValueError('name', u'博客名不能为空')
+    if not summary or not summary.strip():
+        raise APIValueError('summary', u'博客摘要不能为空')
+    if not content or not content.strip():
+        raise APIValueError('content', u'博客内容不能为空')
+
+    blog.name = name.strip()
+    blog.summary = summary.strip()
+    blog.content = content.strip()
+    await blog.update()
+    return blog
+
+
+@post('/api/blogs/{blog_id}/delete')
+async def api_delete_blog(request, *, blog_id):
+    """
+    删除博客API函数
+    :param request: 请求
+    :param blog_id: 博客ID
+    :return:
+    """
+    check_admin(request)
+    blog = await Blog.find(blog_id)
+    await blog.remove()
+    return dict(id=blog_id)
+
+
+@get('/api/comments')
+async def api_get_comments(*, page='1'):
+    """
+    获取评论API函数
+    :param page: 页面索引
+    :return:
+    """
+    page_index = get_page_index(page)
+    num = await Comment.find_number('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, comments=())
+    comments = await Comment.find_all(orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, comments=comments)
+
+
+@post('/api/blogs/{blog_id}/comments')
+async def api_create_comment(blog_id, request, *, content):
+    """
+    创建评论API函数
+    :param blog_id: 博客ID
+    :param request: 请求
+    :param content: 评论内容
+    :return:
+    """
+    user = request.__user__
+    if user is None:
+        raise APIPermissionError(u'请先登录')
+
+    if not content or not content.strip():
+        raise APIValueError('content', u'评论内容不能为空')
+
+    blog = await Blog.find(blog_id)
+    if blog is None:
+        raise APIResourceNotFoundError('Blog', u'评论的博客不存在')
+
+    comment = Comment(blog_id=blog.id,
+                      user_id=user.id,
+                      user_name=user.name,
+                      user_image=user.image,
+                      content=content.strip())
+    await comment.save()
+    return comment
+
+
+@post('/api/comments/{id}/delete')
+async def api_delete_comment(id, request):
+    """
+    删除评论API函数
+    :param id: 评论ID
+    :param request: 请求
+    :return:
+    """
+    check_admin(request)
+    c = await Comment.find(id)
+    if c is None:
+        raise APIResourceNotFoundError('Comment', u'该评论不存在')
+    await c.remove()
+    return dict(id=id)
+
+

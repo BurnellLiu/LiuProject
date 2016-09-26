@@ -282,16 +282,16 @@ class Model(dict, metaclass=ModelMetaclass):
                 raise ValueError('Invalid limit value: %s' % str(limit))
 
         rs = await select(' '.join(sql), args)
-        return [dict(**r) for r in rs]
+        return [cls(**r) for r in rs]
 
     @classmethod
     async def find_number(cls, select_field, where=None, args=None):
         """
-        Find number by select and where
-        :param select_field:
-        :param where:
-        :param args:
-        :return:
+        查找对象数目
+        :param select_field: 查找的字段
+        :param where: 查找条件
+        :param args: 查找参数
+        :return: 数目
         """
         sql = ['select %s _num_ from `%s`' % (select_field, cls.__table__)]
         if where:
@@ -312,7 +312,7 @@ class Model(dict, metaclass=ModelMetaclass):
         rs = await select('%s where `%s`=?' % (cls.__select__, cls.__primary_key__), [pk], 1)
         if len(rs) == 0:
             return None
-        return dict(**rs[0])
+        return cls(**rs[0])
 
     async def save(self):
         """
