@@ -61,7 +61,7 @@ async def index(*, page='1'):
 
 
 @get('/blog/{blog_id}')
-async def get_blog(blog_id):
+async def blog(blog_id):
     """
     博客详细页面路由函数
     :param blog_id: 博客ID
@@ -236,12 +236,16 @@ async def api_user_authenticate(*, email, password):
 
     users = await User.find_all(where='email=?', args=[email])
     if len(users) == 0:
-        raise APIError('authenticate:fail', email, u'邮箱账号不存在')
+        # TODO: APIError第二个参数设置为'invalid email'会导致登录按钮处于旋转状态
+        # TODO: 原因不明
+        raise APIError('authenticate:fail', 'email', u'邮箱账号不存在')
 
     user = users[0]
     sha1_password = generate_sha1_password(user['id'], password)
     if user['password'] != sha1_password:
-        raise APIError('authenticate:fail', 'invalid password', u'密码错误')
+        # TODO: APIError第二个参数设置为'invalid password'会导致登录按钮处于旋转状态
+        # TODO: 原因不明
+        raise APIError('authenticate:fail', 'password', u'密码错误')
 
     cookie_name = configs.session.cookie_name
     r = web.Response()
