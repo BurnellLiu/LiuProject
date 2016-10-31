@@ -30,8 +30,13 @@ protected:
     去掉系统边框和标题栏后导致程序窗口无法移动
     手动处理以下三个事件来实现窗口移动
     */
+    /// @brief 鼠标按下事件
     void mousePressEvent(QMouseEvent *e);
+
+    /// @brief 鼠标移动事件, 只有鼠标处于按下状态时才会触发该事件
     void mouseMoveEvent(QMouseEvent *e);
+
+    /// @brief 鼠标释放事件
     void mouseReleaseEvent(QMouseEvent *e);
 
 private slots:
@@ -57,6 +62,7 @@ private:
     Ui::MainForm ui;
     QSplashScreen m_splashScreen; ///< 启动画面
 
+    bool m_mousePressed; ///< 标志鼠标是否被按下
     QPoint m_mouseLastPos; ///< 最新鼠标位置
 
     HardwareInforPage* m_pHardwareInforPage;

@@ -18,7 +18,7 @@
 #define MAIN_TITLE "BLHWScaner"
 
 // 修改版本时请同时修改资源文件中的版本信息
-#define CURRENT_VERSION "V1.3.4"
+#define CURRENT_VERSION "V1.3.5"
 
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
@@ -26,6 +26,8 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
      ui.setupUi(this);
 
      this->LoadQSS();
+
+     m_mousePressed = false;
 
      QObject::connect(ui.toolButtonHardware, SIGNAL(clicked()), this, SLOT(HardwareInforClicked()));
      QObject::connect(ui.toolButtonTempManagement, SIGNAL(clicked()), this, SLOT(TemperatureClicked()));
@@ -166,11 +168,16 @@ void MainPage::showEvent(QShowEvent* e)
 
 void MainPage::mousePressEvent(QMouseEvent *e)
 {
+    m_mousePressed = true;
     m_mouseLastPos = e->globalPos();  
 }
 
 void MainPage::mouseMoveEvent(QMouseEvent *e)  
 {  
+    if (!m_mousePressed)
+        return;
+
+
     int dx = e->globalX() - m_mouseLastPos.x();  
     int dy = e->globalY() - m_mouseLastPos.y();  
     m_mouseLastPos = e->globalPos();  
@@ -178,9 +185,7 @@ void MainPage::mouseMoveEvent(QMouseEvent *e)
 }  
 void MainPage::mouseReleaseEvent(QMouseEvent *e)  
 {  
-    int dx = e->globalX() - m_mouseLastPos.x();  
-    int dy = e->globalY() - m_mouseLastPos.y();  
-    move(this->x() + dx, this->y() + dy);  
+    m_mousePressed = false; 
 }  
 
 void MainPage::HardwareInforClicked()
