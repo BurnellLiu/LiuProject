@@ -10,6 +10,21 @@ using std::string;
 
 #pragma comment(lib, "unrar.lib")
 
+void DbgPrint(const char *format, ...)
+{
+    string debugInfor = "<BLHWScaner><UpdateInstall> ";
+    
+    va_list args;
+    va_start(args, format);
+    char strBuffer[1024] = {0};
+    vsprintf_s(strBuffer, format, args);
+    va_end(args);
+
+    debugInfor += strBuffer;
+
+    OutputDebugString(debugInfor.c_str());
+}
+
 /// @brief 关闭主进程
 void KillBLHWScaner()
 {
@@ -113,19 +128,22 @@ void StartBLHWScaner()
     CreateProcess(NULL, "..\\BLHWScaner.exe", NULL, NULL, FALSE, 0, NULL, "..\\", &si, &pi);
 }
 
-int main()
+
+int WINAPI WinMain(IN HINSTANCE hInstance, IN HINSTANCE hPrevInstance, IN LPSTR lpCmdLine, IN int nShowCmd )
 {
-    printf("Installing New Version...");
+    DbgPrint("Installing new version");
 
-
+    DbgPrint("Kill main process");
     KillBLHWScaner();
 
     Sleep(200);
 
+    DbgPrint("Decompress rar file");
     DecompressionRarFile();
 
     Sleep(200);
 
+    DbgPrint("Start main process");
     StartBLHWScaner();
 
     return 0;
