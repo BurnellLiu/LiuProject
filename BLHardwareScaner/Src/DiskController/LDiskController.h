@@ -37,7 +37,7 @@ class LIDEDiskController
 public:
     /// @brief 构造函数
     /// @param[in] devicePath 设备路径
-    /// 设备路径格式为(C语言)"////.//DeviceName"
+    /// 设备路径格式为(C语言)"\\\\.\\DeviceName"
     /// 设备名称如: PhysicalDrive0, PhysicalDrive1, ...
     LIDEDiskController(IN const wstring& devicePath);
     ~LIDEDiskController();
