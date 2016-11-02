@@ -1,12 +1,24 @@
 
 #include "PerformanceCounter.h"
 
+#include <vector>
+using std::vector;
+
 #include "Wmi\\LWMISystemClasses.h"
 #include "Wmi\\LWMIHardwareClasses.h"
 
 #include "Memory\\LMemory.h"
 
 #include "Pdh\\LPdh.h"
+
+/// @brief PDH磁盘ID
+/// 在使用PDH获取磁盘信息时, 该结构可以确定一个磁盘
+struct PdhDiskId 
+{
+    wchar_t IdIndex; ///< ID索引, 如0, 1, 2...
+    wstring DeviceId; ///< 设备ID, 如"\\\\.\\PhysicalDrive0"
+    wstring LogicalName; ///< 逻辑磁盘分区名称, 多个分区名称之间用空格隔开, 如"C: D:"
+};
 
 /// @brief 性能计数器实现类
 class CPerformanceCounter
@@ -15,7 +27,7 @@ public:
     /// @brief 构造函数
     CPerformanceCounter()
     {
-
+        this->ScanFixedDiskId(m_fixedDiskIdList);
     }
 
     /// @brief 析构函数
@@ -65,11 +77,39 @@ public:
     }
 
     /// @brief 获取磁盘性能
+    /// 该方法只能获取固定磁盘的性能
     /// @param[in] diskPerformance 存储磁盘性能
     /// @return 成功返回true, 失败返回false
     bool GetDiskPerformance(OUT DiskPerformance& diskPerformance)
     {
-        unsigned int fixedDiskCount = 0;
+        diskPerformance.Count = m_fixedDiskIdList.size();
+        for (unsigned int i = 0; i < m_fixedDiskIdList.size(); i++)
+        {
+            diskPerformance.DiskDriveID[i] = m_fixedDiskIdList[i].DeviceId;
+
+            // Path Sample: "\\PhysicalDisk(0 C: D:)\\% Disk Time"
+            wstring counterPath = L"\\PhysicalDisk(";
+            counterPath += m_fixedDiskIdList[i].IdIndex;
+            counterPath += L' ';
+            counterPath += m_fixedDiskIdList[i].LogicalName;
+            counterPath += L")\\% Disk Time";
+
+            LPdh pdh(counterPath);
+
+            long value = 0;
+            pdh.CollectDataLong(200, value);
+            diskPerformance.UsageRate[i] = (unsigned int)value;
+        }
+
+        return true;
+    }
+
+private:
+    /// @brief 扫描固定磁盘ID
+    /// @param[out] idList 存储ID
+    void ScanFixedDiskId(OUT vector<PdhDiskId>& idList)
+    {
+        idList.clear();
 
         LWMI::LDiskDriveManager diskDriveManager;
 
@@ -82,41 +122,28 @@ public:
                 continue;
             }
 
+            
+            PdhDiskId pdhDiskId;
             wstring deviceId; 
             diskDriveManager.GetDiskDeviceID(i, deviceId);
-            diskPerformance.DiskDriveID[fixedDiskCount] = deviceId;
-            
+            pdhDiskId.DeviceId = deviceId;
+            pdhDiskId.IdIndex = deviceId[deviceId.length()-1];
+
             wstring logicalName;
             diskDriveManager.GetDiskLogicalName(i, logicalName);
-
-            wchar_t idIndex = deviceId[deviceId.length()-1];
             for (unsigned int j = 0; j < logicalName.length(); j++)
             {
                 if (L';' == logicalName[j])
                     logicalName[j] = L' ';
             }
+            pdhDiskId.LogicalName = logicalName;
 
-            // Path Sample: "\\PhysicalDisk(0 C: D:)\\% Disk Time"
-            wstring counterPath = L"\\PhysicalDisk(";
-            counterPath += idIndex;
-            counterPath += L' ';
-            counterPath += logicalName;
-            counterPath += L")\\% Disk Time";
-
-            LPdh pdh(counterPath);
-
-            long value = 0;
-            pdh.CollectDataLong(200, value);
-            diskPerformance.UsageRate[fixedDiskCount] = (unsigned int)value;
-
-            fixedDiskCount++;
+            idList.push_back(pdhDiskId);
         }
-
-        diskPerformance.Count = fixedDiskCount;
-
-        return true;
     }
-    
+
+private:
+    vector<PdhDiskId> m_fixedDiskIdList; ///< 固定磁盘ID列表
 };
 
 PerformanceCounter::PerformanceCounter()

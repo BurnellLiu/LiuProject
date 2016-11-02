@@ -69,6 +69,7 @@ public:
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance);
 
     /// @brief 获取磁盘性能
+    /// 该方法只能获取固定磁盘的性能
     /// @param[in] diskPerformance 存储磁盘性能
     /// @return 成功返回true, 失败返回false
     bool GetDiskPerformance(OUT DiskPerformance& diskPerformance);

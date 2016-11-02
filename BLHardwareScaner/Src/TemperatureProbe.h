@@ -82,6 +82,7 @@ public:
     bool GetGpuTemp(OUT GpuTempInfor& gpuTemp);
 
     /// @brief 获取磁盘温度
+    /// 该方法只能获取SATA(IDE)磁盘的温度
     /// @param[out] diskTemp 存储磁盘温度
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
 private:

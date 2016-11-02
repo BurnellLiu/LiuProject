@@ -2,6 +2,9 @@
 
 #include "TemperatureProbe.h"
 
+#include <vector>
+using std::vector;
+
 #include <Windows.h>
 
 #include "DiskController\\LDiskController.h"
@@ -30,6 +33,8 @@ public:
         m_pGetCpuTemp = (GetCpuTempFun)GetProcAddress(m_hCoreTemp, "GetCpuTemp");
 
         m_pGetGpuTemp = (GetGpuTempFun)GetProcAddress(m_hCoreTemp, "GetGpuTemp");
+
+        this->ScanSataDiskId(m_sataDiskIdList);
 
     }
 
@@ -70,15 +75,15 @@ public:
     }
 
     /// @brief 获取磁盘温度
+    /// 该方法只能获取SATA(IDE)磁盘的温度
     /// @param[out] diskTemp 存储磁盘温度
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp)
     {
         diskTemp.Count = 0;
 
-        for (int i = 0; i < 25; i++)
+        for (unsigned int i = 0; i < m_sataDiskIdList.size(); i++)
         {
-            wchar_t diskDriveID[256] = {0};
-            wsprintfW(diskDriveID, L"\\\\.\\PhysicalDrive%d", i);
+            const wstring& diskDriveID = m_sataDiskIdList[i];
 
             // 打开磁盘控制器
             LIDEDiskController diskController(diskDriveID);
@@ -107,9 +112,37 @@ public:
     }
 
 private:
+    /// @brief 扫描SATA磁盘ID
+    /// 只有SATA才能获取SMART数据, 才能获取到温度
+    /// @param[out] idList 存储磁盘ID
+    void ScanSataDiskId(OUT vector<wstring>& idList)
+    {
+        idList.clear();
+
+        for (int i = 0; i < 25; i++)
+        {
+            wchar_t diskDriveId[256] = {0};
+            wsprintfW(diskDriveId, L"\\\\.\\PhysicalDrive%d", i);
+
+            // 打开磁盘控制器
+            LIDEDiskController diskController(diskDriveId);
+            if (!diskController.DeviceExist())
+                continue;
+
+            // 获取SMART数据
+            unsigned char smartData[362] = {0};
+            if (!diskController.GetSMARTData(smartData))
+                continue;
+
+            idList.push_back(diskDriveId);
+        }
+    }
+
+private:
     GetCpuTempFun m_pGetCpuTemp; ///< 获取CPU温度函数指针
     GetGpuTempFun m_pGetGpuTemp; ///< 获取GPU温度函数指针
     HMODULE m_hCoreTemp; ///< CoreTemp DLL句柄
+    vector<wstring> m_sataDiskIdList; ///< 存储SATA磁盘ID
 };
 
 TemperatureProbe::TemperatureProbe()
