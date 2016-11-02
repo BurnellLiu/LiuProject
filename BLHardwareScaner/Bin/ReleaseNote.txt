@@ -1,6 +1,8 @@
 ﻿************************************
-Project : BLHardwareScaner
+Project : BLHWScaner
 OS Support: Windows7/8/8.1/10 Desktop
+Author: Burnell Liu
+Email: burnell_liu@outlook.com
 
 ************************************
 * Update Log
@@ -12,6 +14,8 @@ XXXX/XX/XX V1.4.0 Release
 4. 不再区分SD卡和U盘, 统一变为可移动磁盘
 5. 磁盘速度测试不再显示没有分区的磁盘
 6. 解决BUG: 在按钮上拖动时, 窗体闪动的问题
+7. 不再显示安装更新时的命令行窗口
+8. 优化磁盘性能和温度获取功能: 不再重复扫描不必要的其他磁盘
 
 2016/08/11 V1.3.0 Release
 1. 增加功能: 显示主磁盘使用率
