@@ -173,14 +173,14 @@
     <ClCompile Include="GeneratedFiles\qrc_UIControlImage.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="App\App.cpp">
-      <Filter>App</Filter>
-    </ClCompile>
     <ClCompile Include="App\Main.cpp">
       <Filter>App</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\TaskScheduler\LTaskScheduler.cpp">
       <Filter>Src\TaskScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="App\AppParam.cpp">
+      <Filter>App</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -318,11 +318,11 @@
     <ClInclude Include="GeneratedFiles\ui_RestartAging.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="App\App.h">
-      <Filter>App</Filter>
-    </ClInclude>
     <ClInclude Include="..\Src\TaskScheduler\LTaskScheduler.h">
       <Filter>Src\TaskScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="App\AppParam.h">
+      <Filter>App</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

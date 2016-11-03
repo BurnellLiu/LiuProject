@@ -104,7 +104,7 @@
     <ClCompile Include="..\Src\Wmi\LWMICoreManager.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMIHardwareClasses.cpp" />
     <ClCompile Include="..\Src\Wmi\LWMISystemClasses.cpp" />
-    <ClCompile Include="App\App.cpp" />
+    <ClCompile Include="App\AppParam.cpp" />
     <ClCompile Include="App\Main.cpp" />
     <ClCompile Include="GeneratedFiles\moc_CameraViewPage.cpp" />
     <ClCompile Include="GeneratedFiles\moc_DiskSpeedPage.cpp" />
@@ -163,7 +163,7 @@
     <ClInclude Include="..\Src\Wmi\LWMICoreManager.h" />
     <ClInclude Include="..\Src\Wmi\LWMIHardwareClasses.h" />
     <ClInclude Include="..\Src\Wmi\LWMISystemClasses.h" />
-    <ClInclude Include="App\App.h" />
+    <ClInclude Include="App\AppParam.h" />
     <ClInclude Include="GeneratedFiles\ui_CameraView.h" />
     <ClInclude Include="GeneratedFiles\ui_DiskSpeed.h" />
     <ClInclude Include="GeneratedFiles\ui_HardwareInfor.h" />

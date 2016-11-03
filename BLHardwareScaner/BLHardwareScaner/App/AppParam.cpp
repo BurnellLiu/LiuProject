@@ -1,16 +1,16 @@
 
-#include "App.h"
+#include "AppParam.h"
 
 #include <QtCore/QString>
 
 #define STRING_PARAM_RESTARTAGING "-RestartAging"
 
-APP_START_MODE LAppStartMode::Get()
+APP_START_MODE LAppParam::GetStartMode()
 {
     return sAppRunMode;
 }
 
-void LAppStartMode::Init(int argc, char *argv[])
+void LAppParam::Init(int argc, char *argv[])
 {
     if (1 == argc)
     {
@@ -35,4 +35,4 @@ void LAppStartMode::Init(int argc, char *argv[])
     return;
 }
 
-APP_START_MODE LAppStartMode::sAppRunMode = APP_NORMAL;
+APP_START_MODE LAppParam::sAppRunMode = APP_NORMAL;

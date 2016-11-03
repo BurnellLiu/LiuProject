@@ -7,7 +7,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
 
-#include "App\\App.h"
+#include "App\\AppParam.h"
 
 #include "HardwareInforPage.h"
 #include "TempManagementPage.h"
@@ -101,9 +101,9 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     ui.stackedWidget->addWidget(m_pTestItemPage);
 
 
-    if (APP_NORMAL == LAppStartMode::Get())
+    if (APP_NORMAL == LAppParam::GetStartMode())
         ui.stackedWidget->setCurrentWidget(m_pHardwareInforPage);
-    else if (APP_RESTARTAGING == LAppStartMode::Get())
+    else if (APP_RESTARTAGING == LAppParam::GetStartMode())
         ui.stackedWidget->setCurrentWidget(m_pTestItemPage);
     else
         ui.stackedWidget->setCurrentWidget(m_pTestItemPage);

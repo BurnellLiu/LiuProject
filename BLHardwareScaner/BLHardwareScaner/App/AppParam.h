@@ -10,13 +10,13 @@ enum APP_START_MODE
     APP_RESTARTAGING ///< 重开机Aging启动模式
 };
 
-/// @brief 程序运行模式类
-class LAppStartMode
+/// @brief 程序参数类
+class LAppParam
 {
 public:
     /// @brief 获取程序启动模式
     /// @return 程序启动模式
-    static APP_START_MODE Get();
+    static APP_START_MODE GetStartMode();
 
 private:
     /// @brief 初始化程序启动模式

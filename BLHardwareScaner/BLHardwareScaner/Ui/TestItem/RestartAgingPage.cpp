@@ -7,7 +7,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QDateTime>
 
-#include "App\\App.h"
+#include "App\\AppParam.h"
 
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\TaskScheduler\\LTaskScheduler.h"
@@ -81,10 +81,10 @@ void RestartAgingPage::showEvent(QShowEvent* e)
 
     sFristShow = false;
 
-    if (APP_NORMAL == LAppStartMode::Get())
+    if (APP_NORMAL == LAppParam::GetStartMode())
         return;
 
-    if (APP_RESTARTAGING == LAppStartMode::Get())
+    if (APP_RESTARTAGING == LAppParam::GetStartMode())
     {
         // 从配置文件中读取信息
         RestartAgingParam testParam;

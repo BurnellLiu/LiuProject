@@ -5,7 +5,7 @@
 #include <QtCore/QFile>
 
 #include "Ui\\MainPage.h"
-#include "App\\App.h"
+#include "App\\AppParam.h"
 #include "..\\Src\\Log\\LLog.h"
 #include "..\\Src\\LAppInstance.h"
 
@@ -64,8 +64,8 @@ int main(int argc, char *argv[])
     QDir::setCurrent(appPath);
 
     // 初始化APP启动模式
-    LAppStartMode::Init(argc, argv);
-    APP_START_MODE startMode = LAppStartMode::Get();
+    LAppParam::Init(argc, argv);
+    APP_START_MODE startMode = LAppParam::GetStartMode();
 
     CheckPath(LOG_PATH);
     // 如果正在进行重开机AGING测试, 则以追加方式打开LOG
