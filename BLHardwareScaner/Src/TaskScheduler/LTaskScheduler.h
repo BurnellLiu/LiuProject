@@ -48,7 +48,7 @@ public:
     bool Principal(IN bool bHighestLevel);
 
     /// @brief 设置触发条件
-    /// 该方法为可选项
+    /// 该方法为必须设置项
     /// @param[in] trigger, 1(启动时触发), 2(登录时触发), 没有默认值
     /// @return 成功返回true, 失败返回false
     bool Trigger(IN unsigned int trigger);
