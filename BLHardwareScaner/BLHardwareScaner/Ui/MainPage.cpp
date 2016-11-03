@@ -17,9 +17,6 @@
 
 #define MAIN_TITLE "BLHWScaner"
 
-// 修改版本时请同时修改资源文件中的版本信息
-#define CURRENT_VERSION "V1.3.6"
-
 MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {   
@@ -47,7 +44,7 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
      this->setWindowIcon(QIcon(":/ControlImage/Main.png"));
 
      QString title = MAIN_TITLE;
-     title += CURRENT_VERSION;
+     title += LAppParam::GetAppVersion();
      this->ui.labelTitle->setText(title);
 
      this->ui.pushButtonUpdate->setVisible(false);
@@ -154,7 +151,7 @@ void MainPage::showEvent(QShowEvent* e)
         this->setFocus(Qt::ActiveWindowFocusReason);
 
         // 检查新版本
-        m_checkNew.SetCurrentVersion(CURRENT_VERSION);
+        m_checkNew.SetCurrentVersion(LAppParam::GetAppVersion());
         m_checkNew.StartCheckAsync();
         m_checkNewTimer.setInterval(1000);
         m_checkNewTimer.start();

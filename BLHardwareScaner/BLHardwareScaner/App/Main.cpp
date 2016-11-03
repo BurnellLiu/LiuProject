@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     QDir::setCurrent(appPath);
 
     // 初始化APP启动模式
-    LAppParam::Init(argc, argv);
+    LAppParam::InitAppParam(argc, argv);
     APP_START_MODE startMode = LAppParam::GetStartMode();
 
     CheckPath(LOG_PATH);

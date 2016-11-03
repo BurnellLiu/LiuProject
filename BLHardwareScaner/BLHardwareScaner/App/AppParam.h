@@ -3,6 +3,8 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include <QtCore/QString>
+
 /// @brief 程序启动模式
 enum APP_START_MODE
 {
@@ -18,14 +20,15 @@ public:
     /// @return 程序启动模式
     static APP_START_MODE GetStartMode();
 
+    /// @brief 获取程序当前版本
+    /// @return 版本信息, 如V1.3.6
+    static QString GetAppVersion();
+
 private:
-    /// @brief 初始化程序启动模式
+    /// @brief 初始化程序参数
     /// @param[in] argc 命令行参数数目
     /// @param[in] argv[] 命令行参数
-    static void Init(int argc, char *argv[]);
-
-    static APP_START_MODE sAppRunMode; ///< 程序启动模式
-
+    static void InitAppParam(int argc, char *argv[]);
     friend int main(int argc, char *argv[]); ///< 设置main函数为友元
 };
 
