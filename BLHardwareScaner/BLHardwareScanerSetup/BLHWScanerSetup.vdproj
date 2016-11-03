@@ -15,13 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_01255E95978E4113953518BE5E69051F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_02A1E4ABC7754BB990DA2CC7C02B41B3"
+        "MsmKey" = "8:_04A94723974342B7BCEBDF0DAA89839A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,13 +33,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_21D64A135E4646FD9166EF830F7394CB"
+        "MsmKey" = "8:_1EDC04B15FA24BF795F5BA3C87B791E0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_22F4B2E37A9C46138B37641809E3B0B7"
+        "MsmKey" = "8:_21D64A135E4646FD9166EF830F7394CB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -64,18 +58,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3F0B2A455FB14CD7A52F54C316FF273C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_435BE08EB70144D09241FE81F2877D9A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_44C0BEEBA019486EB4EED98D89EE10A7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -111,12 +93,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_74C8C05B0E214B008ED297E06068BF61"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -141,6 +117,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9285A60D957C41DB99C4232A99597832"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9CEFF04546024F3DBE7FD92A8F939D03"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -153,7 +135,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9EDAFCE3936A429ABB0B45BCD7244FDE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9F9871212797469F89DAAC058F117498"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ABD2CA6D24A0426F85EAE98FCBB8DB2B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -171,7 +165,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C74B9C3495C24FDF8450D4526C897036"
+        "MsmKey" = "8:_C9D255EBA88046E48D1B03E7EF07DD20"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CD1C080795F948A28EA486291045144F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D21EC8A1A567436A81E4ED42009EA1DD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -184,12 +190,6 @@
         "Entry"
         {
         "MsmKey" = "8:_E2A9092ECFF149FE9F7E49C8033CBB63"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EB2C44A11113410C8FF8CAB96BCD9594"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -244,7 +244,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\BLHWScaner_1.3.5.msi"
+        "OutputFilename" = "8:Release\\BLHWScaner.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -296,32 +296,12 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01255E95978E4113953518BE5E69051F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_04A94723974342B7BCEBDF0DAA89839A"
             {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\TestItemPage.qss"
-            "TargetName" = "8:TestItemPage.qss"
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\RestartAgingPage.qss"
+            "TargetName" = "8:RestartAgingPage.qss"
             "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_02A1E4ABC7754BB990DA2CC7C02B41B3"
-            {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\MainPage.qss"
-            "TargetName" = "8:MainPage.qss"
-            "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -376,12 +356,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21D64A135E4646FD9166EF830F7394CB"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1EDC04B15FA24BF795F5BA3C87B791E0"
             {
-            "SourcePath" = "8:..\\Bin\\Update\\unrar.dll"
-            "TargetName" = "8:unrar.dll"
+            "SourcePath" = "8:..\\Bin\\Config\\Version"
+            "TargetName" = "8:Version"
             "Tag" = "8:"
-            "Folder" = "8:_D90DCA501E814C4381BC40FE7407898A"
+            "Folder" = "8:_29C96F2D693F4A67B7B79B906AEC1C9E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -396,12 +376,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_22F4B2E37A9C46138B37641809E3B0B7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21D64A135E4646FD9166EF830F7394CB"
             {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\RestartAgingPage.qss"
-            "TargetName" = "8:RestartAgingPage.qss"
+            "SourcePath" = "8:..\\Bin\\Update\\unrar.dll"
+            "TargetName" = "8:unrar.dll"
             "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
+            "Folder" = "8:_D90DCA501E814C4381BC40FE7407898A"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -462,46 +442,6 @@
             "TargetName" = "8:WinRing0x64.sys"
             "Tag" = "8:"
             "Folder" = "8:_9F45CCE1702242DA92C2E189A652842E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_435BE08EB70144D09241FE81F2877D9A"
-            {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\TempManagementPage.qss"
-            "TargetName" = "8:TempManagementPage.qss"
-            "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_44C0BEEBA019486EB4EED98D89EE10A7"
-            {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\HardwareInforPage.qss"
-            "TargetName" = "8:HardwareInforPage.qss"
-            "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -616,26 +556,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
-            {
-            "SourcePath" = "8:Src\\msiexec.exe"
-            "TargetName" = "8:msiexec.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74C8C05B0E214B008ED297E06068BF61"
             {
             "SourcePath" = "8:..\\Bin\\msvcp100.dll"
@@ -716,6 +636,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9285A60D957C41DB99C4232A99597832"
+            {
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\HardwareInforPage.qss"
+            "TargetName" = "8:HardwareInforPage.qss"
+            "Tag" = "8:"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9CEFF04546024F3DBE7FD92A8F939D03"
             {
             "SourcePath" = "8:..\\Bin\\Image\\TestItem\\RestartAging.png"
@@ -756,12 +696,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9EDAFCE3936A429ABB0B45BCD7244FDE"
+            {
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\TestItemPage.qss"
+            "TargetName" = "8:TestItemPage.qss"
+            "Tag" = "8:"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F9871212797469F89DAAC058F117498"
             {
             "SourcePath" = "8:..\\Bin\\QtCore4.dll"
             "TargetName" = "8:QtCore4.dll"
             "Tag" = "8:"
             "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ABD2CA6D24A0426F85EAE98FCBB8DB2B"
+            {
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\TempManagementPage.qss"
+            "TargetName" = "8:TempManagementPage.qss"
+            "Tag" = "8:"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -816,12 +796,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C74B9C3495C24FDF8450D4526C897036"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C9D255EBA88046E48D1B03E7EF07DD20"
             {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\CameraViewPage.qss"
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\CameraViewPage.qss"
             "TargetName" = "8:CameraViewPage.qss"
             "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD1C080795F948A28EA486291045144F"
+            {
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\DiskSpeedPage.qss"
+            "TargetName" = "8:DiskSpeedPage.qss"
+            "Tag" = "8:"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D21EC8A1A567436A81E4ED42009EA1DD"
+            {
+            "SourcePath" = "8:..\\Bin\\Config\\QSS\\Default\\MainPage.qss"
+            "TargetName" = "8:MainPage.qss"
+            "Tag" = "8:"
+            "Folder" = "8:_356D10C6548442B1BFED2A5A78742DA4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -862,26 +882,6 @@
             "TargetName" = "8:TestItem.png"
             "Tag" = "8:"
             "Folder" = "8:_3FB0FE1B9A08483EB8AD2ECB4059BCEE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB2C44A11113410C8FF8CAB96BCD9594"
-            {
-            "SourcePath" = "8:..\\Bin\\QSS\\Default\\DiskSpeedPage.qss"
-            "TargetName" = "8:DiskSpeedPage.qss"
-            "Tag" = "8:"
-            "Folder" = "8:_B8557B5F271C47DE84C3019BE1EF45AB"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -965,6 +965,39 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_29C96F2D693F4A67B7B79B906AEC1C9E"
+                    {
+                    "Name" = "8:Config"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_DB647E90CFDA4A1E955C8BB007A9BE94"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_25FBA0764FE94A8ABF65F7E847A0B93F"
+                            {
+                            "Name" = "8:QSS"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_CF0CA5A3A6604122BFDD3D4A43804720"
+                                "Folders"
+                                {
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_356D10C6548442B1BFED2A5A78742DA4"
+                                    {
+                                    "Name" = "8:Default"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_5A8ECA4C63FD4999A2A9B31B3F9047A1"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_3FB0FE1B9A08483EB8AD2ECB4059BCEE"
                     {
                     "Name" = "8:Image"
@@ -1009,28 +1042,6 @@
                         {
                         }
                     }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_C9A369754D054AF7A12D063F2BD5AFAE"
-                    {
-                    "Name" = "8:QSS"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_7DAC84873E854F00B107F272A7D8FBD9"
-                        "Folders"
-                        {
-                            "{9EF0B969-E518-4E46-987F-47570745A589}:_B8557B5F271C47DE84C3019BE1EF45AB"
-                            {
-                            "Name" = "8:Default"
-                            "AlwaysCreate" = "11:FALSE"
-                            "Condition" = "8:"
-                            "Transitive" = "11:FALSE"
-                            "Property" = "8:_E5D2647C049147029E174ED846CC6510"
-                                "Folders"
-                                {
-                                }
-                            }
-                        }
-                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_D90DCA501E814C4381BC40FE7407898A"
                     {
                     "Name" = "8:Update"
@@ -1072,14 +1083,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BLHWScaner"
         "ProductCode" = "8:{13DF8869-2854-413F-AF24-AAC97AD8E27B}"
-        "PackageCode" = "8:{F8E40463-5DB5-4A15-92AB-081CAEBA11CA}"
+        "PackageCode" = "8:{F8868753-6E18-4D32-99EA-F7171432E991}"
         "UpgradeCode" = "8:{8E41EF3B-3DF6-4B2F-BE30-8A6F064B72EF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.3.5"
+        "ProductVersion" = "8:1.4.0"
         "Manufacturer" = "8:BL"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1194,7 +1205,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_08D12F29A55544E38E9C1F2AF5313F36"
             {
-            "Name" = "8:BLHWScaner.exe"
+            "Name" = "8:BLHWScaner"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1204,34 +1215,6 @@
             "Folder" = "8:_A4C762042AF1491EA2D3FDA51C3C6F16"
             "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
             "Icon" = "8:_4C80372E60B745B0ACA4A6C156C50683"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_CB2A66F0A07E48A19CD2CFB46F9FB9F8"
-            {
-            "Name" = "8:Uninstall.exe"
-            "Arguments" = "8:/x {13DF8869-2854-413F-AF24-AAC97AD8E27B}"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
-            "Folder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
-            "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E18668213C4C4AEF9C4D07B11C1A9B82"
-            {
-            "Name" = "8:Uninstall.exe"
-            "Arguments" = "8:/x {13DF8869-2854-413F-AF24-AAC97AD8E27B}"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_6EFC5C99C6E64AF4A3AF887E9EE035A0"
-            "Folder" = "8:_A4C762042AF1491EA2D3FDA51C3C6F16"
-            "WorkingFolder" = "8:_F7626FD2F6A34102B724CF786EE5787B"
-            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
