@@ -6,6 +6,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QTime>
 
+#include "App\\AppParam.h"
+
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\TemperatureProbe.h"
 #include "..\\Src\\PerformanceCounter.h"
@@ -409,7 +411,9 @@ void TempManagementPage::RefreshUi()
 
 void TempManagementPage::LoadQSS()
 {
-    QFile qssFile(".\\Qss\\Default\\TempManagementPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "TempManagementPage.qss";
+    QFile qssFile(filePath);  
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

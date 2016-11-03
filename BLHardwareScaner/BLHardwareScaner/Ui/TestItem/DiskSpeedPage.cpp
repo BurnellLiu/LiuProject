@@ -4,6 +4,8 @@
 #include <QtCore/QFile>
 #include <QtGui/QListView>
 
+#include "App\\AppParam.h"
+
 #include "..\\Src\\Log\\LLog.h"
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\DiskController\\LDiskController.h"
@@ -489,7 +491,9 @@ void DiskSpeedPage::LoadQSS(IN float uiRatio)
     ui.comboBoxSeqSize->setView(new QListView());
     ui.comboBoxRandSize->setView(new QListView());
 
-    QFile qssFile(".\\Qss\\Default\\DiskSpeedPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "DiskSpeedPage.qss";
+    QFile qssFile(filePath);     
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

@@ -296,7 +296,9 @@ void MainPage::DownloadNewTimerTimeout()
 
 void MainPage::LoadQSS()
 {
-    QFile qssFile(".\\Qss\\Default\\MainPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "MainPage.qss";
+    QFile qssFile(filePath);   
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

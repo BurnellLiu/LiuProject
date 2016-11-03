@@ -4,6 +4,8 @@
 #include <QtCore/QString>
 #include <QtCore/QFile>
 
+#include "App\\AppParam.h"
+
 #include "..\\Src\\LSensorObject.h"
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\Log\\LLog.h"
@@ -192,7 +194,9 @@ void HardwareInforPage::CurrentItemChanged()
 
 void HardwareInforPage::LoadQSS(IN float uiRatio)
 {
-    QFile qssFile(".\\Qss\\Default\\HardwareInforPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "HardwareInforPage.qss";
+    QFile qssFile(filePath);   
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

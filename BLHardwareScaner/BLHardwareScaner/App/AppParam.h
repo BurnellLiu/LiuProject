@@ -24,6 +24,10 @@ public:
     /// @return 版本信息, 如V1.3.6
     static QString GetAppVersion();
 
+    /// @brief 获取默认QSS文件路径
+    /// @return QSS文件路径, 如".\\Config\\QSS\\Default\\"
+    static QString GetDefaultQssPath();
+
 private:
     /// @brief 初始化程序参数
     /// @param[in] argc 命令行参数数目

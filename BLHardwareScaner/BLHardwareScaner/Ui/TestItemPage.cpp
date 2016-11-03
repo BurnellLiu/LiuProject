@@ -117,7 +117,9 @@ void TestItemPage::AddTestItem(IN const QString& name, IN const QIcon& icon)
 
 void TestItemPage::LoadQSS()
 {
-    QFile qssFile(".\\Qss\\Default\\TestItemPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "TestItemPage.qss";
+    QFile qssFile(filePath);  
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

@@ -304,7 +304,9 @@ bool RestartAgingPage::CheckPath(IN const QString& qstrPath)
 
 void RestartAgingPage::LoadQSS()
 {
-    QFile qssFile(".\\Qss\\Default\\RestartAgingPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "RestartAgingPage.qss";
+    QFile qssFile(filePath);   
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  

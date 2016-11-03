@@ -65,6 +65,11 @@ QString LAppParam::GetAppVersion()
     return s_appVersion;
 }
 
+QString LAppParam::GetDefaultQssPath()
+{
+    return ".\\Config\\QSS\\Default\\";
+}
+
 void LAppParam::InitAppParam(int argc, char *argv[])
 {
     s_appStartMode = ParseStartMode(argc, argv);

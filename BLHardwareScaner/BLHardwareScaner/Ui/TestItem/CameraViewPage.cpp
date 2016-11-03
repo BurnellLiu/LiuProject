@@ -3,6 +3,8 @@
 
 #include <QtCore/QFile>
 
+#include "App\\AppParam.h"
+
 
 
 
@@ -75,7 +77,10 @@ void CameraViewPage::SwitchButtonClicked()
 
 void CameraViewPage::LoadQSS()
 {
-    QFile qssFile(".\\QSS\\Default\\CameraViewPage.qss");  
+    QString filePath = LAppParam::GetDefaultQssPath();
+    filePath += "CameraViewPage.qss";
+    QFile qssFile(filePath);   
+  
     qssFile.open(QFile::ReadOnly);  
 
     if(qssFile.isOpen())  
