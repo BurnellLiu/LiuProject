@@ -1,4 +1,4 @@
-
+ï»¿
 #define _EXPORTING_SENSOR
 #include "SensorObject.h"
 
@@ -18,7 +18,7 @@ using std::wstring;
 #define SAFE_DEL_ARRAY(p) do {if (p){ delete[] (p); (p) = 0;}}while(0)
 
 /// <SUMMARY>
-/// ³õÊ¼»¯COMÀà(µ¥Ïß³ÌÌ×¼ä)
+/// åˆå§‹åŒ–COMç±»(å•çº¿ç¨‹å¥—é—´)
 /// </SUMMARY>
 class CComInitS
 {
@@ -26,8 +26,8 @@ public:
     CComInitS()
         : m_success(false)
     {
-        // CoInitializeµ÷ÓÃºó·µ»ØS_FALSE»òS_OKºó¶¼Ğèµ÷ÓÃCoUninitialize
-        // CoInitializeµ÷ÓÃºó·µ»ØRPC_E_CHANGE_MODE, ±íÃ÷µ±Ç°Ïß³ÌÒÑ±»³õÊ¼»¯(ÇÒºÍµ±Ç°Ä£Ê½²»Í¬),²»ĞèÒªµ÷ÓÃCoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›S_FALSEæˆ–S_OKåéƒ½éœ€è°ƒç”¨CoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›RPC_E_CHANGE_MODE, è¡¨æ˜å½“å‰çº¿ç¨‹å·²è¢«åˆå§‹åŒ–(ä¸”å’Œå½“å‰æ¨¡å¼ä¸åŒ),ä¸éœ€è¦è°ƒç”¨CoUninitialize
         HRESULT hr = CoInitialize(0);
         if (hr == S_FALSE || hr == S_OK)
         {
@@ -41,19 +41,19 @@ public:
             CoUninitialize();
     }
 private:
-    bool m_success; // ±êÊ¶COM¿âÊÇ·ñ³õÊ¼»¯³É¹¦
+    bool m_success; // æ ‡è¯†COMåº“æ˜¯å¦åˆå§‹åŒ–æˆåŠŸ
     CComInitS(const CComInitS&);
     CComInitS& operator = (const CComInitS&);
 };
 
 /// <SUMMARY>
-/// ´«¸ĞÆ÷»ù±¾¶ÔÏó
+/// ä¼ æ„Ÿå™¨åŸºæœ¬å¯¹è±¡
 /// </SUMMARY>
 class CSensorObject
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     CSensorObject()
     {
@@ -65,7 +65,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     virtual ~CSensorObject()
     {
@@ -73,13 +73,13 @@ public:
     }
 
     /// <SUMMARY>
-    /// ³õÊ¼»¯Sensor¶ÔÏó
+    /// åˆå§‹åŒ–Sensorå¯¹è±¡
     /// </SUMMARY>
     /// <PARAM name = "sensorType" dir = "IN">
-    /// Ö¸¶¨SensorµÄGUID
+    /// æŒ‡å®šSensorçš„GUID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, m_errorMessageÖĞ´æ´¢´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, m_errorMessageä¸­å­˜å‚¨é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool TypeInit(IN REFSENSOR_TYPE_ID sensorType)
     {
@@ -144,10 +144,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetSensorCount()
     {
@@ -155,16 +155,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -199,16 +199,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷Êı¾İ
+    /// è·å–ä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "pDataReportAddr" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ±¨¸æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®æŠ¥å‘Š
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetDataReport(IN unsigned int index, OUT ISensorDataReport*& pDataReport)
     {
@@ -238,7 +238,7 @@ public:
 
 private:
     /// <SUMMARY>
-    /// ÊÍ·Å×ÊÔ´
+    /// é‡Šæ”¾èµ„æº
     /// </SUMMARY>
     void SafeRelease()
     {
@@ -258,10 +258,10 @@ private:
     }
 
 private:
-    unsigned long m_sensorCount; // SensorÉè±¸ÊıÁ¿
-    string m_errorMessage; // ´íÎóĞÅÏ¢
-    ISensor** m_pSensorArray; // ±£´æSensorÉè±¸¶ÔÏóÖ¸Õë
-    CComInitS comInittS; // ÓÃÓÚ³õÊ¼»¯COM
+    unsigned long m_sensorCount; // Sensorè®¾å¤‡æ•°é‡
+    string m_errorMessage; // é”™è¯¯ä¿¡æ¯
+    ISensor** m_pSensorArray; // ä¿å­˜Sensorè®¾å¤‡å¯¹è±¡æŒ‡é’ˆ
+    CComInitS comInittS; // ç”¨äºåˆå§‹åŒ–COM
     ISensorManager* m_pSensorManager;
     ISensorCollection* m_pSensorCollection;
 
@@ -271,13 +271,13 @@ private:
 };
 
 /// <SUMMARY>
-/// ÖØÁ¦¼ÓËÙ¶È´«¸ĞÆ÷
+/// é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨
 /// </SUMMARY>
 class LAccelerometer3DSensor
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     LAccelerometer3DSensor()
     {
@@ -285,7 +285,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~LAccelerometer3DSensor()
     {
@@ -293,10 +293,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetCount()
     {
@@ -304,16 +304,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -321,16 +321,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡ÖØÁ¦¼ÓËÙ¶È´«¸ĞÆ÷Êı¾İ
+    /// è·å–é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "data" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetData(IN unsigned int index, OUT SAccelerometer3DSensorData& data)
     {
@@ -365,18 +365,18 @@ public:
     }
 
 private:
-    CSensorObject m_sensorObject; // ´«¸ĞÆ÷»ù±¾¶ÔÏó
+    CSensorObject m_sensorObject; // ä¼ æ„Ÿå™¨åŸºæœ¬å¯¹è±¡
 
 };
 
 /// <SUMMARY>
-/// ÍÓÂİÒÇ´«¸ĞÆ÷
+/// é™€èºä»ªä¼ æ„Ÿå™¨
 /// </SUMMARY>
 class LGyrometer3DSensor
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     LGyrometer3DSensor()
     {
@@ -384,7 +384,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~LGyrometer3DSensor()
     {
@@ -392,10 +392,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetCount()
     {
@@ -403,16 +403,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -420,16 +420,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡ÍÓÂİÒÇ´«¸ĞÆ÷Êı¾İ
+    /// è·å–é™€èºä»ªä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "data" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetData(IN unsigned int index, OUT SGyrometer3DSensorData& data)
     {
@@ -463,18 +463,18 @@ public:
     }
 
 private:
-    CSensorObject m_sensorObject; // ´«¸ĞÆ÷»ù±¾¶ÔÏó
+    CSensorObject m_sensorObject; // ä¼ æ„Ÿå™¨åŸºæœ¬å¯¹è±¡
 };
 
 
 /// <SUMMARY>
-/// Ö¸ÄÏÕë´«¸ĞÆ÷
+/// æŒ‡å—é’ˆä¼ æ„Ÿå™¨
 /// </SUMMARY>
 class LCompass3DSensor
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     LCompass3DSensor()
     {
@@ -482,7 +482,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~LCompass3DSensor()
     {
@@ -490,10 +490,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetCount()
     {
@@ -501,16 +501,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -518,16 +518,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡Ö¸ÄÏÕë´«¸ĞÆ÷Êı¾İ
+    /// è·å–æŒ‡å—é’ˆä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "data" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetData(IN unsigned int index, OUT SCompass3DSensorData& data)
     {
@@ -561,17 +561,17 @@ public:
     }
 
 private:
-    CSensorObject m_sensorObject; // ´«¸ĞÆ÷»ù±¾¶ÔÏó
+    CSensorObject m_sensorObject; // ä¼ æ„Ÿå™¨åŸºæœ¬å¯¹è±¡
 };
 
 /// <SUMMARY>
-/// GPS´«¸ĞÆ÷
+/// GPSä¼ æ„Ÿå™¨
 /// </SUMMARY>
 class LLocationGpsSensor
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     LLocationGpsSensor()
     {
@@ -579,7 +579,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~LLocationGpsSensor()
     {
@@ -587,10 +587,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetCount()
     {
@@ -598,16 +598,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -615,16 +615,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡GPS´«¸ĞÆ÷Êı¾İ
+    /// è·å–GPSä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "data" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetData(IN unsigned int index, OUT SGpsSensorData& data)
     {
@@ -654,18 +654,18 @@ public:
     }
 
 private:
-    CSensorObject m_sensorObject; // »ù±¾´«¸ĞÆ÷¶ÔÏó
+    CSensorObject m_sensorObject; // åŸºæœ¬ä¼ æ„Ÿå™¨å¯¹è±¡
 };
 
 
 /// <SUMMARY>
-/// ¹â´«¸ĞÆ÷
+/// å…‰ä¼ æ„Ÿå™¨
 /// </SUMMARY>
 class LAmbientLightSensor
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     LAmbientLightSensor()
     {
@@ -673,7 +673,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~LAmbientLightSensor()
     {
@@ -681,10 +681,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÊıÁ¿
+    /// è·å–ä¼ æ„Ÿå™¨æ•°é‡
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´«¸ĞÆ÷ÊıÁ¿
+    /// ä¼ æ„Ÿå™¨æ•°é‡
     /// </RETURNS>
     unsigned int GetCount()
     {
@@ -692,16 +692,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// è·å–ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ÓÑºÃÃû³Æ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetFriendlyName(IN unsigned int index, OUT wstring& name)
     {
@@ -709,16 +709,16 @@ public:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡¹â´«¸ĞÆ÷Êı¾İ
+    /// è·å–å…‰ä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// ´«¸ĞÆ÷Éè±¸Ë÷Òı
+    /// ä¼ æ„Ÿå™¨è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "data" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷Êı¾İ
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetData(IN unsigned int index, OUT SAmbientLightSensorData& data)
     {
@@ -742,7 +742,7 @@ public:
     }
 
 private:
-    CSensorObject m_sensorObject; // »ù±¾´«¸ĞÆ÷¶ÔÏó
+    CSensorObject m_sensorObject; // åŸºæœ¬ä¼ æ„Ÿå™¨å¯¹è±¡
 
 };
 
@@ -752,7 +752,7 @@ LCompass3DSensor* gCompass3D = NULL;
 LAmbientLightSensor* gAmbientLight = NULL;
 LLocationGpsSensor* gLocationGps = NULL;
 
-/// @brief ½ø³ÌĞ¶ÔØDLL
+/// @brief è¿›ç¨‹å¸è½½DLL
 static void DllProcessDetach()
 {
     if (gAccelerometer3D != NULL)
