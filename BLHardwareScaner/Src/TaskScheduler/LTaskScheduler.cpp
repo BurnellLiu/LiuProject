@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LTaskScheduler.h"
 
 #include <Windows.h>
@@ -8,8 +8,8 @@
 
 #pragma comment(lib, "Taskschd.lib")
 
-/// @brief COM³õÊ¼»¯Àà
-/// Ö»Ö§³Öµ¥Ïß³Ì
+/// @brief COMåˆå§‹åŒ–ç±»
+/// åªæ”¯æŒå•çº¿ç¨‹
 class CInitCom
 {
 public:
@@ -17,8 +17,8 @@ public:
     {
         this->bSuccess = false;
 
-        // CoInitializeµ÷ÓÃºó·µ»ØS_FALSE»òS_OKºó¶¼Ğèµ÷ÓÃCoUninitialize
-        // CoInitializeµ÷ÓÃºó·µ»ØRPC_E_CHANGE_MODE, ±íÃ÷µ±Ç°Ïß³ÌÒÑ±»³õÊ¼»¯(ÇÒºÍµ±Ç°Ä£Ê½²»Í¬),²»ĞèÒªµ÷ÓÃCoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›S_FALSEæˆ–S_OKåéƒ½éœ€è°ƒç”¨CoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›RPC_E_CHANGE_MODE, è¡¨æ˜å½“å‰çº¿ç¨‹å·²è¢«åˆå§‹åŒ–(ä¸”å’Œå½“å‰æ¨¡å¼ä¸åŒ),ä¸éœ€è¦è°ƒç”¨CoUninitialize
         HRESULT hr = CoInitialize(NULL);
         if (hr == S_OK || hr == S_FALSE)
         {
@@ -38,17 +38,17 @@ public:
         }
     }
 private:
-    bool bSuccess; ///< ±êÊ¶ÊÇ·ñ³õÊ¼»¯³É¹¦
+    bool bSuccess; ///< æ ‡è¯†æ˜¯å¦åˆå§‹åŒ–æˆåŠŸ
 };
 
-/// @brief ÈÎÎñ¼Æ»®Àà
+/// @brief ä»»åŠ¡è®¡åˆ’ç±»
 class CTaskScheduler
 {
 public:
-    /// @brief É¾³ıÒ»¸öÈÎÎñ¼Æ»®
-    /// @param[in] pFolderName ÈÎÎñ¼Æ»®ËùÔÚµÄÎÄ¼ş¼ĞÃû³Æ, Èç¹ûÎªNULL, Ôò±íÊ¾ÈÎÎñ¼Æ»®ÔÚ¸ùÄ¿Â¼ÏÂ
-    /// @param[in] pTaskName ÈÎÎñ¼Æ»®Ãû³Æ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief åˆ é™¤ä¸€ä¸ªä»»åŠ¡è®¡åˆ’
+    /// @param[in] pFolderName ä»»åŠ¡è®¡åˆ’æ‰€åœ¨çš„æ–‡ä»¶å¤¹åç§°, å¦‚æœä¸ºNULL, åˆ™è¡¨ç¤ºä»»åŠ¡è®¡åˆ’åœ¨æ ¹ç›®å½•ä¸‹
+    /// @param[in] pTaskName ä»»åŠ¡è®¡åˆ’åç§°
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     static bool Delete(IN const wchar_t* pFolderName, const wchar_t* pTaskName)
     {
         bool bRet = true;
@@ -83,7 +83,7 @@ public:
             goto SAFE_EXIT;
         }
 
-        // »ñÈ¡¸ùÎÄ¼ş¼Ğ
+        // è·å–æ ¹æ–‡ä»¶å¤¹
         hr = pTaskService->GetFolder( _bstr_t( L"\\"), &pRootFolder);
         if (FAILED(hr))
         {
@@ -141,7 +141,7 @@ SAFE_EXIT:
     }
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CTaskScheduler()
     {
         m_pRootTaskFolder = NULL;
@@ -168,14 +168,14 @@ public:
             goto SAFE_EXIT;
         }
 
-        // »ñÈ¡¸ùÎÄ¼ş¼Ğ
+        // è·å–æ ¹æ–‡ä»¶å¤¹
         hr = pTaskService->GetFolder( _bstr_t( L"\\"), &m_pRootTaskFolder);
         if (FAILED(hr))
         {
             goto SAFE_EXIT;
         }
 
-        // ´´½¨ÈÎÎñ
+        // åˆ›å»ºä»»åŠ¡
         hr = pTaskService->NewTask(0, &m_pTaskDef);
         if (FAILED(hr))
         {
@@ -193,7 +193,7 @@ SAFE_EXIT:
 
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CTaskScheduler()
     {
         if (NULL != m_pTaskDef)
@@ -209,7 +209,7 @@ SAFE_EXIT:
         }
     }
 
-    /// @brief ÉèÖÃÈÎÎñÖ÷ÒªÊôĞÔ
+    /// @brief è®¾ç½®ä»»åŠ¡ä¸»è¦å±æ€§
     bool Principal(IN bool bHighestLevel)
     {
         if (NULL == m_pTaskDef)
@@ -250,9 +250,9 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief ÉèÖÃ´¥·¢Ìõ¼ş
-    /// @param[in] trigger, 1(Æô¶¯Ê±´¥·¢), 2(µÇÂ¼Ê±´¥·¢)
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è®¾ç½®è§¦å‘æ¡ä»¶
+    /// @param[in] trigger, 1(å¯åŠ¨æ—¶è§¦å‘), 2(ç™»å½•æ—¶è§¦å‘)
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Trigger(IN unsigned int trigger)
     {
         if (trigger != 1 && trigger != 2)
@@ -265,7 +265,7 @@ SAFE_EXIT:
 
         ITriggerCollection* pTriggerCollection = NULL;
         ITrigger* pTrigger = NULL;
-        //µÃµ½´¥·¢Æ÷¼¯ºÏ    
+        //å¾—åˆ°è§¦å‘å™¨é›†åˆ    
         HRESULT hr = m_pTaskDef->get_Triggers(&pTriggerCollection);
         if(FAILED(hr))
         {
@@ -273,11 +273,11 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
-        //ÔÚ´¥·¢Æ÷¼¯ºÏÖĞ´´½¨´¥·¢Æ÷
+        //åœ¨è§¦å‘å™¨é›†åˆä¸­åˆ›å»ºè§¦å‘å™¨
         if (1 == trigger)
-            hr = pTriggerCollection->Create(TASK_TRIGGER_BOOT, &pTrigger); // ÏµÍ³Æô¶¯Ê±´¥·¢
+            hr = pTriggerCollection->Create(TASK_TRIGGER_BOOT, &pTrigger); // ç³»ç»Ÿå¯åŠ¨æ—¶è§¦å‘
         else if (2 == trigger)
-            hr = pTriggerCollection->Create(TASK_TRIGGER_LOGON, &pTrigger); // µ±ÓÃ»§µÇÂ¼Ê±´¥·¢
+            hr = pTriggerCollection->Create(TASK_TRIGGER_LOGON, &pTrigger); // å½“ç”¨æˆ·ç™»å½•æ—¶è§¦å‘
 
         if(FAILED(hr))
         {
@@ -302,7 +302,7 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief ÉèÖÃÉèÖÃÏî
+    /// @brief è®¾ç½®è®¾ç½®é¡¹
     bool Settings(IN bool bStartOnBattery)
     {
         if (NULL == m_pTaskDef)
@@ -337,7 +337,7 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief ÉèÖÃÈÎÎñ¼Æ»®¶¯×÷
+    /// @brief è®¾ç½®ä»»åŠ¡è®¡åˆ’åŠ¨ä½œ
     bool Action(IN const wchar_t* pExePath, IN const wchar_t* pParam, IN const wchar_t* pWorkingDir)
     {
         if (NULL == pExePath)
@@ -351,7 +351,7 @@ SAFE_EXIT:
         IAction* pAction = NULL;
         IExecAction* pExecAction = NULL;
 
-        //µÃµ½¶¯×÷¼¯ºÏ    
+        //å¾—åˆ°åŠ¨ä½œé›†åˆ    
         HRESULT hr = m_pTaskDef->get_Actions(&pActionCollection);
         if(FAILED(hr))
         {
@@ -359,7 +359,7 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
-        //ÔÚ¶¯×÷¼¯ºÏÖĞ´´½¨¶¯×÷    
+        //åœ¨åŠ¨ä½œé›†åˆä¸­åˆ›å»ºåŠ¨ä½œ    
         hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
         if(FAILED(hr))
         {
@@ -367,14 +367,14 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
-        //Ïò¶¯×÷ÀïÃæĞ´ÈëÖ´ĞĞ³ÌĞò
+        //å‘åŠ¨ä½œé‡Œé¢å†™å…¥æ‰§è¡Œç¨‹åº
         hr = pAction->QueryInterface( IID_IExecAction, (void**)&pExecAction );
         if(FAILED(hr))
         {
             bRet = false;
             goto SAFE_EXIT;
         }
-        hr = pExecAction->put_Path(_bstr_t(pExePath)); //ÔËĞĞ±¾³ÌĞò
+        hr = pExecAction->put_Path(_bstr_t(pExePath)); //è¿è¡Œæœ¬ç¨‹åº
         if(FAILED(hr))
         {
             bRet = false;
@@ -423,7 +423,7 @@ SAFE_EXIT:
 
     }
 
-    /// @brief Ê¹ÓÃÈÎÎñ¼Æ»®Ãû³Æ´´½¨ĞÂµÄÈÎÎñ¼Æ»®
+    /// @brief ä½¿ç”¨ä»»åŠ¡è®¡åˆ’åç§°åˆ›å»ºæ–°çš„ä»»åŠ¡è®¡åˆ’
     bool Register(IN const wchar_t* pFolderName, IN const wchar_t* pTaskName)
     {
         if (NULL == pTaskName)
@@ -442,7 +442,7 @@ SAFE_EXIT:
         if (NULL != pFolderName)
         {
             hr = m_pRootTaskFolder->GetFolder(_bstr_t(pFolderName), &pNewFolder);
-            if(FAILED(hr)) //Èç¹ûÎÄ¼ş¼Ğ²»´æÔÚ,¾Í´´½¨Ò»¸ö
+            if(FAILED(hr)) //å¦‚æœæ–‡ä»¶å¤¹ä¸å­˜åœ¨,å°±åˆ›å»ºä¸€ä¸ª
             {
                 hr = m_pRootTaskFolder->CreateFolder(_bstr_t(pFolderName), _variant_t(), &pNewFolder);
                 if(FAILED(hr))
@@ -453,7 +453,7 @@ SAFE_EXIT:
             }
         }
         
-        // Èç¹ûÖ¸¶¨ÁËÎÄ¼ş¼Ğ, ÔòÔÚÖ¸¶¨µÄÎÄ¼ş¼ĞÏÂ´´½¨ÈÎÎñ¼Æ»®, ·ñÔòÔÚ¸ùÄ¿Â¼ÏÂ´´½¨ÈÎÎñ¼Æ»®
+        // å¦‚æœæŒ‡å®šäº†æ–‡ä»¶å¤¹, åˆ™åœ¨æŒ‡å®šçš„æ–‡ä»¶å¤¹ä¸‹åˆ›å»ºä»»åŠ¡è®¡åˆ’, å¦åˆ™åœ¨æ ¹ç›®å½•ä¸‹åˆ›å»ºä»»åŠ¡è®¡åˆ’
         if (NULL != pNewFolder)
         {
             pMyFolder = pNewFolder;
@@ -498,9 +498,9 @@ SAFE_EXIT:
 
 private:
 
-    ITaskDefinition* m_pTaskDef; ///< ÈÎÎñ¼Æ»®¶¨Òå¶ÔÏó
-    ITaskFolder* m_pRootTaskFolder; ///< ÈÎÎñ¼Æ»®¸ùÎÄ¼ş¼Ğ¶ÔÏó
-    CInitCom m_initCom; ///< ³õÊ¼»¯COM¶ÔÏó
+    ITaskDefinition* m_pTaskDef; ///< ä»»åŠ¡è®¡åˆ’å®šä¹‰å¯¹è±¡
+    ITaskFolder* m_pRootTaskFolder; ///< ä»»åŠ¡è®¡åˆ’æ ¹æ–‡ä»¶å¤¹å¯¹è±¡
+    CInitCom m_initCom; ///< åˆå§‹åŒ–COMå¯¹è±¡
 };
 
 bool LTaskScheduler::Delete(IN const wchar_t* pFolderName, const wchar_t* pTaskName)

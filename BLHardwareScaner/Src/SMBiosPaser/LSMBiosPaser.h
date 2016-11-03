@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LSMBIOSPASER_H_
 #define _LSMBIOSPARSER_H_
@@ -22,64 +22,64 @@ using std::string;
 
 
 
-/// @brief SMBios BIOS ĞÅÏ¢
+/// @brief SMBios BIOS ä¿¡æ¯
 struct SMBiosBIOSInfor
 {
-    string Vendor; /// <³§ÉÌÃû
-    string Version; ///< °æ±¾
-    string ReleaseDate; ///< ·¢²¼ÈÕÆÚ
-    unsigned long RomSize; ///< ROM´óĞ¡, µ¥Î»K
+    string Vendor; /// <å‚å•†å
+    string Version; ///< ç‰ˆæœ¬
+    string ReleaseDate; ///< å‘å¸ƒæ—¥æœŸ
+    unsigned long RomSize; ///< ROMå¤§å°, å•ä½K
 };
 
-/// @brief SMBios ÏµÍ³ĞÅÏ¢
+/// @brief SMBios ç³»ç»Ÿä¿¡æ¯
 struct SMBiosSystemInfor
 {
-    string Manufacturer; ///< µçÄÔÖÆÔìÉÌ
-    string ProductName; ///< µçÄÔÃû³Æ
-    string Version; ///< µçÄÔ°æ±¾
-    string SerialNumber; ///< µçÄÔĞòÁĞºÅ
-    unsigned char UUID[16]; ///< µçÄÔÎ¨Ò»±êÊ¶·û
+    string Manufacturer; ///< ç”µè„‘åˆ¶é€ å•†
+    string ProductName; ///< ç”µè„‘åç§°
+    string Version; ///< ç”µè„‘ç‰ˆæœ¬
+    string SerialNumber; ///< ç”µè„‘åºåˆ—å·
+    unsigned char UUID[16]; ///< ç”µè„‘å”¯ä¸€æ ‡è¯†ç¬¦
 };
 
-/// @brief SMBios Ö÷°åĞÅÏ¢
+/// @brief SMBios ä¸»æ¿ä¿¡æ¯
 struct SMBiosBaseBoardInfor
 {
-    string Manufacturer; ///< Ö÷°åÖÆÔìÉÌ
-    string Product; ///< Ö÷°åÃû
-    string Version; ///< Ö÷°å°æ±¾
-    string SerialNumber; ///< Ö÷°åĞòÁĞºÅ
+    string Manufacturer; ///< ä¸»æ¿åˆ¶é€ å•†
+    string Product; ///< ä¸»æ¿å
+    string Version; ///< ä¸»æ¿ç‰ˆæœ¬
+    string SerialNumber; ///< ä¸»æ¿åºåˆ—å·
 };
 
 class CSMBiosPaser;
 
-/// @brief SMBios½âÎöÀà
+/// @brief SMBiosè§£æç±»
 class LSMBiosPaser
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] smBiosData SMBiosÊı¾İ
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] smBiosData SMBiosæ•°æ®
     explicit LSMBiosPaser(IN const vector<unsigned char>& smBiosData);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LSMBiosPaser();
 
-    /// @brief »ñÈ¡BIOSĞÅÏ¢
-    /// @param[out] biosInfor ´æ´¢BIOSĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–BIOSä¿¡æ¯
+    /// @param[out] biosInfor å­˜å‚¨BIOSä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetBiosInfor(OUT SMBiosBIOSInfor& biosInfor);
 
-    /// @brief »ñÈ¡ÏµÍ³ĞÅÏ¢
-    /// @param[out] systemInfor ´æ´¢ÏµÍ³ĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–ç³»ç»Ÿä¿¡æ¯
+    /// @param[out] systemInfor å­˜å‚¨ç³»ç»Ÿä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetSystemInfor(OUT SMBiosSystemInfor& systemInfor);
 
-    /// @brief »ñÈ¡Ö÷°åĞÅÏ¢
-    /// @param[out] baseBoardInfor ´æ´¢Ö÷°åĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–ä¸»æ¿ä¿¡æ¯
+    /// @param[out] baseBoardInfor å­˜å‚¨ä¸»æ¿ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetBaseBoardInfor(OUT SMBiosBaseBoardInfor& baseBoardInfor);
 
 private:
-    CSMBiosPaser* m_pSMBiosPaser; ///< SMBios½âÎö¶ÔÏó
+    CSMBiosPaser* m_pSMBiosPaser; ///< SMBiosè§£æå¯¹è±¡
 };
 
 

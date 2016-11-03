@@ -1,4 +1,4 @@
-
+ï»¿
 #include <cstdio>
 
 #include <string>
@@ -25,22 +25,22 @@ void DbgPrint(const char *format, ...)
     OutputDebugString(debugInfor.c_str());
 }
 
-/// @brief ¹Ø±ÕÖ÷½ø³Ì
+/// @brief å…³é—­ä¸»è¿›ç¨‹
 void KillBLHWScaner()
 {
-    // ÕÒµ½Ö÷´°¿Ú
+    // æ‰¾åˆ°ä¸»çª—å£
     HWND hWnd = FindWindow(NULL, "BLHWScaner");
     if (NULL == hWnd)
         return;
 
-    // »ñÈ¡½ø³ÌID
+    // è·å–è¿›ç¨‹ID
     DWORD dwProcessID;
     GetWindowThreadProcessId(hWnd, &dwProcessID);
 
-    // ´ò¿ª½ø³Ì¾ä±ú
+    // æ‰“å¼€è¿›ç¨‹å¥æŸ„
     HANDLE hHandle = OpenProcess(PROCESS_TERMINATE, FALSE, dwProcessID);
 
-    // ¹Ø±Õ½ø³Ì
+    // å…³é—­è¿›ç¨‹
     if (FALSE != TerminateProcess(hHandle, 0))
     {
         WaitForSingleObject(hHandle, INFINITE);
@@ -50,8 +50,8 @@ void KillBLHWScaner()
     hHandle = NULL;
 }
 
-/// @brief ½âÑ¹Ñ¹ËõÎÄ¼ş
-/// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+/// @brief è§£å‹å‹ç¼©æ–‡ä»¶
+/// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 bool DecompressionRarFile()
 {
     bool bRet = true;
@@ -70,7 +70,7 @@ bool DecompressionRarFile()
     while (true)
     {
         int iRet = 0;
-        // Ñ¹ËõÎÄ¼şÍ·Êı¾İ
+        // å‹ç¼©æ–‡ä»¶å¤´æ•°æ®
         RARHeaderData headerData = {0};
         iRet = RARReadHeader(hRarFile, &headerData);
         if (0 != iRet)
@@ -79,10 +79,10 @@ bool DecompressionRarFile()
             break;
         }
 
-        // ½«ÎÄ¼ş½âÑ¹µ½ÉÏ¼¶Ä¿Â¼ÖĞ
+        // å°†æ–‡ä»¶è§£å‹åˆ°ä¸Šçº§ç›®å½•ä¸­
         string fileName = "..\\";
 
-        // Èç¹ûÑ¹ËõÎÄ¼ş°üº¬×ÔÉí³ÌĞò, ÔòĞŞ¸ÄÎÄ¼şÃû³Æ: ÎÄ¼şÃû×îºó¼ÓÉÏN
+        // å¦‚æœå‹ç¼©æ–‡ä»¶åŒ…å«è‡ªèº«ç¨‹åº, åˆ™ä¿®æ”¹æ–‡ä»¶åç§°: æ–‡ä»¶åæœ€ååŠ ä¸ŠN
         if ((0 == strcmp(headerData.FileName, "Update\\UpdateInstall.exe")) ||
             (0 == strcmp(headerData.FileName, "Update\\unrar.dll")))
         {
@@ -114,16 +114,16 @@ SAFE_EXIT:
     return bRet;
 }
 
-/// @brief Æô¶¯Ö÷³ÌĞò
+/// @brief å¯åŠ¨ä¸»ç¨‹åº
 void StartBLHWScaner()
 {
-    STARTUPINFO si; //Ò»Ğ©±Ø±¸²ÎÊıÉèÖÃ  
+    STARTUPINFO si; //ä¸€äº›å¿…å¤‡å‚æ•°è®¾ç½®  
     memset(&si, 0, sizeof(STARTUPINFO));  
     si.cb = sizeof(STARTUPINFO);  
     si.dwFlags = STARTF_USESHOWWINDOW;  
     si.wShowWindow = SW_SHOW;  
 
-    PROCESS_INFORMATION pi; //±Ø±¸²ÎÊıÉèÖÃ½áÊø
+    PROCESS_INFORMATION pi; //å¿…å¤‡å‚æ•°è®¾ç½®ç»“æŸ
 
     CreateProcess(NULL, "..\\BLHWScaner.exe", NULL, NULL, FALSE, 0, NULL, "..\\", &si, &pi);
 }

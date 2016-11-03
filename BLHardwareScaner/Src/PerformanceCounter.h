@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _PERFORMANCECOUNTER_H_
 #define _PERFORMANCECOUNTER_H_
@@ -19,63 +19,63 @@ using std::wstring;
 #endif
 
 
-/// @brief ÄÚ´æÐÔÄÜ
+/// @brief å†…å­˜æ€§èƒ½
 struct MemoryPerformance
 {
-    unsigned long TotalSize; ///< ×ÜÄÚ´æ´óÐ¡, µ¥Î»M
-    unsigned long AvailableSize; ///< ¿ÉÓÃÄÚ´æ´óÐ¡, µ¥Î»M
-    unsigned long LoadPercentage; ///< ÄÚ´æÊ¹ÓÃÂÊ, ·¶Î§(1-100)
+    unsigned long TotalSize; ///< æ€»å†…å­˜å¤§å°, å•ä½M
+    unsigned long AvailableSize; ///< å¯ç”¨å†…å­˜å¤§å°, å•ä½M
+    unsigned long LoadPercentage; ///< å†…å­˜ä½¿ç”¨çŽ‡, èŒƒå›´(1-100)
 };
 
-/// @brief ´¦ÀíÆ÷ÐÔÄÜ
+/// @brief å¤„ç†å™¨æ€§èƒ½
 struct ProcessorPerformance
 {
-    unsigned long LoadPercentage; ///< CPUÊ¹ÓÃÂÊ, ·¶Î§(1-100)
+    unsigned long LoadPercentage; ///< CPUä½¿ç”¨çŽ‡, èŒƒå›´(1-100)
 };
 
-/// @brief ×î´ó»ñÈ¡´ÅÅÌÐÔÄÜÊýÁ¿
+/// @brief æœ€å¤§èŽ·å–ç£ç›˜æ€§èƒ½æ•°é‡
 #ifndef MAX_DISKPERFORMANCE_NUMBER
 #define MAX_DISKPERFORMANCE_NUMBER 8
 #endif
 
-/// @brief DiskÐÔÄÜ
+/// @brief Diskæ€§èƒ½
 struct DiskPerformance
 {
-    unsigned int Count; ///< »ñÈ¡µ½ÐÔÄÜµÄ´ÅÅÌÊýÁ¿
-    unsigned int UsageRate[MAX_DISKPERFORMANCE_NUMBER]; ///< ´ÅÅÌÊ¹ÓÃÂÊ
-    wstring DiskDriveID[MAX_DISKPERFORMANCE_NUMBER]; ///< ´ÅÅÌÇý¶¯Æ÷ID, Èç L"\\\\.\\PhysicalDrive0"
+    unsigned int Count; ///< èŽ·å–åˆ°æ€§èƒ½çš„ç£ç›˜æ•°é‡
+    unsigned int UsageRate[MAX_DISKPERFORMANCE_NUMBER]; ///< ç£ç›˜ä½¿ç”¨çŽ‡
+    wstring DiskDriveID[MAX_DISKPERFORMANCE_NUMBER]; ///< ç£ç›˜é©±åŠ¨å™¨ID, å¦‚ L"\\\\.\\PhysicalDrive0"
 };
 
 class CPerformanceCounter;
 
-/// @brief ÐÔÄÜ¼ÆÊýÆ÷Àà
+/// @brief æ€§èƒ½è®¡æ•°å™¨ç±»
 class PerformanceCounter
 {
 public:
-    /// @brief ¹¹Ôìº¯Êý
+    /// @brief æž„é€ å‡½æ•°
     PerformanceCounter();
 
-    /// @brief Îö¹¹º¯Êý
+    /// @brief æžæž„å‡½æ•°
     ~PerformanceCounter();
 
-    /// @brief »ñÈ¡ÄÚ´æÐÔÄÜ
-    /// @param[out] memoryPerformance ´æ´¢ÄÚ´æÐÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief èŽ·å–å†…å­˜æ€§èƒ½
+    /// @param[out] memoryPerformance å­˜å‚¨å†…å­˜æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›žtrue, å¤±è´¥è¿”å›žfalse
     bool GetMemoryPerformance(OUT MemoryPerformance& memoryPerformance);
 
-    /// @brief »ñÈ¡´¦ÀíÆ÷ÐÔÄÜ
-    /// @param[out] processorPerformance ´æ´¢´¦ÀíÆ÷ÐÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief èŽ·å–å¤„ç†å™¨æ€§èƒ½
+    /// @param[out] processorPerformance å­˜å‚¨å¤„ç†å™¨æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›žtrue, å¤±è´¥è¿”å›žfalse
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance);
 
-    /// @brief »ñÈ¡´ÅÅÌÐÔÄÜ
-    /// ¸Ã·½·¨Ö»ÄÜ»ñÈ¡¹Ì¶¨´ÅÅÌµÄÐÔÄÜ
-    /// @param[in] diskPerformance ´æ´¢´ÅÅÌÐÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief èŽ·å–ç£ç›˜æ€§èƒ½
+    /// è¯¥æ–¹æ³•åªèƒ½èŽ·å–å›ºå®šç£ç›˜çš„æ€§èƒ½
+    /// @param[in] diskPerformance å­˜å‚¨ç£ç›˜æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›žtrue, å¤±è´¥è¿”å›žfalse
     bool GetDiskPerformance(OUT DiskPerformance& diskPerformance);
 
 private:
-    CPerformanceCounter* m_pCPerformanceCounter; ///< ÐÔÄÜ¼ÆÊýÆ÷ÊµÏÖ¶ÔÏó
+    CPerformanceCounter* m_pCPerformanceCounter; ///< æ€§èƒ½è®¡æ•°å™¨å®žçŽ°å¯¹è±¡
 };
 
 

@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LWINRING0_H_
 #define _LWINRING0_H_
@@ -20,21 +20,21 @@ using std::wstring;
 
 namespace LWinRing0
 {
-    /// @brief ³õÊ¼»¯WinRing0
-    /// @param[in] filePath DLLÎÄ¼şÂ·¾¶
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief åˆå§‹åŒ–WinRing0
+    /// @param[in] filePath DLLæ–‡ä»¶è·¯å¾„
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool InitializeWinRing0(IN const wstring& filePath);
 
-    /// @brief ÊÍ·ÅWinRing0
+    /// @brief é‡Šæ”¾WinRing0
     void DeinitializeWinRing0();
 
-    /// @brief CPUIDÖ¸Áî
-    /// @param[in] index CPUIDÖ¸ÁîË÷Òı
+    /// @brief CPUIDæŒ‡ä»¤
+    /// @param[in] index CPUIDæŒ‡ä»¤ç´¢å¼•
     /// @param[out] eax
     /// @param[out] ebx
     /// @param[out] ecx
     /// @param[out] edx
-    /// @return ³É¹¦·µ»Ø1, Ê§°Ü·µ»Ø0
+    /// @return æˆåŠŸè¿”å›1, å¤±è´¥è¿”å›0
     int Cpuid(
         IN unsigned long index, 
         OUT unsigned long* eax, 
@@ -42,18 +42,18 @@ namespace LWinRing0
         OUT unsigned long* ecx, 
         OUT unsigned long* edx);
 
-    /// @brief ¶ÁĞ´Ä£Ê½Ö¸¶¨¼Ä´æÆ÷Öµ
-    /// @return ³É¹¦·µ»Ø1, Ê§°Ü·µ»Ø0
+    /// @brief è¯»å†™æ¨¡å¼æŒ‡å®šå¯„å­˜å™¨å€¼
+    /// @return æˆåŠŸè¿”å›1, å¤±è´¥è¿”å›0
     int Rdmsr(IN unsigned long index, OUT unsigned long* eax, OUT unsigned long* edx);
 
-    /// @brief ´ÓÖ¸¶¨I/O¶Ë¿ÚµØÖ·¶Á4¸ö×Ö½Ú
-    /// @param[in] address ¶Ë¿ÚµØÖ·
-    /// @return ¶ÁÈ¡µ½µÄÊı¾İ
+    /// @brief ä»æŒ‡å®šI/Oç«¯å£åœ°å€è¯»4ä¸ªå­—èŠ‚
+    /// @param[in] address ç«¯å£åœ°å€
+    /// @return è¯»å–åˆ°çš„æ•°æ®
     unsigned long ReadIoPortDword(IN unsigned short address);
 
-    /// @brief Ğ´Ò»¸öÖµµ½Ö¸¶¨µÄI/O¶Ë¿ÚµØÖ·
-    /// @param[in] address ¶Ë¿ÚµØÖ·
-    /// @param[in] value ÒªĞ´µÄÖµ
+    /// @brief å†™ä¸€ä¸ªå€¼åˆ°æŒ‡å®šçš„I/Oç«¯å£åœ°å€
+    /// @param[in] address ç«¯å£åœ°å€
+    /// @param[in] value è¦å†™çš„å€¼
     void WriteIoPortDword(IN unsigned short address, IN unsigned long value);
 };
 

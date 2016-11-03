@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LWMIHARDWARECLASSES_H_
 #define _LWMIHARDWARECLASSES_H_
@@ -22,108 +22,108 @@ namespace LWMI
 {
     class LWMICoreManager;
 
-    /// @brief Ö÷°å¹ÜÀíÕßÀà
+    /// @brief ä¸»æ¿ç®¡ç†è€…ç±»
     class LBaseBoardManager
     {
     public:
         LBaseBoardManager();
         ~LBaseBoardManager();
 
-        /// @brief »ñÈ¡Ö÷°åÊıÁ¿
-        /// @return Ö÷°åÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–ä¸»æ¿æ•°é‡
+        /// @return ä¸»æ¿æ•°é‡(åº”è¯¥ä¸º1)
         int GetBaseBoardCount();
 
-        /// @brief »ñÈ¡Ö÷°å±êÌâ
-        /// @param[in] index Ö÷°åË÷Òı
-        /// @param[out] caption ´æ´¢Ö÷°å±êÌâ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ä¸»æ¿æ ‡é¢˜
+        /// @param[in] index ä¸»æ¿ç´¢å¼•
+        /// @param[out] caption å­˜å‚¨ä¸»æ¿æ ‡é¢˜
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardCaption(IN int index, OUT wstring& caption);
 
-        /// @brief »ñÈ¡Ö÷°åÃèÊö
-        /// @param[in] index Ö÷°åË÷Òı
-        /// @param[out] caption ´æ´¢Ö÷°åÃèÊö
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ä¸»æ¿æè¿°
+        /// @param[in] index ä¸»æ¿ç´¢å¼•
+        /// @param[out] caption å­˜å‚¨ä¸»æ¿æè¿°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardDescription(IN int index, OUT wstring& description);
 
-        /// @brief »ñÈ¡Ö÷°åÖÆÔìÉÌ
-        /// @param[in] index Ö÷°åË÷Òı
-        /// @param[out] manufacturer ´æ´¢Ö÷°åÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ä¸»æ¿åˆ¶é€ å•†
+        /// @param[in] index ä¸»æ¿ç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨ä¸»æ¿åˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡Ö÷°åĞòÁĞºÅ
-        /// @param[in] index Ö÷°åË÷Òı
-        /// @param[´æ´¢ĞòÁĞºÅ] serialNumber
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ä¸»æ¿åºåˆ—å·
+        /// @param[in] index ä¸»æ¿ç´¢å¼•
+        /// @param[å­˜å‚¨åºåˆ—å·] serialNumber
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardSerialNumber(IN int index, OUT wstring& serialNumber);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LBaseBoardManager(const LBaseBoardManager&);
         LBaseBoardManager& operator = (const LBaseBoardManager&);
     };
 
-    /// @brief BIOS¹ÜÀíÕßÀà
+    /// @brief BIOSç®¡ç†è€…ç±»
     class LBIOSManager
     {
     public:
         LBIOSManager();
         ~LBIOSManager();
 
-        /// @brief »ñÈ¡BIOSÊıÁ¿
-        /// @return BIOSÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–BIOSæ•°é‡
+        /// @return BIOSæ•°é‡(åº”è¯¥ä¸º1)
         int GetBIOSCount();
 
-        /// @brief »ñÈ¡BIOSÃèÊö
-        /// @param[in] index BIOSË÷Òı
-        /// @param[out] description ´æ´¢BIOSÃèÊö
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–BIOSæè¿°
+        /// @param[in] index BIOSç´¢å¼•
+        /// @param[out] description å­˜å‚¨BIOSæè¿°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSDescription(IN int index, OUT wstring& description);
 
-        /// @brief »ñÈ¡BIOSÖÆÔìÉÌ
-        /// @param[in] index BIOSË÷Òı
-        /// @param[out] manufacturer ´æ´¢BIOSÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–BIOSåˆ¶é€ å•†
+        /// @param[in] index BIOSç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨BIOSåˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡BIOSĞòÁĞºÅ
-        /// @param[in] index BIOSË÷Òı
-        /// @param[out] serialNumber ´æ´¢BIOSĞòÁĞºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–BIOSåºåˆ—å·
+        /// @param[in] index BIOSç´¢å¼•
+        /// @param[out] serialNumber å­˜å‚¨BIOSåºåˆ—å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSSerialNumber(IN int index, OUT wstring& serialNumber);
 
-        /// @brief »ñÈ¡BIOS°æ±¾
-        /// @param[in] index BIOSË÷Òı
-        /// @param[in] version ´æ´¢BIOS°æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–BIOSç‰ˆæœ¬
+        /// @param[in] index BIOSç´¢å¼•
+        /// @param[in] version å­˜å‚¨BIOSç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSVersion(IN int index, OUT wstring& version);
 
-        /// @brief »ñÈ¡SMBIOS BIOS°æ±¾
-        /// @param[in] index BIOSË÷Òı
-        /// @param[in] version ´æ´¢SMBIOS BIOS°æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–SMBIOS BIOSç‰ˆæœ¬
+        /// @param[in] index BIOSç´¢å¼•
+        /// @param[in] version å­˜å‚¨SMBIOS BIOSç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSMBIOSBIOSVersion(IN int index, OUT wstring& version);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LBIOSManager(const LBIOSManager&);
         LBIOSManager& operator = (const LBIOSManager&);
     };
 
-    /// @brief ´¦ÀíÆ÷¹ÜÀíÕßÀà
+    /// @brief å¤„ç†å™¨ç®¡ç†è€…ç±»
     class LProcessorManager
     {
     public:
         LProcessorManager();
         ~LProcessorManager();
 
-        /// @brief ´¦ÀíÆ÷¼Ü¹¹
+        /// @brief å¤„ç†å™¨æ¶æ„
         enum LPROCESSOR_ARCHITECTURE
         {
             X86 = 0,
@@ -135,126 +135,126 @@ namespace LWMI
             X64 = 9
         };
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷ÊıÁ¿
-        /// @return ´¦ÀíÆ÷ÊıÁ¿(Ò»°ãÎª1)
+        /// @brief è·å–å¤„ç†å™¨æ•°é‡
+        /// @return å¤„ç†å™¨æ•°é‡(ä¸€èˆ¬ä¸º1)
         int GetProcessorCount();
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷Ãû³Æ
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[out] name ´æ´¢Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨åç§°
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[out] name å­˜å‚¨åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorName(IN int index, OUT wstring& name);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷ÃèÊö
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[out] description ´æ´¢ÃèÊöĞÅÏ¢
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨æè¿°
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[out] description å­˜å‚¨æè¿°ä¿¡æ¯
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorDesription(IN int index, OUT wstring& description);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷¼Ü¹¹ĞÅÏ¢
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[out] architecture ´æ´¢¼Ü¹¹ĞÅÏ¢
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨æ¶æ„ä¿¡æ¯
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[out] architecture å­˜å‚¨æ¶æ„ä¿¡æ¯
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorArchitecture(IN int index, OUT LPROCESSOR_ARCHITECTURE& architecture);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷ÖÆÔìÉÌ
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[out] manufacturer ´æ´¢ÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨åˆ¶é€ å•†
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨åˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷×î´óÆµÂÊ(µ¥Î»MHz)
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[in] speed ´æ´¢ÆµÂÊ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨æœ€å¤§é¢‘ç‡(å•ä½MHz)
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[in] speed å­˜å‚¨é¢‘ç‡
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorMaxClockSpeed(IN int index, OUT unsigned long& speed);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷ºËĞÄÊı
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[in] coresNumber ´æ´¢ºËĞÄÊı
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨æ ¸å¿ƒæ•°
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[in] coresNumber å­˜å‚¨æ ¸å¿ƒæ•°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorCoresNumber(IN int index, OUT unsigned long& coresNumber);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷Âß¼­´¦ÀíÆ÷ÊıÁ¿(Ïß³ÌÊı)
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[in] logicalProcessorsNumber Âß¼­´¦ÀíÆ÷ÊıÁ¿
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å¤„ç†å™¨é€»è¾‘å¤„ç†å™¨æ•°é‡(çº¿ç¨‹æ•°)
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[in] logicalProcessorsNumber é€»è¾‘å¤„ç†å™¨æ•°é‡
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorLogicalProcessorNumber(IN int index, OUT unsigned long& logicalProcessorsNumber);
 
-        /// @brief »ñÈ¡´¦ÀíÆ÷µÄÊ¹ÓÃÂÊ
+        /// @brief è·å–å¤„ç†å™¨çš„ä½¿ç”¨ç‡
         ///
-        /// ÔÚ¶àºË´¦ÀíÆ÷ÉÏ, ¸Ã·½·¨·µ»ØµÄÊÇ¶à¸öºËĞÄµÄÆ½¾ùÊ¹ÓÃÂÊ
-        /// @param[in] index ´¦ÀíÆ÷Ë÷Òı
-        /// @param[out] percentage ´¦ÀíÆ÷Ê¹ÓÃÂÊ(°Ù·Ö±È)
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// åœ¨å¤šæ ¸å¤„ç†å™¨ä¸Š, è¯¥æ–¹æ³•è¿”å›çš„æ˜¯å¤šä¸ªæ ¸å¿ƒçš„å¹³å‡ä½¿ç”¨ç‡
+        /// @param[in] index å¤„ç†å™¨ç´¢å¼•
+        /// @param[out] percentage å¤„ç†å™¨ä½¿ç”¨ç‡(ç™¾åˆ†æ¯”)
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetProcessorLoadPercentage(IN int index, OUT unsigned long& percentage);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LProcessorManager(const LProcessorManager&);
         LProcessorManager& operator = (const LProcessorManager&);
     };
 
-    /// @brief ÎïÀíÄÚ´æ¹ÜÀíÕßÀà
+    /// @brief ç‰©ç†å†…å­˜ç®¡ç†è€…ç±»
     class LPhysicalMemoryManager
     {
     public:
         LPhysicalMemoryManager();
         ~LPhysicalMemoryManager();
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æÊıÁ¿
-        /// @return ÎïÀíÄÚ´æÊıÁ¿
+        /// @brief è·å–ç‰©ç†å†…å­˜æ•°é‡
+        /// @return ç‰©ç†å†…å­˜æ•°é‡
         int GetPhysicalMemoryCount();
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æÃèÊö
-        /// @param[in] index ÄÚ´æË÷Òı
-        /// @param[out] description ´æ´¢ÃèÊö
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜æè¿°
+        /// @param[in] index å†…å­˜ç´¢å¼•
+        /// @param[out] description å­˜å‚¨æè¿°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemoryDescription(IN int index, OUT wstring& description);
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æÖÆÔìÉÌ
-        /// @param[in] index ÄÚ´æË÷Òı
-        /// @param[out] manufacturer ´æ´¢ÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜åˆ¶é€ å•†
+        /// @param[in] index å†…å­˜ç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨åˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemoryManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æĞòÁĞºÅ
-        /// @param[in] index ÎïÀíÄÚ´æË÷Òı
-        /// @param[out] serialNumber ´æ´¢ĞòÁĞºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜åºåˆ—å·
+        /// @param[in] index ç‰©ç†å†…å­˜ç´¢å¼•
+        /// @param[out] serialNumber å­˜å‚¨åºåˆ—å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemorySerialNumber(IN int index, OUT wstring& serialNumber);
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æÈİÁ¿(µ¥Î»M)
-        /// @param[in] index ÎïÀíÄÚ´æË÷Òı
-        /// @param[out] capacity ´æ´¢ÈİÁ¿
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜å®¹é‡(å•ä½M)
+        /// @param[in] index ç‰©ç†å†…å­˜ç´¢å¼•
+        /// @param[out] capacity å­˜å‚¨å®¹é‡
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemoryCapacity(IN int index, OUT unsigned long& capacity);
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æÆµÂÊ(µ¥Î»MHz)
-        /// @param[in] index ÎïÀíÄÚ´æË÷Òı
-        /// @param[out] speed ´æ´¢ÆµÂÊ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜é¢‘ç‡(å•ä½MHz)
+        /// @param[in] index ç‰©ç†å†…å­˜ç´¢å¼•
+        /// @param[out] speed å­˜å‚¨é¢‘ç‡
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemorySpeed(IN int index, OUT unsigned long& speed);
 
-        /// @brief »ñÈ¡ÎïÀíÄÚ´æĞÍºÅ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] partNumber ´æ´¢ĞÍºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç‰©ç†å†…å­˜å‹å·
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] partNumber å­˜å‚¨å‹å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetPhysicalMemoryPartNumber(IN int index, OUT wstring& partNumber);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LPhysicalMemoryManager(const LPhysicalMemoryManager&);
         LPhysicalMemoryManager& operator = (const LPhysicalMemoryManager&);
     };
 
-    /// @brief ÊÓÆÁ¿ØÖÆÆ÷(ÏÔ¿¨)¹ÜÀíÕßÀà
+    /// @brief è§†å±æ§åˆ¶å™¨(æ˜¾å¡)ç®¡ç†è€…ç±»
     class LVideoControllerManager
     {
     public:
@@ -262,287 +262,287 @@ namespace LWMI
         LVideoControllerManager(IN const wstring& pnpDeviceID);
         ~LVideoControllerManager();
 
-        /// @brief »ñÈ¡ÊÓÆÁ¿ØÖÆÆ÷ÊıÁ¿
-        /// @return ÊÓÆÁ¿ØÖÆÆ÷ÊıÁ¿
+        /// @brief è·å–è§†å±æ§åˆ¶å™¨æ•°é‡
+        /// @return è§†å±æ§åˆ¶å™¨æ•°é‡
         int GetVideoControllerCount();
 
-        /// @brief »ñÈ¡ÊÓÆÁ¿ØÖÆÆ÷ÃèÊö
-        /// @param[in] index ÊÓÆÁ¿ØÖÆÆ÷Ë÷Òı
-        /// @param[in] description ´æ´¢ÊÓÆÁ¿ØÖÆÆ÷ÃèÊö
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–è§†å±æ§åˆ¶å™¨æè¿°
+        /// @param[in] index è§†å±æ§åˆ¶å™¨ç´¢å¼•
+        /// @param[in] description å­˜å‚¨è§†å±æ§åˆ¶å™¨æè¿°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetVideoControllerDescription(IN int index, OUT wstring& description);
 
-        /// @brief »ñÈ¡ÊÓÆÁ¿ØÖÆÆ÷ÊÊÅäÆ÷¼ÇÒäÌåÈİÁ¿(ÏÔ´æÈİÁ¿)(µ¥Î»M)
-        /// @param[in] index ÊÓÆÁ¿ØÖÆÆ÷Ë÷Òı
-        /// @param[in] ramCapacity ¼ÇÒäÌåÈİÁ¿
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–è§†å±æ§åˆ¶å™¨é€‚é…å™¨è®°å¿†ä½“å®¹é‡(æ˜¾å­˜å®¹é‡)(å•ä½M)
+        /// @param[in] index è§†å±æ§åˆ¶å™¨ç´¢å¼•
+        /// @param[in] ramCapacity è®°å¿†ä½“å®¹é‡
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetVideoControllerAdapterRAMCapacity(IN int index, OUT unsigned long& ramCapacity);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LVideoControllerManager(const  LVideoControllerManager&);
         LVideoControllerManager& operator = (const  LVideoControllerManager&);
     };
 
-    /// @brief ´ÅÅÌÇı¶¯Æ÷¹ÜÀíÕßÀà
+    /// @brief ç£ç›˜é©±åŠ¨å™¨ç®¡ç†è€…ç±»
     class LDiskDriveManager
     {
     public:
         LDiskDriveManager();
         ~LDiskDriveManager();
 
-        /// @brief ´ÅÅÌÀàĞÍ
+        /// @brief ç£ç›˜ç±»å‹
         enum LDISK_TYPE
         {
-            UNKNOWN_DISK = 0, // Î´ÖªÀàĞÍ
-            FIXED_DISK = 1, // ¹Ì¶¨´ÅÅÌ(Èç±¾µØÓ²ÅÌ)
-            EXTERNAL_USB_DISK = 2, // À©Õ¹´ÅÅÌ(ÈçUSBÒÆ¶¯Ó²ÅÌ)
-            VIRTUAL_DISK = 3, // ĞéÄâÓ²ÅÌ(ÈçVHD)
-            REMOVABLE_DISK = 4, // ¿ÉÒÆ¶¯ÅÌ
+            UNKNOWN_DISK = 0, // æœªçŸ¥ç±»å‹
+            FIXED_DISK = 1, // å›ºå®šç£ç›˜(å¦‚æœ¬åœ°ç¡¬ç›˜)
+            EXTERNAL_USB_DISK = 2, // æ‰©å±•ç£ç›˜(å¦‚USBç§»åŠ¨ç¡¬ç›˜)
+            VIRTUAL_DISK = 3, // è™šæ‹Ÿç¡¬ç›˜(å¦‚VHD)
+            REMOVABLE_DISK = 4, // å¯ç§»åŠ¨ç›˜
         };
 
-        /// @brief »ñÈ¡´ÅÅÌÇı¶¯Æ÷ÊıÁ¿
-        /// @return ´ÅÅÌÊıÁ¿
+        /// @brief è·å–ç£ç›˜é©±åŠ¨å™¨æ•°é‡
+        /// @return ç£ç›˜æ•°é‡
         int GetDiskCount();
 
-        /// @brief »ñÈ¡´ÅÅÌĞÍºÅ
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] model ´ÅÅÌĞÍºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜å‹å·
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] model ç£ç›˜å‹å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskModel(IN int index, OUT wstring& model);
 
-        /// @brief »ñÈ¡´ÅÅÌĞòÁĞºÅ
+        /// @brief è·å–ç£ç›˜åºåˆ—å·
         ///  
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] serialNumber ĞòÁĞºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] serialNumber åºåˆ—å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskSerialNumber(IN int index, OUT wstring& serialNumber);
 
-        /// @brief »ñÈ¡´ÅÅÌ´óĞ¡
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] size ´æ´¢´ÅÅÌ´óĞ¡, µ¥Î»(G)
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜å¤§å°
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] size å­˜å‚¨ç£ç›˜å¤§å°, å•ä½(G)
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskSize(IN int index, OUT unsigned long& size);
 
-        /// @brief »ñÈ¡´ÅÅÌÉè±¸ID
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] deviceID ´æ´¢´ÅÅÌÉè±¸ID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜è®¾å¤‡ID
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] deviceID å­˜å‚¨ç£ç›˜è®¾å¤‡ID
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskDeviceID(IN int index, OUT wstring& deviceID);
 
-        /// @brief »ñÈ¡´ÅÅÌÊµÀıÂ·¾¶
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] pnpDeviceID ´æ´¢´ÅÅÌÊµÀıÂ·¾¶
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜å®ä¾‹è·¯å¾„
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] pnpDeviceID å­˜å‚¨ç£ç›˜å®ä¾‹è·¯å¾„
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
 
-        /// @brief »ñÈ¡´ÅÅÌ½Ó¿ÚÀàĞÍ
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] type ´ÅÅÌ½Ó¿ÚÀàĞÍ(SCSI, HDC, IDE, USB, 1394)
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜æ¥å£ç±»å‹
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] type ç£ç›˜æ¥å£ç±»å‹(SCSI, HDC, IDE, USB, 1394)
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskInterfaceType(IN int index, OUT wstring& type);
 
-        /// @brief »ñÈ¡´ÅÅÌÀàĞÍ
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] type ´æ´¢´ÅÅÌÀàĞÍ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜ç±»å‹
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] type å­˜å‚¨ç£ç›˜ç±»å‹
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskType(IN int index, OUT LDISK_TYPE& type);
 
-        /// @brief »ñÈ¡´ÅÅÌÂß¼­·ÖÇøÃû³Æ
-        ///  ¶à¸ö·ÖÇøÒÔ·ÖºÅ¸ô¿ªÈç: C:;D:;E:
-        /// @param[in] index ´ÅÅÌË÷Òı
-        /// @param[out] logicalName ´æ´¢´ÅÅÌÂß¼­Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç£ç›˜é€»è¾‘åˆ†åŒºåç§°
+        ///  å¤šä¸ªåˆ†åŒºä»¥åˆ†å·éš”å¼€å¦‚: C:;D:;E:
+        /// @param[in] index ç£ç›˜ç´¢å¼•
+        /// @param[out] logicalName å­˜å‚¨ç£ç›˜é€»è¾‘åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetDiskLogicalName(IN int index, OUT wstring& logicalName);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
-        // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+        // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
         LDiskDriveManager(const  LDiskDriveManager&);
         LDiskDriveManager& operator = (const  LDiskDriveManager&);
     };
 
-    /// @brief µç³Ø¹ÜÀíÕßÀà
+    /// @brief ç”µæ± ç®¡ç†è€…ç±»
     class LBatteryManager
     {
     public:
         LBatteryManager();
         ~LBatteryManager();
 
-        /// @brief »ñÈ¡µç³ØÊıÁ¿
-        /// @return µç³ØÊıÁ¿
+        /// @brief è·å–ç”µæ± æ•°é‡
+        /// @return ç”µæ± æ•°é‡
         int GetBatteryCount();
 
-        /// @brief »ñÈ¡µç³ØÃû³Æ
+        /// @brief è·å–ç”µæ± åç§°
         /// @param[in] index
-        /// @param[out] name ´æ´¢Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] name å­˜å‚¨åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryName(IN int index, OUT wstring& name);
 
-        /// @brief »ñÈ¡µç³ØÉè±¸ID
+        /// @brief è·å–ç”µæ± è®¾å¤‡ID
         /// @param[in] index
-        /// @param[out] deviceID ´æ´¢Éè±¸ID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] deviceID å­˜å‚¨è®¾å¤‡ID
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryDeviceID(IN int index, OUT wstring& deviceID);
 
-        /// @brief »ñÈ¡µç³ØÉè¼ÆµçÑ¹
+        /// @brief è·å–ç”µæ± è®¾è®¡ç”µå‹
         /// @param[in] index 
-        /// @param[out] voltage ´æ´¢Éè¼ÆµçÑ¹(µ¥Î»mV)
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] voltage å­˜å‚¨è®¾è®¡ç”µå‹(å•ä½mV)
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryDesignVoltage(IN int index, OUT unsigned long& voltage);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
     private:
         LBatteryManager(const LBatteryManager&);
         LBatteryManager& operator = (const LBatteryManager&);
     };
 
-    /// @brief µç³Ø¾²Ì¬Êı¾İ¹ÜÀíÕßÀà
+    /// @brief ç”µæ± é™æ€æ•°æ®ç®¡ç†è€…ç±»
     class LBatteryStaticDataManager
     {
     public:
         LBatteryStaticDataManager();
         ~LBatteryStaticDataManager();
 
-        /// @brief »ñÈ¡µç³ØÊıÄ¿
-        /// @return µç³ØÊıÄ¿
+        /// @brief è·å–ç”µæ± æ•°ç›®
+        /// @return ç”µæ± æ•°ç›®
         int GetBatteryCount();
 
-        /// @brief »ñÈ¡µç³ØÖÆÔìÉÌÃû³Æ
+        /// @brief è·å–ç”µæ± åˆ¶é€ å•†åç§°
         /// @param[in] index
-        /// @param[in] manufacturer ´æ´¢ÖÆÔìÉÌÃû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[in] manufacturer å­˜å‚¨åˆ¶é€ å•†åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryManufacturerName(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡µç³ØÎ¨Ò»ID
+        /// @brief è·å–ç”µæ± å”¯ä¸€ID
         /// @param[in] index
-        /// @param[out] uniqueID ´æ´¢Î¨Ò»ID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] uniqueID å­˜å‚¨å”¯ä¸€ID
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryUniqueID(IN int index, OUT wstring& uniqueID);
 
-        /// @brief »ñÈ¡µç³ØĞòÁĞºÅ
+        /// @brief è·å–ç”µæ± åºåˆ—å·
         /// @param[in] index 
-        /// @param[out] serialNumber ´æ´¢ĞòÁĞºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] serialNumber å­˜å‚¨åºåˆ—å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatterySerialNumber(IN int index, OUT wstring& serialNumber);
 
-        /// @brief »ñÈ¡µç³ØÉè¼ÆµçÁ¿
+        /// @brief è·å–ç”µæ± è®¾è®¡ç”µé‡
         /// @param[in] index
-        /// @param[out] capacity ´æ´¢µçÁ¿Öµ, µ¥Î»mWh
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] capacity å­˜å‚¨ç”µé‡å€¼, å•ä½mWh
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryDesignedCapacity(IN int index, OUT unsigned long& capacity);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
     private:
         LBatteryStaticDataManager(const LBatteryStaticDataManager&);
         LBatteryStaticDataManager& operator = (const LBatteryStaticDataManager&);
     };
 
-    /// @brief µç³ØÂúµçÁ¿¹ÜÀíÕßÀà
+    /// @brief ç”µæ± æ»¡ç”µé‡ç®¡ç†è€…ç±»
     class LBatteryFullCapacityManager
     {
     public:
         LBatteryFullCapacityManager();
         ~LBatteryFullCapacityManager();
 
-        /// @brief »ñÈ¡µç³ØÊıÁ¿
-        /// @return µç³ØÊıÁ¿
+        /// @brief è·å–ç”µæ± æ•°é‡
+        /// @return ç”µæ± æ•°é‡
         int GetBatteryCount();
 
-        /// @brief »ñÈ¡µç³ØÂúµçÁ¿ÈİÁ¿
+        /// @brief è·å–ç”µæ± æ»¡ç”µé‡å®¹é‡
         /// @param[in] index
-        /// @param[out] capacity ÈİÁ¿, µ¥Î»mWh
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] capacity å®¹é‡, å•ä½mWh
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBatteryFullChargedCapacity(IN int index, OUT unsigned long& capacity);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
     private:
         LBatteryFullCapacityManager(const LBatteryFullCapacityManager&);
         LBatteryFullCapacityManager& operator = (const LBatteryFullCapacityManager&);
     };
 
-    /// @brief ÎïÀíÍø¿¨¹ÜÀíÕßÀà
+    /// @brief ç‰©ç†ç½‘å¡ç®¡ç†è€…ç±»
     class LNetworkAdapterManager
     {
     public:
         LNetworkAdapterManager();
         ~LNetworkAdapterManager();
 
-        /// @brief  »ñÈ¡Íø¿¨ÊıÁ¿
-        /// @return Íø¿¨ÊıÁ¿
+        /// @brief  è·å–ç½‘å¡æ•°é‡
+        /// @return ç½‘å¡æ•°é‡
         int GetNetworkCardCount();
 
-        /// @brief »ñÈ¡Íø¿¨Ãû³Æ
-        /// @param[in] index Íø¿¨Ë÷Òı
-        /// @param[out] name ´æ´¢Íø¿¨Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç½‘å¡åç§°
+        /// @param[in] index ç½‘å¡ç´¢å¼•
+        /// @param[out] name å­˜å‚¨ç½‘å¡åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardName(IN int index, OUT wstring& name);
 
-        /// @brief »ñÈ¡Íø¿¨ÖÆÔìÉÌ
-        /// @param[in] idex Íø¿¨Ë÷Òı
-        /// @param[out] manufacturer ´æ´¢Íø¿¨ÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç½‘å¡åˆ¶é€ å•†
+        /// @param[in] idex ç½‘å¡ç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨ç½‘å¡åˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡Íø¿¨MACµØÖ·
-        /// @param[in] index Íø¿¨Ë÷Òı
-        /// @param[out] mac ´æ´¢MACµØÖ·
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç½‘å¡MACåœ°å€
+        /// @param[in] index ç½‘å¡ç´¢å¼•
+        /// @param[out] mac å­˜å‚¨MACåœ°å€
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardMACAddress(IN int index, OUT wstring& mac);
 
-        /// @brief »ñÈ¡Íø¿¨Á¬½ÓID
-        /// ÈçWi-Fi, Ethernet
-        /// @param[in] index Íø¿¨Ë÷Òı
-        /// @param[out] connectionID Á¬½ÓID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç½‘å¡è¿æ¥ID
+        /// å¦‚Wi-Fi, Ethernet
+        /// @param[in] index ç½‘å¡ç´¢å¼•
+        /// @param[out] connectionID è¿æ¥ID
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardConnectionID(IN int index, OUT wstring& connectionID);
 
-        /// @brief »ñÈ¡Íø¿¨GUID
-        /// @param[in] index Íø¿¨Ë÷Òı
-        /// @param[out] guid ´æ´¢Íø¿¨GUID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–ç½‘å¡GUID
+        /// @param[in] index ç½‘å¡ç´¢å¼•
+        /// @param[out] guid å­˜å‚¨ç½‘å¡GUID
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardGUID(IN int index, OUT wstring& guid);
 
-        /// @brief »ñÈ¡Íø¿¨PNPÉè±¸ID
-        /// @param[in] index Íø¿¨Ë÷Òı
+        /// @brief è·å–ç½‘å¡PNPè®¾å¤‡ID
+        /// @param[in] index ç½‘å¡ç´¢å¼•
         /// @param[out] pnpDeviceID
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetNetworkCardPNPDeviceID(IN int index, OUT wstring& pnpDeviceID);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
     private:
         LNetworkAdapterManager(const LNetworkAdapterManager&);
         LNetworkAdapterManager& operator = (const LNetworkAdapterManager&);
     };
 
-    /// @brief ¹âÇı¹ÜÀíÕßÀà
+    /// @brief å…‰é©±ç®¡ç†è€…ç±»
     class LCDRomDriveManager
     {
     public:
         LCDRomDriveManager();
         ~LCDRomDriveManager();
 
-        /// @brief »ñÈ¡¹âÇıÊıÁ¿
-        /// @return ¹âÇıÊıÁ¿
+        /// @brief è·å–å…‰é©±æ•°é‡
+        /// @return å…‰é©±æ•°é‡
         int GetCDRomDriveCount();
 
-        /// @brief »ñÈ¡¹âÇıÃû³Æ
-        /// @param[in] index ¹âÇıË÷Òı
-        /// @param[out] name ´æ´¢¹âÇıÃû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å…‰é©±åç§°
+        /// @param[in] index å…‰é©±ç´¢å¼•
+        /// @param[out] name å­˜å‚¨å…‰é©±åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetCDRomDriveName(IN int index, OUT wstring& name);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
         LCDRomDriveManager(const LCDRomDriveManager&);

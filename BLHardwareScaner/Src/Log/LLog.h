@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LLOG_H_
 #define _LLOG_H_
@@ -19,47 +19,47 @@
 using std::string;
 using std::wstring;
 
-/// @brief LOGÀà
+/// @brief LOGç±»
 namespace LLog
 {
-    /// @brief ´ò¿ªLOGµµ, Èç¹û²»´æÔÚÔò´´½¨, Èç¹ûÒÑ¾­´æÔÚÄÇÃ´Ô­Ê¼ÄÚÈİ½«±»Ïú»Ù
-    /// @param[in] szFileName LOGµµÎÄ¼şÃû
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ‰“å¼€LOGæ¡£, å¦‚æœä¸å­˜åœ¨åˆ™åˆ›å»º, å¦‚æœå·²ç»å­˜åœ¨é‚£ä¹ˆåŸå§‹å†…å®¹å°†è¢«é”€æ¯
+    /// @param[in] szFileName LOGæ¡£æ–‡ä»¶å
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Open(IN const wchar_t* szFileName);
 
-    /// @brief ¹Ø±ÕLOGµµ
+    /// @brief å…³é—­LOGæ¡£
     void Close();
 
-    /// @brief Ã¿ĞĞLOGÇ°ÏÔÊ¾Ïß³ÌId
-    /// Ä¬ÈÏ²»Ôö¼ÓÏß³ÌId
-    /// @param[in] bFlag ±êÊ¶ÊÇ·ñÔÚÃ¿ĞĞLOGÇ°ÏÔÊ¾Ïß³ÌId
+    /// @brief æ¯è¡ŒLOGå‰æ˜¾ç¤ºçº¿ç¨‹Id
+    /// é»˜è®¤ä¸å¢åŠ çº¿ç¨‹Id
+    /// @param[in] bFlag æ ‡è¯†æ˜¯å¦åœ¨æ¯è¡ŒLOGå‰æ˜¾ç¤ºçº¿ç¨‹Id
     void ShowThreadId(IN bool bFlag);
 
-    /// @brief Ã¿ĞĞLOGÇ°ÏÔÊ¾µ±Ç°Ê±¼ä
-    /// Ä¬ÈÏ²»Ôö¼Óµ±Ç°Ê±¼ä
-    /// @param[in] bFlag ±êÊ¶ÊÇ·ñÔÚÃ¿ĞĞLOGÇ°ÏÔÊ¾µ±Ç°Ê±¼ä
+    /// @brief æ¯è¡ŒLOGå‰æ˜¾ç¤ºå½“å‰æ—¶é—´
+    /// é»˜è®¤ä¸å¢åŠ å½“å‰æ—¶é—´
+    /// @param[in] bFlag æ ‡è¯†æ˜¯å¦åœ¨æ¯è¡ŒLOGå‰æ˜¾ç¤ºå½“å‰æ—¶é—´
     void ShowTime(IN bool bFlag);
 
-    /// @brief ÉèÖÃÊÇ·ñ×·¼Ó´ò¿ªLOGµµ
-    /// Ä¬ÈÏĞÂ´´½¨LOGµµ
-    /// @param[in] bFlag true(×·¼Ó·½Ê½´ò¿ªLOGµµ) fale(ĞÂ´´½¨LOGµµ)
+    /// @brief è®¾ç½®æ˜¯å¦è¿½åŠ æ‰“å¼€LOGæ¡£
+    /// é»˜è®¤æ–°åˆ›å»ºLOGæ¡£
+    /// @param[in] bFlag true(è¿½åŠ æ–¹å¼æ‰“å¼€LOGæ¡£) fale(æ–°åˆ›å»ºLOGæ¡£)
     void SetAppendOpen(IN bool bFlag);
 
-    /// @brief Ğ´Ò»ĞĞLOG, ×Ô¶¯»»ĞĞ, Ã¿ĞĞ×î¶à1024¸ö×Ö·û
-    /// @param[in] szFormat ĞèÒªĞ´ÈëLOGµÄ¸ñÊ½»¯×Ö·û´®
+    /// @brief å†™ä¸€è¡ŒLOG, è‡ªåŠ¨æ¢è¡Œ, æ¯è¡Œæœ€å¤š1024ä¸ªå­—ç¬¦
+    /// @param[in] szFormat éœ€è¦å†™å…¥LOGçš„æ ¼å¼åŒ–å­—ç¬¦ä¸²
     void WriteLineW(IN const wchar_t* szFormat, ...);
 
-    /// @brief Ğ´Ò»ĞĞLOG, ×Ô¶¯»»ĞĞ, Ã»ĞĞ×î¶à1024¸ö×Ö·û
-    /// @param[in] szFormat ĞèÒªĞ´ÈëLOGµÄ¸ñÊ½»¯×Ö·û´®
+    /// @brief å†™ä¸€è¡ŒLOG, è‡ªåŠ¨æ¢è¡Œ, æ²¡è¡Œæœ€å¤š1024ä¸ªå­—ç¬¦
+    /// @param[in] szFormat éœ€è¦å†™å…¥LOGçš„æ ¼å¼åŒ–å­—ç¬¦ä¸²
     void WriteLineA(IN const char* szFormat, ...);
 };
 
-/// @brief ´òÓ¡LOGºê
+/// @brief æ‰“å°LOGå®
 #ifndef PrintLogA
 #define PrintLogA(format, ...) LLog::WriteLineA(format, __VA_ARGS__)
 #endif
 
-/// @brief ´òÓ¡LOGºê
+/// @brief æ‰“å°LOGå®
 #ifndef PrintLogW
 #define PrintLogW(format, ...) LLog::WriteLineW(format, __VA_ARGS__)
 #endif

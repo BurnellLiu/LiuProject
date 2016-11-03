@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "LCpuTemp.h"
 
@@ -8,27 +8,27 @@
 
 
 
-/// @brief CPUÎÂ¶ÈÊµÏÖ½Ó¿Ú
+/// @brief CPUæ¸©åº¦å®ç°æ¥å£
 class CCpuTemp
 {
 public:
-    static bool gInitWinRing0Success; ///< ±êÖ¾ÊÇ·ñ³É¹¦³õÊ¼»¯WinRing0
+    static bool gInitWinRing0Success; ///< æ ‡å¿—æ˜¯å¦æˆåŠŸåˆå§‹åŒ–WinRing0
 
 public:
-    /// @brief ĞéÎö¹¹º¯Êı
+    /// @brief è™šææ„å‡½æ•°
     virtual ~CCpuTemp() = 0{}
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] coreNum ´æ´¢CPUÎïÀíºËĞÄÊı
-    /// @param[out] temp ´æ´¢ÎÂ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] coreNum å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]) = 0;
 
 protected:
-    /// @brief »ñÈ¡´¦ÀíÆ÷ºËĞÄÊı
-    /// @param[out] physicalCoreNumber ÎïÀíºËĞÄÊı
-    /// @param[out] logicalProcessorNumber Âß¼­´¦ÀíÆ÷ÊıÁ¿
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–å¤„ç†å™¨æ ¸å¿ƒæ•°
+    /// @param[out] physicalCoreNumber ç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] logicalProcessorNumber é€»è¾‘å¤„ç†å™¨æ•°é‡
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetProcessorCoreNumber(unsigned long& physicalCoreNumber, unsigned long& logicalProcessorNumber)
     {
         bool bRet = false;
@@ -63,7 +63,7 @@ protected:
             }
         }
 
-        // »ñÈ¡Âß¼­´¦ÀíÆ÷ÊıÁ¿
+        // è·å–é€»è¾‘å¤„ç†å™¨æ•°é‡
 
         GetNativeSystemInfo(&systemInfo);
         logicalProcessorNumber = systemInfo.dwNumberOfProcessors;
@@ -82,26 +82,26 @@ SAFE_EXIT:
 
 bool CCpuTemp::gInitWinRing0Success = false;
 
-/// @brief IntelCPUÎÂ¶ÈÀà
+/// @brief IntelCPUæ¸©åº¦ç±»
 class CIntelCpuTemp : public CCpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CIntelCpuTemp()
     {
 
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CIntelCpuTemp()
     {
 
     }
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] coreNum ´æ´¢CPUÎïÀíºËĞÄÊı
-    /// @param[out] temp ´æ´¢ÎÂ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] coreNum å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
     {
         if (!gInitWinRing0Success)
@@ -110,17 +110,17 @@ public:
         ZeroMemory(temp, sizeof(unsigned int) * MAX_PROCESSOR_PHYSICAL_CORE_NUM);
 
         /*
-        DTS( Digital Thermal Senser)·½Ê½»ñÈ¡CPUÎÂ¶È£¬Í¨¹ı¶ÁÈ¡MSRÀ´ÊµÏÖ
-        ÏÖÔÚIntel´¦ÀíÆ÷CPUÖĞÃ¿¸ö¶¼¼¯ºÏÁËDTS£¬ÓÃÀ´ÊµÊ±¼à²âCPUµÄÎÂ¶È£¬ 
-        µ±ÎÂ¶È´ïµ½TCC( Thermal Control Circuit)¼¤»îÎÂ¶ÈÊ±£¬ ½«»áÍ¨¹ı½µµÍµçÑ¹¡¢Ö÷Æµ¡¢·çÉÈµ÷½ÚµÈĞÎÊ½µ÷½ÚÎÂ¶È£¬ ÎÒÃÇ³ÆÕâ¸öÎÂ¶ÈÎªTjunction
-        ¶øÎÒÃÇ´ÓMSR£¨Model Specific Register£©¶Áµ½µÄÎÂ¶ÈÊÇ¾àÀëTjunctionµÄÎÂ²î£¬¶ø²»ÊÇÊµ¼ÊµÄÎÂ¶È£¬³ÆÖ®ÎªDelta
-        ËùÒÔÊµ¼ÊµÄÎÂ¶ÈÎª£ºTjunction- Delta
-        ²¢ÇÒ²»Í¬CPUµÄTjunction»¹²»Ò»Ñù£¬¿ÉÒÔÎª85¡æ¡¢100¡æ¡¢105¡æµÈ, ĞèÒª²éÔÄIntelÓÃ»§ÊÖ²á
-        ÒÔÏÂÎªIntel ¿áî£CPUÎÂ¶ÈµÄ¶ÁÈ¡¹ı³Ì:
+        DTS( Digital Thermal Senser)æ–¹å¼è·å–CPUæ¸©åº¦ï¼Œé€šè¿‡è¯»å–MSRæ¥å®ç°
+        ç°åœ¨Intelå¤„ç†å™¨CPUä¸­æ¯ä¸ªéƒ½é›†åˆäº†DTSï¼Œç”¨æ¥å®æ—¶ç›‘æµ‹CPUçš„æ¸©åº¦ï¼Œ 
+        å½“æ¸©åº¦è¾¾åˆ°TCC( Thermal Control Circuit)æ¿€æ´»æ¸©åº¦æ—¶ï¼Œ å°†ä¼šé€šè¿‡é™ä½ç”µå‹ã€ä¸»é¢‘ã€é£æ‰‡è°ƒèŠ‚ç­‰å½¢å¼è°ƒèŠ‚æ¸©åº¦ï¼Œ æˆ‘ä»¬ç§°è¿™ä¸ªæ¸©åº¦ä¸ºTjunction
+        è€Œæˆ‘ä»¬ä»MSRï¼ˆModel Specific Registerï¼‰è¯»åˆ°çš„æ¸©åº¦æ˜¯è·ç¦»Tjunctionçš„æ¸©å·®ï¼Œè€Œä¸æ˜¯å®é™…çš„æ¸©åº¦ï¼Œç§°ä¹‹ä¸ºDelta
+        æ‰€ä»¥å®é™…çš„æ¸©åº¦ä¸ºï¼šTjunction- Delta
+        å¹¶ä¸”ä¸åŒCPUçš„Tjunctionè¿˜ä¸ä¸€æ ·ï¼Œå¯ä»¥ä¸º85â„ƒã€100â„ƒã€105â„ƒç­‰, éœ€è¦æŸ¥é˜…Intelç”¨æˆ·æ‰‹å†Œ
+        ä»¥ä¸‹ä¸ºIntel é…·ç¿CPUæ¸©åº¦çš„è¯»å–è¿‡ç¨‹:
         */
 
-        // Ê¹ÓÃCPUIDÖ¸Áî0»ñÈ¡CPUÖ§³ÖµÄ×î´óÃüÁîÊı
-        // Èç¹û×î´óÃüÁîÊıĞ¡ÓÚ6, ÄÇÃ´CPU²»Ö§³ÖDTS
+        // ä½¿ç”¨CPUIDæŒ‡ä»¤0è·å–CPUæ”¯æŒçš„æœ€å¤§å‘½ä»¤æ•°
+        // å¦‚æœæœ€å¤§å‘½ä»¤æ•°å°äº6, é‚£ä¹ˆCPUä¸æ”¯æŒDTS
         DWORD eax = 0;
         DWORD ebx = 0;
         DWORD ecx = 0;
@@ -132,8 +132,8 @@ public:
         if (maxCmdNum < 6)
             return false;
 
-        // Ê¹ÓÃCPUIDÖ¸Áî6, ²é¿´CPUÊÇ·ñÖ§³ÖDTS
-        // eaxµÚÒ»Î»Îª1Ôò±íÊ¾Ö§³ÖDTS, ·´Ö®²»Ö§³ÖDTS
+        // ä½¿ç”¨CPUIDæŒ‡ä»¤6, æŸ¥çœ‹CPUæ˜¯å¦æ”¯æŒDTS
+        // eaxç¬¬ä¸€ä½ä¸º1åˆ™è¡¨ç¤ºæ”¯æŒDTS, åä¹‹ä¸æ”¯æŒDTS
         eax = 0;
         ebx = 0;
         ecx = 0;
@@ -144,7 +144,7 @@ public:
         if (0 == (eax & 1))
             return false;
 
-        // Ê¹ÓÃ0xeeÖ´ĞĞrdmsrÖ¸Áî, Èç¹ûexaµÄµÚ30Î»Îª1, Ôò±íÊ¾TjunctionÎª85, ·ñÔòÎª100
+        // ä½¿ç”¨0xeeæ‰§è¡ŒrdmsræŒ‡ä»¤, å¦‚æœexaçš„ç¬¬30ä½ä¸º1, åˆ™è¡¨ç¤ºTjunctionä¸º85, å¦åˆ™ä¸º100
         eax = 0;
         edx = 0;
 
@@ -164,8 +164,8 @@ public:
 
         coreNum = processorCoreNum;
 
-        // Ê¹ÓÃ0x19cÖ´ĞĞrdmsrÖ¸Áî, eaxµÄ16:23Î»±íÊ¾µ±Ç°DTSÖµ
-        // ·Ö±ğ»ñÈ¡Ã¿¸öÂß¼­´¦ÀíÆ÷µÄÎÂ¶È
+        // ä½¿ç”¨0x19cæ‰§è¡ŒrdmsræŒ‡ä»¤, eaxçš„16:23ä½è¡¨ç¤ºå½“å‰DTSå€¼
+        // åˆ†åˆ«è·å–æ¯ä¸ªé€»è¾‘å¤„ç†å™¨çš„æ¸©åº¦
         for (DWORD processorIndex = 0; processorIndex < logicalProcessorNum; processorIndex += step)
         {
             DWORD threadMask = 1;
@@ -188,26 +188,26 @@ public:
 };
 
 
-/// @brief AMDCPUÎÂ¶ÈÀà
+/// @brief AMDCPUæ¸©åº¦ç±»
 class CAMDCpuTemp : public CCpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CAMDCpuTemp()
     {
 
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CAMDCpuTemp()
     {
 
     }
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] coreNum ´æ´¢CPUÎïÀíºËĞÄÊı
-    /// @param[out] temp ´æ´¢ÎÂ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] coreNum å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     virtual bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM])
     {
         if (!gInitWinRing0Success)
@@ -224,7 +224,7 @@ public:
         const WORD PCI_CONFIG_ADDRESS = 0XCF8;
         const WORD PCI_CONFIG_DATA = 0XCFC;
 
-        // É¨ÃèËùÓĞPCIÉè±¸ÕÒµ½Éè±¸: VID 0x1022 DID 0x141D
+        // æ‰«ææ‰€æœ‰PCIè®¾å¤‡æ‰¾åˆ°è®¾å¤‡: VID 0x1022 DID 0x141D
         for(unsigned int bus = 0; bus <= 255; bus++)
         {
             for(unsigned int dev = 0; dev < 32; dev++)
@@ -233,11 +233,11 @@ public:
                 {
                     DWORD dwAddr=0X80000000+(bus<<16)+(dev<<11)+(func<<8);
 
-                    // ¶ÁÈ¡Éè±¸IDºÍ³§ÉÌID
+                    // è¯»å–è®¾å¤‡IDå’Œå‚å•†ID
                     LWinRing0::WriteIoPortDword(PCI_CONFIG_ADDRESS, dwAddr);
                     DWORD dwData = LWinRing0::ReadIoPortDword(PCI_CONFIG_DATA);
 
-                    // ÖµÎª0XFFFFFFFF±íÊ¾²»´æÔÚ¸ÃPCIÉè±¸
+                    // å€¼ä¸º0XFFFFFFFFè¡¨ç¤ºä¸å­˜åœ¨è¯¥PCIè®¾å¤‡
                     if(dwData==0XFFFFFFFF)
                     {
                         continue;
@@ -249,7 +249,7 @@ public:
                     if (vid == 0X1022 &&
                         did == 0X141D)
                     {
-                        // ¼Ä´æÆ÷µÄÖµ¸ß8Î»ÎªÎÂ¶ÈÖµ
+                        // å¯„å­˜å™¨çš„å€¼é«˜8ä½ä¸ºæ¸©åº¦å€¼
                         LWinRing0::WriteIoPortDword(PCI_CONFIG_ADDRESS, dwAddr|0XA4);
                         DWORD dwTemp = LWinRing0::ReadIoPortDword(PCI_CONFIG_DATA);
                         dwTemp = dwTemp >> 24;
@@ -292,7 +292,7 @@ LCpuTemp::LCpuTemp(IN const wstring& winRing0Path)
             return;
     }
 
-    // »ñÈ¡CPU³§ÉÌĞÅÏ¢
+    // è·å–CPUå‚å•†ä¿¡æ¯
     char vendorBuffer[20] = {0};
     int iRet = LWinRing0::Cpuid(
         0, 
@@ -306,7 +306,7 @@ LCpuTemp::LCpuTemp(IN const wstring& winRing0Path)
 
     //AMD:      "AuthenticAMD"
     //Intel:    "GenuineIntel"
-    //×¢ÒâÕâÀï£ºedxÓë ecxµÄË³ĞòºÍ×Ö·û´®ÖĞ¶şÕßµÄË³ĞòÊÇ·´µÄ, ËùÒÔµ÷»»ºóÁ½¸ö¼Ä´æÆ÷
+    //æ³¨æ„è¿™é‡Œï¼šedxä¸ ecxçš„é¡ºåºå’Œå­—ç¬¦ä¸²ä¸­äºŒè€…çš„é¡ºåºæ˜¯åçš„, æ‰€ä»¥è°ƒæ¢åä¸¤ä¸ªå¯„å­˜å™¨
     unsigned long ecx = *((unsigned long *)&vendorBuffer[8]);
     unsigned long edx = *((unsigned long *)&vendorBuffer[12]);
     *((unsigned long *)&vendorBuffer[12]) = ecx;

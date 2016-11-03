@@ -1,4 +1,4 @@
-
+ï»¿
 #define _EXPORTING_CORETEMP
 #include "CoreTemp.h"
 
@@ -8,12 +8,12 @@
 #include "LCpuTemp.h"
 #include "LGpuTemp.h"
 
-LCpuTemp* gCpuTemp = NULL; ///< CPUÎÂ¶È¶ÔÏóÖ¸Õë
-LGpuTemp* gGpuTemp = NULL; ///< GPUÎÂ¶È¶ÔÏóÖ¸Õë
+LCpuTemp* gCpuTemp = NULL; ///< CPUæ¸©åº¦å¯¹è±¡æŒ‡é’ˆ
+LGpuTemp* gGpuTemp = NULL; ///< GPUæ¸©åº¦å¯¹è±¡æŒ‡é’ˆ
 
 
-/// @brief ½ø³Ì¼ÓÔØDLL
-/// @param[in] hModule DLLÄ£¿é¾ä±ú
+/// @brief è¿›ç¨‹åŠ è½½DLL
+/// @param[in] hModule DLLæ¨¡å—å¥æŸ„
 static void DllProcessAttach(IN HMODULE hModule)
 {
     const int NAME_MAX_LEN = 1024;
@@ -49,7 +49,7 @@ static void DllProcessAttach(IN HMODULE hModule)
 
 }
 
-/// @brief ½ø³ÌÐ¶ÔØDLL
+/// @brief è¿›ç¨‹å¸è½½DLL
 static void DllProcessDetach()
 {
     if (gCpuTemp != 0)

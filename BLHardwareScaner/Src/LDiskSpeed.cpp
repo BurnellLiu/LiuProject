@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LDiskSpeed.h"
 
 #include <ctime>
@@ -10,7 +10,7 @@ using std::vector;
 
 #include <Windows.h>
 
-/// @brief ´íÎóÏûÏ¢×Ö·û´®ÁĞ±í
+/// @brief é”™è¯¯æ¶ˆæ¯å­—ç¬¦ä¸²åˆ—è¡¨
 static wchar_t* ErrorMsgList[] =
 {
     L"No Error",
@@ -21,19 +21,19 @@ static wchar_t* ErrorMsgList[] =
     L"Test Abort Error"
 };
 
-/// @brief ²úÉúËæ»úÕûÊı
-/// @param[in] min Ëæ»úÕûÊıµÄ×îĞ¡Öµ
-/// @param[in] max Ëæ»úÕûÊıµÄ×î´óÖµ
-/// @return Ëæ»úÕûÊı
+/// @brief äº§ç”Ÿéšæœºæ•´æ•°
+/// @param[in] min éšæœºæ•´æ•°çš„æœ€å°å€¼
+/// @param[in] max éšæœºæ•´æ•°çš„æœ€å¤§å€¼
+/// @return éšæœºæ•´æ•°
 static int RandInt(int min, int max) 
 {
     return rand()%(max - min + 1) + min;
 }
 
-/// @brief ´´½¨Ëæ»ú»º³åÇø
-/// »º³åÇøÖĞ½«±»Ëæ»úÌî³äÖµ
-/// @param[in] bufferSize »º³åÇø´óĞ¡
-/// @return »º³åÇøÖ¸Õë
+/// @brief åˆ›å»ºéšæœºç¼“å†²åŒº
+/// ç¼“å†²åŒºä¸­å°†è¢«éšæœºå¡«å……å€¼
+/// @param[in] bufferSize ç¼“å†²åŒºå¤§å°
+/// @return ç¼“å†²åŒºæŒ‡é’ˆ
 static char* CreateRandomBuffer(unsigned long bufferSize)
 {
     char* pBuffer = new char[bufferSize];
@@ -48,8 +48,8 @@ static char* CreateRandomBuffer(unsigned long bufferSize)
     return pBuffer;
 }
 
-/// @brief »ñÈ¡Windows´íÎóÂë
-/// @param[out] pWStr ´æ´¢´íÎóĞÅÏ¢
+/// @brief è·å–Windowsé”™è¯¯ç 
+/// @param[out] pWStr å­˜å‚¨é”™è¯¯ä¿¡æ¯
 static void GetWindowsError(OUT wstring* pWStr)
 {
     if (0 == pWStr)
@@ -60,19 +60,19 @@ static void GetWindowsError(OUT wstring* pWStr)
     (*pWStr) = windowsErrorCode;
 }
 
-/// @brief ´ÅÅÌËÙ¶È²âÊÔÎÄ¼ş½á¹¹
+/// @brief ç£ç›˜é€Ÿåº¦æµ‹è¯•æ–‡ä»¶ç»“æ„
 struct LDiskSpeedTestFile
 {
-    wstring Path; ///< ²âÊÔÎÄ¼şÂ·¾¶
-    unsigned long Size; ///< ²âÊÔÎÄ¼ş´óĞ¡, ²âÊÔÎÄ¼ş×î´óÎª2^32-1(¼´4G-1)
+    wstring Path; ///< æµ‹è¯•æ–‡ä»¶è·¯å¾„
+    unsigned long Size; ///< æµ‹è¯•æ–‡ä»¶å¤§å°, æµ‹è¯•æ–‡ä»¶æœ€å¤§ä¸º2^32-1(å³4G-1)
 };
 
-/// @brief ´ÅÅÌË³Ğò²âÊÔ
+/// @brief ç£ç›˜é¡ºåºæµ‹è¯•
 class CDiskSequenceTest
 {
 public:
 
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CDiskSequenceTest()
     {
         m_bStopTest = false;
@@ -87,19 +87,19 @@ public:
         m_testState.WriteSpeed = 0.0f;
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CDiskSequenceTest()
     {
 
     }
 
-    /// @brief ¿ªÊ¼²âÊÔ
+    /// @brief å¼€å§‹æµ‹è¯•
     bool Start(IN const wstring& filePath, IN unsigned int fileSize)
     {
         if (false == m_testState.TestDone)
             return false;
 
-        // ÎÄ¼ş´óĞ¡³¬³ö·¶Î§16M~4G
+        // æ–‡ä»¶å¤§å°è¶…å‡ºèŒƒå›´16M~4G
         if (fileSize < 16 || fileSize >= 4096)
             return false;
        
@@ -121,44 +121,44 @@ public:
         return true;
     }
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
     LDiskSpeedTestState& GetState()
     {
         return m_testState;
     }
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop()
     {
         m_bStopTest = true;
     }
 
 private:
-    LDiskSpeedTestFile m_testFile; ///< ²âÊÔÎÄ¼ş
-    LDiskSpeedTestState m_testState; ///< ²âÊÔ×´Ì¬
-    bool m_bStopTest; ///< ±ê¼ÇÊÇ·ñÍ£Ö¹²âÊÔ
+    LDiskSpeedTestFile m_testFile; ///< æµ‹è¯•æ–‡ä»¶
+    LDiskSpeedTestState m_testState; ///< æµ‹è¯•çŠ¶æ€
+    bool m_bStopTest; ///< æ ‡è®°æ˜¯å¦åœæ­¢æµ‹è¯•
 
 private:
-    /// @brief Ë³Ğò²âÊÔ
-    /// @param[in] pParam ²ÎÊı
+    /// @brief é¡ºåºæµ‹è¯•
+    /// @param[in] pParam å‚æ•°
     static void DiskSequenceTestThread(void* pParam)
     {
         /*
-        ²âÊÔËã·¨:
-        ÏÈÒÔ16MµÄ³ß´çÎªµ¥Î», ³ÖĞøÏòÊÜ²â·ÖÇøĞ´ÈëÉú²ú1¸ö´ïµ½Ö¸¶¨´óĞ¡µÄÎÄ¼ş,
-        È»ºóÔÙÒÔÍ¬ÑùµÄµ¥Î»³ß´ç¶ÁÈ¡
+        æµ‹è¯•ç®—æ³•:
+        å…ˆä»¥16Mçš„å°ºå¯¸ä¸ºå•ä½, æŒç»­å‘å—æµ‹åˆ†åŒºå†™å…¥ç”Ÿäº§1ä¸ªè¾¾åˆ°æŒ‡å®šå¤§å°çš„æ–‡ä»¶,
+        ç„¶åå†ä»¥åŒæ ·çš„å•ä½å°ºå¯¸è¯»å–
         */
 
         CDiskSequenceTest* pDiskSequenceTest = (CDiskSequenceTest*)pParam;
         LDiskSpeedTestState& testState = pDiskSequenceTest->m_testState;
         LDiskSpeedTestFile& testFile = pDiskSequenceTest->m_testFile;
 
-        HANDLE hFile = 0; // ÎÄ¼ş¾ä±ú
+        HANDLE hFile = 0; // æ–‡ä»¶å¥æŸ„
 
-        clock_t clockBegin; // ¼ÆÊ±¿ªÊ¼
-        clock_t clockEnd; // ¼ÆÊ±½áÊø
+        clock_t clockBegin; // è®¡æ—¶å¼€å§‹
+        clock_t clockEnd; // è®¡æ—¶ç»“æŸ
 
-        // ·ÖÅäÒ»¸ö16MµÄ¶ÁĞ´»º³åÇø
+        // åˆ†é…ä¸€ä¸ª16Mçš„è¯»å†™ç¼“å†²åŒº
         const unsigned long RW_BUFFER_SIZE = (unsigned long)(16) * 1024 * 1024;
 
         char* pRWBuffer = CreateRandomBuffer(RW_BUFFER_SIZE);
@@ -169,7 +169,7 @@ private:
             goto SAFE_EXIT;
         }
         
-        // ´´½¨ÎÄ¼ş, ¹Ø±ÕÎÄ¼ş¾ä±úºó»á×Ô¶¯É¾³ıÎÄ¼ş, ³ÌĞòÒâÍâ¹Ø±Õºó, Ò²¿ÉÉ¾³ı²âÊÔÎÄ¼ş
+        // åˆ›å»ºæ–‡ä»¶, å…³é—­æ–‡ä»¶å¥æŸ„åä¼šè‡ªåŠ¨åˆ é™¤æ–‡ä»¶, ç¨‹åºæ„å¤–å…³é—­å, ä¹Ÿå¯åˆ é™¤æµ‹è¯•æ–‡ä»¶
         hFile = CreateFileW(
             testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
@@ -187,7 +187,7 @@ private:
             goto SAFE_EXIT;
         }
 
-        // ½øĞĞĞ´²âÊÔ
+        // è¿›è¡Œå†™æµ‹è¯•
         clockBegin = clock();
         for (unsigned long i = 0; i < testFile.Size/RW_BUFFER_SIZE; i++)
         {
@@ -211,14 +211,14 @@ private:
 
             clockEnd = clock();
 
-            // ¾­ÀúÊ±¼ä, »»Ëã³ÉÃë, ¼ÆËãĞ´ÈëËÙ¶È
+            // ç»å†æ—¶é—´, æ¢ç®—æˆç§’, è®¡ç®—å†™å…¥é€Ÿåº¦
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
             testState.WriteSpeed = (float)(RW_BUFFER_SIZE/1024/1024) * (i + 1.0f)/time;
 
         }
 
-        // ½øĞĞ¶Á²âÊÔ
+        // è¿›è¡Œè¯»æµ‹è¯•
         SetFilePointer(hFile, 0, 0, FILE_BEGIN);
         clockBegin = clock();
         for (unsigned long i = 0; i < testFile.Size/RW_BUFFER_SIZE; i++)
@@ -243,7 +243,7 @@ private:
 
             clockEnd = clock();
 
-            // ¾­ÀúÊ±¼ä, »»Ëã³ÉÃë, ¼ÆËã¶ÁÈ¡ËÙ¶È
+            // ç»å†æ—¶é—´, æ¢ç®—æˆç§’, è®¡ç®—è¯»å–é€Ÿåº¦
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
             testState.ReadSpeed = (float)(RW_BUFFER_SIZE/1024/1024) * (i + 1.0f)/time;
@@ -252,10 +252,10 @@ private:
 
 SAFE_EXIT:
 
-        // ÉèÖÃ²âÊÔ×´Ì¬
+        // è®¾ç½®æµ‹è¯•çŠ¶æ€
         testState.TestDone = true;
 
-        // ÊÍ·Å×ÊÔ´
+        // é‡Šæ”¾èµ„æº
         if (0 != hFile)
         {
             CloseHandle(hFile);
@@ -275,7 +275,7 @@ class CDisk4KRandomTest
 {
 public:
 
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CDisk4KRandomTest()
     {
         m_bStopTest = false;
@@ -292,7 +292,7 @@ public:
         m_testFileHandle = 0;
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CDisk4KRandomTest()
     {
         if (m_testFileHandle != 0 &&
@@ -304,13 +304,13 @@ public:
 
     }
 
-    /// @brief ¿ªÊ¼²âÊÔ
+    /// @brief å¼€å§‹æµ‹è¯•
     bool Start(IN const wstring& filePath, IN unsigned int fileSize)
     {
         if (false == m_testState.TestDone)
             return false;
 
-        // ÎÄ¼şÒªÇóĞ¡ÓÚµÈÓÚ4G
+        // æ–‡ä»¶è¦æ±‚å°äºç­‰äº4G
         if (fileSize > 4096)
             return false;
 
@@ -318,7 +318,7 @@ public:
 
         m_testFile.Path = filePath;
 
-        // ×ö³Ë·¨Ê±Óöµ½ÕûĞÍ³£Á¿Òç³ö,Ö»ĞèÒª°ÑµÚÒ»¸ö³ËÊıÇ¿ÖÆ×ª»»ÎªÎŞ·ûºÅ32Î»Êı
+        // åšä¹˜æ³•æ—¶é‡åˆ°æ•´å‹å¸¸é‡æº¢å‡º,åªéœ€è¦æŠŠç¬¬ä¸€ä¸ªä¹˜æ•°å¼ºåˆ¶è½¬æ¢ä¸ºæ— ç¬¦å·32ä½æ•°
         m_testFile.Size = (unsigned long)fileSize * 1024 * 1024;
 
         m_testState.TestDone = false;
@@ -335,14 +335,14 @@ public:
             m_testFileHandle = 0;
         }
 
-        // ´´½¨¶ÁĞ´µØÖ·ÁĞ±í, ÒÔ4KÎªÃ¿¸ö¶ÁĞ´µ¥Î»
+        // åˆ›å»ºè¯»å†™åœ°å€åˆ—è¡¨, ä»¥4Kä¸ºæ¯ä¸ªè¯»å†™å•ä½
         m_rwAddressList.clear();
         m_rwAddressList.resize(m_testFile.Size/(4 * 1024));
         for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
         {
             m_rwAddressList[i] = i;
         }
-        // ´òÂÒ¶ÁĞ´µØÖ·ÖĞµÄË³Ğò
+        // æ‰“ä¹±è¯»å†™åœ°å€ä¸­çš„é¡ºåº
         for (int j = 0; j < 3; j++)
         {
             for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
@@ -358,13 +358,13 @@ public:
         return true;
     }
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
     LDiskSpeedTestState& GetState()
     {
         return m_testState;
     }
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop()
     {
         if (true == m_testState.TestDone)
@@ -375,26 +375,26 @@ public:
     }
 
 private:
-    /// @brief 4KËæ»úĞ´²âÊÔ
-    /// ¸ÃÏî²âÊÔ×î¶à½øĞĞ20Ãë
+    /// @brief 4Kéšæœºå†™æµ‹è¯•
+    /// è¯¥é¡¹æµ‹è¯•æœ€å¤šè¿›è¡Œ20ç§’
     bool Disk4KRandomWriteTest()
     {
-        // Ğ´»º³åÇø4K
+        // å†™ç¼“å†²åŒº4K
         const unsigned long  WRITE_BUFFER_SIZE = (unsigned long)(4) * 1024;
 
-        // ±êÊ¶º¯Êı·µ»ØÖµ
+        // æ ‡è¯†å‡½æ•°è¿”å›å€¼
         bool bRet = false;
         
-        // ¼ÆÊ±¿ªÊ¼±äÁ¿
+        // è®¡æ—¶å¼€å§‹å˜é‡
         clock_t clockBegin;
-        // ¼ÆÊ±½áÊø±äÁ¿
+        // è®¡æ—¶ç»“æŸå˜é‡
         clock_t clockEnd; 
 
-        // ¶¨ÒåĞ´»º³åÇø
+        // å®šä¹‰å†™ç¼“å†²åŒº
         char* pWriteBuffer = 0;
         
 
-        // ·ÖÅäÒ»¸öĞ´»º³åÇø
+        // åˆ†é…ä¸€ä¸ªå†™ç¼“å†²åŒº
         pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_SIZE);
         if (0 == pWriteBuffer)
         {
@@ -404,7 +404,7 @@ private:
             goto SAFE_EXIT;
         }
 
-        // ½øĞĞĞ´²âÊÔ
+        // è¿›è¡Œå†™æµ‹è¯•
         clockBegin = clock();
         clockEnd = clock();
         for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
@@ -435,7 +435,7 @@ private:
 
             clockEnd = clock();
 
-            // ¾­ÀúÊ±¼ä, »»Ëã³ÉÃë, ¼ÆËãĞ´ÈëËÙ¶È
+            // ç»å†æ—¶é—´, æ¢ç®—æˆç§’, è®¡ç®—å†™å…¥é€Ÿåº¦
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
             m_testState.WriteSpeed = (float)WRITE_BUFFER_SIZE/1024.0f/1024.0f * (i + 1)/time;
@@ -453,26 +453,26 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief 4KËæ»ú¶Á²âÊÔ
-    /// ¸ÃÏî²âÊÔ×î¶à½øĞĞ20Ãë
+    /// @brief 4Kéšæœºè¯»æµ‹è¯•
+    /// è¯¥é¡¹æµ‹è¯•æœ€å¤šè¿›è¡Œ20ç§’
     bool Disk4KRandomReadTest()
     {
-        // ¶Á»º³åÇø4K
+        // è¯»ç¼“å†²åŒº4K
         const unsigned long  READ_BUFFER_LEN = (unsigned long)(4) * 1024;
 
-        // ±êÊ¶º¯Êı·µ»ØÖµ
+        // æ ‡è¯†å‡½æ•°è¿”å›å€¼
         bool bRet = false;
 
-        // ¼ÆÊ±¿ªÊ¼±äÁ¿
+        // è®¡æ—¶å¼€å§‹å˜é‡
         clock_t clockBegin;
-        // ¼ÆÊ±½áÊø±äÁ¿
+        // è®¡æ—¶ç»“æŸå˜é‡
         clock_t clockEnd; 
 
-        // ¶¨Òå¶Á»º³åÇø
+        // å®šä¹‰è¯»ç¼“å†²åŒº
         char* pReadBuffer = 0;
 
 
-        // ·ÖÅäÒ»¸ö¶Á»º³åÇø
+        // åˆ†é…ä¸€ä¸ªè¯»ç¼“å†²åŒº
         pReadBuffer = CreateRandomBuffer(READ_BUFFER_LEN);
         if (0 == pReadBuffer)
         {
@@ -482,7 +482,7 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
-        // ½øĞĞ¶Á²âÊÔ
+        // è¿›è¡Œè¯»æµ‹è¯•
         clockBegin = clock();
         clockEnd = clock();
         for (unsigned long i = 0; i < m_rwAddressList.size(); i++)
@@ -514,7 +514,7 @@ SAFE_EXIT:
 
             clockEnd = clock();
 
-            // ¾­ÀúÊ±¼ä, »»Ëã³ÉÃë, ¼ÆËã¶ÁÈ¡ËÙ¶È
+            // ç»å†æ—¶é—´, æ¢ç®—æˆç§’, è®¡ç®—è¯»å–é€Ÿåº¦
             float time = (float)(clockEnd-clockBegin);
             time = time/1000.0f;
             m_testState.ReadSpeed = (float)READ_BUFFER_LEN/1024.0f/1024.0f * (i + 1)/time;
@@ -532,17 +532,17 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief Éú³ÉÎÄ¼ş
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief ç”Ÿæˆæ–‡ä»¶
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GenerateTestFile()
     {
         // 512KB
         const unsigned long WRITE_BUFFER_SIZE = 512 * 1024;
 
-        bool bRet = false; // º¯Êı·µ»ØÖµ
-        char* pWriteBuffer = 0; // Ğ´»º³åÇø
+        bool bRet = false; // å‡½æ•°è¿”å›å€¼
+        char* pWriteBuffer = 0; // å†™ç¼“å†²åŒº
 
-        // ´´½¨ÎÄ¼ş, ¹Ø±ÕÎÄ¼ş¾ä±úºó»á×Ô¶¯É¾³ıÎÄ¼ş, ³ÌĞòÒâÍâ¹Ø±Õºó, Ò²¿ÉÉ¾³ı²âÊÔÎÄ¼ş
+        // åˆ›å»ºæ–‡ä»¶, å…³é—­æ–‡ä»¶å¥æŸ„åä¼šè‡ªåŠ¨åˆ é™¤æ–‡ä»¶, ç¨‹åºæ„å¤–å…³é—­å, ä¹Ÿå¯åˆ é™¤æµ‹è¯•æ–‡ä»¶
         m_testFileHandle = CreateFileW(
             m_testFile.Path.c_str(), 
             GENERIC_WRITE | GENERIC_READ, 
@@ -561,7 +561,7 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
 
-        // ³õÊ¼»¯Ğ´Èë»º³åÇø
+        // åˆå§‹åŒ–å†™å…¥ç¼“å†²åŒº
         pWriteBuffer = CreateRandomBuffer(WRITE_BUFFER_SIZE);
         if (0 == pWriteBuffer)
         {
@@ -572,7 +572,7 @@ SAFE_EXIT:
         }
 
        
-        // Éú³É²âÊÔÎÄ¼ş
+        // ç”Ÿæˆæµ‹è¯•æ–‡ä»¶
         for (unsigned long i = 0; i < m_testFile.Size/WRITE_BUFFER_SIZE; i++)
         {
             unsigned long count = 0;
@@ -609,7 +609,7 @@ SAFE_EXIT:
         return bRet;
     }
 
-    /// @brief É¾³ı²âÊÔÎÄ¼ş
+    /// @brief åˆ é™¤æµ‹è¯•æ–‡ä»¶
     void DeleteTestFile()
     {
         if (m_testFileHandle != 0 && m_testFileHandle != INVALID_HANDLE_VALUE)
@@ -620,49 +620,49 @@ SAFE_EXIT:
     }
 
 private:
-    LDiskSpeedTestState m_testState; ///< ²âÊÔ×´Ì¬
-    LDiskSpeedTestFile m_testFile; ///< ²âÊÔÎÄ¼ş
-    bool m_bStopTest; ///< ±êÊ¶ÊÇ·ñÍ£Ö¹²âÊÔ
-    vector<unsigned long> m_rwAddressList; ///< Ëæ»ú¶ÁĞ´µØÖ·ÁĞ±í, ÒÔ4KÎªÃ¿¸ö¶ÁĞ´µ¥Î»
+    LDiskSpeedTestState m_testState; ///< æµ‹è¯•çŠ¶æ€
+    LDiskSpeedTestFile m_testFile; ///< æµ‹è¯•æ–‡ä»¶
+    bool m_bStopTest; ///< æ ‡è¯†æ˜¯å¦åœæ­¢æµ‹è¯•
+    vector<unsigned long> m_rwAddressList; ///< éšæœºè¯»å†™åœ°å€åˆ—è¡¨, ä»¥4Kä¸ºæ¯ä¸ªè¯»å†™å•ä½
 
-    HANDLE m_testFileHandle; ///< ²âÊÔÎÄ¼ş¾ä±ú
+    HANDLE m_testFileHandle; ///< æµ‹è¯•æ–‡ä»¶å¥æŸ„
 
 private:
-     /// @brief 4KËæ»ú²âÊÔ
-    /// @param[in] pParam ²ÎÊı
+     /// @brief 4Kéšæœºæµ‹è¯•
+    /// @param[in] pParam å‚æ•°
     static void Disk4KRandomTestThread(void* pParam)
     {
         /*
-        ²âÊÔËã·¨:
-        ÏÈÒÔ512KBµÄµ¥Î»³ß´çÉú³ÉÖ¸¶¨´óĞ¡µÄ²âÊÔÎÄ¼ş,
-        È»ºóÔÚÆäµØÖ··¶Î§ÄÚ½øĞĞËæ»ú4KBµ¥Î»³ß´ç½øĞĞĞ´Èë¼°¶ÁÈ¡²âÊÔ
+        æµ‹è¯•ç®—æ³•:
+        å…ˆä»¥512KBçš„å•ä½å°ºå¯¸ç”ŸæˆæŒ‡å®šå¤§å°çš„æµ‹è¯•æ–‡ä»¶,
+        ç„¶ååœ¨å…¶åœ°å€èŒƒå›´å†…è¿›è¡Œéšæœº4KBå•ä½å°ºå¯¸è¿›è¡Œå†™å…¥åŠè¯»å–æµ‹è¯•
         */
 
         CDisk4KRandomTest* pDisk4KRandomTest = (CDisk4KRandomTest*)pParam;
         LDiskSpeedTestState& testState = pDisk4KRandomTest->m_testState;
 
         
-        // Éú³É²âÊÔÎÄ¼ş
+        // ç”Ÿæˆæµ‹è¯•æ–‡ä»¶
         bool bRet = pDisk4KRandomTest->GenerateTestFile();
         if (!bRet)
             goto SAFE_EXIT;
 
-        // ½øĞĞĞ´²âÊÔ
+        // è¿›è¡Œå†™æµ‹è¯•
         bRet = pDisk4KRandomTest->Disk4KRandomWriteTest();
         if (!bRet)
             goto SAFE_EXIT;
 
-        // ½øĞĞ¶Á²âÊÔ
+        // è¿›è¡Œè¯»æµ‹è¯•
         bRet = pDisk4KRandomTest->Disk4KRandomReadTest();
         if (!bRet)
             goto SAFE_EXIT;
 
 SAFE_EXIT:
 
-        // ÉèÖÃ²âÊÔ×´Ì¬
+        // è®¾ç½®æµ‹è¯•çŠ¶æ€
         testState.TestDone = true;
 
-        // É¾³ı²âÊÔÎÄ¼ş
+        // åˆ é™¤æµ‹è¯•æ–‡ä»¶
         pDisk4KRandomTest->DeleteTestFile();
 
 

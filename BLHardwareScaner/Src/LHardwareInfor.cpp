@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LHardwareInfor.h"
 
 #include <algorithm>
@@ -25,25 +25,25 @@ using std::transform;
 
 
 
-/// @brief Ó²¼şĞÅÏ¢Àà
+/// @brief ç¡¬ä»¶ä¿¡æ¯ç±»
 ///
-/// ¸ÃÀà»ñÈ¡µÄ¶¼ÊÇ¹Ì¶¨ĞÅÏ¢
+/// è¯¥ç±»è·å–çš„éƒ½æ˜¯å›ºå®šä¿¡æ¯
 class CHardwareInfor
 {
 public:
-    /// @brief »ñÈ¡ÊµÀı¶ÔÏó
-    /// @return ÊµÀı¶ÔÏó
+    /// @brief è·å–å®ä¾‹å¯¹è±¡
+    /// @return å®ä¾‹å¯¹è±¡
     static CHardwareInfor& GetInstance()
     {
         static CHardwareInfor s_instance;
         return s_instance;
     }
 
-    /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ĞÅÏ¢
-    /// @return ¼ÆËã»úÏµÍ³ĞÅÏ¢
+    /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
+    /// @return è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
     const ComputerSystemInfor& GetComputerSystemInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanComputerSystemInfor(m_computerSystemInfor);
@@ -53,11 +53,11 @@ public:
         return m_computerSystemInfor;
     }
 
-    /// @brief »ñÈ¡²Ù×÷ÏµÍ³ĞÅÏ¢
-    /// @return ²Ù×÷ÏµÍ³ĞÅÏ¢
+    /// @brief è·å–æ“ä½œç³»ç»Ÿä¿¡æ¯
+    /// @return æ“ä½œç³»ç»Ÿä¿¡æ¯
     const OperatingSystemInfor& GetOperatingSystemInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanOperatingSystemInfor(m_operatingSystemInfor);
@@ -67,11 +67,11 @@ public:
         return m_operatingSystemInfor;
     }
 
-    /// @brief »ñÈ¡Ö÷°åĞÅÏ¢
-    /// @return Ö÷°åĞÅÏ¢
+    /// @brief è·å–ä¸»æ¿ä¿¡æ¯
+    /// @return ä¸»æ¿ä¿¡æ¯
     const MotherBoardInfor& GetMotherBoardInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanMotherBoardInfor(m_motherBoardInfor);
@@ -81,11 +81,11 @@ public:
         return m_motherBoardInfor;
     }
 
-    /// @brief »ñÈ¡´¦ÀíÆ÷ĞÅÏ¢
-    /// @return ´¦ÀíÆ÷ĞÅÏ¢
+    /// @brief è·å–å¤„ç†å™¨ä¿¡æ¯
+    /// @return å¤„ç†å™¨ä¿¡æ¯
     const ProcessorInfor& GetProcessorInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanProcessorInfor(m_processorInfor);
@@ -95,11 +95,11 @@ public:
         return m_processorInfor;
     }
 
-    /// @brief »ñÈ¡ÏÔ¿¨ĞÅÏ¢
-    /// @return ÏÔ¿¨ĞÅÏ¢
+    /// @brief è·å–æ˜¾å¡ä¿¡æ¯
+    /// @return æ˜¾å¡ä¿¡æ¯
     const VideoCardInforArray& GetVideoCardInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanVideoCardInfor(m_videoCardInfor);
@@ -109,11 +109,11 @@ public:
         return m_videoCardInfor;
     }
 
-    /// @brief »ñÈ¡ÎïÀíÄÚ´æĞÅÏ¢
-    /// @return ÎïÀíÄÚ´æĞÅÏ¢
+    /// @brief è·å–ç‰©ç†å†…å­˜ä¿¡æ¯
+    /// @return ç‰©ç†å†…å­˜ä¿¡æ¯
     const PhysicalMemoryInforArray& GetPhysicalMemoryInfor()
     {
-        static bool s_bScanDone = false; // ±êÊ¶ÊÇ·ñÍê³ÉÉ¨ÃèÓ²¼şĞÅÏ¢
+        static bool s_bScanDone = false; // æ ‡è¯†æ˜¯å¦å®Œæˆæ‰«æç¡¬ä»¶ä¿¡æ¯
         if (!s_bScanDone)
         {
             this->ScanPhysicalMemoryInfor(m_physicalMemoryInfor);
@@ -123,32 +123,32 @@ public:
         return m_physicalMemoryInfor;
     }
 
-    /// @brief »ñÈ¡´ÅÅÌĞÅÏ¢
-    /// @return ´ÅÅÌĞÅÏ¢
+    /// @brief è·å–ç£ç›˜ä¿¡æ¯
+    /// @return ç£ç›˜ä¿¡æ¯
     const DiskInforArray& GetDiskInfor()
     {
         /*
-        ´ÅÅÌĞÅÏ¢»á·¢Éú±ä»¯ËùÒÔĞèÒªÔÚÃ¿´Î»ñÈ¡µÄÊ±ºòÖØĞÂÉ¨Ãè
+        ç£ç›˜ä¿¡æ¯ä¼šå‘ç”Ÿå˜åŒ–æ‰€ä»¥éœ€è¦åœ¨æ¯æ¬¡è·å–çš„æ—¶å€™é‡æ–°æ‰«æ
         */
         this->ScanDiskInfor(m_diskInfor);
 
         return m_diskInfor;
     }
 
-    /// @brief »ñÈ¡ÏÔÊ¾Æ÷ĞÅÏ¢
-    /// @return ÏÔÊ¾Æ÷ĞÅÏ¢
+    /// @brief è·å–æ˜¾ç¤ºå™¨ä¿¡æ¯
+    /// @return æ˜¾ç¤ºå™¨ä¿¡æ¯
     const MonitorInforArray& GetMonitorInfor()
     {
         /*
-        ÏÔÊ¾Æ÷ĞÅÏ¢»á·¢Éú±ä»¯ËùÒÔĞèÒªÔÚÃ¿´Î»ñÈ¡µÄÊ±ºòÖØĞÂÉ¨Ãè
+        æ˜¾ç¤ºå™¨ä¿¡æ¯ä¼šå‘ç”Ÿå˜åŒ–æ‰€ä»¥éœ€è¦åœ¨æ¯æ¬¡è·å–çš„æ—¶å€™é‡æ–°æ‰«æ
         */
         this->ScanMonitorInfor(m_monitorInfor);
 
         return m_monitorInfor;
     }
 
-    /// @brief »ñÈ¡µç³Ø¾²Ì¬ĞÅÏ¢
-    /// @return µç³Ø¾²Ì¬ĞÅÏ¢
+    /// @brief è·å–ç”µæ± é™æ€ä¿¡æ¯
+    /// @return ç”µæ± é™æ€ä¿¡æ¯
     const BatteryStaticInfor& GetBatteryStaticInfor()
     {
         this->ScanBatteryStaticInfor(m_batteryStaticInfor);
@@ -156,8 +156,8 @@ public:
         return m_batteryStaticInfor;
     }
 
-    /// @brief »ñÈ¡Íø¿¨ĞÅÏ¢
-    /// @return Íø¿¨ĞÅÏ¢
+    /// @brief è·å–ç½‘å¡ä¿¡æ¯
+    /// @return ç½‘å¡ä¿¡æ¯
     const NetworkCardInforArray& GetNetworkCardInfor()
     {
         this->ScanNetworkCardInfor(m_networkCardInfor);
@@ -165,8 +165,8 @@ public:
         return m_networkCardInfor;
     }
 
-    /// @brief »ñÈ¡¹âÇıĞÅÏ¢
-    /// @return ¹âÇıĞÅÏ¢
+    /// @brief è·å–å…‰é©±ä¿¡æ¯
+    /// @return å…‰é©±ä¿¡æ¯
     const CDRomDriveInforArray& GetCDRomDriveInfor()
     {
         this->ScanCDRomDriveInfor(m_cdRomDriveInfor);
@@ -174,8 +174,8 @@ public:
         return m_cdRomDriveInfor;
     }
 
-    /// @brief »ñÈ¡ÉãÏñ»úĞÅÏ¢
-    /// @return ÉãÏñ»úĞÅÏ¢
+    /// @brief è·å–æ‘„åƒæœºä¿¡æ¯
+    /// @return æ‘„åƒæœºä¿¡æ¯
     const CameraInforArray& GetCameraInfor()
     {
         static bool s_bScanDone = false;
@@ -189,15 +189,15 @@ public:
         return m_cameraInfor;
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CHardwareInfor()
     {
 
     }
 
 private:
-    /// @brief É¨Ãè¼ÆËã»úÏµÍ³ĞÅÏ¢
-    /// @param[out] computerSystemInfor ´æ´¢¼ÆËã»úÏµÍ³ĞÅÏ¢
+    /// @brief æ‰«æè®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
+    /// @param[out] computerSystemInfor å­˜å‚¨è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
     void ScanComputerSystemInfor(OUT ComputerSystemInfor& computerSystemInfor)
     {
         computerSystemInfor.Type = COMPUTER_TYPE_UNKNOWN;
@@ -224,8 +224,8 @@ private:
     }
 
 
-    /// @brief É¨Ãè²Ù×÷ÏµÍ³ĞÅÏ¢
-    /// @param[out] operatingSystemInfor ²Ù×÷ÏµÍ³ĞÅÏ¢
+    /// @brief æ‰«ææ“ä½œç³»ç»Ÿä¿¡æ¯
+    /// @param[out] operatingSystemInfor æ“ä½œç³»ç»Ÿä¿¡æ¯
     void ScanOperatingSystemInfor(OUT OperatingSystemInfor& operatingSystemInfor)
     {
         LWMI::LOperatingSystemManager operatingSystemManager;
@@ -235,8 +235,8 @@ private:
         operatingSystemManager.GetOSSystemDrive(0, operatingSystemInfor.SystemDrive);
     }
 
-    /// @brief É¨ÃèÖ÷°åĞÅÏ¢
-    /// @param[out] motherBoardInfor Ö÷°åĞÅÏ¢
+    /// @brief æ‰«æä¸»æ¿ä¿¡æ¯
+    /// @param[out] motherBoardInfor ä¸»æ¿ä¿¡æ¯
     void ScanMotherBoardInfor(OUT MotherBoardInfor& motherBoardInfor)
     {
         LWMI::LMSSmBios_RawSMBiosTablesManager smBios;
@@ -261,8 +261,8 @@ private:
         motherBoardInfor.BiosRomSize = biosInfor.RomSize;
     }
 
-    /// @brief É¨Ãè´¦ÀíÆ÷ĞÅÏ¢
-    /// @param[out] processorInfor ´æ´¢´¦ÀíÆ÷ĞÅÏ¢
+    /// @brief æ‰«æå¤„ç†å™¨ä¿¡æ¯
+    /// @param[out] processorInfor å­˜å‚¨å¤„ç†å™¨ä¿¡æ¯
     void ScanProcessorInfor(OUT ProcessorInfor& processorInfor)
     {
         LWMI::LProcessorManager processorManager;
@@ -274,8 +274,8 @@ private:
         processorManager.GetProcessorMaxClockSpeed(0, processorInfor.MaxClockSpeed);
     }
 
-    /// @brief É¨ÃèÏÔ¿¨ĞÅÏ¢
-    /// @param[out] videoCardInfor ´æ´¢ÏÔ¿¨ĞÅÏ¢
+    /// @brief æ‰«ææ˜¾å¡ä¿¡æ¯
+    /// @param[out] videoCardInfor å­˜å‚¨æ˜¾å¡ä¿¡æ¯
     void ScanVideoCardInfor(OUT VideoCardInforArray& videoCardInfor)
     {
         videoCardInfor.Count = 0;
@@ -301,8 +301,8 @@ private:
             if (0 != dwRet)
                 continue;
 
-            // ¶ÀÁ¢ÏÔ¿¨¹ÒÔÚPCI²å²Û¿ÚÉÏËùÒÔ×ÜÏßºÅ²»Îª0
-            // ¼¯³ÉÏÔ¿¨¹ÒÔÚPCIÉÏ×ÜÏßºÃÎª0
+            // ç‹¬ç«‹æ˜¾å¡æŒ‚åœ¨PCIæ’æ§½å£ä¸Šæ‰€ä»¥æ€»çº¿å·ä¸ä¸º0
+            // é›†æˆæ˜¾å¡æŒ‚åœ¨PCIä¸Šæ€»çº¿å¥½ä¸º0
             if (0 == busNumber)
                 videoCardInfor.Type[i] = VIDEO_CARD_INTERNAL;
             else
@@ -319,8 +319,8 @@ private:
 
     }
 
-    /// @brief É¨ÃèÎïÀíÄÚ´æĞÅÏ¢
-    /// @param[out] physicalMemoryInfor ´æ´¢ÎïÀíÄÚ´æĞÅÏ¢
+    /// @brief æ‰«æç‰©ç†å†…å­˜ä¿¡æ¯
+    /// @param[out] physicalMemoryInfor å­˜å‚¨ç‰©ç†å†…å­˜ä¿¡æ¯
     void ScanPhysicalMemoryInfor(OUT PhysicalMemoryInforArray& physicalMemoryInfor)
     {
         physicalMemoryInfor.Count = 0;
@@ -337,8 +337,8 @@ private:
         }
     }
 
-    /// @brief É¨Ãè´ÅÅÌĞÅÏ¢
-    /// @param[out] diskInfor ´æ´¢´ÅÅÌĞÅÏ¢
+    /// @brief æ‰«æç£ç›˜ä¿¡æ¯
+    /// @param[out] diskInfor å­˜å‚¨ç£ç›˜ä¿¡æ¯
     void ScanDiskInfor(OUT DiskInforArray& diskInfor)
     {
         PrintLogW(L"Scan Disk Infor Function");
@@ -370,7 +370,7 @@ private:
             if (diskInfor.DiskType[i] != FIXED_DISK)
                 continue;
 
-            // »ñÈ¡¹Ì¶¨Ó²ÅÌµÄÆäËûÊôĞÔ
+            // è·å–å›ºå®šç¡¬ç›˜çš„å…¶ä»–å±æ€§
 
             wstring pnpDeviceID;
             wstring parentInstanceID;
@@ -379,7 +379,7 @@ private:
             if (pnpDeviceID.empty())
                 continue;
 
-            // »ñÈ¡´ÅÅÌÇı¶¯Æ÷µÄÊµÀıID
+            // è·å–ç£ç›˜é©±åŠ¨å™¨çš„å®ä¾‹ID
             LSetupDevAll devAll;
             for (int j = 0; j < devAll.GetDevNum(); j++)
             {
@@ -396,7 +396,7 @@ private:
             if (parentInstanceID.empty())
                 continue;
 
-            // »ñÈ¡´ÅÅÌÇı¶¯Æ÷µÄÀà±ğºÍÆ¥ÅäÉè±¸ID
+            // è·å–ç£ç›˜é©±åŠ¨å™¨çš„ç±»åˆ«å’ŒåŒ¹é…è®¾å¤‡ID
             wstring diskControllerClass;
             wstring diskControllerMatchingDeviceID;
             for (int j = 0; j < devAll.GetDevNum(); j++)
@@ -430,7 +430,7 @@ private:
                 else
                     diskInfor.FixedDiskType[i] = FIXED_DISK_HDD;
 
-                unsigned char smartData[SMART_DATA_LENGTH] = {0}; // ´æ´¢SMARTÊı¾İ
+                unsigned char smartData[SMART_DATA_LENGTH] = {0}; // å­˜å‚¨SMARTæ•°æ®
                 ideDiskController.GetSMARTData(smartData);
                 LSMARTParser smartParser(smartData);
                 diskInfor.ATAInfor[i].PowerOnHours = 0;
@@ -450,8 +450,8 @@ private:
         }
     }
 
-    /// @brief É¨ÃèÏÔÊ¾Æ÷ĞÅÏ¢
-    /// @param[out] monitorInfor ´æ´¢ÏÔÊ¾Æ÷ĞÅÏ¢
+    /// @brief æ‰«ææ˜¾ç¤ºå™¨ä¿¡æ¯
+    /// @param[out] monitorInfor å­˜å‚¨æ˜¾ç¤ºå™¨ä¿¡æ¯
     void ScanMonitorInfor(OUT MonitorInforArray& monitorInfor)
     {
         monitorInfor.Count = 0;
@@ -466,8 +466,8 @@ private:
         }
     }
 
-    /// @brief É¨Ãèµç³Ø¾²Ì¬ĞÅÏ¢
-    /// @param[out] batteryStaticInfor ´æ´¢µç³Ø¾²Ì¬ĞÅÏ¢
+    /// @brief æ‰«æç”µæ± é™æ€ä¿¡æ¯
+    /// @param[out] batteryStaticInfor å­˜å‚¨ç”µæ± é™æ€ä¿¡æ¯
     void ScanBatteryStaticInfor(OUT BatteryStaticInfor& batteryStaticInfor)
     {
         LWMI::LBatteryManager batteryManager;
@@ -491,11 +491,11 @@ private:
         batteryManager.GetBatteryDesignVoltage(0, batteryStaticInfor.DesignedVoltage);
     }
 
-    /// @brief É¨ÃèÍø¿¨ĞÅÏ¢
-    /// @param[out] networkCardInfor ´æ´¢Íø¿¨ĞÅÏ¢
+    /// @brief æ‰«æç½‘å¡ä¿¡æ¯
+    /// @param[out] networkCardInfor å­˜å‚¨ç½‘å¡ä¿¡æ¯
     void ScanNetworkCardInfor(OUT NetworkCardInforArray& networkCardInfor)
     {
-        // »ñÈ¡ÎŞÏßÍø¿¨GUID
+        // è·å–æ— çº¿ç½‘å¡GUID
         LWifiNetwork wifiNetwork;
         wstring wlanGUID;
         wifiNetwork.GetWLANGUID(wlanGUID);
@@ -541,8 +541,8 @@ private:
         }
     }
 
-    /// @brief É¨Ãè¹âÇıĞÅÏ¢
-    /// @param[out] cdRomDrive ´æ´¢¹âÇıĞÅÏ¢
+    /// @brief æ‰«æå…‰é©±ä¿¡æ¯
+    /// @param[out] cdRomDrive å­˜å‚¨å…‰é©±ä¿¡æ¯
     void ScanCDRomDriveInfor(OUT CDRomDriveInforArray& cdRomDriveInfor)
     {
         LWMI::LCDRomDriveManager cdRomDriveManager;
@@ -554,8 +554,8 @@ private:
         }
     }
 
-    /// @brief É¨ÃèÉãÏñ»úĞÅÏ¢
-    /// @param[out] cameraInfor ´æ´¢ÉãÏñ»úĞÅÏ¢
+    /// @brief æ‰«ææ‘„åƒæœºä¿¡æ¯
+    /// @param[out] cameraInfor å­˜å‚¨æ‘„åƒæœºä¿¡æ¯
     void ScanCameraInfor(OUT CameraInforArray& cameraInfor)
     {
         PrintLogW(L"Scan Camera Infor Function");
@@ -581,7 +581,7 @@ private:
                 if (!bRet)
                     continue;
 
-                // ÏÈ×ª»»Îª´óĞ´, ÔÙÌæ»»'#'Îª'\\'
+                // å…ˆè½¬æ¢ä¸ºå¤§å†™, å†æ›¿æ¢'#'ä¸º'\\'
                 displayName = WStringToUpper(displayName);
                 for (unsigned int k = 0; k < displayName.size(); k++)
                 {
@@ -602,7 +602,7 @@ private:
           
         }
 
-        // ÊÍ·Å×ÊÔ´
+        // é‡Šæ”¾èµ„æº
         for (unsigned int i = 0; i < webcamVec.size(); i++)
         {
             if (webcamVec[i] != 0)
@@ -614,11 +614,11 @@ private:
         }
     }
 
-    /// @brief ½«×Ö·û´®µÄĞ¡Ğ´×ÖÄ¸×ª»»Îª´óĞ´
+    /// @brief å°†å­—ç¬¦ä¸²çš„å°å†™å­—æ¯è½¬æ¢ä¸ºå¤§å†™
     ///  
-    /// ²»Òª³¢ÊÔ½«·Çuicode×Ö·û´®×ª»»´óĞ¡Ğ´, ÒòÎªÔÚÖĞÎÄÔÚ¶à×Ö½Ú±àÂëÖĞÊ¹ÓÃÁ½¸ö×Ö½Ú±íÊ¾
-    /// @param[in] str Ô­Ê¼×Ö·û´®
-    /// @return ×ª»»ºóµÄ´óĞ´×Ö·û´®
+    /// ä¸è¦å°è¯•å°†éuicodeå­—ç¬¦ä¸²è½¬æ¢å¤§å°å†™, å› ä¸ºåœ¨ä¸­æ–‡åœ¨å¤šå­—èŠ‚ç¼–ç ä¸­ä½¿ç”¨ä¸¤ä¸ªå­—èŠ‚è¡¨ç¤º
+    /// @param[in] str åŸå§‹å­—ç¬¦ä¸²
+    /// @return è½¬æ¢åçš„å¤§å†™å­—ç¬¦ä¸²
     wstring WStringToUpper(IN const wstring& str)
     {
         wstring newStr = str;
@@ -630,22 +630,22 @@ private:
     {
 
     }
-    CHardwareInfor(const CHardwareInfor&); // ½ûÖ¹Ä¬ÈÏ¿½±´¹¹Ôìº¯Êı
-    CHardwareInfor& operator = (const CHardwareInfor&); // ½ûÖ¹¸³Öµ²Ù×÷·û
+    CHardwareInfor(const CHardwareInfor&); // ç¦æ­¢é»˜è®¤æ‹·è´æ„é€ å‡½æ•°
+    CHardwareInfor& operator = (const CHardwareInfor&); // ç¦æ­¢èµ‹å€¼æ“ä½œç¬¦
 
 private:
-    ComputerSystemInfor m_computerSystemInfor; ///< ¼ÆËã»úÏµÍ³ĞÅÏ¢
-    OperatingSystemInfor m_operatingSystemInfor; ///< ²Ù×÷ÏµÍ³ĞÅÏ¢
-    MotherBoardInfor m_motherBoardInfor; ///< Ö÷°åĞÅÏ¢
-    ProcessorInfor m_processorInfor; ///< ´¦ÀíÆ÷ĞÅÏ¢
-    VideoCardInforArray m_videoCardInfor; ///< ÏÔ¿¨ĞÅÏ¢
-    PhysicalMemoryInforArray m_physicalMemoryInfor; ///< ÎïÀíÄÚ´æĞÅÏ¢
-    DiskInforArray m_diskInfor; ///< ´ÅÅÌĞÅÏ¢
-    MonitorInforArray m_monitorInfor; ////< ÏÔÊ¾Æ÷ĞÅÏ¢
-    BatteryStaticInfor m_batteryStaticInfor; ///< µç³Ø¾²Ì¬ĞÅÏ¢
-    NetworkCardInforArray m_networkCardInfor; ///< Íø¿¨ĞÅÏ¢
-    CDRomDriveInforArray m_cdRomDriveInfor; ///< ¹âÇıĞÅÏ¢
-    CameraInforArray m_cameraInfor; ///< ÉãÏñ»úĞÅÏ¢
+    ComputerSystemInfor m_computerSystemInfor; ///< è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
+    OperatingSystemInfor m_operatingSystemInfor; ///< æ“ä½œç³»ç»Ÿä¿¡æ¯
+    MotherBoardInfor m_motherBoardInfor; ///< ä¸»æ¿ä¿¡æ¯
+    ProcessorInfor m_processorInfor; ///< å¤„ç†å™¨ä¿¡æ¯
+    VideoCardInforArray m_videoCardInfor; ///< æ˜¾å¡ä¿¡æ¯
+    PhysicalMemoryInforArray m_physicalMemoryInfor; ///< ç‰©ç†å†…å­˜ä¿¡æ¯
+    DiskInforArray m_diskInfor; ///< ç£ç›˜ä¿¡æ¯
+    MonitorInforArray m_monitorInfor; ////< æ˜¾ç¤ºå™¨ä¿¡æ¯
+    BatteryStaticInfor m_batteryStaticInfor; ///< ç”µæ± é™æ€ä¿¡æ¯
+    NetworkCardInforArray m_networkCardInfor; ///< ç½‘å¡ä¿¡æ¯
+    CDRomDriveInforArray m_cdRomDriveInfor; ///< å…‰é©±ä¿¡æ¯
+    CameraInforArray m_cameraInfor; ///< æ‘„åƒæœºä¿¡æ¯
 };
 
 

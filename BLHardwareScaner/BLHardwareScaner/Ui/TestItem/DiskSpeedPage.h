@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _DISKSPEED_PAGE_H_
 #define _DISKSPEED_PAGE_H_
@@ -22,72 +22,72 @@
 #define OUT
 #endif
 
-/// @brief ´ÅÅÌËÙ¶È²âÊÔÒ³Ãæ
+/// @brief ç£ç›˜é€Ÿåº¦æµ‹è¯•é¡µé¢
 class DiskSpeedPage : public QDialog
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     DiskSpeedPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~DiskSpeedPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
 private slots:
-    /// @brief ²âÊÔ°´Å¥µ¥»÷²Ûº¯Êı
+    /// @brief æµ‹è¯•æŒ‰é’®å•å‡»æ§½å‡½æ•°
     void TestButtonClicked();
 
-    /// @brief ¸üĞÂ°´Å¥µ¥»÷²Ûº¯Êı
+    /// @brief æ›´æ–°æŒ‰é’®å•å‡»æ§½å‡½æ•°
     void UpdateButtonClicked();
 
-    /// @brief Ë³Ğò²âÊÔ¼à²â¼ÆÊ±Æ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief é¡ºåºæµ‹è¯•ç›‘æµ‹è®¡æ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void SeqTestMonitorTimer();
 
-    /// @brief 4KËæ»ú²âÊÔ¼à²â¼ÆÊ±Æ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief 4Kéšæœºæµ‹è¯•ç›‘æµ‹è®¡æ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void Rand4KTestMonitorTimer();
 
 private:
-    /// @brief ¸üĞÂ´ÅÅÌĞÅÏ¢
+    /// @brief æ›´æ–°ç£ç›˜ä¿¡æ¯
     void UpdateDiskInformation();
 
-    /// @brief ´Ó´ÅÅÌµÄÂß¼­·ÖÇøÖĞÑ¡ÔñÒ»¸ö
-    /// ÓÅÏÈÑ¡ÔñÊ£Óà¿Õ¼ä´óµÄ·ÖÇø
-    /// @param[in] diskLogicalName ´ÅÅÌÂß¼­Ãû³Æ, ¶à¸ö·ÖÇøÒÔ·ÖºÅ¸ô¿ªÈç: C:;D:;E:
-    /// @param[out] pDrive ´æ´¢Ñ¡ÔñµÄÂß¼­·ÖÇø
-    /// @param[out] pDriveFreeSpace Âß¼­·ÖÇøµÄÊ£Óà¿Õ¼ä, µ¥Î»×Ö½Ú
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief ä»ç£ç›˜çš„é€»è¾‘åˆ†åŒºä¸­é€‰æ‹©ä¸€ä¸ª
+    /// ä¼˜å…ˆé€‰æ‹©å‰©ä½™ç©ºé—´å¤§çš„åˆ†åŒº
+    /// @param[in] diskLogicalName ç£ç›˜é€»è¾‘åç§°, å¤šä¸ªåˆ†åŒºä»¥åˆ†å·éš”å¼€å¦‚: C:;D:;E:
+    /// @param[out] pDrive å­˜å‚¨é€‰æ‹©çš„é€»è¾‘åˆ†åŒº
+    /// @param[out] pDriveFreeSpace é€»è¾‘åˆ†åŒºçš„å‰©ä½™ç©ºé—´, å•ä½å­—èŠ‚
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool SelectLogicalDrive(
         IN const QString& diskLogicalName, 
         OUT QString* pDrive, 
         OUT unsigned long long* pDriveFreeSpace);
 
-    /// @brief »ñÈ¡²âÊÔÎÄ¼ş´óĞ¡
+    /// @brief è·å–æµ‹è¯•æ–‡ä»¶å¤§å°
     void GetTestFileSize();
 
-    /// @brief ¼ÓÔØUIÑùÊ½
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief åŠ è½½UIæ ·å¼
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     void LoadQSS(IN float uiRatio);
 
 private:
     Ui::DiskSpeedForm ui;
 
-    unsigned long m_seqSize; ///< Ë³Ğò²âÊÔÎÄ¼ş´óĞ¡, µ¥Î»M
-    unsigned long m_randSize; ///< Ëæ»ú²âÊÔÎÄ¼ş´óĞ¡, µ¥Î»M
+    unsigned long m_seqSize; ///< é¡ºåºæµ‹è¯•æ–‡ä»¶å¤§å°, å•ä½M
+    unsigned long m_randSize; ///< éšæœºæµ‹è¯•æ–‡ä»¶å¤§å°, å•ä½M
 
-    QTimer m_seqTestTimer; ///< Ë³Ğò²âÊÔ¼à²â¶¨Ê±Æ÷
-    QTimer m_rand4KTestTimer; ///< 4KËæ»ú²âÊÔ¼à²â¶¨Ê±Æ÷
+    QTimer m_seqTestTimer; ///< é¡ºåºæµ‹è¯•ç›‘æµ‹å®šæ—¶å™¨
+    QTimer m_rand4KTestTimer; ///< 4Kéšæœºæµ‹è¯•ç›‘æµ‹å®šæ—¶å™¨
 
-    IDiskSpeedTest* m_pSeqTest; ///< Ë³Ğò²âÊÔ
-    IDiskSpeedTest* m_p4KRandTest; ///< 4KËæ»ú²âÊÔ
+    IDiskSpeedTest* m_pSeqTest; ///< é¡ºåºæµ‹è¯•
+    IDiskSpeedTest* m_p4KRandTest; ///< 4Kéšæœºæµ‹è¯•
 
-    QString m_currentTestLogicalDrive; ///< µ±Ç°ĞèÒª²âÊÔµÄÂß¼­·ÖÇø
-    QVector<QString> m_diskLogicalNameList; ///< ´ÅÅÌÂß¼­ÅÌ·ûÃû³ÆÁĞ±í
+    QString m_currentTestLogicalDrive; ///< å½“å‰éœ€è¦æµ‹è¯•çš„é€»è¾‘åˆ†åŒº
+    QVector<QString> m_diskLogicalNameList; ///< ç£ç›˜é€»è¾‘ç›˜ç¬¦åç§°åˆ—è¡¨
 
 };
 

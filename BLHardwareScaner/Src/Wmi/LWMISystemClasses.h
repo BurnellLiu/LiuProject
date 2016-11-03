@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef _LWMI_SYSTEM_CLASSES_H_
 #define _LWMI_SYSTEM_CLASSES_H_
 
@@ -24,239 +24,239 @@ namespace LWMI
 {
     class LWMICoreManager;
 
-    /// @brief ¼ÆËã»úÏµÍ³¹ÜÀíÕßÀà(·Ç²Ù×÷ÏµÍ³¸ÅÄîÉÏÓ¦¸Ã°üº¬ÈíÓ²¼ş)
+    /// @brief è®¡ç®—æœºç³»ç»Ÿç®¡ç†è€…ç±»(éæ“ä½œç³»ç»Ÿæ¦‚å¿µä¸Šåº”è¯¥åŒ…å«è½¯ç¡¬ä»¶)
     class LComputerSystemManager
     {
     public:
         LComputerSystemManager();
         ~LComputerSystemManager();
 
-        /// @brief »ñÈ¡¼ÆËã»úÀàĞÍ
+        /// @brief è·å–è®¡ç®—æœºç±»å‹
         enum LCOMPUTER_SYSTEM_TYPE
         {
-            COMPUTER_SYSTEM_UNKNOWN = 0, ///< Î´Öª
-            COMPUTER_SYSTEM_DESKTOP = 1, ///< Ì¨Ê½»ú
-            COMPUTER_SYSTEM_NOTE_BOOK = 2, ///< ±Ê¼Ç±¾
-            COMPUTER_SYSTEM_TABLET = 3 ///< Æ½°åµçÄÔ
+            COMPUTER_SYSTEM_UNKNOWN = 0, ///< æœªçŸ¥
+            COMPUTER_SYSTEM_DESKTOP = 1, ///< å°å¼æœº
+            COMPUTER_SYSTEM_NOTE_BOOK = 2, ///< ç¬”è®°æœ¬
+            COMPUTER_SYSTEM_TABLET = 3 ///< å¹³æ¿ç”µè„‘
         };
 
-        /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ÊıÁ¿
-        /// @return ¼ÆËã»úÏµÍ³ÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿæ•°é‡
+        /// @return è®¡ç®—æœºç³»ç»Ÿæ•°é‡(åº”è¯¥ä¸º1)
         int GetComputerSystemCount();
 
-        /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ĞÍºÅ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] model ´æ´¢ĞÍºÅ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿå‹å·
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] model å­˜å‚¨å‹å·
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetComputerSystemModel(IN int index, OUT wstring& model);
 
-        /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ÖÆÔìÉÌ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] manufacturer ´æ´¢ÖÆÔìÉÌ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿåˆ¶é€ å•†
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] manufacturer å­˜å‚¨åˆ¶é€ å•†
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetComputerSystemManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡¼ÆËã»úÀàĞÍ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] type ´æ´¢ÀàĞÍ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–è®¡ç®—æœºç±»å‹
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] type å­˜å‚¨ç±»å‹
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetComputerSystemPCType(IN int index, OUT LCOMPUTER_SYSTEM_TYPE& type);
 
-        /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ÀàĞÍ
+        /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿç±»å‹
         ///
-        /// Èç: "x64-based PC"
-        /// @param[in] index Ë÷Òı
-        /// @param[out] type ´æ´¢ÀàĞÍ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// å¦‚: "x64-based PC"
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] type å­˜å‚¨ç±»å‹
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetComputerSystemType(IN int index, OUT wstring& type);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
     private:
         LComputerSystemManager(const LComputerSystemManager&);
         LComputerSystemManager& operator = (const LComputerSystemManager&);
     };
 
-    /// @brief ²Ù×÷ÏµÍ³¹ÜÀíÕßÀà
+    /// @brief æ“ä½œç³»ç»Ÿç®¡ç†è€…ç±»
     class LOperatingSystemManager
     {
     public:
         LOperatingSystemManager();
         ~LOperatingSystemManager();
 
-        /// @brief »ñÈ¡²Ù×÷ÏµÍ³ÊıÁ¿
-        /// @return ²Ù×÷ÏµÍ³ÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–æ“ä½œç³»ç»Ÿæ•°é‡
+        /// @return æ“ä½œç³»ç»Ÿæ•°é‡(åº”è¯¥ä¸º1)
         int GetOSCount();
 
-        /// @brief »ñÈ¡²Ù×÷ÏµÍ³±êÌâ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] caption ±êÌâ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ“ä½œç³»ç»Ÿæ ‡é¢˜
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] caption æ ‡é¢˜
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetOSCaption(IN int index, OUT wstring& caption);
 
-        /// @brief »ñÈ¡²Ù×÷ÏµÍ³¼Ü¹¹
-        /// @param[in] index Ë÷Òı
-        /// @param[out] architecture ²Ù×÷ÏµÍ³¼Ü¹¹
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ“ä½œç³»ç»Ÿæ¶æ„
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] architecture æ“ä½œç³»ç»Ÿæ¶æ„
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetOSArchitecture(IN int index, OUT wstring& architecture);
 
-        /// @brief »ñÈ¡²Ù×÷ÏµÍ³°æ±¾
-        /// @param[in] index Ë÷Òı
-        /// @param[out] version °æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ“ä½œç³»ç»Ÿç‰ˆæœ¬
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] version ç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetOSVersion(IN int index, OUT wstring& version);
 
-        /// @brief »ñÈ¡²Ù×÷ÏµÍ³ÏµÍ³ÅÌ·û
-        /// @param[in] index Ë÷Òı
-        /// @param[out] drive ÏµÍ³ÅÌ·û
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ“ä½œç³»ç»Ÿç³»ç»Ÿç›˜ç¬¦
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] drive ç³»ç»Ÿç›˜ç¬¦
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetOSSystemDrive(IN int index, OUT wstring& drive);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
         LOperatingSystemManager(const LOperatingSystemManager&);
         LOperatingSystemManager& operator = (const LOperatingSystemManager&);
     };
 
-    /// @brief ÏµÍ³ĞÅÏ¢¹ÜÀíÕßÀà
+    /// @brief ç³»ç»Ÿä¿¡æ¯ç®¡ç†è€…ç±»
     class LMS_SystemInformationManager
     {
     public:
         LMS_SystemInformationManager();
         ~LMS_SystemInformationManager();
 
-        /// @brief »ñÈ¡ÏµÍ³ĞÅÏ¢ÊıÁ¿
-        /// @return ÏµÍ³ĞÅÏ¢ÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–ç³»ç»Ÿä¿¡æ¯æ•°é‡
+        /// @return ç³»ç»Ÿä¿¡æ¯æ•°é‡(åº”è¯¥ä¸º1)
         int GetSystemInforCount();
 
-        /// @brief »ñÈ¡Ö÷°åÖÆÔìÉÌ
+        /// @brief è·å–ä¸»æ¿åˆ¶é€ å•†
         /// @param[in] index
-        /// @param[out] manufacturer ´æ´¢ÖÆÔìÉÌĞÅÏ¢
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] manufacturer å­˜å‚¨åˆ¶é€ å•†ä¿¡æ¯
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡Ö÷°å²úÆ·Ãû³Æ
+        /// @brief è·å–ä¸»æ¿äº§å“åç§°
         /// @param[in] index
-        /// @param[out] product ´æ´¢²úÆ·Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] product å­˜å‚¨äº§å“åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBaseBoardProductName(IN int index, OUT wstring& product);
 
-        /// @brief »ñÈ¡BIOS·¢²¼ÈÕÆÚ
+        /// @brief è·å–BIOSå‘å¸ƒæ—¥æœŸ
         /// @param[in] index
-        /// @param[out] releaseDate ´æ´¢·¢²¼ÈÕÆÚ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] releaseDate å­˜å‚¨å‘å¸ƒæ—¥æœŸ
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSReleaseDate(IN int index, OUT wstring& releaseDate);
 
-        /// @brief »ñÈ¡BIOS³§ÉÌĞÅÏ¢
+        /// @brief è·å–BIOSå‚å•†ä¿¡æ¯
         /// @param[in] index
-        /// @param[out] vendor ´æ´¢³§ÉÌĞÅÏ¢ 
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] vendor å­˜å‚¨å‚å•†ä¿¡æ¯ 
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSVendor(IN int index, OUT wstring& vendor);
 
-        /// @brief »ñÈ¡BIOS°æ±¾
+        /// @brief è·å–BIOSç‰ˆæœ¬
         /// @param[in] index 
-        /// @param[out] version ´æ´¢BIOS°æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] version å­˜å‚¨BIOSç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetBIOSVersion(IN int index, OUT wstring& version);
 
-        /// @brief »ñÈ¡ÏµÍ³¼Ò×å
+        /// @brief è·å–ç³»ç»Ÿå®¶æ—
         /// @param[in] index
-        /// @param[out] family ´æ´¢ÏµÍ³¼Ò×å
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] family å­˜å‚¨ç³»ç»Ÿå®¶æ—
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSystemFamily(IN int index, OUT wstring& family);
 
-        /// @brief »ñÈ¡ÏµÍ³ÖÆÔìÉÌĞÅÏ¢
+        /// @brief è·å–ç³»ç»Ÿåˆ¶é€ å•†ä¿¡æ¯
         /// @param[in] index
-        /// @param[in] manufacturer ´æ´¢ÖÆÔìÉÌĞÅÏ¢
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[in] manufacturer å­˜å‚¨åˆ¶é€ å•†ä¿¡æ¯
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSystemManufacturer(IN int index, OUT wstring& manufacturer);
 
-        /// @brief »ñÈ¡ÏµÍ³²úÆ·Ãû³Æ
+        /// @brief è·å–ç³»ç»Ÿäº§å“åç§°
         /// @param[in] index
-        /// @param[out] productName ´æ´¢²úÆ·Ãû³Æ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[out] productName å­˜å‚¨äº§å“åç§°
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSystemProductName(IN int index, OUT wstring& productName);
 
-        /// @brief »ñÈ¡ÏµÍ³SKUĞÅÏ¢
+        /// @brief è·å–ç³»ç»ŸSKUä¿¡æ¯
         ///
-        /// Èç: ASUS-NotebookSKU
+        /// å¦‚: ASUS-NotebookSKU
         /// @param[in] index
-        /// @param[in] sku ´æ´¢SKUĞÅÏ¢
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @param[in] sku å­˜å‚¨SKUä¿¡æ¯
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSystemSKU(IN int index, OUT wstring& sku);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
         LMS_SystemInformationManager(const LMS_SystemInformationManager&);
         LMS_SystemInformationManager& operator = (const LMS_SystemInformationManager&);
     };
 
-    /// @brief SMBIOS¶ş½øÖÆÊı¾İ±í¹ÜÀíÕßÀà
+    /// @brief SMBIOSäºŒè¿›åˆ¶æ•°æ®è¡¨ç®¡ç†è€…ç±»
     class LMSSmBios_RawSMBiosTablesManager
     {
     public:
         LMSSmBios_RawSMBiosTablesManager();
         ~LMSSmBios_RawSMBiosTablesManager();
 
-        /// @brief »ñÈ¡SMBiosÊı¾İ±íÊıÄ¿(Ò»°ãÎª1)
-        /// @return SMBiosÊı¾İ±íÊıÄ¿
+        /// @brief è·å–SMBiosæ•°æ®è¡¨æ•°ç›®(ä¸€èˆ¬ä¸º1)
+        /// @return SMBiosæ•°æ®è¡¨æ•°ç›®
         int GetRawSMBiosTablesCount();
 
-        /// @brief »ñÈ¡SMBiosÖ÷°æ±¾
-        /// @param[in] index Ë÷Òı
-        /// @param[out] version ´æ´¢°æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–SMBiosä¸»ç‰ˆæœ¬
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] version å­˜å‚¨ç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSMBiosMajorVersion(IN int index, OUT unsigned char& version);
 
-        /// @brief »ñÈ¡SMBios´Î°æ±¾
-        /// @param[in] index Ë÷Òı
-        /// @param[out] version ´æ´¢°æ±¾
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–SMBiosæ¬¡ç‰ˆæœ¬
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] version å­˜å‚¨ç‰ˆæœ¬
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSMBiosMinorVersion(IN int index, OUT unsigned char& version);
 
-        /// @brief »ñÈ¡SMBiosÊı¾İ
-        /// @param[in] index Ë÷Òı
-        /// @param[out] data ´æ´¢Êı¾İ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–SMBiosæ•°æ®
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] data å­˜å‚¨æ•°æ®
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetSMBiosData(IN int index, OUT vector<unsigned char>& data);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
         LMSSmBios_RawSMBiosTablesManager(const LMSSmBios_RawSMBiosTablesManager&);
         LMSSmBios_RawSMBiosTablesManager& operator = (const LMSSmBios_RawSMBiosTablesManager&);
     };
 
-    /// @brief ÏµÍ³ĞÅÏ¢¹ÜÀíÕßÀà
+    /// @brief ç³»ç»Ÿä¿¡æ¯ç®¡ç†è€…ç±»
     class LPerfRawData_PerfOS_MemoryManager
     {
     public:
         LPerfRawData_PerfOS_MemoryManager();
         ~LPerfRawData_PerfOS_MemoryManager();
 
-        /// @brief »ñÈ¡ÄÚ´æĞÔÄÜÊı¾İÊıÁ¿
-        /// @return ÄÚ´æĞÔÄÜÊı¾İÊıÁ¿(Ó¦¸ÃÎª1)
+        /// @brief è·å–å†…å­˜æ€§èƒ½æ•°æ®æ•°é‡
+        /// @return å†…å­˜æ€§èƒ½æ•°æ®æ•°é‡(åº”è¯¥ä¸º1)
         int GetMemoryPerfDataCount();
 
-        /// @brief »ñÈ¡ÄÚ´æ¿ÉÓÃ´óĞ¡
-        /// @param[in] index Ë÷Òı
-        /// @param[out] availableBytes ¿ÉÓÃÄÚ´æ´óĞ¡, µ¥Î»M
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å†…å­˜å¯ç”¨å¤§å°
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] availableBytes å¯ç”¨å†…å­˜å¤§å°, å•ä½M
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetMemoryAvailableMBytes(IN int index, OUT unsigned long& availableBytes);
 
-        /// @brief »ñÈ¡ÄÚ´æÎ´Ê¹ÓÃ´óĞ¡
-        /// @param[in] index Ë÷Òı
-        /// @param[out] unusedBytes ¿ÉÓÃÄÚ´æ´óĞ¡, µ¥Î»M
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å†…å­˜æœªä½¿ç”¨å¤§å°
+        /// @param[in] index ç´¢å¼•
+        /// @param[out] unusedBytes å¯ç”¨å†…å­˜å¤§å°, å•ä½M
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetMemoryUnusedMBytes(IN int index, OUT unsigned long& unusedBytes);
 
     private:
-        LWMICoreManager* m_pWMICoreManager; ///< WMIºËĞÄ¹ÜÀíÕß
+        LWMICoreManager* m_pWMICoreManager; ///< WMIæ ¸å¿ƒç®¡ç†è€…
 
     private:
         LPerfRawData_PerfOS_MemoryManager(const LPerfRawData_PerfOS_MemoryManager&);

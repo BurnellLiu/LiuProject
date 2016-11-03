@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LDiskController.h"
 
 
@@ -9,327 +9,327 @@ using std::string;
 #include <ntddscsi.h>
 
 
-/// @brief ´æ´¢Éè±¸ÊôĞÔ
+/// @brief å­˜å‚¨è®¾å¤‡å±æ€§
 struct SStorageDeviceProperty
 {
-    bool RemovableMedia; // ÊÇ·ñÎª¿ÉÒÆ¶¯Ã½Ìå
-    UCHAR DeviceType; // Éè±¸ÀàĞÍ, ÓÉSCSI¹æ·¶¶¨Òå
-    UCHAR DeviceTypeModifier; // Éè±¸ÀàĞÍĞŞÊÎ, ÓÉSCSI¹æ·¶¶¨Òå, Îª0±íÊ¾Ã»ÓĞ¸ÃÖµ
-    STORAGE_BUS_TYPE BusType; // ×ÜÏßÀàĞÍ
-    string VendorId; // ³§ÉÌID
-    string ProductId; // ²úÆ·ID
-    string ProductRevision; // ²úÆ·ĞŞ¶©
-    string SerialNumber; // ĞòÁĞºÅ
+    bool RemovableMedia; // æ˜¯å¦ä¸ºå¯ç§»åŠ¨åª’ä½“
+    UCHAR DeviceType; // è®¾å¤‡ç±»å‹, ç”±SCSIè§„èŒƒå®šä¹‰
+    UCHAR DeviceTypeModifier; // è®¾å¤‡ç±»å‹ä¿®é¥°, ç”±SCSIè§„èŒƒå®šä¹‰, ä¸º0è¡¨ç¤ºæ²¡æœ‰è¯¥å€¼
+    STORAGE_BUS_TYPE BusType; // æ€»çº¿ç±»å‹
+    string VendorId; // å‚å•†ID
+    string ProductId; // äº§å“ID
+    string ProductRevision; // äº§å“ä¿®è®¢
+    string SerialNumber; // åºåˆ—å·
 };
 
-// ÒÔÏÂ½á¹¹È¡ÏûÄÚ´æ¶ÔÆë
-#pragma pack (1) // È¡ÏûÄÚ´æ¶ÔÆë
+// ä»¥ä¸‹ç»“æ„å–æ¶ˆå†…å­˜å¯¹é½
+#pragma pack (1) // å–æ¶ˆå†…å­˜å¯¹é½
 
-/// @brief ATA8 ID½á¹¹
+/// @brief ATA8 IDç»“æ„
 ///
-/// ¹²512×Ö½Ú(256¸öWORD)£¬ÕâÀï½ö¶¨ÒåÁËÒ»Ğ©¸ĞĞËÈ¤µÄÏî(»ù±¾ÉÏÒÀ¾İATA8-ACS)
-/// ×¢Òâ:¸Ã½á¹¹ÖĞµÄ×Ö·û´®×Ö·ûÁ½Á½µßµ¹ Ô­ÒòÊÇATA/ATAPIÖĞµÄWORD£¬ÓëWindows²ÉÓÃµÄ×Ö½ÚË³ĞòÏà·´
+/// å…±512å­—èŠ‚(256ä¸ªWORD)ï¼Œè¿™é‡Œä»…å®šä¹‰äº†ä¸€äº›æ„Ÿå…´è¶£çš„é¡¹(åŸºæœ¬ä¸Šä¾æ®ATA8-ACS)
+/// æ³¨æ„:è¯¥ç»“æ„ä¸­çš„å­—ç¬¦ä¸²å­—ç¬¦ä¸¤ä¸¤é¢ å€’ åŸå› æ˜¯ATA/ATAPIä¸­çš„WORDï¼Œä¸Windowsé‡‡ç”¨çš„å­—èŠ‚é¡ºåºç›¸å
 struct SATA8IdentifyData
 {
-    USHORT GeneralConfig; // WORD 0: »ù±¾ĞÅÏ¢×Ö
-    USHORT Obsolete1; // WORD 1: ·ÏÆú
-    USHORT SpecConfig; // WORD 2: ¾ßÌåÅäÖÃ
-    USHORT Obsolete3; // WORD 3: ·ÏÆú
-    USHORT Obsolete4; // WORD 4: ·ÏÆú
-    USHORT Obsolete5; // WORD 5: ·ÏÆú
-    USHORT Obsolete6; // WORD 6: ·ÏÆú
-    USHORT CompactFlashReserved[2]; // WORD 7-8: ±£Áô
-    USHORT Obsolete9; // WORD 9: ·ÏÆú
-    CHAR SerialNumber[20]; // WORD 10-19:ĞòÁĞºÅ
-    USHORT Obsolete20[3]; // WORD 20-22: ·ÏÆú
-    CHAR FirmwareRev[8]; // WORD 23-26: ¹Ì¼ş°æ±¾
-    CHAR ModelNumber[40]; // WORD 27-46: ĞÍºÅ
-    USHORT Reserved47; // WORD 47: ±£Áô
-    USHORT Reserved48; // WORD 48: ±£Áô
+    USHORT GeneralConfig; // WORD 0: åŸºæœ¬ä¿¡æ¯å­—
+    USHORT Obsolete1; // WORD 1: åºŸå¼ƒ
+    USHORT SpecConfig; // WORD 2: å…·ä½“é…ç½®
+    USHORT Obsolete3; // WORD 3: åºŸå¼ƒ
+    USHORT Obsolete4; // WORD 4: åºŸå¼ƒ
+    USHORT Obsolete5; // WORD 5: åºŸå¼ƒ
+    USHORT Obsolete6; // WORD 6: åºŸå¼ƒ
+    USHORT CompactFlashReserved[2]; // WORD 7-8: ä¿ç•™
+    USHORT Obsolete9; // WORD 9: åºŸå¼ƒ
+    CHAR SerialNumber[20]; // WORD 10-19:åºåˆ—å·
+    USHORT Obsolete20[3]; // WORD 20-22: åºŸå¼ƒ
+    CHAR FirmwareRev[8]; // WORD 23-26: å›ºä»¶ç‰ˆæœ¬
+    CHAR ModelNumber[40]; // WORD 27-46: å‹å·
+    USHORT Reserved47; // WORD 47: ä¿ç•™
+    USHORT Reserved48; // WORD 48: ä¿ç•™
     struct 
     {
-        USHORT Obsolete0:8; // bit 0-7: ·ÏÆú
-        USHORT DMASupport:1; // bit 8: 1=Ö§³ÖDMA
-        USHORT LBASupport:1; // bit 9: 1=Ö§³ÖLBA
-        USHORT IORDYDisabled:1; // bit 10: 1=IORDY¿ÉÒÔ±»½ûÓÃ
-        USHORT IORDYSupport:1; // bit 11: 1=Ö§³ÖIORDY
-        USHORT Reserved12:4; // bit 12-15: ±£Áô
-    }Capabilities; // WORD 49: Ò»°ãÄÜÁ¦
-    USHORT Reserved50; // WORD 50: ±£Áô
-    USHORT Obsolete51; // WORD 51: ·ÏÆú
-    USHORT Obsolete52; // WORD 52: ·ÏÆú
-    USHORT Reserved53; // WORD 53: ±£Áô
-    USHORT Obsolete54[5]; // WORD 54-58: ·ÏÆú
-    USHORT Reserved59; // WORD 59: ±£Áô
-    ULONG LBATotalSectors; // WORD 60-61: LBA¿ÉÑ°Ö·µÄÉÈÇøÊı
-    USHORT Obsolete62; // WORD 62: ·ÏÆú
+        USHORT Obsolete0:8; // bit 0-7: åºŸå¼ƒ
+        USHORT DMASupport:1; // bit 8: 1=æ”¯æŒDMA
+        USHORT LBASupport:1; // bit 9: 1=æ”¯æŒLBA
+        USHORT IORDYDisabled:1; // bit 10: 1=IORDYå¯ä»¥è¢«ç¦ç”¨
+        USHORT IORDYSupport:1; // bit 11: 1=æ”¯æŒIORDY
+        USHORT Reserved12:4; // bit 12-15: ä¿ç•™
+    }Capabilities; // WORD 49: ä¸€èˆ¬èƒ½åŠ›
+    USHORT Reserved50; // WORD 50: ä¿ç•™
+    USHORT Obsolete51; // WORD 51: åºŸå¼ƒ
+    USHORT Obsolete52; // WORD 52: åºŸå¼ƒ
+    USHORT Reserved53; // WORD 53: ä¿ç•™
+    USHORT Obsolete54[5]; // WORD 54-58: åºŸå¼ƒ
+    USHORT Reserved59; // WORD 59: ä¿ç•™
+    ULONG LBATotalSectors; // WORD 60-61: LBAå¯å¯»å€çš„æ‰‡åŒºæ•°
+    USHORT Obsolete62; // WORD 62: åºŸå¼ƒ
     struct 
     {
-        USHORT Mode0:1; // bit 0: 1=Ö§³ÖÄ£Ê½0 (4.17Mb/s)
-        USHORT Mode1:1; // bit 1: 1=Ö§³ÖÄ£Ê½1 (13.3Mb/s)
-        USHORT Mode2:1; // bit 2: 1=Ö§³ÖÄ£Ê½2 (16.7Mb/s)
-        USHORT Reserved5:5; // bit 3-7: ±£Áô
-        USHORT Mode0Sel:1; // bit8: 1=ÒÑÑ¡ÔñÄ£Ê½0
-        USHORT Mode1Sel:1; // bit9: 1=ÒÑÑ¡ÔñÄ£Ê½1
-        USHORT Mode2Sel:1; // bit10: 1=ÒÑÑ¡ÔñÄ£Ê½2
-        USHORT Reserved11:5; // bit 11-15: ±£Áô
-    } MultiWordDMA; // WORD 63: ¶à×Ö½ÚDMAÖ§³ÖÄÜÁ¦
+        USHORT Mode0:1; // bit 0: 1=æ”¯æŒæ¨¡å¼0 (4.17Mb/s)
+        USHORT Mode1:1; // bit 1: 1=æ”¯æŒæ¨¡å¼1 (13.3Mb/s)
+        USHORT Mode2:1; // bit 2: 1=æ”¯æŒæ¨¡å¼2 (16.7Mb/s)
+        USHORT Reserved5:5; // bit 3-7: ä¿ç•™
+        USHORT Mode0Sel:1; // bit8: 1=å·²é€‰æ‹©æ¨¡å¼0
+        USHORT Mode1Sel:1; // bit9: 1=å·²é€‰æ‹©æ¨¡å¼1
+        USHORT Mode2Sel:1; // bit10: 1=å·²é€‰æ‹©æ¨¡å¼2
+        USHORT Reserved11:5; // bit 11-15: ä¿ç•™
+    } MultiWordDMA; // WORD 63: å¤šå­—èŠ‚DMAæ”¯æŒèƒ½åŠ›
     struct 
     {
-        USHORT AdvPOIModes:8; // bit 0-7: Ö§³Ö¸ß¼¶POIÄ£Ê½Êı
-        USHORT Reserved8:8; // bit 8-15: ±£Áô
-    } PIOCapacity; // WORD 64: ¸ß¼¶PIOÖ§³ÖÄÜÁ¦
-    USHORT MinMultiWordDMACycle; // WORD 65: ¶à×Ö½ÚDMA´«ÊäÖÜÆÚµÄ×îĞ¡Öµ
-    USHORT RecMultiWordDMACycle; // WORD 66: ¶à×Ö½ÚDMA´«ÊäÖÜÆÚµÄ½¨ÒéÖµ
-    USHORT MinPIONoFlowCycle; // WORD 67: ÎŞÁ÷¿ØÖÆÊ±PIO´«ÊäÖÜÆÚµÄ×îĞ¡Öµ
-    USHORT MinPIOFlowCycle; // WORD 68: ÓĞÁ÷¿ØÖÆÊ±PIO´«ÊäÖÜÆÚµÄ×îĞ¡Öµ
-    USHORT Reserved69[7]; // WORD 69-75: ±£Áô
+        USHORT AdvPOIModes:8; // bit 0-7: æ”¯æŒé«˜çº§POIæ¨¡å¼æ•°
+        USHORT Reserved8:8; // bit 8-15: ä¿ç•™
+    } PIOCapacity; // WORD 64: é«˜çº§PIOæ”¯æŒèƒ½åŠ›
+    USHORT MinMultiWordDMACycle; // WORD 65: å¤šå­—èŠ‚DMAä¼ è¾“å‘¨æœŸçš„æœ€å°å€¼
+    USHORT RecMultiWordDMACycle; // WORD 66: å¤šå­—èŠ‚DMAä¼ è¾“å‘¨æœŸçš„å»ºè®®å€¼
+    USHORT MinPIONoFlowCycle; // WORD 67: æ— æµæ§åˆ¶æ—¶PIOä¼ è¾“å‘¨æœŸçš„æœ€å°å€¼
+    USHORT MinPIOFlowCycle; // WORD 68: æœ‰æµæ§åˆ¶æ—¶PIOä¼ è¾“å‘¨æœŸçš„æœ€å°å€¼
+    USHORT Reserved69[7]; // WORD 69-75: ä¿ç•™
     struct
     {
-        USHORT Reserved0:1; // bit 0: ±£Áô
-        USHORT SATAGen1:1; // bit1: 1=Ö§³ÖSATA Gen1(1.5Gb/s)
-        USHORT SATAGen2:1; // bit2: 1=Ö§³ÖSATA Gen2(3.0Gb/s)
-        USHORT SATAGen3:1; // bit3: 1=Ö§³ÖSATA Gen3(6.0Gb/s)
-        USHORT Reserved4:12; // bit4-15: ±£Áô
-    }SATACapabilities; // WORD 76: SATAÄÜÁ¦
-    USHORT Reserved77; // WORD 77: ±£Áô
+        USHORT Reserved0:1; // bit 0: ä¿ç•™
+        USHORT SATAGen1:1; // bit1: 1=æ”¯æŒSATA Gen1(1.5Gb/s)
+        USHORT SATAGen2:1; // bit2: 1=æ”¯æŒSATA Gen2(3.0Gb/s)
+        USHORT SATAGen3:1; // bit3: 1=æ”¯æŒSATA Gen3(6.0Gb/s)
+        USHORT Reserved4:12; // bit4-15: ä¿ç•™
+    }SATACapabilities; // WORD 76: SATAèƒ½åŠ›
+    USHORT Reserved77; // WORD 77: ä¿ç•™
     struct
     {
-        USHORT Reserved0: 1; // bit0: Ó¦¸ÃÎª0
-        USHORT NoneZeroBufferOffsets: 1; // bit1: 1=Éè±¸Ö§³Ö·Ç0»º³åÆ«ÒÆ
+        USHORT Reserved0: 1; // bit0: åº”è¯¥ä¸º0
+        USHORT NoneZeroBufferOffsets: 1; // bit1: 1=è®¾å¤‡æ”¯æŒé0ç¼“å†²åç§»
         USHORT DMASetupAutoActivation: 1; // bit2:
-        USHORT InitiatePowerManagement: 1; // bit3: 1=Éè±¸Ö§³Ö·¢ÆğµçÔ´¹ÜÀí
+        USHORT InitiatePowerManagement: 1; // bit3: 1=è®¾å¤‡æ”¯æŒå‘èµ·ç”µæºç®¡ç†
         USHORT InorderDataDelivery: 1; // bit4:
-        USHORT Reserved11: 11; // bit5-15: ±£Áô
-    }SATAFeaturesSupported; // WORD 78: SATAÌØÕ÷Ö§³Ö
+        USHORT Reserved11: 11; // bit5-15: ä¿ç•™
+    }SATAFeaturesSupported; // WORD 78: SATAç‰¹å¾æ”¯æŒ
     struct
     {
-        USHORT Reserved0: 1; // bit0: Ó¦¸ÃÎª0
-        USHORT NoneZeroBufferOffsets: 1; // bit1: 1=·Ç0»º³åÆ«ÒÆ¿ªÆô
+        USHORT Reserved0: 1; // bit0: åº”è¯¥ä¸º0
+        USHORT NoneZeroBufferOffsets: 1; // bit1: 1=é0ç¼“å†²åç§»å¼€å¯
         USHORT DMASetupAutoActivation: 1; // bit2:
-        USHORT InitiatePowerManagement: 1; // bit3: 1=·¢ÆğµçÔ´¹ÜÀí¿ªÆô
+        USHORT InitiatePowerManagement: 1; // bit3: 1=å‘èµ·ç”µæºç®¡ç†å¼€å¯
         USHORT InorderDataDelivery: 1; // bit4:
-        USHORT Reserved11: 11; // bit5-15: ±£Áô
-    }SATAFeaturesEnabled; // WORD 79: SATAÌØÕ÷¿ªÆô
+        USHORT Reserved11: 11; // bit5-15: ä¿ç•™
+    }SATAFeaturesEnabled; // WORD 79: SATAç‰¹å¾å¼€å¯
     struct 
     {
-        USHORT Reserved0:1; // bit0: ±£Áô
-        USHORT Obsolete1:3; // bit1-3: ·ÏÆú
-        USHORT ATA4:1; // bit4: 1=Ö§³ÖATA/ATAPI-4
-        USHORT ATA5:1; // bit5: 1=Ö§³ÖATA/ATAPI-5
-        USHORT ATA6:1; // bit6: 1=Ö§³ÖATA/ATAPI-6
-        USHORT ATA7:1; // bit7: 1=Ö§³ÖATA/ATAPI-7
-        USHORT ATA8:1; // bit8: 1=Ö§³ÖATA8-ACS
-        USHORT Reserved9:7; // bit9-15: ±£Áô
-    } MajorVersion; // WORD 80: Ö÷°æ±¾
-    USHORT MinorVersion; // WORD 81: ¸±°æ±¾
-    USHORT Reserved82;// WORD 82: ±£Áô
+        USHORT Reserved0:1; // bit0: ä¿ç•™
+        USHORT Obsolete1:3; // bit1-3: åºŸå¼ƒ
+        USHORT ATA4:1; // bit4: 1=æ”¯æŒATA/ATAPI-4
+        USHORT ATA5:1; // bit5: 1=æ”¯æŒATA/ATAPI-5
+        USHORT ATA6:1; // bit6: 1=æ”¯æŒATA/ATAPI-6
+        USHORT ATA7:1; // bit7: 1=æ”¯æŒATA/ATAPI-7
+        USHORT ATA8:1; // bit8: 1=æ”¯æŒATA8-ACS
+        USHORT Reserved9:7; // bit9-15: ä¿ç•™
+    } MajorVersion; // WORD 80: ä¸»ç‰ˆæœ¬
+    USHORT MinorVersion; // WORD 81: å‰¯ç‰ˆæœ¬
+    USHORT Reserved82;// WORD 82: ä¿ç•™
     struct 
     {
-        USHORT Reserved0:3; // bit0-2: ±£Áô
-        USHORT AdvancedPowerManagementFeatureSetSupported:1; // bit3: 1=¸ß¼¶µçÔ´¹ÜÀíÌØÕ÷¼¯Ö§³Ö
-        USHORT Reserved4:12; // bit4-15: ±£Áô
-    }CommandSetsSupported; // WORD 83: ÃüÁî¼¯Ö§³Ö
-    USHORT Reserved84[2]; // WORD 84-85: ±£Áô
+        USHORT Reserved0:3; // bit0-2: ä¿ç•™
+        USHORT AdvancedPowerManagementFeatureSetSupported:1; // bit3: 1=é«˜çº§ç”µæºç®¡ç†ç‰¹å¾é›†æ”¯æŒ
+        USHORT Reserved4:12; // bit4-15: ä¿ç•™
+    }CommandSetsSupported; // WORD 83: å‘½ä»¤é›†æ”¯æŒ
+    USHORT Reserved84[2]; // WORD 84-85: ä¿ç•™
     struct 
     {
-        USHORT Reserved0:3; // bit0-2: ±£Áô
-        USHORT AdvancedPowerManagementFeatureSetEnabled:1; // bit3: 1=¸ß¼¶µçÔ´¹ÜÀíÌØÕ÷¼¯¿ªÆô
-        USHORT Reserved4:12; // bit4-15: ±£Áô
-    }CommandSetFeatureEnabledSupported;  // WORD 86: ÃüÁî¼¯»òÌØÕ÷¿ªÆô»òÖ§³Ö
-    USHORT Reserved87; // WORD 87: ±£Áô
+        USHORT Reserved0:3; // bit0-2: ä¿ç•™
+        USHORT AdvancedPowerManagementFeatureSetEnabled:1; // bit3: 1=é«˜çº§ç”µæºç®¡ç†ç‰¹å¾é›†å¼€å¯
+        USHORT Reserved4:12; // bit4-15: ä¿ç•™
+    }CommandSetFeatureEnabledSupported;  // WORD 86: å‘½ä»¤é›†æˆ–ç‰¹å¾å¼€å¯æˆ–æ”¯æŒ
+    USHORT Reserved87; // WORD 87: ä¿ç•™
     struct 
     {
-        USHORT Mode0:1;                // 1=Ö§³ÖÄ£Ê½0 (16.7Mb/s)
-        USHORT Mode1:1;                // 1=Ö§³ÖÄ£Ê½1 (25Mb/s)
-        USHORT Mode2:1;                // 1=Ö§³ÖÄ£Ê½2 (33Mb/s)
-        USHORT Mode3:1;                // 1=Ö§³ÖÄ£Ê½3 (44Mb/s)
-        USHORT Mode4:1;                // 1=Ö§³ÖÄ£Ê½4 (66Mb/s)
-        USHORT Mode5:1;                // 1=Ö§³ÖÄ£Ê½5 (100Mb/s)
-        USHORT Mode6:1;                // 1=Ö§³ÖÄ£Ê½6 (133Mb/s)
-        USHORT Reserved7:1;          // ±£Áô
-        USHORT Mode0Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½0
-        USHORT Mode1Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½1
-        USHORT Mode2Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½2
-        USHORT Mode3Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½3
-        USHORT Mode4Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½4
-        USHORT Mode5Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½5
-        USHORT Mode6Sel:1;             // 1=ÒÑÑ¡ÔñÄ£Ê½6
-        USHORT Reserved15:1;          // ±£Áô
-    } UltraDMA; // WORD 88:  Ultra DMAÖ§³ÖÄÜÁ¦
-    USHORT Reserved89[2];         // WORD 89-90: ±£Áô
+        USHORT Mode0:1;                // 1=æ”¯æŒæ¨¡å¼0 (16.7Mb/s)
+        USHORT Mode1:1;                // 1=æ”¯æŒæ¨¡å¼1 (25Mb/s)
+        USHORT Mode2:1;                // 1=æ”¯æŒæ¨¡å¼2 (33Mb/s)
+        USHORT Mode3:1;                // 1=æ”¯æŒæ¨¡å¼3 (44Mb/s)
+        USHORT Mode4:1;                // 1=æ”¯æŒæ¨¡å¼4 (66Mb/s)
+        USHORT Mode5:1;                // 1=æ”¯æŒæ¨¡å¼5 (100Mb/s)
+        USHORT Mode6:1;                // 1=æ”¯æŒæ¨¡å¼6 (133Mb/s)
+        USHORT Reserved7:1;          // ä¿ç•™
+        USHORT Mode0Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼0
+        USHORT Mode1Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼1
+        USHORT Mode2Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼2
+        USHORT Mode3Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼3
+        USHORT Mode4Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼4
+        USHORT Mode5Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼5
+        USHORT Mode6Sel:1;             // 1=å·²é€‰æ‹©æ¨¡å¼6
+        USHORT Reserved15:1;          // ä¿ç•™
+    } UltraDMA; // WORD 88:  Ultra DMAæ”¯æŒèƒ½åŠ›
+    USHORT Reserved89[2];         // WORD 89-90: ä¿ç•™
     struct
     {
-        BYTE LevelValue; // ¸ß¼¶µçÔ´¹ÜÀí¼¶±ğÖµ
+        BYTE LevelValue; // é«˜çº§ç”µæºç®¡ç†çº§åˆ«å€¼
         BYTE Reserved;
-    }AdvancePowerManagementLevel; // WORD 91: ¸ß¼¶µçÔ´¹ÜÀí¼¶±ğ
+    }AdvancePowerManagementLevel; // WORD 91: é«˜çº§ç”µæºç®¡ç†çº§åˆ«
     USHORT Reserved92[125];         // WORD 92-216
-    USHORT NominalMediaRotationRate; //  WORD 217 ±ê¶¨×ªËÙ(RPM), Èç¹ûÖµÎª1±íÊ¾ÎªSSD»òÕßÆäËû
-    USHORT Reserved218[38]; // WORD 218-255 ±£Áô
+    USHORT NominalMediaRotationRate; //  WORD 217 æ ‡å®šè½¬é€Ÿ(RPM), å¦‚æœå€¼ä¸º1è¡¨ç¤ºä¸ºSSDæˆ–è€…å…¶ä»–
+    USHORT Reserved218[38]; // WORD 218-255 ä¿ç•™
 };
 
-#pragma pack () // »Ö¸´ÄÚ´æ¶ÔÆë
+#pragma pack () // æ¢å¤å†…å­˜å¯¹é½
 
-/// @brief Í¨ÓÃ´æ´¢¿ØÖÆÆ÷
+/// @brief é€šç”¨å­˜å‚¨æ§åˆ¶å™¨
 ///
 ///https://msdn.microsoft.com/en-us/library/windows/hardware/ff553891(v=vs.85).aspx
 class CGeneralStorageController
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] devicePath Éè±¸Â·¾¶
-    /// Éè±¸Â·¾¶¸ñÊ½Îª(CÓïÑÔ)"////.//DeviceName"
-    /// Éè±¸Ãû³ÆÈç: 
-    /// Ó²ÅÌÂß¼­·ÖÇø: C:, D:, E:, ...
-    /// ÎïÀíÇı¶¯Æ÷: PhysicalDrive0, PhysicalDrive1, ...
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] devicePath è®¾å¤‡è·¯å¾„
+    /// è®¾å¤‡è·¯å¾„æ ¼å¼ä¸º(Cè¯­è¨€)"////.//DeviceName"
+    /// è®¾å¤‡åç§°å¦‚: 
+    /// ç¡¬ç›˜é€»è¾‘åˆ†åŒº: C:, D:, E:, ...
+    /// ç‰©ç†é©±åŠ¨å™¨: PhysicalDrive0, PhysicalDrive1, ...
     /// CD-ROM, DVD/ROM: CDROM0, CDROM1, ...
     explicit CGeneralStorageController(IN const wstring& devicePath);
     virtual ~CGeneralStorageController();
 
-    /// @brief ÅĞ¶ÏÉè±¸ÊÇ·ñ´æÔÚ
-    /// @return ´æÔÚ·µ»Øtrue, ²»´æÔÚ·µ»Øfalse
+    /// @brief åˆ¤æ–­è®¾å¤‡æ˜¯å¦å­˜åœ¨
+    /// @return å­˜åœ¨è¿”å›true, ä¸å­˜åœ¨è¿”å›false
     bool DeviceExist();
 
-    /// @brief ÖØÖÃÉè±¸Â·¾¶
-    /// @param[in] devicePath Éè±¸Â·¾¶
+    /// @brief é‡ç½®è®¾å¤‡è·¯å¾„
+    /// @param[in] devicePath è®¾å¤‡è·¯å¾„
     void ResetDeviceId(IN const wstring& devicePath);
 
-    /// @brief »ñÈ¡Éè±¸ÊôĞÔ
-    /// @param[out] devicePrperty ´æ´¢Éè±¸ÊôĞÔ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–è®¾å¤‡å±æ€§
+    /// @param[out] devicePrperty å­˜å‚¨è®¾å¤‡å±æ€§
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetDeviceProperty(OUT SStorageDeviceProperty& devicePrperty);
 
-    /// @brief »ñÈ¡Ã½ÌåÀàĞÍ
-    /// @param[in] mediaInfo ´æ´¢Ã½ÌåĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–åª’ä½“ç±»å‹
+    /// @param[in] mediaInfo å­˜å‚¨åª’ä½“ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetMediaType(OUT DEVICE_MEDIA_INFO& mediaInfo);
 
 protected:
-    /// @brief ´ò¿ªÉè±¸¾ä±ú
-    /// @return ·µ»ØÉè±¸¾ä±ú
+    /// @brief æ‰“å¼€è®¾å¤‡å¥æŸ„
+    /// @return è¿”å›è®¾å¤‡å¥æŸ„
     HANDLE OpenDeviceHandle();
 
 private:
-    wstring m_devicePath; ///< Éè±¸Ãû³Æ
+    wstring m_devicePath; ///< è®¾å¤‡åç§°
 
 private:
     CGeneralStorageController(const CGeneralStorageController&);
     CGeneralStorageController& operator = (const CGeneralStorageController&);
 };
 
-/// @brief ´ÅÅÌ¿ØÖÆÆ÷
+/// @brief ç£ç›˜æ§åˆ¶å™¨
 ///
 ///https://msdn.microsoft.com/en-us/library/windows/hardware/ff552626(v=vs.85).aspx
 class CDiskController : public CGeneralStorageController
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] devicePath Éè±¸Â·¾¶
-    /// Éè±¸Â·¾¶¸ñÊ½Îª(CÓïÑÔ)"////.//DeviceName"
-    /// Éè±¸Ãû³ÆÈç: PhysicalDrive0, PhysicalDrive1, ...
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] devicePath è®¾å¤‡è·¯å¾„
+    /// è®¾å¤‡è·¯å¾„æ ¼å¼ä¸º(Cè¯­è¨€)"////.//DeviceName"
+    /// è®¾å¤‡åç§°å¦‚: PhysicalDrive0, PhysicalDrive1, ...
     CDiskController(IN const wstring& devicePath);
     virtual ~CDiskController();
 
-    /// @brief »ñÈ¡´ÅÅÌ¼¸ºÎĞÅÏ¢
-    /// @param[in] geometry ´æ´¢¼¸ºÎĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–ç£ç›˜å‡ ä½•ä¿¡æ¯
+    /// @param[in] geometry å­˜å‚¨å‡ ä½•ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetGeometry(OUT DISK_GEOMETRY& geometry);
 
-    /// @brief »ñÈ¡°æ±¾ĞÅÏ¢
+    /// @brief è·å–ç‰ˆæœ¬ä¿¡æ¯
     ///
-    /// ¸Ã·½·¨ÒªÇó´ÅÅÌÖ§³ÖSMART
-    /// @param[in] versionParams ´æ´¢¼¸ºÎĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// è¯¥æ–¹æ³•è¦æ±‚ç£ç›˜æ”¯æŒSMART
+    /// @param[in] versionParams å­˜å‚¨å‡ ä½•ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetVersionInfor(OUT GETVERSIONINPARAMS& versionParams);
 };
 
-/// @brief IDE(ATA)´ÅÅÌ¿ØÖÆÆ÷
+/// @brief IDE(ATA)ç£ç›˜æ§åˆ¶å™¨
 ///
 /// https://msdn.microsoft.com/en-us/library/windows/hardware/ff559105(v=vs.85).aspx
 /// ATA8-ACS
 class CIDEDiskController : public CDiskController
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] devicePath Éè±¸Â·¾¶
-    /// Éè±¸Â·¾¶¸ñÊ½Îª(CÓïÑÔ)"////.//DeviceName"
-    /// Éè±¸Ãû³ÆÈç: PhysicalDrive0, PhysicalDrive1, ...
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] devicePath è®¾å¤‡è·¯å¾„
+    /// è®¾å¤‡è·¯å¾„æ ¼å¼ä¸º(Cè¯­è¨€)"////.//DeviceName"
+    /// è®¾å¤‡åç§°å¦‚: PhysicalDrive0, PhysicalDrive1, ...
     CIDEDiskController(IN const wstring& devicePath);
     virtual ~CIDEDiskController();
 
     bool ATACmdCheckMediaCardType();
 
-    /// @brief ¼ì²âµçÔ´Ä£Ê½
-    /// @param[out] mode ´æ´¢Ä£Ê½µÄÖµ
-    /// mode µÄÖµÈçÏÂ: (²éÔÄATA8 SPE)
-    /// 0x00 Device is in Standby mode [Ê¡µçÄ£Ê½]
+    /// @brief æ£€æµ‹ç”µæºæ¨¡å¼
+    /// @param[out] mode å­˜å‚¨æ¨¡å¼çš„å€¼
+    /// mode çš„å€¼å¦‚ä¸‹: (æŸ¥é˜…ATA8 SPE)
+    /// 0x00 Device is in Standby mode [çœç”µæ¨¡å¼]
     /// 0x40 Device is in NV Cache Power Mode and spindle is spun down or spinning down
     /// 0x41 Device is in NV Cache Power Mode and spindle is spun up or spinning up
     /// 0x80 Device is in Idle mode
     /// 0xFF Device is in Active mode or Idle mode
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdCheckPowerMode(OUT BYTE& mode);
 
-    /// @brief Ö±½ÓÉèÖÃµçÔ´Ä£Ê½ÎªIDLE
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief ç›´æ¥è®¾ç½®ç”µæºæ¨¡å¼ä¸ºIDLE
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdIDLEImmediate();
 
-    /// @brief Ö±½ÓÉèÖÃµçÔ´Ä£Ê½ÎªStandby
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief ç›´æ¥è®¾ç½®ç”µæºæ¨¡å¼ä¸ºStandby
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdStandbyImmediate();
 
-    /// @brief Ë¯ÃßÃüÁî
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief ç¡çœ å‘½ä»¤
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdSleep();
 
-    /// @brief ÖØÖÃÃüÁî
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief é‡ç½®å‘½ä»¤
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdDeviceReset();
 
-    /// @brief Õï¶ÏÃüÁî
-    /// @param[out] state ´æ´¢×´Ì¬Öµ
-    /// state µÄÖµÎª0x01»ò0x81Ôò±íÊ¾Éè±¸ÊÇºÃµÄ, ·ñÔò±íÊ¾Éè±¸ÊÇ»µµÄ»òÕßÃ»ÓĞÁ¬½Ó
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è¯Šæ–­å‘½ä»¤
+    /// @param[out] state å­˜å‚¨çŠ¶æ€å€¼
+    /// state çš„å€¼ä¸º0x01æˆ–0x81åˆ™è¡¨ç¤ºè®¾å¤‡æ˜¯å¥½çš„, å¦åˆ™è¡¨ç¤ºè®¾å¤‡æ˜¯åçš„æˆ–è€…æ²¡æœ‰è¿æ¥
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdExecuteDeviceDiagnostic(OUT BYTE& state);
 
-    /// @brief ¼ìÑé¶ÁÉÈÇøÀ©Õ¹ÃüÁî(Ã»ÓĞ·µ»Ø¶ÁÈ¡µÄÊı¾İ, For LBA48)
-    /// @param[in] lbaAddress ĞèÒª¶ÁÈ¡µÄÆğÊ¼ÉÈÇø¿ªÊ¼µØÖ·
-    /// @param[in] sectorCount ĞèÒª¶ÁÈ¡µÄÉÈÇøµÄÊıÁ¿
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ£€éªŒè¯»æ‰‡åŒºæ‰©å±•å‘½ä»¤(æ²¡æœ‰è¿”å›è¯»å–çš„æ•°æ®, For LBA48)
+    /// @param[in] lbaAddress éœ€è¦è¯»å–çš„èµ·å§‹æ‰‡åŒºå¼€å§‹åœ°å€
+    /// @param[in] sectorCount éœ€è¦è¯»å–çš„æ‰‡åŒºçš„æ•°é‡
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN unsigned long sectorCount);
 
-    /// @brief »ñÈ¡IDĞÅÏ¢ÃüÁî
-    /// @param[out] identifyData ´æ´¢IDĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–IDä¿¡æ¯å‘½ä»¤
+    /// @param[out] identifyData å­˜å‚¨IDä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyData);
 
-    /// @brief »ñÈ¡SMARTÊı¾İÃüÁî
+    /// @brief è·å–SMARTæ•°æ®å‘½ä»¤
     ///
-    /// SMARTÊôĞÔ¶¨Òå: http://en.wikipedia.org/wiki/S.M.A.R.T.
-    /// @param[out] smartData ´æ´¢SMARTÊı¾İ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// SMARTå±æ€§å®šä¹‰: http://en.wikipedia.org/wiki/S.M.A.R.T.
+    /// @param[out] smartData å­˜å‚¨SMARTæ•°æ®
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool ATACmdSMARTReadData(OUT unsigned char smartData[SMART_DATA_LENGTH]);
 private:
-    /// @brief ATAÃüÁî
+    /// @brief ATAå‘½ä»¤
     enum ATA_COMMAND
     {
-        ATA_DEVICE_RESET = 0x08, // ÖØÖÃÃüÁî
-        ATA_READ_VERIFY_SECTOR_EXT = 0x42, // ¼ìÑé¶ÁÀ©Õ¹ÃüÁî
-        ATA_EXECUTE_DEVICE_DIAGNOSTIC = 0x90, // Õï¶ÏÃüÁî
-        ATA_CHECK_MEDIA_CARD_TYPE = 0xD1, // ¼ì²âÃ½ÌåÀàĞÍÃüÁî
-        ATA_STANDBY_IMMEDIATE = 0xE0, // Á¢¼´ÉèÖÃµçÔ´Ä£Ê½ÎªSTANDBYÃüÁî
-        ATA_IDELE_IMMEDIATE = 0xE1, // Á¢¼´ÉèÖÃµçÔ´Ä£Ê½ÎªIDELEÃüÁî
-        ATA_IDENTIFY_DEVICE = 0xEC, // »ñÈ¡IDĞÅÏ¢ÃüÁî
-        ATA_CHECK_POWER_MODE = 0xE5, // ¼ì²âµçÔ´Ä£Ê½ÃüÁî
-        ATA_SLEEP = 0xE6, // ËæÃßÃüÁî
-        ATA_SET_FEATURE = 0xFE // ÉèÖÃÌØÕ÷ÃüÁî
+        ATA_DEVICE_RESET = 0x08, // é‡ç½®å‘½ä»¤
+        ATA_READ_VERIFY_SECTOR_EXT = 0x42, // æ£€éªŒè¯»æ‰©å±•å‘½ä»¤
+        ATA_EXECUTE_DEVICE_DIAGNOSTIC = 0x90, // è¯Šæ–­å‘½ä»¤
+        ATA_CHECK_MEDIA_CARD_TYPE = 0xD1, // æ£€æµ‹åª’ä½“ç±»å‹å‘½ä»¤
+        ATA_STANDBY_IMMEDIATE = 0xE0, // ç«‹å³è®¾ç½®ç”µæºæ¨¡å¼ä¸ºSTANDBYå‘½ä»¤
+        ATA_IDELE_IMMEDIATE = 0xE1, // ç«‹å³è®¾ç½®ç”µæºæ¨¡å¼ä¸ºIDELEå‘½ä»¤
+        ATA_IDENTIFY_DEVICE = 0xEC, // è·å–IDä¿¡æ¯å‘½ä»¤
+        ATA_CHECK_POWER_MODE = 0xE5, // æ£€æµ‹ç”µæºæ¨¡å¼å‘½ä»¤
+        ATA_SLEEP = 0xE6, // éšçœ å‘½ä»¤
+        ATA_SET_FEATURE = 0xFE // è®¾ç½®ç‰¹å¾å‘½ä»¤
     };
 
-    /// @brief ATAÃüÁîÉèÖÃÌØÕ÷×ÓÃüÁî
+    /// @brief ATAå‘½ä»¤è®¾ç½®ç‰¹å¾å­å‘½ä»¤
     enum SET_FEATURE_SUB_COMMAND
     {
-        SET_FEATURE_ENABLE_ADVANCED_POWER_MANAGEMENT = 0x05, // ¿ªÆô¸ß¼¶µçÔ´¹ÜÀí
-        SET_FEATURE_DISABLE_ADVANCED_POWER_MANAGEMENT = 0x85 // ¹Ø±Õ¸ß¼¶µçÔ´¹ÜÀí
+        SET_FEATURE_ENABLE_ADVANCED_POWER_MANAGEMENT = 0x05, // å¼€å¯é«˜çº§ç”µæºç®¡ç†
+        SET_FEATURE_DISABLE_ADVANCED_POWER_MANAGEMENT = 0x85 // å…³é—­é«˜çº§ç”µæºç®¡ç†
     };
 };
 
@@ -370,15 +370,15 @@ void CGeneralStorageController::ResetDeviceId(IN const wstring& devicePath)
 
 bool CGeneralStorageController::GetDeviceProperty(OUT SStorageDeviceProperty& devicePrperty)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
-    STORAGE_PROPERTY_QUERY propertyQuery; // ²éÑ¯µÄÊôĞÔ
-    STORAGE_DEVICE_DESCRIPTOR deviceDescriptor; // ÊôĞÔÃèÊö½á¹¹
-    STORAGE_DEVICE_DESCRIPTOR* pDeviceDescriptor = NULL; // ´æ´¢²éÑ¯µ½µÄÊôĞÔ
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
+    STORAGE_PROPERTY_QUERY propertyQuery; // æŸ¥è¯¢çš„å±æ€§
+    STORAGE_DEVICE_DESCRIPTOR deviceDescriptor; // å±æ€§æè¿°ç»“æ„
+    STORAGE_DEVICE_DESCRIPTOR* pDeviceDescriptor = NULL; // å­˜å‚¨æŸ¥è¯¢åˆ°çš„å±æ€§
 
-    // ´ò¿ªÉè±¸
+    // æ‰“å¼€è®¾å¤‡
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
     {
@@ -386,12 +386,12 @@ bool CGeneralStorageController::GetDeviceProperty(OUT SStorageDeviceProperty& de
         goto SAFE_EXIT;
     }
 
-    // Ìî³äĞèÒª²éÑ¯µÄÊôĞÔ
+    // å¡«å……éœ€è¦æŸ¥è¯¢çš„å±æ€§
     ZeroMemory(&propertyQuery, sizeof(propertyQuery));
     propertyQuery.PropertyId = StorageDeviceProperty;
     propertyQuery.QueryType = PropertyStandardQuery;
 
-    // µÚÒ»´Î²éÑ¯, »ñÈ¡ÊôĞÔĞèÒªµÄ×Ö½ÚÊı
+    // ç¬¬ä¸€æ¬¡æŸ¥è¯¢, è·å–å±æ€§éœ€è¦çš„å­—èŠ‚æ•°
     nRet = DeviceIoControl(
         hDevice, 
         IOCTL_STORAGE_QUERY_PROPERTY, 
@@ -410,7 +410,7 @@ bool CGeneralStorageController::GetDeviceProperty(OUT SStorageDeviceProperty& de
 
     pDeviceDescriptor = (STORAGE_DEVICE_DESCRIPTOR*)malloc(deviceDescriptor.Size);
 
-    // µÚ¶ş´Î²éÑ¯, »ñÈ¡ÊôĞÔ
+    // ç¬¬äºŒæ¬¡æŸ¥è¯¢, è·å–å±æ€§
     nRet = DeviceIoControl(
         hDevice, 
         IOCTL_STORAGE_QUERY_PROPERTY, 
@@ -434,7 +434,7 @@ bool CGeneralStorageController::GetDeviceProperty(OUT SStorageDeviceProperty& de
     devicePrperty.DeviceTypeModifier = pDeviceDescriptor->DeviceTypeModifier;
     devicePrperty.RemovableMedia = pDeviceDescriptor->RemovableMedia == TRUE ? true : false;
 
-    // ĞòÁĞºÅÒÔ¼°ÆäËûÊôĞÔĞèÒª¸ù¾İÆ«ÒÆÀ´È¡µÃ, Èç¹ûÆ«ÒÆÖµÎª0, Ôò±íÊ¾Ã»ÓĞ¸ÃÖµ
+    // åºåˆ—å·ä»¥åŠå…¶ä»–å±æ€§éœ€è¦æ ¹æ®åç§»æ¥å–å¾—, å¦‚æœåç§»å€¼ä¸º0, åˆ™è¡¨ç¤ºæ²¡æœ‰è¯¥å€¼
     if (pDeviceDescriptor->SerialNumberOffset != 0)
     {
         devicePrperty.SerialNumber = (char*)pDeviceDescriptor + pDeviceDescriptor->SerialNumberOffset;
@@ -471,16 +471,16 @@ SAFE_EXIT:
 
 bool CGeneralStorageController::GetMediaType(OUT DEVICE_MEDIA_INFO& mediaInfo)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
-    ULONG requiredBytes = 0; // ´æ´¢ĞèÒªµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
+    ULONG requiredBytes = 0; // å­˜å‚¨éœ€è¦çš„å­—èŠ‚æ•°
 
-    GET_MEDIA_TYPES mediaTypes; // Ã½ÌåÀàĞÍ½á¹¹
-    GET_MEDIA_TYPES* pMediaTypes = NULL; // ´æ´¢Ã½ÌåÀàĞÍ
+    GET_MEDIA_TYPES mediaTypes; // åª’ä½“ç±»å‹ç»“æ„
+    GET_MEDIA_TYPES* pMediaTypes = NULL; // å­˜å‚¨åª’ä½“ç±»å‹
 
-    // ´ò¿ªÉè±¸
+    // æ‰“å¼€è®¾å¤‡
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
     {
@@ -488,7 +488,7 @@ bool CGeneralStorageController::GetMediaType(OUT DEVICE_MEDIA_INFO& mediaInfo)
         goto SAFE_EXIT;
     }
 
-    // µÚÒ»´Î²éÑ¯ĞèÒªµÄ´óĞ¡
+    // ç¬¬ä¸€æ¬¡æŸ¥è¯¢éœ€è¦çš„å¤§å°
     nRet = DeviceIoControl(
         hDevice, 
         IOCTL_STORAGE_GET_MEDIA_TYPES_EX, 
@@ -506,10 +506,10 @@ bool CGeneralStorageController::GetMediaType(OUT DEVICE_MEDIA_INFO& mediaInfo)
     }
 
     requiredBytes = sizeof(GET_MEDIA_TYPES) + mediaTypes.MediaInfoCount * sizeof(DEVICE_MEDIA_INFO);
-    // ·ÖÅä×ã¹»µÄ¿Õ¼ä
+    // åˆ†é…è¶³å¤Ÿçš„ç©ºé—´
     pMediaTypes = (GET_MEDIA_TYPES*)malloc(requiredBytes);
 
-    // µÚ¶ş´Î²éÑ¯, »ñÈ¡ÀàĞÍ
+    // ç¬¬äºŒæ¬¡æŸ¥è¯¢, è·å–ç±»å‹
     nRet = DeviceIoControl(
         hDevice, 
         IOCTL_STORAGE_GET_MEDIA_TYPES_EX, 
@@ -520,8 +520,8 @@ bool CGeneralStorageController::GetMediaType(OUT DEVICE_MEDIA_INFO& mediaInfo)
         &nBytes, 
         NULL);
 
-    // ËäÈ»¿ÉÄÜ»ñÈ¡µ½¶à×éÃ½ÌåĞÅÏ¢, µ«ÎÒÃÇÖ»È¡µÚÒ»×é, ÒÔºóÈç¹ûÓĞÆäËûĞèÇó, 
-    // Äã¿ÉÒÔÖØÔØ±¾·½·¨
+    // è™½ç„¶å¯èƒ½è·å–åˆ°å¤šç»„åª’ä½“ä¿¡æ¯, ä½†æˆ‘ä»¬åªå–ç¬¬ä¸€ç»„, ä»¥åå¦‚æœæœ‰å…¶ä»–éœ€æ±‚, 
+    // ä½ å¯ä»¥é‡è½½æœ¬æ–¹æ³•
     mediaInfo = *(pMediaTypes->MediaInfo);
 
     if (nRet == FALSE)
@@ -659,14 +659,14 @@ CIDEDiskController::~CIDEDiskController()
 
 bool CIDEDiskController::ATACmdCheckMediaCardType()
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -677,11 +677,11 @@ bool CIDEDiskController::ATACmdCheckMediaCardType()
 
     
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_CHECK_MEDIA_CARD_TYPE; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_CHECK_MEDIA_CARD_TYPE; // å‘½ä»¤å¯„å­˜å™¨
    
     nRet = DeviceIoControl(
         hDevice,
@@ -699,8 +699,8 @@ bool CIDEDiskController::ATACmdCheckMediaCardType()
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -721,14 +721,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdCheckPowerMode(OUT BYTE& mode)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -739,11 +739,11 @@ bool CIDEDiskController::ATACmdCheckPowerMode(OUT BYTE& mode)
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_CHECK_POWER_MODE; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_CHECK_POWER_MODE; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -761,15 +761,15 @@ bool CIDEDiskController::ATACmdCheckPowerMode(OUT BYTE& mode)
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
         goto SAFE_EXIT;
     }
 
-    // ²éÔÄATA8 SPEC ¿ÉÖª, Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ2¸ö×Ö½ÚÖµÎªµçÔ´Ä£Ê½µÄÖµ
+    // æŸ¥é˜…ATA8 SPEC å¯çŸ¥, æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬2ä¸ªå­—èŠ‚å€¼ä¸ºç”µæºæ¨¡å¼çš„å€¼
     mode = pATACmd->CurrentTaskFile[1];
 
     bRet = true;
@@ -786,14 +786,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdIDLEImmediate()
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -804,11 +804,11 @@ bool CIDEDiskController::ATACmdIDLEImmediate()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_IDELE_IMMEDIATE; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_IDELE_IMMEDIATE; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -826,8 +826,8 @@ bool CIDEDiskController::ATACmdIDLEImmediate()
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -848,14 +848,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdStandbyImmediate()
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -866,11 +866,11 @@ bool CIDEDiskController::ATACmdStandbyImmediate()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_STANDBY_IMMEDIATE; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_STANDBY_IMMEDIATE; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -888,8 +888,8 @@ bool CIDEDiskController::ATACmdStandbyImmediate()
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -910,14 +910,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdSleep()
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -928,11 +928,11 @@ bool CIDEDiskController::ATACmdSleep()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_SLEEP; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_SLEEP; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -950,8 +950,8 @@ bool CIDEDiskController::ATACmdSleep()
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -972,14 +972,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdDeviceReset()
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -990,11 +990,11 @@ bool CIDEDiskController::ATACmdDeviceReset()
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_DEVICE_RESET; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_DEVICE_RESET; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -1012,8 +1012,8 @@ bool CIDEDiskController::ATACmdDeviceReset()
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -1034,14 +1034,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdExecuteDeviceDiagnostic(OUT BYTE& state)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -1052,11 +1052,11 @@ bool CIDEDiskController::ATACmdExecuteDeviceDiagnostic(OUT BYTE& state)
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_EXECUTE_DEVICE_DIAGNOSTIC; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_EXECUTE_DEVICE_DIAGNOSTIC; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -1074,16 +1074,16 @@ bool CIDEDiskController::ATACmdExecuteDeviceDiagnostic(OUT BYTE& state)
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
         goto SAFE_EXIT;
     }
 
-    // »ñÈ¡´íÎó¼Ä´æÆ÷ÖĞµÄÖµ
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ1¸ö×Ö½ÚÖµÎª´íÎó¼Ä´æÆ÷µÄÖµ
+    // è·å–é”™è¯¯å¯„å­˜å™¨ä¸­çš„å€¼
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬1ä¸ªå­—èŠ‚å€¼ä¸ºé”™è¯¯å¯„å­˜å™¨çš„å€¼
     state = pATACmd->CurrentTaskFile[0];
     bRet = true;
 
@@ -1103,14 +1103,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN unsigned long sectorCount)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
     IDEREGS* pCurrentTaskFile = (IDEREGS*)pATACmd->CurrentTaskFile;
     IDEREGS* pPreviousTaskFile = (IDEREGS*)pATACmd->PreviousTaskFile;
 
@@ -1123,12 +1123,12 @@ bool CIDEDiskController::ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN u
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_48BIT_COMMAND; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN | ATA_FLAGS_48BIT_COMMAND; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
 
-    // ÉèÖÃÃüÁî¼Ä´æÆ÷
+    // è®¾ç½®å‘½ä»¤å¯„å­˜å™¨
     pCurrentTaskFile->bCommandReg = pPreviousTaskFile->bCommandReg = ATA_READ_VERIFY_SECTOR_EXT;
 
      /*	
@@ -1149,15 +1149,15 @@ bool CIDEDiskController::ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN u
     When L=1, addressing is by 'LBA' mode.
     */
 
-    // ÉèÖÃÇı¶¯Æ÷Í·¼Ä´æÆ÷
-    pCurrentTaskFile->bDriveHeadReg = pPreviousTaskFile->bDriveHeadReg = 0xE0; // Çı¶¯Æ÷Í·¼Ä´æÆ÷ÉèÖÃÎª0xE0±íÊ¾Ê¹ÓÃLBAÑ°Ö··½Ê½
+    // è®¾ç½®é©±åŠ¨å™¨å¤´å¯„å­˜å™¨
+    pCurrentTaskFile->bDriveHeadReg = pPreviousTaskFile->bDriveHeadReg = 0xE0; // é©±åŠ¨å™¨å¤´å¯„å­˜å™¨è®¾ç½®ä¸º0xE0è¡¨ç¤ºä½¿ç”¨LBAå¯»å€æ–¹å¼
    
 
-    // ÉèÖÃ¶ÁÈ¡ÉÈÇøÊıÄ¿¼Ä´æÆ÷
+    // è®¾ç½®è¯»å–æ‰‡åŒºæ•°ç›®å¯„å­˜å™¨
     pCurrentTaskFile->bSectorCountReg = (BYTE)sectorCount;
     pPreviousTaskFile->bSectorCountReg = (BYTE)(sectorCount >> 8);
 
-    // ÉèÖÃÆğÊ¼¼Ä´æÆ÷LBAµØÖ·
+    // è®¾ç½®èµ·å§‹å¯„å­˜å™¨LBAåœ°å€
     pCurrentTaskFile->bSectorNumberReg = (BYTE)lbaAddress;
     pCurrentTaskFile->bCylLowReg = (BYTE)(lbaAddress >> 8);
     pCurrentTaskFile->bCylHighReg = (BYTE)(lbaAddress >> 16);
@@ -1181,8 +1181,8 @@ bool CIDEDiskController::ATACmdReadVerifySectorExt(IN ULONGLONG lbaAddress, IN u
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -1203,14 +1203,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyData)
 {
-    BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+    BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
 
     hDevice = this->OpenDeviceHandle();
     if (hDevice == INVALID_HANDLE_VALUE || hDevice == NULL)
@@ -1221,11 +1221,11 @@ bool CIDEDiskController::ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyDat
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
-    pATACmd->CurrentTaskFile[6] = ATA_IDENTIFY_DEVICE; // ÃüÁî¼Ä´æÆ÷
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
+    pATACmd->CurrentTaskFile[6] = ATA_IDENTIFY_DEVICE; // å‘½ä»¤å¯„å­˜å™¨
 
     nRet = DeviceIoControl(
         hDevice,
@@ -1243,8 +1243,8 @@ bool CIDEDiskController::ATACmdIdentifyDevice(OUT SATA8IdentifyData& identifyDat
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
@@ -1267,14 +1267,14 @@ SAFE_EXIT:
 
 bool CIDEDiskController::ATACmdSMARTReadData(OUT unsigned char smartData[SMART_DATA_LENGTH])
 {
-     BOOL nRet = FALSE; // ÏµÍ³API·µ»ØÖµ
-    bool bRet = false; // º¯Êı·µ»ØÖµ
-    HANDLE hDevice = NULL; // Éè±¸¾ä±ú
-    ULONG nBytes = 0; // ´æ´¢·µ»ØµÄ×Ö½ÚÊı
+     BOOL nRet = FALSE; // ç³»ç»ŸAPIè¿”å›å€¼
+    bool bRet = false; // å‡½æ•°è¿”å›å€¼
+    HANDLE hDevice = NULL; // è®¾å¤‡å¥æŸ„
+    ULONG nBytes = 0; // å­˜å‚¨è¿”å›çš„å­—èŠ‚æ•°
 
-    const int DATA_BUFFER_LEN = 512; // Êı¾İ»º³å³¤¶È
-    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // ²ÎÊı»º³åÇø, ATAÃüÁî+Êä³ö»º³åÇø
-    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAÃüÁî²ÎÊı
+    const int DATA_BUFFER_LEN = 512; // æ•°æ®ç¼“å†²é•¿åº¦
+    BYTE paramBuffer[sizeof(ATA_PASS_THROUGH_EX) + DATA_BUFFER_LEN] = {0}; // å‚æ•°ç¼“å†²åŒº, ATAå‘½ä»¤+è¾“å‡ºç¼“å†²åŒº
+    ATA_PASS_THROUGH_EX* pATACmd = (ATA_PASS_THROUGH_EX*)paramBuffer; // ATAå‘½ä»¤å‚æ•°
     IDEREGS* pCurrentTaskFile = (IDEREGS*)pATACmd->CurrentTaskFile;
 
     hDevice = this->OpenDeviceHandle();
@@ -1286,12 +1286,12 @@ bool CIDEDiskController::ATACmdSMARTReadData(OUT unsigned char smartData[SMART_D
 
 
     pATACmd->Length = sizeof(ATA_PASS_THROUGH_EX);
-    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // ¶ÁÈ¡Êı¾İ
-    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // Êı¾İ»º³åÇøµÄÆ«ÒÆÖµ
-    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // Êı¾İ»º³åÇøµÄ³¤¶È
-    pATACmd->TimeOutValue = 3; // ÃüÁîÖ´ĞĞµÄ³¬Ê±Ê±¼ä(Ãë)
+    pATACmd->AtaFlags = ATA_FLAGS_DATA_IN; // è¯»å–æ•°æ®
+    pATACmd->DataBufferOffset = sizeof(ATA_PASS_THROUGH_EX); // æ•°æ®ç¼“å†²åŒºçš„åç§»å€¼
+    pATACmd->DataTransferLength = DATA_BUFFER_LEN; // æ•°æ®ç¼“å†²åŒºçš„é•¿åº¦
+    pATACmd->TimeOutValue = 3; // å‘½ä»¤æ‰§è¡Œçš„è¶…æ—¶æ—¶é—´(ç§’)
 
-    // ÉèÖÃÃüÁî¼Ä´æÆ÷
+    // è®¾ç½®å‘½ä»¤å¯„å­˜å™¨
     pCurrentTaskFile->bCommandReg = SMART_CMD;
 
      /*	
@@ -1312,11 +1312,11 @@ bool CIDEDiskController::ATACmdSMARTReadData(OUT unsigned char smartData[SMART_D
     When L=1, addressing is by 'LBA' mode.
     */
 
-    // ÉèÖÃÇı¶¯Æ÷Í·¼Ä´æÆ÷
-    pCurrentTaskFile->bDriveHeadReg = 0xA0; // Çı¶¯Æ÷Í·¼Ä´æÆ÷ÉèÖÃÎª0xA0±íÊ¾Ê¹ÓÃCHSÑ°Ö··½Ê½
+    // è®¾ç½®é©±åŠ¨å™¨å¤´å¯„å­˜å™¨
+    pCurrentTaskFile->bDriveHeadReg = 0xA0; // é©±åŠ¨å™¨å¤´å¯„å­˜å™¨è®¾ç½®ä¸º0xA0è¡¨ç¤ºä½¿ç”¨CHSå¯»å€æ–¹å¼
    
 
-    // ÉèÖÃÌØÕ÷¼Ä´æÆ÷
+    // è®¾ç½®ç‰¹å¾å¯„å­˜å™¨
     pCurrentTaskFile->bFeaturesReg = READ_ATTRIBUTES;
 
     pCurrentTaskFile->bCylLowReg = SMART_CYL_LOW;
@@ -1338,15 +1338,15 @@ bool CIDEDiskController::ATACmdSMARTReadData(OUT unsigned char smartData[SMART_D
         goto SAFE_EXIT;
     }
 
-    // Ö´ĞĞÃüÁîºóTaskFileÖĞµÄµÚ7¸ö×Ö½ÚÖµÎª×´Ì¬¼Ä´æÆ÷µÄÖµ, ¼ì²â¸ÃÖµ¿ÉÒÔÖªµÀÃüÁîµÄÖ´ĞĞ½á¹û
-    // Èç¹û×´Ì¬¼Ä´æÆ÷µÄÖµµÃ0Î»Îª1, ±íÊ¾·¢ÉúÁË´íÎó
+    // æ‰§è¡Œå‘½ä»¤åTaskFileä¸­çš„ç¬¬7ä¸ªå­—èŠ‚å€¼ä¸ºçŠ¶æ€å¯„å­˜å™¨çš„å€¼, æ£€æµ‹è¯¥å€¼å¯ä»¥çŸ¥é“å‘½ä»¤çš„æ‰§è¡Œç»“æœ
+    // å¦‚æœçŠ¶æ€å¯„å­˜å™¨çš„å€¼å¾—0ä½ä¸º1, è¡¨ç¤ºå‘ç”Ÿäº†é”™è¯¯
     if (pATACmd->CurrentTaskFile[6] & 0x1)
     {
         bRet = false;
         goto SAFE_EXIT;
     }
 
-    // ·µ»ØµÄÊı¾İÖĞ, Ç°362¸öÊı¾İÎªSMARTÊôĞÔÊı¾İ
+    // è¿”å›çš„æ•°æ®ä¸­, å‰362ä¸ªæ•°æ®ä¸ºSMARTå±æ€§æ•°æ®
     memcpy(smartData, paramBuffer + sizeof(ATA_PASS_THROUGH_EX), SMART_DATA_LENGTH);
 
     bRet = true;
@@ -1420,7 +1420,7 @@ unsigned long LIDEDiskController::GetSATAType()
     }
 
     /*
-    ¸ß°æ±¾µÄ°üº¬µÍ°æ±¾µÄÖµËùÒÔĞèÒª´Ó¸ßµ½µÍÅĞ¶Ï
+    é«˜ç‰ˆæœ¬çš„åŒ…å«ä½ç‰ˆæœ¬çš„å€¼æ‰€ä»¥éœ€è¦ä»é«˜åˆ°ä½åˆ¤æ–­
     */
     if (identifyData.SATACapabilities.SATAGen3)
     {

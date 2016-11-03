@@ -1,7 +1,7 @@
-/// @file TemperatureProbe.h
-/// @brief ¸ÃÍ·ÎÄ¼şÖĞÉùÃ÷ÁËÎÂ¶ÈÌ½²âÀà
+ï»¿/// @file TemperatureProbe.h
+/// @brief è¯¥å¤´æ–‡ä»¶ä¸­å£°æ˜äº†æ¸©åº¦æ¢æµ‹ç±»
 /// 
-/// ¸ÃÍ·ÎÄ¼şÉêÃ÷µÄÀà¹ØÁªWinRing0, ²¢ÇÒĞèÒª¹ÜÀíÔ±È¨ÏŞ
+/// è¯¥å¤´æ–‡ä»¶ç”³æ˜çš„ç±»å…³è”WinRing0, å¹¶ä¸”éœ€è¦ç®¡ç†å‘˜æƒé™
 /// Detail:
 /// @author Burnell_Liu  
 /// @version   
@@ -25,68 +25,68 @@ using std::wstring;
 #define OUT
 #endif
 
-/// @brief ×î´ó»ñÈ¡´ÅÅÌÎÂ¶ÈÊıÁ¿
+/// @brief æœ€å¤§è·å–ç£ç›˜æ¸©åº¦æ•°é‡
 #ifndef MAX_DISKTEMP_NUMBER
 #define MAX_DISKTEMP_NUMBER 8
 #endif
 
-/// @brief ´ÅÅÌÎÂ¶ÈĞÅÏ¢×é
+/// @brief ç£ç›˜æ¸©åº¦ä¿¡æ¯ç»„
 struct DiskTempInforArray
 {
-    unsigned int Count; ///< ³É¹¦»ñÈ¡µ½ÎÂ¶ÈµÄ´ÅÅÌµÄÊıÁ¿
-    unsigned int Temp[MAX_DISKTEMP_NUMBER]; ///< ´ÅÅÌÎÂ¶È, µ¥Î»ÉãÊÏ¶È(C)
-    wstring DiskDriveID[MAX_DISKTEMP_NUMBER]; ///< ´ÅÅÌÇı¶¯Æ÷ID, Èç L"\\\\.\\PhysicalDrive0"
+    unsigned int Count; ///< æˆåŠŸè·å–åˆ°æ¸©åº¦çš„ç£ç›˜çš„æ•°é‡
+    unsigned int Temp[MAX_DISKTEMP_NUMBER]; ///< ç£ç›˜æ¸©åº¦, å•ä½æ‘„æ°åº¦(C)
+    wstring DiskDriveID[MAX_DISKTEMP_NUMBER]; ///< ç£ç›˜é©±åŠ¨å™¨ID, å¦‚ L"\\\\.\\PhysicalDrive0"
 };
 
-/// @brief ×î´ó´¦ÀíÆ÷ÎïÀíºËĞÄÊı
+/// @brief æœ€å¤§å¤„ç†å™¨ç‰©ç†æ ¸å¿ƒæ•°
 #ifndef MAX_PROCESSOR_PHYSICAL_CORE_NUM
 #define MAX_PROCESSOR_PHYSICAL_CORE_NUM 64
 #endif
 
-/// @brief CPUÎÂ¶ÈĞÅÏ¢
+/// @brief CPUæ¸©åº¦ä¿¡æ¯
 struct CpuTempInfor
 {
-    unsigned int CoreNum; ///< CPUÎïÀíºËĞÄÊı
-    unsigned int CoreTemp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]; ///< CPUºËĞÄÎÂ¶È
+    unsigned int CoreNum; ///< CPUç‰©ç†æ ¸å¿ƒæ•°
+    unsigned int CoreTemp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]; ///< CPUæ ¸å¿ƒæ¸©åº¦
 };
 
-/// @brief ×î´óGPUÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
+/// @brief æœ€å¤§GPUæ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
 #ifndef MAX_GPU_SENSORS_NUMBER
 #define MAX_GPU_SENSORS_NUMBER 16
 #endif
 
-/// @brief GPUÎÂ¶ÈĞÅÏ¢
+/// @brief GPUæ¸©åº¦ä¿¡æ¯
 struct GpuTempInfor
 {
-    unsigned int SensorsNum; ///< ÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
+    unsigned int SensorsNum; ///< æ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
     unsigned int Temp[MAX_GPU_SENSORS_NUMBER];
 };
 
 class CTemperatureProbe;
 
-/// @brief ÎÂ¶ÈÌ½²âÀà
+/// @brief æ¸©åº¦æ¢æµ‹ç±»
 class TemperatureProbe
 {
 public:
     TemperatureProbe();
     ~TemperatureProbe();
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] OUT cpuTemp ´æ´¢CPUÎÂ¶ÈĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] OUT cpuTemp å­˜å‚¨CPUæ¸©åº¦ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetCpuTemp(OUT CpuTempInfor& cpuTemp);
 
-    /// @brief »ñÈ¡GPUÎÂ¶È
-    /// @param[out] OUT gpuTemp ´æ´¢GPUÎÂ¶ÈĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–GPUæ¸©åº¦
+    /// @param[out] OUT gpuTemp å­˜å‚¨GPUæ¸©åº¦ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetGpuTemp(OUT GpuTempInfor& gpuTemp);
 
-    /// @brief »ñÈ¡´ÅÅÌÎÂ¶È
-    /// ¸Ã·½·¨Ö»ÄÜ»ñÈ¡SATA(IDE)´ÅÅÌµÄÎÂ¶È
-    /// @param[out] diskTemp ´æ´¢´ÅÅÌÎÂ¶È
+    /// @brief è·å–ç£ç›˜æ¸©åº¦
+    /// è¯¥æ–¹æ³•åªèƒ½è·å–SATA(IDE)ç£ç›˜çš„æ¸©åº¦
+    /// @param[out] diskTemp å­˜å‚¨ç£ç›˜æ¸©åº¦
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp);
 private:
-    CTemperatureProbe* m_pTemperatureProbe; ///< ÎÂ¶ÈÌ½²âÊµÏÖÀà¶ÔÏó
+    CTemperatureProbe* m_pTemperatureProbe; ///< æ¸©åº¦æ¢æµ‹å®ç°ç±»å¯¹è±¡
 };
 
 

@@ -1,45 +1,45 @@
-
+ï»¿
 #pragma once
 #ifndef _MULTITHREAD_H_
 #define _MULTITHREAD_H_
 
 
-/// @brief ÊÖ¶¯Ëø
+/// @brief æ‰‹åŠ¨é”
 class LManualLock
 {
 public:
-	/// @brief ¹¹Ôìº¯Êı
+	/// @brief æ„é€ å‡½æ•°
 	LManualLock();
 
-	/// @brief Îö¹¹º¯Êı
+	/// @brief ææ„å‡½æ•°
 	~LManualLock();
 
-	/// @brief ÉÏËø
+	/// @brief ä¸Šé”
 	void Lock();
 
-	/// @brief ½âËø
+	/// @brief è§£é”
 	void UnLock();
 private:
 	LManualLock(const LManualLock&);
 	void operator = (const LManualLock&);
 
-	void* m_pLock; ///< Êµ¼ÊËø¶ÔÏó
+	void* m_pLock; ///< å®é™…é”å¯¹è±¡
 };
 
-/// @brief ×Ô¶¯Ëø
+/// @brief è‡ªåŠ¨é”
 class LAutoLock
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
 	LAutoLock(LManualLock* pManualLock);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
 	~LAutoLock();
 
 private:
 	LAutoLock(const LAutoLock& );
 	void operator = (const LAutoLock&);
 
-	LManualLock* m_pManualLock; ///< ÊÖ¶¯Ëø¶ÔÏó
+	LManualLock* m_pManualLock; ///< æ‰‹åŠ¨é”å¯¹è±¡
 };
 #endif

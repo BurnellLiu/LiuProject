@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LSensorObject.h"
 
 #include <Windows.h>
@@ -14,7 +14,7 @@ typedef bool (*GetAmbientLightSensorInforFun)(OUT SAmbientLightInforArray* pInfo
 
 typedef bool (*GetGpsSensorInforFun)(OUT SGpsInforArray* pInforArray);
 
-/// @brief ´«¸ÐÆ÷ÊµÏÖ¶ÔÏó
+/// @brief ä¼ æ„Ÿå™¨å®žçŽ°å¯¹è±¡
 class CSensorObject
 {
 public:
@@ -100,13 +100,13 @@ public:
     }
 
 private:
-    HMODULE m_hSensorObject; ///< SensorObject DLL¾ä±ú
+    HMODULE m_hSensorObject; ///< SensorObject DLLå¥æŸ„
 
-    GetAccelerometer3DSensorInforFun m_pGetAccelerometer3DSensorInforFun; ///< »ñÈ¡ÖØÁ¦¼ÓËÙ¶È´«¸ÐÆ÷ÐÅÏ¢º¯ÊýÖ¸Õë
-    GetGyrometer3DSensorInforFun m_pGetGyrometer3DSensorInforFun; ///< »ñÈ¡ÍÓÂÝÒÇ´«¸ÐÆ÷ÐÅÏ¢º¯ÊýÖ¸Õë
-    GetCompass3DSensorInforFun m_pGetCompass3DSensorInforFun; ///< »ñÈ¡Ö¸ÄÏÕë´«¸ÐÆ÷ÐÅÏ¢º¯ÊýÖ¸Õë
-    GetAmbientLightSensorInforFun m_pGetAmbientLightSensorInforFun; ///< »ñÈ¡¹â´«¸ÐÆ÷º¯ÊýÖ¸Õë
-    GetGpsSensorInforFun m_pGetGpsSensorInforFun; ///< »ñÈ¡GPS´«¸ÐÆ÷º¯ÊýÖ¸Õë
+    GetAccelerometer3DSensorInforFun m_pGetAccelerometer3DSensorInforFun; ///< èŽ·å–é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨ä¿¡æ¯å‡½æ•°æŒ‡é’ˆ
+    GetGyrometer3DSensorInforFun m_pGetGyrometer3DSensorInforFun; ///< èŽ·å–é™€èžºä»ªä¼ æ„Ÿå™¨ä¿¡æ¯å‡½æ•°æŒ‡é’ˆ
+    GetCompass3DSensorInforFun m_pGetCompass3DSensorInforFun; ///< èŽ·å–æŒ‡å—é’ˆä¼ æ„Ÿå™¨ä¿¡æ¯å‡½æ•°æŒ‡é’ˆ
+    GetAmbientLightSensorInforFun m_pGetAmbientLightSensorInforFun; ///< èŽ·å–å…‰ä¼ æ„Ÿå™¨å‡½æ•°æŒ‡é’ˆ
+    GetGpsSensorInforFun m_pGetGpsSensorInforFun; ///< èŽ·å–GPSä¼ æ„Ÿå™¨å‡½æ•°æŒ‡é’ˆ
 };
 
 LSensorObject::LSensorObject()

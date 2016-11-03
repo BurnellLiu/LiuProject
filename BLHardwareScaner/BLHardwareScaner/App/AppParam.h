@@ -1,39 +1,39 @@
-
+ï»¿
 
 #ifndef _APP_H_
 #define _APP_H_
 
 #include <QtCore/QString>
 
-/// @brief ³ÌĞòÆô¶¯Ä£Ê½
+/// @brief ç¨‹åºå¯åŠ¨æ¨¡å¼
 enum APP_START_MODE
 {
-    APP_NORMAL = 0, ///< ±ê×¼Æô¶¯Ä£Ê½
-    APP_RESTARTAGING ///< ÖØ¿ª»úAgingÆô¶¯Ä£Ê½
+    APP_NORMAL = 0, ///< æ ‡å‡†å¯åŠ¨æ¨¡å¼
+    APP_RESTARTAGING ///< é‡å¼€æœºAgingå¯åŠ¨æ¨¡å¼
 };
 
-/// @brief ³ÌĞò²ÎÊıÀà
+/// @brief ç¨‹åºå‚æ•°ç±»
 class LAppParam
 {
 public:
-    /// @brief »ñÈ¡³ÌĞòÆô¶¯Ä£Ê½
-    /// @return ³ÌĞòÆô¶¯Ä£Ê½
+    /// @brief è·å–ç¨‹åºå¯åŠ¨æ¨¡å¼
+    /// @return ç¨‹åºå¯åŠ¨æ¨¡å¼
     static APP_START_MODE GetStartMode();
 
-    /// @brief »ñÈ¡³ÌĞòµ±Ç°°æ±¾
-    /// @return °æ±¾ĞÅÏ¢, ÈçV1.3.6
+    /// @brief è·å–ç¨‹åºå½“å‰ç‰ˆæœ¬
+    /// @return ç‰ˆæœ¬ä¿¡æ¯, å¦‚V1.3.6
     static QString GetAppVersion();
 
-    /// @brief »ñÈ¡Ä¬ÈÏQSSÎÄ¼şÂ·¾¶
-    /// @return QSSÎÄ¼şÂ·¾¶, Èç".\\Config\\QSS\\Default\\"
+    /// @brief è·å–é»˜è®¤QSSæ–‡ä»¶è·¯å¾„
+    /// @return QSSæ–‡ä»¶è·¯å¾„, å¦‚".\\Config\\QSS\\Default\\"
     static QString GetDefaultQssPath();
 
 private:
-    /// @brief ³õÊ¼»¯³ÌĞò²ÎÊı
-    /// @param[in] argc ÃüÁîĞĞ²ÎÊıÊıÄ¿
-    /// @param[in] argv[] ÃüÁîĞĞ²ÎÊı
+    /// @brief åˆå§‹åŒ–ç¨‹åºå‚æ•°
+    /// @param[in] argc å‘½ä»¤è¡Œå‚æ•°æ•°ç›®
+    /// @param[in] argv[] å‘½ä»¤è¡Œå‚æ•°
     static void InitAppParam(int argc, char *argv[]);
-    friend int main(int argc, char *argv[]); ///< ÉèÖÃmainº¯ÊıÎªÓÑÔª
+    friend int main(int argc, char *argv[]); ///< è®¾ç½®mainå‡½æ•°ä¸ºå‹å…ƒ
 };
 
 #endif

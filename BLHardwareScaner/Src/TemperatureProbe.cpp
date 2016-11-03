@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "TemperatureProbe.h"
 
@@ -14,11 +14,11 @@ typedef bool (*GetCpuTempFun)(OUT unsigned int* pCoreNum, OUT unsigned int temp[
 
 typedef bool (*GetGpuTempFun)(OUT unsigned int* pSensorNum, OUT unsigned int temp[MAX_GPU_SENSORS_NUMBER]);
 
-/// @brief ÎÂ¶ÈÌ½²âÊµÏÖÀà
+/// @brief æ¸©åº¦æ¢æµ‹å®ç°ç±»
 class CTemperatureProbe
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CTemperatureProbe()
     {
         m_pGetCpuTemp = NULL;
@@ -38,7 +38,7 @@ public:
 
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CTemperatureProbe()
     {
         if (m_hCoreTemp != NULL)
@@ -48,9 +48,9 @@ public:
         }
     }
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] OUT cpuTemp ´æ´¢CPUÎÂ¶ÈĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] OUT cpuTemp å­˜å‚¨CPUæ¸©åº¦ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetCpuTemp(OUT CpuTempInfor& cpuTemp)
     {
         cpuTemp.CoreNum = 0;
@@ -61,9 +61,9 @@ public:
         return m_pGetCpuTemp(&cpuTemp.CoreNum, cpuTemp.CoreTemp);
     }
 
-    /// @brief »ñÈ¡GPUÎÂ¶È
-    /// @param[out] OUT gpuTemp ´æ´¢GPUÎÂ¶ÈĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–GPUæ¸©åº¦
+    /// @param[out] OUT gpuTemp å­˜å‚¨GPUæ¸©åº¦ä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetGpuTemp(OUT GpuTempInfor& gpuTemp)
     {
         gpuTemp.SensorsNum = 0;
@@ -74,9 +74,9 @@ public:
         return m_pGetGpuTemp(&gpuTemp.SensorsNum, gpuTemp.Temp);
     }
 
-    /// @brief »ñÈ¡´ÅÅÌÎÂ¶È
-    /// ¸Ã·½·¨Ö»ÄÜ»ñÈ¡SATA(IDE)´ÅÅÌµÄÎÂ¶È
-    /// @param[out] diskTemp ´æ´¢´ÅÅÌÎÂ¶È
+    /// @brief è·å–ç£ç›˜æ¸©åº¦
+    /// è¯¥æ–¹æ³•åªèƒ½è·å–SATA(IDE)ç£ç›˜çš„æ¸©åº¦
+    /// @param[out] diskTemp å­˜å‚¨ç£ç›˜æ¸©åº¦
     void GetDiskTemp(OUT DiskTempInforArray& diskTemp)
     {
         diskTemp.Count = 0;
@@ -85,17 +85,17 @@ public:
         {
             const wstring& diskDriveID = m_sataDiskIdList[i];
 
-            // ´ò¿ª´ÅÅÌ¿ØÖÆÆ÷
+            // æ‰“å¼€ç£ç›˜æ§åˆ¶å™¨
             LIDEDiskController diskController(diskDriveID);
             if (!diskController.DeviceExist())
                 continue;
 
-            // »ñÈ¡SMARTÊı¾İ
+            // è·å–SMARTæ•°æ®
             unsigned char smartData[362] = {0};
             if (!diskController.GetSMARTData(smartData))
                 continue;
 
-            // ½âÎöSMARTÊı¾İ
+            // è§£æSMARTæ•°æ®
             LSMARTParser smartParser(smartData);
             unsigned int temp = 0;
             if (!smartParser.GetTemperature(temp))
@@ -112,9 +112,9 @@ public:
     }
 
 private:
-    /// @brief É¨ÃèSATA´ÅÅÌID
-    /// Ö»ÓĞSATA²ÅÄÜ»ñÈ¡SMARTÊı¾İ, ²ÅÄÜ»ñÈ¡µ½ÎÂ¶È
-    /// @param[out] idList ´æ´¢´ÅÅÌID
+    /// @brief æ‰«æSATAç£ç›˜ID
+    /// åªæœ‰SATAæ‰èƒ½è·å–SMARTæ•°æ®, æ‰èƒ½è·å–åˆ°æ¸©åº¦
+    /// @param[out] idList å­˜å‚¨ç£ç›˜ID
     void ScanSataDiskId(OUT vector<wstring>& idList)
     {
         idList.clear();
@@ -124,12 +124,12 @@ private:
             wchar_t diskDriveId[256] = {0};
             wsprintfW(diskDriveId, L"\\\\.\\PhysicalDrive%d", i);
 
-            // ´ò¿ª´ÅÅÌ¿ØÖÆÆ÷
+            // æ‰“å¼€ç£ç›˜æ§åˆ¶å™¨
             LIDEDiskController diskController(diskDriveId);
             if (!diskController.DeviceExist())
                 continue;
 
-            // »ñÈ¡SMARTÊı¾İ
+            // è·å–SMARTæ•°æ®
             unsigned char smartData[362] = {0};
             if (!diskController.GetSMARTData(smartData))
                 continue;
@@ -139,10 +139,10 @@ private:
     }
 
 private:
-    GetCpuTempFun m_pGetCpuTemp; ///< »ñÈ¡CPUÎÂ¶Èº¯ÊıÖ¸Õë
-    GetGpuTempFun m_pGetGpuTemp; ///< »ñÈ¡GPUÎÂ¶Èº¯ÊıÖ¸Õë
-    HMODULE m_hCoreTemp; ///< CoreTemp DLL¾ä±ú
-    vector<wstring> m_sataDiskIdList; ///< ´æ´¢SATA´ÅÅÌID
+    GetCpuTempFun m_pGetCpuTemp; ///< è·å–CPUæ¸©åº¦å‡½æ•°æŒ‡é’ˆ
+    GetGpuTempFun m_pGetGpuTemp; ///< è·å–GPUæ¸©åº¦å‡½æ•°æŒ‡é’ˆ
+    HMODULE m_hCoreTemp; ///< CoreTemp DLLå¥æŸ„
+    vector<wstring> m_sataDiskIdList; ///< å­˜å‚¨SATAç£ç›˜ID
 };
 
 TemperatureProbe::TemperatureProbe()

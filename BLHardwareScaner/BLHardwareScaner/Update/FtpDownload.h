@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _FTP_DOWNLOAD_
 #define _FTP_DOWNLOAD_
@@ -21,71 +21,71 @@
 #endif
 
 
-/// @brief ÏÂÔØÎÄ¼ş×´Ì¬
+/// @brief ä¸‹è½½æ–‡ä»¶çŠ¶æ€
 struct DownloadState
 {
-    bool IsDone; ///< ±êÖ¾ÏÂÔØÊÇ·ñÍê³É
-    qint64 DoneSize; ///< Íê³É´óĞ¡
-    qint64 TotalSize; ///< ÎÄ¼ş×Ü´óĞ¡
+    bool IsDone; ///< æ ‡å¿—ä¸‹è½½æ˜¯å¦å®Œæˆ
+    qint64 DoneSize; ///< å®Œæˆå¤§å°
+    qint64 TotalSize; ///< æ–‡ä»¶æ€»å¤§å°
 
-    bool IsError; ///< ±êÖ¾ÊÇ·ñ·¢Éú´íÎó
-    QString ErrorMsg; ///< ´íÎóÏûÏ¢
+    bool IsError; ///< æ ‡å¿—æ˜¯å¦å‘ç”Ÿé”™è¯¯
+    QString ErrorMsg; ///< é”™è¯¯æ¶ˆæ¯
 };
 
 
 
-/// @brief FTPÏÂÔØÀà
+/// @brief FTPä¸‹è½½ç±»
 class LFtpDownload : public QObject
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] url ÏÂÔØÎÄ¼şFTP URL
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] url ä¸‹è½½æ–‡ä»¶FTP URL
     explicit LFtpDownload(IN const QString& url);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     /// @return
     ~LFtpDownload();
 
-    /// @brief ÉèÖÃµÇÂ½ĞÅÏ¢
-    /// @param[in] user ÓÃ»§Ãû
-    /// @param[in] pwd ÃÜÂë
+    /// @brief è®¾ç½®ç™»é™†ä¿¡æ¯
+    /// @param[in] user ç”¨æˆ·å
+    /// @param[in] pwd å¯†ç 
     void SetLogin(IN const QString& user, IN const QString& pwd);
 
-    /// @brief ÉèÖÃ±£´æÎÄ¼şµÄÂ·¾¶
-    /// @param[in] path Â·¾¶
+    /// @brief è®¾ç½®ä¿å­˜æ–‡ä»¶çš„è·¯å¾„
+    /// @param[in] path è·¯å¾„
     /// @return
     void SetFilePath(IN const QString& path);
 
-    /// @brief ¿ªÊ¼ÏÂÔØ
-    /// ¸Ã·½·¨ÎªÒì²½·½·¨, ¸Ã·½·¨±ØĞëÔËĞĞÔÚUIÏß³ÌÖĞ
+    /// @brief å¼€å§‹ä¸‹è½½
+    /// è¯¥æ–¹æ³•ä¸ºå¼‚æ­¥æ–¹æ³•, è¯¥æ–¹æ³•å¿…é¡»è¿è¡Œåœ¨UIçº¿ç¨‹ä¸­
     void StartDownloadAsync();
 
-    /// @brief »ñÈ¡ÏÂÔØ×´Ì¬
-    /// @return ÏÂÔØ×´Ì¬
+    /// @brief è·å–ä¸‹è½½çŠ¶æ€
+    /// @return ä¸‹è½½çŠ¶æ€
     const DownloadState& GetDownloadState();
 
 private slots:
-    /// @brief ÏÂÔØÍê³É²Ûº¯Êı
-    /// @param[in] bError ±êÖ¾ÊÇ·ñ·¢Éú´íÎó
+    /// @brief ä¸‹è½½å®Œæˆæ§½å‡½æ•°
+    /// @param[in] bError æ ‡å¿—æ˜¯å¦å‘ç”Ÿé”™è¯¯
     void FtpDownloadDone(bool bError);
 
-    /// @brief Êı¾İ´«Êä½ø¶È
-    /// @param[in] done ÒÑÍê³É×Ö½ÚÊı
-    /// @param[in] total ×Ü×Ö½ÚÊı
+    /// @brief æ•°æ®ä¼ è¾“è¿›åº¦
+    /// @param[in] done å·²å®Œæˆå­—èŠ‚æ•°
+    /// @param[in] total æ€»å­—èŠ‚æ•°
     void DataTransferProgress(qint64 done, qint64 total);
 
 private:
-    QFtp m_ftp; ///< FTP¶ÔÏó
-    QFile m_downloadFile; ///< ±£´æµÄÎÄ¼ş¶ÔÏó
-    QString m_filePath; ///< ÎÄ¼ş±£´æÂ·¾¶
-    QString m_downloadUrl; ///< ÏÂÔØÁ´½Ó
+    QFtp m_ftp; ///< FTPå¯¹è±¡
+    QFile m_downloadFile; ///< ä¿å­˜çš„æ–‡ä»¶å¯¹è±¡
+    QString m_filePath; ///< æ–‡ä»¶ä¿å­˜è·¯å¾„
+    QString m_downloadUrl; ///< ä¸‹è½½é“¾æ¥
 
-    QString m_loginUser; ///< FTPµÇÂ¼ÓÃ»§Ãû
-    QString m_loginPwd; ///< FTPµÇÂ¼ÃÜÂë
+    QString m_loginUser; ///< FTPç™»å½•ç”¨æˆ·å
+    QString m_loginPwd; ///< FTPç™»å½•å¯†ç 
 
-    DownloadState m_downloadState; ///< ´æ´¢ÏÂÔØ×´Ì¬
+    DownloadState m_downloadState; ///< å­˜å‚¨ä¸‹è½½çŠ¶æ€
 };
 
 #endif

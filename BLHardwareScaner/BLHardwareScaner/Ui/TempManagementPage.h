@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef _TEMPMANAGEMENTPAGE_H_
 #define _TEMPMANAGEMENTPAGE_H_
 
@@ -22,7 +22,7 @@
 #define OUT
 #endif
 
-/// @brief É¨ÃèÎÂ¶ÈÏß³ÌÀà
+/// @brief æ‰«ææ¸©åº¦çº¿ç¨‹ç±»
 class ScanTempThread : public QThread
 {
     Q_OBJECT
@@ -30,18 +30,18 @@ public:
     ScanTempThread();
     ~ScanTempThread();
 
-    /// @brief Í£Ö¹Ïß³Ì
+    /// @brief åœæ­¢çº¿ç¨‹
     void Stop();
 
 protected:
     virtual void run();
 
 private:
-    bool m_bStopThread; ///< ±ê¼ÇÊÇ·ñÍ£Ö¹Ïß³Ì
+    bool m_bStopThread; ///< æ ‡è®°æ˜¯å¦åœæ­¢çº¿ç¨‹
 
 };
 
-/// @brief É¨ÃèĞÔÄÜÏß³ÌÀà
+/// @brief æ‰«ææ€§èƒ½çº¿ç¨‹ç±»
 class ScanPerformanceThread : public QThread
 {
     Q_OBJECT
@@ -49,14 +49,14 @@ public:
     ScanPerformanceThread();
     ~ScanPerformanceThread();
 
-    /// @brief Í£Ö¹Ïß³Ì
+    /// @brief åœæ­¢çº¿ç¨‹
     void Stop();
 
 protected:
     virtual void run();
 
 private:
-    bool m_bStopThread; ///< ±ê¼ÇÊÇ·ñÍ£Ö¹Ïß³Ì
+    bool m_bStopThread; ///< æ ‡è®°æ˜¯å¦åœæ­¢çº¿ç¨‹
 
 };
 
@@ -74,33 +74,33 @@ protected:
     void hideEvent(QHideEvent* e);
 
 private slots:
-    /// @brief UIË¢ĞÂ¼ÆËãÆ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief UIåˆ·æ–°è®¡ç®—å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void UiRefreshTimerTimeout();
 
-    /// @brief CPU¶¯×÷°´Å¥²Ûº¯Êı
+    /// @brief CPUåŠ¨ä½œæŒ‰é’®æ§½å‡½æ•°
     void CpuActionButtonClicked();
 
-    /// @brief CPUÑ¹Á¦²âÊÔ¶¨Ê±Æ÷³¬Ê±º¯Êı
+    /// @brief CPUå‹åŠ›æµ‹è¯•å®šæ—¶å™¨è¶…æ—¶å‡½æ•°
     void CpuStressTimerTimeout();
 
 private:
-    /// @brief Ë¢ĞÂUI
+    /// @brief åˆ·æ–°UI
     void RefreshUi();
 
-    /// @brief ¼ÓÔØUIÑùÊ½
+    /// @brief åŠ è½½UIæ ·å¼
     void LoadQSS();
 
 private:
     Ui::TempManagementForm ui;
-    QTimer* m_pUiRefreshTimer; ///< Ë¢ĞÂUI¶¨Ê±Æ÷
+    QTimer* m_pUiRefreshTimer; ///< åˆ·æ–°UIå®šæ—¶å™¨
 
-    ScanTempThread m_scanTempThread; ///< É¨ÃèÎÂ¶ÈÏß³Ì
-    ScanPerformanceThread m_scanPerformanceThred; ///< É¨ÃèĞÔÄãÄØÏß³Ì
+    ScanTempThread m_scanTempThread; ///< æ‰«ææ¸©åº¦çº¿ç¨‹
+    ScanPerformanceThread m_scanPerformanceThred; ///< æ‰«ææ€§ä½ å‘¢çº¿ç¨‹
 
-    QTimer* m_pCpuStressTimer; ///< CPUÑ¹Á¦²âÊÔ¶¨Ê±Æ÷
-    LCpuStressTest m_cpuStressTest; ///< CPUÑ¹Á¦²âÊÔ
+    QTimer* m_pCpuStressTimer; ///< CPUå‹åŠ›æµ‹è¯•å®šæ—¶å™¨
+    LCpuStressTest m_cpuStressTest; ///< CPUå‹åŠ›æµ‹è¯•
     
-    bool m_bExternalVideoCardExist; ///< ±êÊ¶ÊÇ·ñ´æÔÚ¶ÀÁ¢ÏÔ¿¨
+    bool m_bExternalVideoCardExist; ///< æ ‡è¯†æ˜¯å¦å­˜åœ¨ç‹¬ç«‹æ˜¾å¡
 };
 
 

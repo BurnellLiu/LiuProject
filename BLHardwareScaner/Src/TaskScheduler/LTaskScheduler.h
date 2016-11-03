@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LTASKSCHEDULER_H_
 #define _LTASKSCHEDULER_H_
@@ -23,60 +23,60 @@ using std::wstring;
 
 class CTaskScheduler;
 
-/// @brief ÈÎÎñ¼Æ»®Àà
-/// ÉèÖÃºÃÈÎÎñ¼Æ»®¸÷¸öÊôĞÔºóµ÷ÓÃRegister·½·¨¼´¿ÉÔÚÏµÍ³ÖĞ×¢²á¼Æ»®ÈÎÎñ
+/// @brief ä»»åŠ¡è®¡åˆ’ç±»
+/// è®¾ç½®å¥½ä»»åŠ¡è®¡åˆ’å„ä¸ªå±æ€§åè°ƒç”¨Registeræ–¹æ³•å³å¯åœ¨ç³»ç»Ÿä¸­æ³¨å†Œè®¡åˆ’ä»»åŠ¡
 class LTaskScheduler
 {
 public:
-    /// @brief É¾³ıÒ»¸öÈÎÎñ¼Æ»®
-    /// @param[in] pFolderName ÈÎÎñ¼Æ»®ËùÔÚµÄÎÄ¼ş¼ĞÃû³Æ, Èç¹ûÎªNULL, Ôò±íÊ¾ÈÎÎñ¼Æ»®ÔÚ¸ùÄ¿Â¼ÏÂ
-    /// @param[in] pTaskName ÈÎÎñ¼Æ»®Ãû³Æ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief åˆ é™¤ä¸€ä¸ªä»»åŠ¡è®¡åˆ’
+    /// @param[in] pFolderName ä»»åŠ¡è®¡åˆ’æ‰€åœ¨çš„æ–‡ä»¶å¤¹åç§°, å¦‚æœä¸ºNULL, åˆ™è¡¨ç¤ºä»»åŠ¡è®¡åˆ’åœ¨æ ¹ç›®å½•ä¸‹
+    /// @param[in] pTaskName ä»»åŠ¡è®¡åˆ’åç§°
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     static bool Delete(IN const wchar_t* pFolderName, const wchar_t* pTaskName);
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LTaskScheduler();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LTaskScheduler();
 
-    /// @brief ÉèÖÃÈÎÎñÖ÷ÒªÊôĞÔ
-    /// ¸Ã·½·¨Îª¿ÉÑ¡Ïî, Èç¹ûÉèÖÃÎª×î¸ßÈ¨ÏŞ, ÔòĞèÒª¹ÜÀíÔ±È¨ÏŞ, ²»È»×¢²áÈÎÎñ¼Æ»®»áÊ§°Ü
-    /// @param[in] bHighestLevel ±êÖ¾ÊÇ·ñÎª×î¸ßÈ¨ÏŞÔËĞĞ, Ä¬ÈÏ²»ÊÇ×î¸ßÈ¨ÏŞ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è®¾ç½®ä»»åŠ¡ä¸»è¦å±æ€§
+    /// è¯¥æ–¹æ³•ä¸ºå¯é€‰é¡¹, å¦‚æœè®¾ç½®ä¸ºæœ€é«˜æƒé™, åˆ™éœ€è¦ç®¡ç†å‘˜æƒé™, ä¸ç„¶æ³¨å†Œä»»åŠ¡è®¡åˆ’ä¼šå¤±è´¥
+    /// @param[in] bHighestLevel æ ‡å¿—æ˜¯å¦ä¸ºæœ€é«˜æƒé™è¿è¡Œ, é»˜è®¤ä¸æ˜¯æœ€é«˜æƒé™
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Principal(IN bool bHighestLevel);
 
-    /// @brief ÉèÖÃ´¥·¢Ìõ¼ş
-    /// ¸Ã·½·¨Îª±ØĞëÉèÖÃÏî
-    /// @param[in] trigger, 1(Æô¶¯Ê±´¥·¢), 2(µÇÂ¼Ê±´¥·¢), Ã»ÓĞÄ¬ÈÏÖµ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è®¾ç½®è§¦å‘æ¡ä»¶
+    /// è¯¥æ–¹æ³•ä¸ºå¿…é¡»è®¾ç½®é¡¹
+    /// @param[in] trigger, 1(å¯åŠ¨æ—¶è§¦å‘), 2(ç™»å½•æ—¶è§¦å‘), æ²¡æœ‰é»˜è®¤å€¼
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Trigger(IN unsigned int trigger);
 
-    /// @brief ÉèÖÃÉèÖÃÏî
-    /// ¸Ã·½·¨Îª¿ÉÑ¡Ïî
-    /// @param[in] bStartOnBattery ±êÖ¾ÊÇ·ñ¿ÉÒÔÔÚDCÄ£Ê½ÏÂÆô¶¯, Ä¬ÈÏÖµÎª²»¿ÉÒÔ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è®¾ç½®è®¾ç½®é¡¹
+    /// è¯¥æ–¹æ³•ä¸ºå¯é€‰é¡¹
+    /// @param[in] bStartOnBattery æ ‡å¿—æ˜¯å¦å¯ä»¥åœ¨DCæ¨¡å¼ä¸‹å¯åŠ¨, é»˜è®¤å€¼ä¸ºä¸å¯ä»¥
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Settings(IN bool bStartOnBattery);
 
-    /// @brief ÉèÖÃÈÎÎñ¼Æ»®¶¯×÷
-    /// ¸Ã·½·¨Îª±ØĞëÉèÖÃÏî
-    /// @param[in] pExePath ³ÌĞòÂ·¾¶, ²»¿ÉÒÔÎªNULL
-    /// @param[in] pParam ³ÌĞòÆô¶¯²ÎÊı, ¿ÉÒÔÎªNULL
-    /// @param[in] pWorkingDir ³ÌĞò¹¤×÷Ä¿Â¼, ¿ÉÒÔÎªNULL, ÎªNULL±íÊ¾Ê¹ÓÃÏµÍ³Ä¿Â¼×÷Îª¹¤×÷Ä¿Â¼, Èç:"C:\\Windows\\System32"
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è®¾ç½®ä»»åŠ¡è®¡åˆ’åŠ¨ä½œ
+    /// è¯¥æ–¹æ³•ä¸ºå¿…é¡»è®¾ç½®é¡¹
+    /// @param[in] pExePath ç¨‹åºè·¯å¾„, ä¸å¯ä»¥ä¸ºNULL
+    /// @param[in] pParam ç¨‹åºå¯åŠ¨å‚æ•°, å¯ä»¥ä¸ºNULL
+    /// @param[in] pWorkingDir ç¨‹åºå·¥ä½œç›®å½•, å¯ä»¥ä¸ºNULL, ä¸ºNULLè¡¨ç¤ºä½¿ç”¨ç³»ç»Ÿç›®å½•ä½œä¸ºå·¥ä½œç›®å½•, å¦‚:"C:\\Windows\\System32"
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Action(IN const wchar_t* pExePath, IN const wchar_t* pParam, IN const wchar_t* pWorkingDir);
 
-    /// @brief ½«ÈÎÎñ¼Æ»®×¢²áµ½ÏµÍ³ÖĞ
-    /// ¸Ã·½·¨Îª±ØĞëÉèÖÃÏî
-    /// Èç¹ûÏµÍ³ÖĞÒÑ¾­´æÔÚÍ¬ÃûµÄ¼Æ»®ÈÎÎñ, Ôò»áÊ¹ÓÃĞÂµÄÊôĞÔÀ´¸²¸Ç
-    /// @param[in] pFolderName ÎÄ¼ş¼ĞÃû³Æ, Èç¹û²»´æÔÚ¸ÃÎÄ¼ş¼Ğ, Ôò´´½¨ÎÄ¼ş¼Ğ, Èç: "Test\\MyFolder", Èç¹û¸ÃÖµÎªNULL, ÔòÔÚ¸ùÄ¿Â¼ÏÂ´´½¨ÈÎÎñ¼Æ»®
-    /// @param[in] pTaskName ÈÎÎñ¼Æ»®Ãû³Æ, ²»¿ÉÒÔÎªNULL
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief å°†ä»»åŠ¡è®¡åˆ’æ³¨å†Œåˆ°ç³»ç»Ÿä¸­
+    /// è¯¥æ–¹æ³•ä¸ºå¿…é¡»è®¾ç½®é¡¹
+    /// å¦‚æœç³»ç»Ÿä¸­å·²ç»å­˜åœ¨åŒåçš„è®¡åˆ’ä»»åŠ¡, åˆ™ä¼šä½¿ç”¨æ–°çš„å±æ€§æ¥è¦†ç›–
+    /// @param[in] pFolderName æ–‡ä»¶å¤¹åç§°, å¦‚æœä¸å­˜åœ¨è¯¥æ–‡ä»¶å¤¹, åˆ™åˆ›å»ºæ–‡ä»¶å¤¹, å¦‚: "Test\\MyFolder", å¦‚æœè¯¥å€¼ä¸ºNULL, åˆ™åœ¨æ ¹ç›®å½•ä¸‹åˆ›å»ºä»»åŠ¡è®¡åˆ’
+    /// @param[in] pTaskName ä»»åŠ¡è®¡åˆ’åç§°, ä¸å¯ä»¥ä¸ºNULL
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Register(IN const wchar_t* pFolderName, const wchar_t* pTaskName);
 
 private:
-    CTaskScheduler* m_pTaskScheduler; ///< ÈÎÎñ¼Æ»®ÊµÏÖ¶ÔÏó
+    CTaskScheduler* m_pTaskScheduler; ///< ä»»åŠ¡è®¡åˆ’å®ç°å¯¹è±¡
 };
 
 #endif

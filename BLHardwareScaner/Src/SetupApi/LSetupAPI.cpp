@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "LSetupAPI.h"
 
@@ -23,9 +23,9 @@ using std::vector;
 
 
 /// <SUMMARY>
-/// Éè±¸¶ÔÏóÀà
-/// ¸ÃÀà·½·¨²»¶ÔË÷Òı·¶Î§½øĞĞ¼ì²é
-/// ±¾Àà·½·¨·µ»ØµÄErrorCode¶¼È¡×ÔGetLastError
+/// è®¾å¤‡å¯¹è±¡ç±»
+/// è¯¥ç±»æ–¹æ³•ä¸å¯¹ç´¢å¼•èŒƒå›´è¿›è¡Œæ£€æŸ¥
+/// æœ¬ç±»æ–¹æ³•è¿”å›çš„ErrorCodeéƒ½å–è‡ªGetLastError
 /// </SUMMARY>
 class CSADevObject
 {
@@ -74,7 +74,7 @@ public:
             return returnCode;
         }
 
-        // »ñÈ¡Éè±¸ÊıÄ¿
+        // è·å–è®¾å¤‡æ•°ç›®
         SP_DEVINFO_DATA devInfoData;
         devInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
         for (int i = 0; SetupDiEnumDeviceInfo(m_hDevInfoSet, i, &devInfoData); i++)
@@ -88,7 +88,7 @@ public:
             return returnCode;
         }
 
-        // »ñÈ¡Éè±¸ĞÅÏ¢
+        // è·å–è®¾å¤‡ä¿¡æ¯
         m_pDevInfoList = new SP_DEVINFO_DATA[m_devCount];
 
         for (int i = 0; i < m_devCount; i++)
@@ -263,19 +263,19 @@ public:
 
 private:
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸×¢²á±íÊôĞÔ(×Ö·û´®)
+    /// è·å–è®¾å¤‡æ³¨å†Œè¡¨å±æ€§(å­—ç¬¦ä¸²)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "dwProperty" dir = "IN">
-    /// Ö¸¶¨µÄÉè±¸ÊôĞÔ
+    /// æŒ‡å®šçš„è®¾å¤‡å±æ€§
     /// </PARAM>
     /// <PARAM name = "strProperty" dir = "OUT">
-    /// ±£´æÉè±¸ÊôĞÔ
+    /// ä¿å­˜è®¾å¤‡å±æ€§
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode
     /// </RETURNS>
     DWORD GetRegistryPropertyStr(IN int index, IN DWORD dwProperty, OUT wstring& strProperty)
     {
@@ -333,19 +333,19 @@ private:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸×¢²á±íÊôĞÔ(ÎŞ·ûºÅÕûĞÎ)
+    /// è·å–è®¾å¤‡æ³¨å†Œè¡¨å±æ€§(æ— ç¬¦å·æ•´å½¢)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "dwProperty" dir = "IN">
-    /// Ö¸¶¨µÄÉè±¸ÊôĞÔ
+    /// æŒ‡å®šçš„è®¾å¤‡å±æ€§
     /// </PARAM>
     /// <PARAM name = "strProperty" dir = "OUT">
-    /// ±£´æÉè±¸ÊôĞÔ
+    /// ä¿å­˜è®¾å¤‡å±æ€§
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode
     /// </RETURNS>
     DWORD GetRegistryPropertyUInt(IN int index, IN DWORD dwProperty, OUT unsigned int& propertyValue)
     {
@@ -402,19 +402,19 @@ private:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÊôĞÔ(×Ö·û´®)
+    /// è·å–è®¾å¤‡å±æ€§(å­—ç¬¦ä¸²)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "propertyKey" dir = "IN">
-    /// ÊôĞÔ¼ü
+    /// å±æ€§é”®
     /// </PARAM>
     /// <PARAM name = "strProperty" dir = "OUT">
-    /// ±£´æÉè±¸ÊôĞÔ
+    /// ä¿å­˜è®¾å¤‡å±æ€§
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode
     /// </RETURNS>
     DWORD GetPropertyStr(IN int index, IN const DEVPROPKEY* propertyKey, OUT wstring& strProperty)
     {
@@ -472,19 +472,19 @@ private:
     }
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÊôĞÔ(×Ö·û´®ÁĞ±í)
+    /// è·å–è®¾å¤‡å±æ€§(å­—ç¬¦ä¸²åˆ—è¡¨)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "propertyKey" dir = "IN">
-    /// ÊôĞÔ¼ü
+    /// å±æ€§é”®
     /// </PARAM>
     /// <PARAM name = "strPropertyList" dir = "OUT">
-    /// ±£´æÉè±¸ÊôĞÔÁĞ±í
+    /// ä¿å­˜è®¾å¤‡å±æ€§åˆ—è¡¨
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0, Ê§°Ü·µ»ØErrorCode
+    /// æˆåŠŸè¿”å›0, å¤±è´¥è¿”å›ErrorCode
     /// </RETURNS>
     DWORD GetPropertyStrList(IN int index, IN const DEVPROPKEY* propertyKey, OUT vector<wstring>& strPropertyList)
     {
@@ -558,17 +558,17 @@ private:
     }
 
     /// <SUMMARY>
-    /// ¸Ä±äÉè±¸×´Ì¬
-    /// ¸Ã·½·¨ĞèÒª¹ÜÀíÔ±È¨ÏŞ
+    /// æ”¹å˜è®¾å¤‡çŠ¶æ€
+    /// è¯¥æ–¹æ³•éœ€è¦ç®¡ç†å‘˜æƒé™
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "newState" dir = "IN">
-    /// ĞÂµÄ×´Ì¬
+    /// æ–°çš„çŠ¶æ€
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode
     /// </RETURNS>
     DWORD ChangeState(IN int index, IN DWORD newSate)
     {
@@ -599,7 +599,7 @@ private:
     }
 
     /// <SUMMARY>
-    /// ÇåÀí×ÊÔ´
+    /// æ¸…ç†èµ„æº
     /// </SUMMARY>
     void BaseCleanUp()
     {
@@ -619,16 +619,16 @@ private:
     }
 
     /// <SUMMARY>
-    /// ¿í×Ö·û´®×ª»»Îª×Ö·û´®
+    /// å®½å­—ç¬¦ä¸²è½¬æ¢ä¸ºå­—ç¬¦ä¸²
     /// </SUMMARY>
     /// <PARAM name = " strSrc" dir = "IN">
-    /// Ô´¿í×Ö·û´®
+    /// æºå®½å­—ç¬¦ä¸²
     /// </PARAM>
     /// <PARAM name = " strDest" dir = "OUT">
-    /// ´æ´¢×ª»»ºóµÄ×Ö·û´®
+    /// å­˜å‚¨è½¬æ¢åçš„å­—ç¬¦ä¸²
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›0, å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool WStringToString(IN const wstring& strSrc, OUT string& strDest)
     {
@@ -650,16 +650,16 @@ private:
     }
 
     /// <SUMMARY>
-    /// ×Ö·û´®×ª»»Îª¿í×Ö·û´®
+    /// å­—ç¬¦ä¸²è½¬æ¢ä¸ºå®½å­—ç¬¦ä¸²
     /// </SUMMARY>
     /// <PARAM name = " strSrc" dir = "IN">
-    /// Ô´×Ö·û´®
+    /// æºå­—ç¬¦ä¸²
     /// </PARAM>
     /// <PARAM name = " strDest" dir = "OUT">
-    /// ´æ´¢×ª»»ºóµÄ¿í×Ö·û´®
+    /// å­˜å‚¨è½¬æ¢åçš„å®½å­—ç¬¦ä¸²
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›0, å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool StringToWString(const string& strSrc, wstring& strDest)
     {
@@ -681,10 +681,10 @@ private:
     }
 
     /// <SUMMARY>
-    /// ×Ö·û´®×ª»»Îª´óĞ´Ä£Ê½
+    /// å­—ç¬¦ä¸²è½¬æ¢ä¸ºå¤§å†™æ¨¡å¼
     /// </SUMMARY>
     /// <PARAM name = "wstr" dir = "INOUT">
-    /// ĞèÒª×ª»»µÄ×Ö·û´®
+    /// éœ€è¦è½¬æ¢çš„å­—ç¬¦ä¸²
     /// </PARAM>
     void WStringToUpper(INOUT wstring& wstr)
     {
@@ -692,9 +692,9 @@ private:
     }
 
 private:
-    HDEVINFO m_hDevInfoSet; ///<Éè±¸ĞÅÏ¢¼¯
-    int m_devCount; ///<Éè±¸ÊıÄ¿
-    SP_DEVINFO_DATA* m_pDevInfoList; /// Éè±¸ĞÅÏ¢ÁĞ±í 
+    HDEVINFO m_hDevInfoSet; ///<è®¾å¤‡ä¿¡æ¯é›†
+    int m_devCount; ///<è®¾å¤‡æ•°ç›®
+    SP_DEVINFO_DATA* m_pDevInfoList; /// è®¾å¤‡ä¿¡æ¯åˆ—è¡¨ 
 };
 
 LSetupDev::LSetupDev()
@@ -815,23 +815,23 @@ LSetupDisplayCard::~LSetupDisplayCard()
 
 }
 
-#pragma pack (1) //È¡ÏûÄÚ´æ¶ÔÆë
+#pragma pack (1) //å–æ¶ˆå†…å­˜å¯¹é½
 /// <SUMMARY>
-/// ÏÔÊ¾Æ÷À©Õ¹ÏÔÊ¾±êÊ¶Êı¾İ
+/// æ˜¾ç¤ºå™¨æ‰©å±•æ˜¾ç¤ºæ ‡è¯†æ•°æ®
 /// </SUMMARY>
 struct LMonitorEDID
 {
-    unsigned char HeadInfor[8]; ///< Í·ĞÅÏ¢, 8¸ö×Ö½Ú
-    unsigned char VendorID[2]; ///< ³§ÉÌID
-    unsigned char ProductID[2]; ///< ²úÆ·ID
-    unsigned char SerialNumber[4]; ///< ĞòÁĞºÅ
-    unsigned char Date[2]; ///< ÖÆÔìÈÕÆÚ
-    unsigned char EDIDVersion[2]; ///< EDID°æ±¾
-    unsigned char BasicInfor[5]; ///< ÏÔÊ¾Æ÷»ù±¾ĞÅÏ¢(µçÔ´, ×î´ó¸ß¶È, ¿í¶È)
-    unsigned char ColorFeature[10]; ///< ÏÔÊ¾Æ÷ÑÕÉ«ÌØÕ÷
-    unsigned char OtherInfor[93]; ///< ÆäËûĞÅÏ¢
+    unsigned char HeadInfor[8]; ///< å¤´ä¿¡æ¯, 8ä¸ªå­—èŠ‚
+    unsigned char VendorID[2]; ///< å‚å•†ID
+    unsigned char ProductID[2]; ///< äº§å“ID
+    unsigned char SerialNumber[4]; ///< åºåˆ—å·
+    unsigned char Date[2]; ///< åˆ¶é€ æ—¥æœŸ
+    unsigned char EDIDVersion[2]; ///< EDIDç‰ˆæœ¬
+    unsigned char BasicInfor[5]; ///< æ˜¾ç¤ºå™¨åŸºæœ¬ä¿¡æ¯(ç”µæº, æœ€å¤§é«˜åº¦, å®½åº¦)
+    unsigned char ColorFeature[10]; ///< æ˜¾ç¤ºå™¨é¢œè‰²ç‰¹å¾
+    unsigned char OtherInfor[93]; ///< å…¶ä»–ä¿¡æ¯
 };
-#pragma pack() // »Ö¸´ÄÚ´æ¶ÔÆë
+#pragma pack() // æ¢å¤å†…å­˜å¯¹é½
 
 LSetupMonitor::LSetupMonitor()
     : LSetupDev()
@@ -847,7 +847,7 @@ LSetupMonitor::~LSetupMonitor()
 bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extendInfor)
 {
     /*
-    Àí½âÒÔÏÂ´úÂëÇ°, Çë²éÔÄÈçºÎ½âÎöÏÔÊ¾Æ÷EDID
+    ç†è§£ä»¥ä¸‹ä»£ç å‰, è¯·æŸ¥é˜…å¦‚ä½•è§£ææ˜¾ç¤ºå™¨EDID
     */
 
     LMonitorEDID edid = {0};
@@ -855,7 +855,7 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
     if (!bRet)
         return false;
 
-    // ´ÓÓ²¼şIDÖĞ»ñÈ¡ÏÔÊ¾Æ÷Ãû³Æ
+    // ä»ç¡¬ä»¶IDä¸­è·å–æ˜¾ç¤ºå™¨åç§°
     wstring hardwareID;
     if (this->GetHardwareId(index, hardwareID) != 0)
         return false;
@@ -866,7 +866,7 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
 
     extendInfor.Name = hardwareID.substr(loc + 1);
 
-    // »ñÈ¡ÏÔÊ¾Æ÷³§ÉÌID
+    // è·å–æ˜¾ç¤ºå™¨å‚å•†ID
     unsigned char cVendorID[2];
     cVendorID[0] = edid.VendorID[1];
     cVendorID[1] = edid.VendorID[0];
@@ -880,14 +880,14 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
     extendInfor.VendorID.push_back(secondChar);
     extendInfor.VendorID.push_back(threeChar);
 
-    // »ñÈ¡ÏÔÊ¾Æ÷²úÆ·ID
+    // è·å–æ˜¾ç¤ºå™¨äº§å“ID
     wchar_t productID[5] = {0};
 
     wsprintfW(productID, L"%02X%02X", edid.ProductID[1], edid.ProductID[0]);
 
     extendInfor.ProductID = productID;
 
-    // »ñÈ¡ÏÔÊ¾Æ÷Éú²úÈÕÆÚ, Ã»ÓĞÑÏ¸ñ¼ÆËã
+    // è·å–æ˜¾ç¤ºå™¨ç”Ÿäº§æ—¥æœŸ, æ²¡æœ‰ä¸¥æ ¼è®¡ç®—
     int moon = (int)((float)edid.Date[0]/4.35f) + 1;
     int year = (int)edid.Date[1] + 1990;
     wchar_t date[16] = {0};
@@ -902,7 +902,7 @@ bool LSetupMonitor::GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extend
 bool LSetupMonitor::GetEDID(IN int index, OUT LMonitorEDID& edid)
 {
     /*
-    Àí½âÒÔÏÂ´úÂëÇ°, Çë²éÔÄÏÔÊ¾Æ÷EDID
+    ç†è§£ä»¥ä¸‹ä»£ç å‰, è¯·æŸ¥é˜…æ˜¾ç¤ºå™¨EDID
     */
     bool bRet = false;
     HKEY hMonitorKey = NULL;

@@ -1,5 +1,5 @@
-/// @file LCpuStress.h
-/// @brief CPUÑ¹Á¦²âÊÔÍ·ÎÄ¼ş 
+ï»¿/// @file LCpuStress.h
+/// @brief CPUå‹åŠ›æµ‹è¯•å¤´æ–‡ä»¶ 
 /// 
 /// Detail:
 /// @author Burnell Liu Email:burnell_liu@outlook.com
@@ -19,43 +19,43 @@
 
 #define MAX_CPU_LOGICAL_CORE_NUM 64
 
-/// @brief CPUÑ¹Á¦²âÊÔ×´Ì¬
+/// @brief CPUå‹åŠ›æµ‹è¯•çŠ¶æ€
 struct LCpuStressTestState 
 {
-    bool TestDone; ///< ±ê¼Ç²âÊÔÊÇ·ñÒÑ¾­½áÊø
-    unsigned int LogicalCoreNum; ///< CPUÂß¼­ºËĞÄÊıÁ¿
-    unsigned long Score[MAX_CPU_LOGICAL_CORE_NUM]; ///< Ã¿¸öCPUÂß¼­ºËĞÄµÄµÃ·Ö(Ò»¶¨Ê±¼äÄÚ¼ÆËãÔ²ÖÜÂÊPIµÄÎ»Êı)
+    bool TestDone; ///< æ ‡è®°æµ‹è¯•æ˜¯å¦å·²ç»ç»“æŸ
+    unsigned int LogicalCoreNum; ///< CPUé€»è¾‘æ ¸å¿ƒæ•°é‡
+    unsigned long Score[MAX_CPU_LOGICAL_CORE_NUM]; ///< æ¯ä¸ªCPUé€»è¾‘æ ¸å¿ƒçš„å¾—åˆ†(ä¸€å®šæ—¶é—´å†…è®¡ç®—åœ†å‘¨ç‡PIçš„ä½æ•°)
 };
 
 class CCpuStressTest;
 
-/// @brief CPUÑ¹Á¦²âÊÔ
+/// @brief CPUå‹åŠ›æµ‹è¯•
 class LCpuStressTest
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LCpuStressTest();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LCpuStressTest();
 
-    /// @brief ¿ªÊ¼²âÊÔ
-    /// @param[in] timeOut ³¬Ê±Ê±¼ä, µ¥Î»Ãë
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, ²âÊÔÕıÔÚ½øĞĞÖĞ»á·µ»Øfalse
+    /// @brief å¼€å§‹æµ‹è¯•
+    /// @param[in] timeOut è¶…æ—¶æ—¶é—´, å•ä½ç§’
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, æµ‹è¯•æ­£åœ¨è¿›è¡Œä¸­ä¼šè¿”å›false
     bool Start(IN unsigned int timeOut);
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
-    /// @return ²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
+    /// @return æµ‹è¯•çŠ¶æ€
     const LCpuStressTestState& GetState();
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop();
 
 private:
-    CCpuStressTest* m_pCpuStressTest; ///< CPUÑ¹Á¦²âÊÔÊµÏÖ¶ÔÏó
+    CCpuStressTest* m_pCpuStressTest; ///< CPUå‹åŠ›æµ‹è¯•å®ç°å¯¹è±¡
 
 private:
-    // ½ûÖ¹¿½±´¹¹Ôìº¯ÊıºÍ¸³Öµ²Ù×÷·û
+    // ç¦æ­¢æ‹·è´æ„é€ å‡½æ•°å’Œèµ‹å€¼æ“ä½œç¬¦
     LCpuStressTest(const LCpuStressTest&);
     LCpuStressTest& operator = (const LCpuStressTest&);
 };

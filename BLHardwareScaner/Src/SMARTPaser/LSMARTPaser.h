@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LSMARTPASER_H_
 #define _LSMARTPASER_H_
@@ -15,7 +15,7 @@
 #define OUT
 #endif
 
-/// @brief SMARTÊı¾İ³¤¶È
+/// @brief SMARTæ•°æ®é•¿åº¦
 #ifndef SMART_DATA_LENGTH
 #define SMART_DATA_LENGTH 362
 #endif
@@ -24,28 +24,28 @@
 
 class CSMARTParser;
 
-/// @brief SMART½âÎöÀà
+/// @brief SMARTè§£æç±»
 class LSMARTParser
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] smartData[362] ÒªÇóÊäÈë362¸ö×Ö½ÚµÄSMARTÊı¾İ
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] smartData[362] è¦æ±‚è¾“å…¥362ä¸ªå­—èŠ‚çš„SMARTæ•°æ®
     LSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH]);
     ~LSMARTParser();
 
-    /// @brief »ñÈ¡ÎÂ¶ÈÖµ, µ¥Î»ÉãÊÏ¶È
-    /// @param[out] temp ´æ´¢ÎÂ¶ÈÖµ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–æ¸©åº¦å€¼, å•ä½æ‘„æ°åº¦
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦å€¼
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetTemperature(OUT unsigned int& temp);
 
-    /// @brief »ñÈ¡Í¨µçÊ±¼ä, µ¥Î»Ğ¡Ê±
+    /// @brief è·å–é€šç”µæ—¶é—´, å•ä½å°æ—¶
     ///  
-    /// @param[out] hours ´æ´¢Í¨µçÊ±¼ä, µ¥Î»Ğ¡Ê±(hours)
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @param[out] hours å­˜å‚¨é€šç”µæ—¶é—´, å•ä½å°æ—¶(hours)
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetPowerOnHours(OUT unsigned long& hours);
 
 private:
-    CSMARTParser* m_pSMARTParser; ///< SMART½âÎöÊµÏÖ¶ÔÏó
+    CSMARTParser* m_pSMARTParser; ///< SMARTè§£æå®ç°å¯¹è±¡
 };
 
 #endif

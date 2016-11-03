@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "TempManagementPage.h"
 
@@ -18,7 +18,7 @@
 
 
 
-/// @brief ÎÂ¶È²Ö¿âÀà
+/// @brief æ¸©åº¦ä»“åº“ç±»
 class TempHouse
 {
 public:
@@ -64,9 +64,9 @@ private:
     }
 
 private:
-    static CpuTempInfor s_cpuTempInfor; ///< CPUÎÂ¶ÈĞÅÏ¢
-    static GpuTempInfor s_gpuTempInfor; ///< GPUÎÂ¶ÈĞÅÏ¢
-    static DiskTempInforArray s_diskTempInforArray; ///< ´ÅÅÌÎÂ¶ÈĞÅÏ¢
+    static CpuTempInfor s_cpuTempInfor; ///< CPUæ¸©åº¦ä¿¡æ¯
+    static GpuTempInfor s_gpuTempInfor; ///< GPUæ¸©åº¦ä¿¡æ¯
+    static DiskTempInforArray s_diskTempInforArray; ///< ç£ç›˜æ¸©åº¦ä¿¡æ¯
 
     friend class ScanTempThread;
 };
@@ -75,7 +75,7 @@ CpuTempInfor TempHouse::s_cpuTempInfor = {0};
 GpuTempInfor TempHouse::s_gpuTempInfor = {0};
 DiskTempInforArray TempHouse::s_diskTempInforArray = {0};
 
-/// @brief ĞÔÄÜ²Ö¿âÀà
+/// @brief æ€§èƒ½ä»“åº“ç±»
 class PerformanceHouse
 {
 public:
@@ -122,9 +122,9 @@ private:
     }
 
 private:
-    static MemoryPerformance s_memoryPerformance; ///< ÄÚ´æĞÔÄÜ
-    static ProcessorPerformance s_processorPerformance; ///< ´¦ÀíÆ÷ĞÔÄÜ
-    static DiskPerformance s_diskPerformance; ///< ´ÅÅÌĞÔÄÜ
+    static MemoryPerformance s_memoryPerformance; ///< å†…å­˜æ€§èƒ½
+    static ProcessorPerformance s_processorPerformance; ///< å¤„ç†å™¨æ€§èƒ½
+    static DiskPerformance s_diskPerformance; ///< ç£ç›˜æ€§èƒ½
 
     friend class ScanPerformanceThread;
 };
@@ -176,7 +176,7 @@ void ScanTempThread::run()
 
         this->msleep(500);
 
-        // Ã¿Ë¢ĞÂ60´ÎĞ´Ò»´ÎLOG
+        // æ¯åˆ·æ–°60æ¬¡å†™ä¸€æ¬¡LOG
         if (refreshCount%60 != 0)
             continue;
 
@@ -241,7 +241,7 @@ void ScanPerformanceThread::run()
 
         this->msleep(500);
 
-        // Ã¿Ë¢ĞÂ30´ÎĞ´Ò»´ÎLOG
+        // æ¯åˆ·æ–°30æ¬¡å†™ä¸€æ¬¡LOG
         if (refreshCount%30 != 0)
             continue;
 

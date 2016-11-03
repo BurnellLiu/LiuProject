@@ -1,7 +1,7 @@
-/// @file LGpuTemp.h
-/// @brief ¸ÃÎÄ¼şÉùÃ÷ÁËGPUÎÂ¶È»ñÈ¡Àà
+ï»¿/// @file LGpuTemp.h
+/// @brief è¯¥æ–‡ä»¶å£°æ˜äº†GPUæ¸©åº¦è·å–ç±»
 /// 
-/// Detail: ¸ÃÍ·ÎÄ¼şÉêÃ÷µÄÀà¹ØÁªnvapi.lib
+/// Detail: è¯¥å¤´æ–‡ä»¶ç”³æ˜çš„ç±»å…³è”nvapi.lib
 /// @author Burnell_Liu Email:burnell_liu@qq.com
 /// @version   
 /// @date 6:11:2015
@@ -22,33 +22,33 @@
 #define OUT
 #endif
 
-/// @brief ×î´óGPUÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
+/// @brief æœ€å¤§GPUæ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
 #ifndef MAX_GPU_SENSORS_NUMBER
 #define MAX_GPU_SENSORS_NUMBER 16
 #endif
 
 class CGpuTemp;
 
-/// @brief GPUÎÂ¶È½Ó¿Ú
-/// ¸ÃÀàÖ»ÄÜ»ñÈ¡µ½¶ÀÁ¢ÏÔ¿¨µÄÎÂ¶È
+/// @brief GPUæ¸©åº¦æ¥å£
+/// è¯¥ç±»åªèƒ½è·å–åˆ°ç‹¬ç«‹æ˜¾å¡çš„æ¸©åº¦
 class LGpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LGpuTemp();
 
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LGpuTemp();
 
-    /// @brief »ñÈ¡GPUÎÂ¶È
-    /// @param[out] sensorsNum ´æ´¢GPUÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
-    /// @param[out] temp ´æ´¢ÎÂ¶È, µ¥Î»ÉãÊÏ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–GPUæ¸©åº¦
+    /// @param[out] sensorsNum å­˜å‚¨GPUæ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦, å•ä½æ‘„æ°åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Get(OUT unsigned int& sensorsNum, OUT unsigned int temp[MAX_GPU_SENSORS_NUMBER]);
 
 private:
-    CGpuTemp* m_pGpuTemp; ///< GPUÊµÏÖÀà
+    CGpuTemp* m_pGpuTemp; ///< GPUå®ç°ç±»
 };
 
 

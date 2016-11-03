@@ -1,4 +1,4 @@
-
+﻿
 #include "FtpDownload.h"
 
 #include <QtCore/QUrl>

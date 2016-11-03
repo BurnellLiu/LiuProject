@@ -1,4 +1,4 @@
-
+ï»¿
 #include "HardwareInforPage.h"
 
 #include <QtCore/QString>
@@ -53,7 +53,7 @@ void HardwareInforPage::InitHardwareInfor()
     HWItemInfor* pComputerItem = new ComputerItemInfor();
     m_hwItemVec.push_back(pComputerItem);
     /*
-    ¼ÆËã»úÕûÌåĞÅÏ¢ÑÓºó¼ÓÔØ
+    è®¡ç®—æœºæ•´ä½“ä¿¡æ¯å»¶ååŠ è½½
     */
     
 
@@ -160,7 +160,7 @@ void HardwareInforPage::InitHardwareInfor()
         pSensorsItem->LoadHWInfor();
     }
 
-    // ¼ÆËã»úÕûÌåĞÅÏ¢ÑÓºó¼ÓÔØ, µÈ´ı¸÷¸öÓ²¼şĞÅÏ¢¼ÓÔØÍê³ÉÔÙ¼ÓÔØ
+    // è®¡ç®—æœºæ•´ä½“ä¿¡æ¯å»¶ååŠ è½½, ç­‰å¾…å„ä¸ªç¡¬ä»¶ä¿¡æ¯åŠ è½½å®Œæˆå†åŠ è½½
     pComputerItem->LoadHWInfor();
 
     PrintLogW(L"End HardwareInforPage::InitHardwareInfor()");
@@ -203,7 +203,7 @@ void HardwareInforPage::LoadQSS(IN float uiRatio)
     {  
         QString qss = qssFile.readAll();
 
-        // ÁĞ±í¿òÃ¿ÏîµÄ¸ß¶ÈĞèÒª¶¯Ì¬ÉèÖÃ, ²»ÄÜÔÚQSSÎÄ¼şÖĞĞ´ËÀ
+        // åˆ—è¡¨æ¡†æ¯é¡¹çš„é«˜åº¦éœ€è¦åŠ¨æ€è®¾ç½®, ä¸èƒ½åœ¨QSSæ–‡ä»¶ä¸­å†™æ­»
         QString listItemHeightQss = QString::fromAscii(
             "QListWidget#listWidgetHWItem::item\
              {\
@@ -288,7 +288,7 @@ void ComputerItemInfor::LoadHWInfor()
     this->SetTitle(QObject::tr("Computer"));
 
 
-     // »ñÈ¡¼ÆËã»úÏµÍ³ĞÅÏ¢
+     // è·å–è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
     const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
     QString strManufacturer = QString::fromStdWString(computerSystemInfor.Manufacturer);
     QString strPCSystemInfor = strManufacturer;
@@ -315,7 +315,7 @@ void ComputerItemInfor::LoadHWInfor()
     
     this->ContentAddItem(QObject::tr("Computer Model"), strPCSystemInfor);
 
-    // Ìî³ä²Ù×÷ÏµÍ³ĞÅÏ¢
+    // å¡«å……æ“ä½œç³»ç»Ÿä¿¡æ¯
     const OperatingSystemInfor& operatingSystemInfor = LHardwareInfor::GetOperatingSystemInfor();
     QString systemCaption = QString::fromStdWString(operatingSystemInfor.Caption);
     systemCaption = systemCaption.trimmed();
@@ -331,7 +331,7 @@ void ComputerItemInfor::LoadHWInfor()
     this->ContentAddItem(QObject::tr("OS Version"), strOperatingSystemVersion);
     this->ContentAddBlankLine();
 
-    // ÌîĞ´Ö÷°åĞÅÏ¢
+    // å¡«å†™ä¸»æ¿ä¿¡æ¯
     const MotherBoardInfor& motherBoardInfor = LHardwareInfor::GetMotherBoardInfor();
     QString motherBoardProductName = QString::fromStdString(motherBoardInfor.ProductName).trimmed();
     QString motherBoardManufacturer = QString::fromStdString(motherBoardInfor.Manufacturer);
@@ -340,14 +340,14 @@ void ComputerItemInfor::LoadHWInfor()
     motherBoardDesc += motherBoardProductName;
     this->ContentAddItem(QObject::tr("Mother Board"), motherBoardDesc);
 
-    // ÌîĞ´´¦ÀíÆ÷ĞÅÏ¢
+    // å¡«å†™å¤„ç†å™¨ä¿¡æ¯
     const ProcessorInfor& processorInfor = LHardwareInfor::GetProcessorInfor();
     QString processorName = QString::fromStdWString(processorInfor.Name);
     processorName = processorName.trimmed();
     processorName += QString::fromStdWString(L"(Cores: %1 Threads: %2)").arg(processorInfor.CoresNumber).arg(processorInfor.LogicalProcessorNumber);
     this->ContentAddItem(QObject::tr("Processor"), processorName);
 
-    // ÌîĞ´ÏÔ¿¨ĞÅÏ¢
+    // å¡«å†™æ˜¾å¡ä¿¡æ¯
     const VideoCardInforArray& videoCardInfor = LHardwareInfor::GetVideoCardInfor();
     for (int i = 0; i < videoCardInfor.Count; i++)
     {
@@ -363,7 +363,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Video Card"), displayCardName);
     }
 
-    // ÌîĞ´ÄÚ´æĞÅÏ¢
+    // å¡«å†™å†…å­˜ä¿¡æ¯
     const PhysicalMemoryInforArray& physicalMemoryInfor = LHardwareInfor::GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInfor.Count; i++)
     {
@@ -373,7 +373,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Memory"), memoryInfor);
     }
     
-    // ÌîĞ´´ÅÅÌĞÅÏ¢
+    // å¡«å†™ç£ç›˜ä¿¡æ¯
     const DiskInforArray& diskInforArray = LHardwareInfor::GetDiskInfor();
     
     for (unsigned long i = 0; i < diskInforArray.Count; i++)
@@ -390,7 +390,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Disk"), diskInfor);
     }
 
-    // »ñÈ¡Íø¿¨ĞÅÏ¢
+    // è·å–ç½‘å¡ä¿¡æ¯
     const NetworkCardInforArray& networkCardInforArray = LHardwareInfor::GetNetworkCardInfor();
     for (unsigned long i = 0; i < networkCardInforArray.Count; i++)
     {
@@ -398,7 +398,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Network Card"), name);
     }
 
-    // ÌîĞ´ÏÔÊ¾Æ÷ĞÅÏ¢
+    // å¡«å†™æ˜¾ç¤ºå™¨ä¿¡æ¯
     const MonitorInforArray& monitorInforArray = LHardwareInfor::GetMonitorInfor();
     for (unsigned long i = 0; i < monitorInforArray.Count; i++)
     {
@@ -407,7 +407,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Monitor"), monitorInfor);
     }
 
-    // ÌîĞ´µç³ØĞÅÏ¢
+    // å¡«å†™ç”µæ± ä¿¡æ¯
     const BatteryStaticInfor& batteryStaticInfor = LHardwareInfor::GetBatteryStaticInfor();
     if (batteryStaticInfor.Exist)
     {
@@ -431,7 +431,7 @@ void ComputerItemInfor::LoadHWInfor()
         }
     }
 
-    // ÌîĞ´ÉãÏñ»úĞÅÏ¢
+    // å¡«å†™æ‘„åƒæœºä¿¡æ¯
     const CameraInforArray& cameraInforArray = LHardwareInfor::GetCameraInfor();
     for (unsigned int i = 0; i < cameraInforArray.Count; i++)
     {
@@ -439,7 +439,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("Camera"), cameraName);
     }
 
-    // ÌîĞ´¹âÇıĞÅÏ¢
+    // å¡«å†™å…‰é©±ä¿¡æ¯
     const CDRomDriveInforArray& cdRomDriveInforArray = LHardwareInfor::GetCDRomDriveInfor();
     for (unsigned int i = 0; i < cdRomDriveInforArray.Count; i++)
     {
@@ -447,7 +447,7 @@ void ComputerItemInfor::LoadHWInfor()
         this->ContentAddItem(QObject::tr("CD ROM Drive"), cdRomName);
     }
 
-    // ÌîĞ´´«¸ĞÆ÷ĞÅÏ¢
+    // å¡«å†™ä¼ æ„Ÿå™¨ä¿¡æ¯
     LSensorObject sensorObject;
     SAccelerometer3DInforArray accelerometerSensor;
     sensorObject.GetAccelerometer3DInfor(&accelerometerSensor);
@@ -606,7 +606,7 @@ void VideoCardItemInfor::LoadHWInfor()
     this->SetTitle("Video Card");
     PrintLogW(L"Video Card Information:");
 
-    // ÌîĞ´ÏÔ¿¨ĞÅÏ¢
+    // å¡«å†™æ˜¾å¡ä¿¡æ¯
     const VideoCardInforArray& videoCardInforArray = LHardwareInfor::GetVideoCardInfor();
     for (int i = 0; i < videoCardInforArray.Count; i++)
     {
@@ -647,7 +647,7 @@ void MemoryItemInfor::LoadHWInfor()
     this->SetTitle("Memory");
     PrintLogW(L"Memory Information");
 
-    // ÌîĞ´ÄÚ´æĞÅÏ¢
+    // å¡«å†™å†…å­˜ä¿¡æ¯
     const PhysicalMemoryInforArray& physicalMemoryInforArray = LHardwareInfor::GetPhysicalMemoryInfor();
     for (unsigned long i = 0; i < physicalMemoryInforArray.Count; i++)
     {

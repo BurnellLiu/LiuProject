@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LWEBCAM_H_
 #define _LWEBCAM_H_
@@ -25,7 +25,7 @@ class CWebcam;
 
 
 /// <SUMMARY>
-/// Î»Í¼½á¹¹
+/// ä½å›¾ç»“æ„
 /// </SUMMARY>
 class CDBIImage
 {
@@ -36,30 +36,30 @@ public:
 	~CDBIImage();
 
 	/// <SUMMARY>
-	/// »ñÈ¡ÕûÕÅÍ¼µÄÆ½¾ùÁÁ¶ÈÖµ
+	/// è·å–æ•´å¼ å›¾çš„å¹³å‡äº®åº¦å€¼
 	/// </SUMMARY>
 	/// <PARAM name = "avgLuma" dir = "OUT">
-	/// ´æ´¢ÁÁ¶ÈÖµ
+	/// å­˜å‚¨äº®åº¦å€¼
 	/// </PARAM>
 	/// <RETURNS>
-	/// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+	/// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 	/// </RETURNS>
 	bool GetAvgLuma(OUT int& avgLuma);
 
 	/// <SUMMARY>
-	/// ±£´æÎªBMPÎÄ¼ş
+	/// ä¿å­˜ä¸ºBMPæ–‡ä»¶
 	/// </SUMMARY>
 	/// <PARAM name = "fileName" dir = "IN">
-	/// ÎÄ¼şÃû
+	/// æ–‡ä»¶å
 	/// </PARAM>
 	/// <RETURNS>
-	/// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+	/// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 	/// </RETURNS>
 	bool SaveToBMP(IN const char* fileName);
 
 private:
-	long Size; // Î»Í¼´óĞ¡
-	unsigned char* Data; // Î»Í¼Êı¾İ
+	long Size; // ä½å›¾å¤§å°
+	unsigned char* Data; // ä½å›¾æ•°æ®
 
 private:
 	CDBIImage(const CDBIImage&);
@@ -67,129 +67,129 @@ private:
 };
 
 /// <SUMMARY>
-/// ÉãÏñÍ·½Ó¿Ú
+/// æ‘„åƒå¤´æ¥å£
 /// </SUMMARY>
 class LWebcam
 {
 public:
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     virtual ~LWebcam() = 0 {}
 
     /// <SUMMARY>
-    /// ÉèÖÃ¸¸´°¿Ú
+    /// è®¾ç½®çˆ¶çª—å£
     /// </SUMMARY>
     /// <PARAM name = "hwnd" dir = "IN">
-    /// ¸¸´°¿Ú¾ä±ú
+    /// çˆ¶çª—å£å¥æŸ„
     /// </PARAM>
     /// <PARAM name = "left, top, width, height" dir = "IN">
-    /// ÉãÏñÍ·´°¿ÚÔÚ¸¸´°¿ÚÖĞµÄÎ»ÖÃºÍ´óĞ¡, ÉãÏñÍ·´°¿Ú×óÆğµã, ÉãÏñÍ·´°¿ÚÉÏÆğµã, ÉãÏñÍ·´°¿Ú¿í¶È, ÉãÏñÍ·´°¿Ú¸ß¶È
+    /// æ‘„åƒå¤´çª—å£åœ¨çˆ¶çª—å£ä¸­çš„ä½ç½®å’Œå¤§å°, æ‘„åƒå¤´çª—å£å·¦èµ·ç‚¹, æ‘„åƒå¤´çª—å£ä¸Šèµ·ç‚¹, æ‘„åƒå¤´çª—å£å®½åº¦, æ‘„åƒå¤´çª—å£é«˜åº¦
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool SetParentWindow(IN void* hwnd, IN long left, IN long top, IN long width, IN long height) = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡ÉãÏñÍ·ÓÑºÃÃû³Æ
+    /// è·å–æ‘„åƒå¤´å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢ÉãÏñÍ·ÓÑºÃÃû³Æ
+    /// å­˜å‚¨æ‘„åƒå¤´å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool GetFriendlyName(OUT wstring& name) = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡ÉãÏñÍ·ÏÔÊ¾Ãû³Æ
+    /// è·å–æ‘„åƒå¤´æ˜¾ç¤ºåç§°
     /// </SUMMARY>
     /// <PARAM name = "name" dir = "OUT">
-    /// ´æ´¢ÉãÏñÍ·ÏÔÊ¾Ãû³Æ
+    /// å­˜å‚¨æ‘„åƒå¤´æ˜¾ç¤ºåç§°
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool GetDisplayName(OUT wstring& name) = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡µ±Ç°Í¼Ïñ
+    /// è·å–å½“å‰å›¾åƒ
     /// </SUMMARY>
     /// <PARAM name = "image" dir = "OUT">
-    /// ´æ´¢Í¼ÏñĞÅÏ¢
+    /// å­˜å‚¨å›¾åƒä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool GetCurrentImage(OUT CDBIImage& image) = 0;
 
     /// <SUMMARY>
-    /// ¿ªÆôÉãÏñÍ·
+    /// å¼€å¯æ‘„åƒå¤´
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool Run() = 0;
 
     /// <SUMMARY>
-    /// ÔİÍ£ÉãÏñÍ·
+    /// æš‚åœæ‘„åƒå¤´
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool Pause() = 0;
 
     /// <SUMMARY>
-    /// Í£Ö¹ÉãÏñÍ·
+    /// åœæ­¢æ‘„åƒå¤´
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool Stop() = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡Æ½¾ùÖ¡ËÙ¶È(Ã¿Ãë)
+    /// è·å–å¹³å‡å¸§é€Ÿåº¦(æ¯ç§’)
     /// </SUMMARY>
     /// <PARAM name = "rate" dir = "IN">
-    /// ´æ´¢Ö¡ËÙ¶È
+    /// å­˜å‚¨å¸§é€Ÿåº¦
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual bool GetAvgFrameRate(int& rate) = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡´íÎóĞÅÏ¢
+    /// è·å–é”™è¯¯ä¿¡æ¯
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´íÎóĞÅÏ¢
+    /// é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     virtual  string GetErrorMessage() = 0;
 
     /// <SUMMARY>
-    /// »ñÈ¡´íÎóĞÅÏ¢
+    /// è·å–é”™è¯¯ä¿¡æ¯
     /// </SUMMARY>
     virtual void GetErrorMessage(string& error) = 0;
 
 
     /// <SUMMARY>
-    /// ÊÍ·Å×ÊÔ´
+    /// é‡Šæ”¾èµ„æº
     /// </SUMMARY>
     virtual void Release() = 0;
 };
 
 /// <SUMMARY>
-/// Ã¶¾ÙÉãÏñÍ·
+/// æšä¸¾æ‘„åƒå¤´
 /// </SUMMARY>
 /// <PARAM name = "webcamList" dir = "OUT">
-/// ´æ´¢ÉãÏñÍ·¶ÔÏó
+/// å­˜å‚¨æ‘„åƒå¤´å¯¹è±¡
 /// </PARAM>
 /// <PARAM name = "errorMessage" dir = "OUT">
-/// ´æ´¢´íÎóĞÅÏ¢
+/// å­˜å‚¨é”™è¯¯ä¿¡æ¯
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+/// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 /// </RETURNS>
 bool LEnumWebcam(OUT vector<LWebcam*>& webcamList, string& errorMessage);
 

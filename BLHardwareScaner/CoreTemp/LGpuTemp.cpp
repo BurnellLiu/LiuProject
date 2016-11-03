@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LGpuTemp.h"
 #include <Windows.h>
 
@@ -8,39 +8,39 @@
 #pragma comment(lib, ".\\nvapi\\nvapi.lib")
 
 /*
-* ¸ÃÎÄ¼şÖĞÉùÃ÷ÁËCGpuTemp, CNvGpuTemp, CAMDGpuTemp3¸öÀà, 
-* CNvGpuTempÀàµÄÊµÏÖÊÇÍ¨¹ıÊ¹ÓÃÓ¢Î°´ï¿ª·¢°ünvapiÀ´ÊµÏÖµÄ
-* CAMDGpuTempÀàµÄÊµÏÖÊÇÍ¨¹ıÊ¹ÓÃAMD¿ª·¢°üADL(AMD Display Library)À´ÊµÏÖµÄ
+* è¯¥æ–‡ä»¶ä¸­å£°æ˜äº†CGpuTemp, CNvGpuTemp, CAMDGpuTemp3ä¸ªç±», 
+* CNvGpuTempç±»çš„å®ç°æ˜¯é€šè¿‡ä½¿ç”¨è‹±ä¼Ÿè¾¾å¼€å‘åŒ…nvapiæ¥å®ç°çš„
+* CAMDGpuTempç±»çš„å®ç°æ˜¯é€šè¿‡ä½¿ç”¨AMDå¼€å‘åŒ…ADL(AMD Display Library)æ¥å®ç°çš„
 */
 
 /// <SUMMARY>
-/// GpuTemp»ùÀà
+/// GpuTempåŸºç±»
 /// </SUMMARY>
 class CGpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CGpuTemp(){}
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     virtual ~CGpuTemp(){}
 
     /// <SUMMARY>
-    /// »ñÈ¡ÎÂ¶È
+    /// è·å–æ¸©åº¦
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     /// </RETURNS>
     virtual bool GetTemp(OUT unsigned int& sensorsNum, OUT unsigned int temp[MAX_GPU_SENSORS_NUMBER]){return false;}
 };
 
 /// <SUMMARY>
-/// NVIDIA(Ó¢Î°´ï)GpuTempÀà
+/// NVIDIA(è‹±ä¼Ÿè¾¾)GpuTempç±»
 /// </SUMMARY>
 class LNvGpuTemp : public CGpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LNvGpuTemp()
         : INVALID_GPU_INDEX(-1)
     {
@@ -68,7 +68,7 @@ public:
         if (m_usingGpuIndex == INVALID_GPU_INDEX)
             return false;
 
-        /* »ñÈ¡ÎÂ¶ÈÇ°ÏÈ»ñÈ¡ÆäËûĞÅÏ¢, ²»È»»ñÈ¡ÎÂ¶È»áÊ§°Ü*/
+        /* è·å–æ¸©åº¦å‰å…ˆè·å–å…¶ä»–ä¿¡æ¯, ä¸ç„¶è·å–æ¸©åº¦ä¼šå¤±è´¥*/
         NvU32 busId = 0;
         NvAPI_GPU_GetBusId(m_hNvPhysicalGpuList[m_usingGpuIndex], &busId);
 
@@ -88,88 +88,88 @@ public:
     }
 
 private:
-    int m_usingGpuIndex; // ÕıÔÚÊ¹ÓÃµÄGpu¾ä±úË÷Òı
-    const int INVALID_GPU_INDEX; // ÎŞĞ§Gpu¾ä±úË÷Òı
-    NvPhysicalGpuHandle m_hNvPhysicalGpuList[NVAPI_MAX_PHYSICAL_GPUS]; // ÎïÀíGpu¾ä±ú±í
+    int m_usingGpuIndex; // æ­£åœ¨ä½¿ç”¨çš„Gpuå¥æŸ„ç´¢å¼•
+    const int INVALID_GPU_INDEX; // æ— æ•ˆGpuå¥æŸ„ç´¢å¼•
+    NvPhysicalGpuHandle m_hNvPhysicalGpuList[NVAPI_MAX_PHYSICAL_GPUS]; // ç‰©ç†Gpuå¥æŸ„è¡¨
 };
 
 
 /// <SUMMARY>
-/// ³õÊ¼»¯ADL2½Ó¿Ú
+/// åˆå§‹åŒ–ADL2æ¥å£
 /// </SUMMARY>
 /// <PARAM name = "callback" dir = "IN">
-/// ÄÚ´æ·ÖÅä»Øµ÷º¯Êı
+/// å†…å­˜åˆ†é…å›è°ƒå‡½æ•°
 /// </PARAM>
 /// <PARAM name = "iEnumConnectedAdapters" dir = "IN">
-/// ÉèÎª1µÃµ½ÎïÀí´æÔÚ²¢ÇÒ±»ÆôÓÃµÄÏÔ¿¨, ÉèÎª0µÃµ½ËùÓĞÔø¾­´æÔÚµÄÏÔ¿¨
+/// è®¾ä¸º1å¾—åˆ°ç‰©ç†å­˜åœ¨å¹¶ä¸”è¢«å¯ç”¨çš„æ˜¾å¡, è®¾ä¸º0å¾—åˆ°æ‰€æœ‰æ›¾ç»å­˜åœ¨çš„æ˜¾å¡
 /// </PARAM>
 /// <PARAM name = "context" dir = "OUT">
-/// ´æ´¢ADL2»·¾³¾ä±ú
+/// å­˜å‚¨ADL2ç¯å¢ƒå¥æŸ„
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»ØADL_OK, Ê§°Ü·µ»Ø´íÎóÂë
+/// æˆåŠŸè¿”å›ADL_OK, å¤±è´¥è¿”å›é”™è¯¯ç 
 /// </RETURNS>
 typedef int (*ADL2_MAIN_CONTROL_CREATE )(IN ADL_MAIN_MALLOC_CALLBACK callback, IN int iEnumConnectedAdapters, OUT ADL_CONTEXT_HANDLE* context);
 
 /// <SUMMARY>
-/// Ğ¶ÔØADL2
+/// å¸è½½ADL2
 /// </SUMMARY>
 /// <PARAM name = "context" dir = "IN">
-/// ADL2»·¾³¾ä±ú
+/// ADL2ç¯å¢ƒå¥æŸ„
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»ØADL_OK, Ê§°Ü·µ»Ø´íÎóÂë
+/// æˆåŠŸè¿”å›ADL_OK, å¤±è´¥è¿”å›é”™è¯¯ç 
 /// </RETURNS>
 typedef int (*ADL2_MAIN_CONTROL_DESTROY )(IN ADL_CONTEXT_HANDLE context);
 
 /// <SUMMARY>
-/// »ñÈ¡ÊÊÅäÆ÷ÊıÁ¿
+/// è·å–é€‚é…å™¨æ•°é‡
 /// </SUMMARY>
 /// <PARAM name = "context" dir = "IN">
-/// ADL2»·¾³¾ä±ú
+/// ADL2ç¯å¢ƒå¥æŸ„
 /// </PARAM>
 /// <PARAM name = "lpNumAdapters" dir = "OUT">
-/// ´æ´¢ÊÊÅäÆ÷ÊıÁ¿
+/// å­˜å‚¨é€‚é…å™¨æ•°é‡
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»ØADL_OK, Ê§°Ü·µ»Ø´íÎóÂë
+/// æˆåŠŸè¿”å›ADL_OK, å¤±è´¥è¿”å›é”™è¯¯ç 
 /// </RETURNS>
 typedef int (*ADL2_ADAPTER_NUMBEROFADAPTERS_GET ) (IN ADL_CONTEXT_HANDLE context, OUT int* lpNumAdapters);
 
 /// <SUMMARY>
-/// »ñÈ¡ÊÊÅäÆ÷ĞÅÏ¢
+/// è·å–é€‚é…å™¨ä¿¡æ¯
 /// </SUMMARY>
 /// <PARAM name = "context" dir = "IN">
-/// ADL2»·¾³¾ä±ú
+/// ADL2ç¯å¢ƒå¥æŸ„
 /// </PARAM>
 /// <PARAM name = "lpInfo" dir = "OUT">
-/// ´æ´¢ÊÊÅäÆ÷ĞÅÏ¢
+/// å­˜å‚¨é€‚é…å™¨ä¿¡æ¯
 /// </PARAM>
 /// <PARAM name = "iInputSize" dir = "IN">
-/// ÊäÈë»º³åÇøµÄ´óĞ¡
+/// è¾“å…¥ç¼“å†²åŒºçš„å¤§å°
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»ØADL_OK, Ê§°Ü·µ»Ø´íÎóÂë
+/// æˆåŠŸè¿”å›ADL_OK, å¤±è´¥è¿”å›é”™è¯¯ç 
 /// </RETURNS>
 typedef int (*ADL2_ADAPTER_ADAPTERINFO_GET)(IN ADL_CONTEXT_HANDLE context, OUT LPAdapterInfo lpInfo, IN int iInputSize);
 
 /// <SUMMARY>
-/// »ñÈ¡ÏÔ¿¨ÎÂ¶È
+/// è·å–æ˜¾å¡æ¸©åº¦
 /// </SUMMARY>
 /// <PARAM name = "context" dir = "IN">
-/// ADL2»·¾³¾ä±ú
+/// ADL2ç¯å¢ƒå¥æŸ„
 /// </PARAM>
 /// <PARAM name = "iAdapterIndex" dir = "IN">
-/// ÊÊÅäÆ÷Ë÷Òı
+/// é€‚é…å™¨ç´¢å¼•
 /// </PARAM>
 /// <PARAM name = "iThermalControllerIndex" dir = "IN">
-/// ÈÈ´«¸ĞÆ÷Ë÷Òı
+/// çƒ­ä¼ æ„Ÿå™¨ç´¢å¼•
 /// </PARAM>
 /// <PARAM name = "lpTemperature" dir = "OUT">
-/// ´æ´¢ÎÂ¶È
+/// å­˜å‚¨æ¸©åº¦
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»ØADL_OK, Ê§°Ü·µ»Ø´íÎóÂë
+/// æˆåŠŸè¿”å›ADL_OK, å¤±è´¥è¿”å›é”™è¯¯ç 
 /// </RETURNS>
 typedef int (*ADL2_OVERDRIVE5_TEMPERATURE_GET)(ADL_CONTEXT_HANDLE context, int iAdapterIndex, int iThermalControllerIndex, ADLTemperature* lpTemperature);
 
@@ -190,12 +190,12 @@ void __stdcall ADL_Main_Memory_Free ( void** lpBuffer )
 }
 
 /// <SUMMARY>
-/// AMD GpuTempÀà
+/// AMD GpuTempç±»
 /// </SUMMARY>
 class LAMDGpuTemp : public CGpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LAMDGpuTemp()
         : INVALID_ADAPTER_INDEX(-1)
     {
@@ -207,8 +207,8 @@ public:
         m_hADLDll = NULL;
         m_usingAdapterIndex = INVALID_ADAPTER_INDEX;
 
-        // °²×°ÁËAMDÏÔ¿¨Çı¶¯µÄÏµÍ³Ä¿Â¼System32ÏÂ´æÔÚatiadlxx.dll(32Î»»ò64Î»)
-        // ÔÚ64Î»ÏµÍ³ÉÏ, 32Î»µÄ³ÌĞò×°ÔØ64Î»µÄdll»áÊ§°Ü, ËùÒÔĞèÒªÔÚ×°ÔØSysWOW64Ä¿Â¼ÏÂµÄatiadlxy.dll
+        // å®‰è£…äº†AMDæ˜¾å¡é©±åŠ¨çš„ç³»ç»Ÿç›®å½•System32ä¸‹å­˜åœ¨atiadlxx.dll(32ä½æˆ–64ä½)
+        // åœ¨64ä½ç³»ç»Ÿä¸Š, 32ä½çš„ç¨‹åºè£…è½½64ä½çš„dllä¼šå¤±è´¥, æ‰€ä»¥éœ€è¦åœ¨è£…è½½SysWOW64ç›®å½•ä¸‹çš„atiadlxy.dll
         m_hADLDll = LoadLibraryA("atiadlxx.dll");
         if (m_hADLDll == NULL)
             m_hADLDll = LoadLibraryA("atiadlxy.dll");
@@ -246,7 +246,7 @@ public:
         m_usingAdapterIndex = 0;
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LAMDGpuTemp()
     {
         if (ADL2_Main_Control_Destroy != NULL)
@@ -279,16 +279,16 @@ public:
     }
 
 private:
-    ADL2_MAIN_CONTROL_CREATE ADL2_Main_Control_Create; // ADL³õÊ¼»¯º¯ÊıÖ¸Õë
-    ADL2_MAIN_CONTROL_DESTROY ADL2_Main_Control_Destroy; // ADLĞ¶ÔØº¯ÊıÖ¸Õë
-    ADL2_ADAPTER_NUMBEROFADAPTERS_GET ADL2_Adapter_NumberOfAdapters_Get; // ADL»ñÈ¡ÊÊÅäÆ÷ÊıÁ¿º¯ÊıÖ¸Õë
-    ADL2_ADAPTER_ADAPTERINFO_GET ADL2_Adapter_AdapterInfo_Get; // ADL»ñÈ¡ÊÊÅäÆ÷ĞÅÏ¢º¯ÊıÖ¸Õë
-    ADL2_OVERDRIVE5_TEMPERATURE_GET ADL2_Overdrive5_Temperature_Get; // ADL»ñÈ¡ÏÔ¿¨ÎÂ¶Èº¯ÊıÖ¸Õë
+    ADL2_MAIN_CONTROL_CREATE ADL2_Main_Control_Create; // ADLåˆå§‹åŒ–å‡½æ•°æŒ‡é’ˆ
+    ADL2_MAIN_CONTROL_DESTROY ADL2_Main_Control_Destroy; // ADLå¸è½½å‡½æ•°æŒ‡é’ˆ
+    ADL2_ADAPTER_NUMBEROFADAPTERS_GET ADL2_Adapter_NumberOfAdapters_Get; // ADLè·å–é€‚é…å™¨æ•°é‡å‡½æ•°æŒ‡é’ˆ
+    ADL2_ADAPTER_ADAPTERINFO_GET ADL2_Adapter_AdapterInfo_Get; // ADLè·å–é€‚é…å™¨ä¿¡æ¯å‡½æ•°æŒ‡é’ˆ
+    ADL2_OVERDRIVE5_TEMPERATURE_GET ADL2_Overdrive5_Temperature_Get; // ADLè·å–æ˜¾å¡æ¸©åº¦å‡½æ•°æŒ‡é’ˆ
 
-    ADL_CONTEXT_HANDLE m_hADLContext; // ADL»·¾³¾ä±ú
-    const int INVALID_ADAPTER_INDEX; // ÎŞĞ§ÏÔ¿¨ÊÊÅäÆ÷Ë÷Òı
-    int  m_usingAdapterIndex; // ÕıÔÚÊ¹ÓÃµÄÏÔ¿¨ÊÊÅäÆ÷Ë÷Òı
-    HMODULE m_hADLDll; // ADL¶¯Ì¬¿â¾ä±ú
+    ADL_CONTEXT_HANDLE m_hADLContext; // ADLç¯å¢ƒå¥æŸ„
+    const int INVALID_ADAPTER_INDEX; // æ— æ•ˆæ˜¾å¡é€‚é…å™¨ç´¢å¼•
+    int  m_usingAdapterIndex; // æ­£åœ¨ä½¿ç”¨çš„æ˜¾å¡é€‚é…å™¨ç´¢å¼•
+    HMODULE m_hADLDll; // ADLåŠ¨æ€åº“å¥æŸ„
 
 };
 

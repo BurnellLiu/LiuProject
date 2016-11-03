@@ -1,4 +1,4 @@
-
+ï»¿
 #include "RestartAgingPage.h"
 
 #include <QtGui/QValidator>
@@ -12,10 +12,10 @@
 #include "..\\Src\\LHardwareInfor.h"
 #include "..\\Src\\TaskScheduler\\LTaskScheduler.h"
 
-// Ä¬ÈÏ¼ä¸ôÊ±¼ä60Ãë
+// é»˜è®¤é—´éš”æ—¶é—´60ç§’
 #define DEFAULT_INTERVALTIME 60
 
-// Ä¬ÈÏAging´ÎÊý60´Î
+// é»˜è®¤Agingæ¬¡æ•°60æ¬¡
 #define DEFAULT_AGINGTIMES 60
 
 #define STRING_START_TEST QObject::tr("StartTest")
@@ -45,8 +45,8 @@ RestartAgingPage::RestartAgingPage(IN QWidget *parent /* = 0 */, IN Qt::WFlags f
     QObject::connect(ui.pushButtonReset, SIGNAL(clicked()), this, SLOT(ResetButtonClicked()));
     QObject::connect(&m_countDownTimer, SIGNAL(timeout()), this, SLOT(CountDownTimerTimeout()));
 
-    // ÉèÖÃÊäÈë¿òÖ»½ÓÊÜ[0, 999]Ö®¼äµÄÊý×Ö
-    // ÒòÎªÉèÖÃpValidatorµÄparentÎªthis, ËùÒÔ¿ÉÒÔ²»delete, ÒòÎªthis±»deleteÊ±, pValidatorÒ²»á±»delete
+    // è®¾ç½®è¾“å…¥æ¡†åªæŽ¥å—[0, 999]ä¹‹é—´çš„æ•°å­—
+    // å› ä¸ºè®¾ç½®pValidatorçš„parentä¸ºthis, æ‰€ä»¥å¯ä»¥ä¸delete, å› ä¸ºthisè¢«deleteæ—¶, pValidatorä¹Ÿä¼šè¢«delete
     QValidator* pValidator = new QIntValidator(0, 999, this);
     ui.lineEditIntervalTime->setValidator(pValidator);
     ui.lineEditAgingTimes->setValidator(pValidator);
@@ -86,7 +86,7 @@ void RestartAgingPage::showEvent(QShowEvent* e)
 
     if (APP_RESTARTAGING == LAppParam::GetStartMode())
     {
-        // ´ÓÅäÖÃÎÄ¼þÖÐ¶ÁÈ¡ÐÅÏ¢
+        // ä»Žé…ç½®æ–‡ä»¶ä¸­è¯»å–ä¿¡æ¯
         RestartAgingParam testParam;
         this->GetTestParamFromFile(testParam);
 
@@ -163,7 +163,7 @@ void RestartAgingPage::CountDownTimerTimeout()
     {
         m_countDownTimer.stop();
 
-        // ÖØÆôÇ°±£´æ²âÊÔ²ÎÊý
+        // é‡å¯å‰ä¿å­˜æµ‹è¯•å‚æ•°
         RestartAgingParam testParam;
         testParam.IntervalTime = ui.lineEditIntervalTime->text().toInt();
         testParam.AgingTimes = ui.lineEditAgingTimes->text().toInt();
@@ -236,16 +236,16 @@ bool RestartAgingPage::IsBSODHappened(IN const QString& lastRestartTime)
     if (lastRestartTime.isEmpty())
         return false;
 
-    // »ñÈ¡µ±Ç°Ê±¼ä
+    // èŽ·å–å½“å‰æ—¶é—´
     QDateTime currentDateTime = QDateTime::currentDateTime();
     QString currentTime = currentDateTime.toString(RESTARTAGING_DATA_FORMAT);
 
-    // »ñÈ¡WindowsÄ¿Â¼
+    // èŽ·å–Windowsç›®å½•
     OperatingSystemInfor osInfor = LHardwareInfor::GetOperatingSystemInfor();
     QString windowsPath = QString::fromStdWString(osInfor.SystemDrive);
     windowsPath += "\\Windows\\";
 
-    // ¼ì²éÊÇ·ñ´æÔÚÍêÕûDUMPÎÄ¼þ
+    // æ£€æŸ¥æ˜¯å¦å­˜åœ¨å®Œæ•´DUMPæ–‡ä»¶
     QString dumpFile = windowsPath + "MEMORY.DMP";
     if (QFile::exists(dumpFile))
     {
@@ -253,7 +253,7 @@ bool RestartAgingPage::IsBSODHappened(IN const QString& lastRestartTime)
         QDateTime fileDateTime = fileInfo.lastModified();
         QString fileTime = fileDateTime.toString(RESTARTAGING_DATA_FORMAT);
 
-        // ÐÞ¸ÄÈÕÆÚÔÚÉÏ´ÎÖØÆôºó, Ôò±íÊ¾·¢ÉúÀ¶ÆÁ
+        // ä¿®æ”¹æ—¥æœŸåœ¨ä¸Šæ¬¡é‡å¯åŽ, åˆ™è¡¨ç¤ºå‘ç”Ÿè“å±
         if (fileTime >= lastRestartTime &&
             fileTime <= currentTime)
         {
@@ -261,7 +261,7 @@ bool RestartAgingPage::IsBSODHappened(IN const QString& lastRestartTime)
         }
     }
 
-    // ¼ì²éMinidumpÎÄ¼þ
+    // æ£€æŸ¥Minidumpæ–‡ä»¶
     QString minidumpPath = windowsPath + "Minidump";
     QDir minidumpDir(minidumpPath);
     if (!minidumpDir.exists())
@@ -278,7 +278,7 @@ bool RestartAgingPage::IsBSODHappened(IN const QString& lastRestartTime)
         QDateTime fileDateTime = fileInfo.lastModified();
         QString fileTime = fileDateTime.toString(RESTARTAGING_DATA_FORMAT);
 
-        // ÐÞ¸ÄÈÕÆÚÔÚÉÏ´ÎÖØÆôºó, Ôò±íÊ¾·¢ÉúÀ¶ÆÁ
+        // ä¿®æ”¹æ—¥æœŸåœ¨ä¸Šæ¬¡é‡å¯åŽ, åˆ™è¡¨ç¤ºå‘ç”Ÿè“å±
         if (fileTime >= lastRestartTime &&
             fileTime <= currentTime)
         {

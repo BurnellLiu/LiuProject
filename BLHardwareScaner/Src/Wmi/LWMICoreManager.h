@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LWMICOREMANAGER_H_
 #define _LWMICOREMANAGER_H_
@@ -35,7 +35,7 @@ namespace LWMI
 {
     class LInitCom;
 
-    /// @brief WMIºËĞÄ¶ÔÏó
+    /// @brief WMIæ ¸å¿ƒå¯¹è±¡
     class LWMICoreManager
     {
     public:
@@ -43,92 +43,92 @@ namespace LWMI
         ~LWMICoreManager();
 
     public:
-        /// @brief ³õÊ¼»¯
-        /// @param[in] pNamespace ĞèÒªÁ¬½ÓµÄÃû×Ö¿Õ¼ä
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief åˆå§‹åŒ–
+        /// @param[in] pNamespace éœ€è¦è¿æ¥çš„åå­—ç©ºé—´
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool BaseInit(const wchar_t* pNamespace);
 
-        /// @brief WQL²éÑ¯
-        /// @param[in] pQuery ²éÑ¯Óï¾ä
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief WQLæŸ¥è¯¢
+        /// @param[in] pQuery æŸ¥è¯¢è¯­å¥
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool WQLQuery(const wchar_t* pQuery);
 
-        /// @brief »ñÈ¡¶ÔÏóÊıÁ¿
-        /// @return ¶ÔÏóµÄÊıÁ¿
+        /// @brief è·å–å¯¹è±¡æ•°é‡
+        /// @return å¯¹è±¡çš„æ•°é‡
         int GetObjectsCount();
 
-        /// @brief »ñÈ¡×Ö·û´®ÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPrppertyName ÊôĞÔÃû³Æ
-        /// @param[out] strProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å­—ç¬¦ä¸²å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPrppertyName å±æ€§åç§°
+        /// @param[out] strProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetStringProperty(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty);
 
-        /// @brief »ñÈ¡×Ö·û´®ÊôĞÔ(Ë¢ĞÂºó)
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPrppertyName ÊôĞÔÃû³Æ
-        /// @param[out] strProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å­—ç¬¦ä¸²å±æ€§(åˆ·æ–°å)
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPrppertyName å±æ€§åç§°
+        /// @param[out] strProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetStringPropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, wstring& strProperty);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅÕûÊıÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] ui8Property ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·æ•´æ•°å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] ui8Property å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT8Property(int objectIndex, const wchar_t* pPropertyName, LBYTE& ui8Property);
 
-        /// @brief »ñÈ¡×Ö½ÚÊı×éÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPrppertyName ÊôĞÔÃû³Æ
-        /// @param[out] arrayProperty ´æ´¢×Ö½ÚÊı×éÊôĞÔ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–å­—èŠ‚æ•°ç»„å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPrppertyName å±æ€§åç§°
+        /// @param[out] arrayProperty å­˜å‚¨å­—èŠ‚æ•°ç»„å±æ€§
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT8ArrayProperty(int objectIndex, const wchar_t* pPropertyName, vector<LBYTE>& arrayProperty);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅÕûÊıÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] uiProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·æ•´æ•°å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] uiProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT16Property(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅÕûÊıÊôĞÔ(Ë¢ĞÂºó)
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] uiProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·æ•´æ•°å±æ€§(åˆ·æ–°å)
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] uiProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT16PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT16& ui16Property);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅÕûÊıÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] uiProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·æ•´æ•°å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] uiProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT32Property(int objectIndex, const wchar_t* pPropertyName, LUINT& uiProperty);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅÕûÊıÊôĞÔ(Ë¢ĞÂºó)
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] uiProperty ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·æ•´æ•°å±æ€§(åˆ·æ–°å)
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] uiProperty å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT32PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT& uiProperty);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅ64Î»ÕûÊıÊôĞÔ
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] ui64Property ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·64ä½æ•´æ•°å±æ€§
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] ui64Property å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT64Property(int objectIndex, const wchar_t* pPropertyName, LUINT64& ui64Property);
 
-        /// @brief »ñÈ¡ÎŞ·ûºÅ64Î»ÕûÊıÊôĞÔ(Ë¢ĞÂºó)
-        /// @param[in] objectIndex ¶ÔÏóË÷Òı
-        /// @param[in] pPropertyName ÊôĞÔÃû³Æ
-        /// @param[out] ui64Property ´æ´¢ÊôĞÔÖµ
-        /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+        /// @brief è·å–æ— ç¬¦å·64ä½æ•´æ•°å±æ€§(åˆ·æ–°å)
+        /// @param[in] objectIndex å¯¹è±¡ç´¢å¼•
+        /// @param[in] pPropertyName å±æ€§åç§°
+        /// @param[out] ui64Property å­˜å‚¨å±æ€§å€¼
+        /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
         bool GetUINT64PropertyRefreshed(int objectIndex, const wchar_t* pPropertyName, LUINT64& ui64Property);
 
     private:
-        /// @brief ÇåÀí×ÊÔ´
+        /// @brief æ¸…ç†èµ„æº
         void BaseCleanUp();
 
     private:

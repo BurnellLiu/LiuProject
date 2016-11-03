@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LPDH_H_
 #define _LPDH_H_
@@ -17,26 +17,26 @@ using std::wstring;
 
 class CPdh;
 
-/// @brief PDH½Ó¿ÚÀà
+/// @brief PDHæ¥å£ç±»
 class LPdh
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] counterPath ÊÕ¼¯Æ÷Â·¾¶
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] counterPath æ”¶é›†å™¨è·¯å¾„
     explicit LPdh(IN const wstring& counterPath);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LPdh();
 
-    /// @brief ÊÕ¼¯ÕûĞÎÊı¾İ
-    /// ¸Ãº¯ÊıºÄ·ÑÖ¸¶¨µÄÊÕ¼¯Ê±¼ä
-    /// @param[in] time ÊÕ¼¯Ê±¼ä, µ¥Î»ºÁÃë
-    /// @param[in] value ´æ´¢ÊÕ¼¯ºóµÄÊı¾İ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ”¶é›†æ•´å½¢æ•°æ®
+    /// è¯¥å‡½æ•°è€—è´¹æŒ‡å®šçš„æ”¶é›†æ—¶é—´
+    /// @param[in] time æ”¶é›†æ—¶é—´, å•ä½æ¯«ç§’
+    /// @param[in] value å­˜å‚¨æ”¶é›†åçš„æ•°æ®
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool CollectDataLong(IN unsigned long time, OUT long& value);
 
 private:
-    CPdh* m_pPdh; ///< PDHÊµÏÖ¶ÔÏó
+    CPdh* m_pPdh; ///< PDHå®ç°å¯¹è±¡
 };
 
 #endif

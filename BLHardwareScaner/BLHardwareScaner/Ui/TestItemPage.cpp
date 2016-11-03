@@ -1,4 +1,4 @@
-
+ï»¿
 #include "TestItemPage.h"
 
 #include <QtCore/QFile>
@@ -77,7 +77,7 @@ void TestItemPage::showEvent(QShowEvent* e)
 void TestItemPage::Init()
 {
     connect(ui.listWidgetTestItem, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(TestItemClicked(QListWidgetItem*)));
-    // ÉèÖÃÊôÐÔ
+    // è®¾ç½®å±žæ€§
     ui.listWidgetTestItem->setViewMode(QListView::IconMode);
     ui.listWidgetTestItem->setIconSize(QSize(64 * m_uiRatio, 64 * m_uiRatio));
     ui.listWidgetTestItem->setMovement(QListView::Static);
@@ -106,8 +106,8 @@ void TestItemPage::Init()
 
 void TestItemPage::AddTestItem(IN const QString& name, IN const QIcon& icon)
 {
-    // ËäÈ»Ê¹ÓÃnew·½·¨, µ«ÊÇpItemÒÑÉèÖÃ¸¸¶ÔÏó, ËùÒÔ¿ÉÒÔ²»delete
-    // Qt»úÖÆ: ¸¸¶ÔÏó±»Îö¹¹Ê±, ×Ô¶¯Îö¹¹×Ó¶ÔÏó
+    // è™½ç„¶ä½¿ç”¨newæ–¹æ³•, ä½†æ˜¯pItemå·²è®¾ç½®çˆ¶å¯¹è±¡, æ‰€ä»¥å¯ä»¥ä¸delete
+    // Qtæœºåˆ¶: çˆ¶å¯¹è±¡è¢«æžæž„æ—¶, è‡ªåŠ¨æžæž„å­å¯¹è±¡
     QListWidgetItem* pItem = new QListWidgetItem(ui.listWidgetTestItem);
     pItem->setIcon(icon);
     pItem->setText(name);

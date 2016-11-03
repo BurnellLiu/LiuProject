@@ -1,7 +1,7 @@
-/// @file LCpuTemp.h
-/// @brief ¸ÃÍ·ÎÄ¼şÖĞÉùÃ÷ÁËCPUÎÂ¶È»ñÈ¡Àà
+ï»¿/// @file LCpuTemp.h
+/// @brief è¯¥å¤´æ–‡ä»¶ä¸­å£°æ˜äº†CPUæ¸©åº¦è·å–ç±»
 /// 
-/// ¸ÃÍ·ÎÄ¼şÉêÃ÷µÄÀà¹ØÁªWinRing0, ²¢ÇÒĞèÒª¹ÜÀíÔ±È¨ÏŞ
+/// è¯¥å¤´æ–‡ä»¶ç”³æ˜çš„ç±»å…³è”WinRing0, å¹¶ä¸”éœ€è¦ç®¡ç†å‘˜æƒé™
 /// Detail:
 /// @author Burnell_Liu  
 /// @version   
@@ -25,28 +25,28 @@ using std::wstring;
 #define OUT
 #endif
 
-/// @brief ×î´ó´¦ÀíÆ÷ÎïÀíºËĞÄÊı
+/// @brief æœ€å¤§å¤„ç†å™¨ç‰©ç†æ ¸å¿ƒæ•°
 #ifndef MAX_PROCESSOR_PHYSICAL_CORE_NUM
 #define MAX_PROCESSOR_PHYSICAL_CORE_NUM 64
 #endif
 
 class CCpuTemp;
 
-/// @brief CPUÎÂ¶È½Ó¿Ú
+/// @brief CPUæ¸©åº¦æ¥å£
 class LCpuTemp
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] winRing0Path WinRing0 DLLÂ·¾¶
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] winRing0Path WinRing0 DLLè·¯å¾„
     explicit LCpuTemp(IN const wstring& winRing0Path);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LCpuTemp();
 
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// @param[out] coreNum ´æ´¢CPUÎïÀíºËĞÄÊı
-    /// @param[out] temp ´æ´¢ÎÂ¶È, µ¥Î»ÉãÊÏ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// @param[out] coreNum å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦, å•ä½æ‘„æ°åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Get(OUT unsigned int& coreNum, OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]);
 
 private:

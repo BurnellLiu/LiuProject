@@ -1,4 +1,4 @@
-
+ï»¿
 #include "DiskSpeedPage.h"
 
 #include <QtCore/QFile>
@@ -66,7 +66,7 @@ DiskSpeedPage::DiskSpeedPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags
     ui.comboBoxRandSize->addItem(SIZE_4G);
     ui.comboBoxRandSize->setCurrentIndex(5);
 
-    // Èç¹ûÔÚshowEventÖĞ¸üĞÂ´ÅÅÌĞÅÏ¢, ÄÇÃ´µÚÒ»´ÎÏÔÊ¾²âËÙUIµÄÊ±ºòÓĞ¿¨¶ÙÏÖÏó
+    // å¦‚æœåœ¨showEventä¸­æ›´æ–°ç£ç›˜ä¿¡æ¯, é‚£ä¹ˆç¬¬ä¸€æ¬¡æ˜¾ç¤ºæµ‹é€ŸUIçš„æ—¶å€™æœ‰å¡é¡¿ç°è±¡
     this->UpdateDiskInformation();
 }
 
@@ -200,14 +200,14 @@ void DiskSpeedPage::SeqTestMonitorTimer()
     ui.labelSeqRSpeed->setText(readSpeed);
     ui.labelSeqWSpeed->setText(writeSpeed);
 
-    // ²âÊÔÎ´½áÊø
+    // æµ‹è¯•æœªç»“æŸ
     if (!state.TestDone)
         return;
 
-    // ²âÊÔ½áÊø
+    // æµ‹è¯•ç»“æŸ
     m_seqTestTimer.stop();
 
-    // ²âÊÔÃ»·¢Éú´íÎóÔò½øĞĞ4KËæ»ú²âÊÔ
+    // æµ‹è¯•æ²¡å‘ç”Ÿé”™è¯¯åˆ™è¿›è¡Œ4Kéšæœºæµ‹è¯•
     if (state.Error == DST_NO_ERROR)
     {
         ui.labelTestState->setText("4K Random Test Is Running...");
@@ -227,7 +227,7 @@ void DiskSpeedPage::SeqTestMonitorTimer()
         PrintLogW(L"Start Disk 4K Random Test");
     }
 
-    // ²âÊÔ·¢Éú´íÎó, ÏÔÊ¾´íÎóÏûÏ¢, Í£Ö¹²âÊÔ
+    // æµ‹è¯•å‘ç”Ÿé”™è¯¯, æ˜¾ç¤ºé”™è¯¯æ¶ˆæ¯, åœæ­¢æµ‹è¯•
     if (state.Error != DST_NO_ERROR)
     {
         ui.labelTestState->setText(QString::fromStdWString(state.ErrorMsg));
@@ -501,7 +501,7 @@ void DiskSpeedPage::LoadQSS(IN float uiRatio)
         QString qss = qssFile.readAll();
         qssFile.close();  
 
-        // ÏÂÀ­¿òÃ¿ÏîµÄ¸ß¶ÈĞèÒª¶¯Ì¬ÉèÖÃ, ²»ÄÜÔÚQSSÎÄ¼şÖĞĞ´ËÀ
+        // ä¸‹æ‹‰æ¡†æ¯é¡¹çš„é«˜åº¦éœ€è¦åŠ¨æ€è®¾ç½®, ä¸èƒ½åœ¨QSSæ–‡ä»¶ä¸­å†™æ­»
         QString comboxItemHeightQss = QString::fromAscii(
             "QComboBox QAbstractItemView::item\
              {\

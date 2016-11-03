@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LDISKCONTROLLER_H_
 #define _LDISKCONTROLLER_H_
@@ -16,51 +16,51 @@ using std::wstring;
 #define OUT
 #endif
 
-/// @brief SMARTÊı¾İ³¤¶È
+/// @brief SMARTæ•°æ®é•¿åº¦
 #ifndef SMART_DATA_LENGTH
 #define SMART_DATA_LENGTH 362
 #endif
 
-/// @brief »ñÈ¡Âß¼­·ÖÇøÊ£Óà¿Õ¼ä
-/// @param[in] logicalDrive Âß¼­·ÖÇøÃû³Æ
-/// @param[out] pFreeSpace ´æ´¢Ê£Óà¿Õ¼ä, µ¥Î»×Ö½Ú
-/// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse 
+/// @brief è·å–é€»è¾‘åˆ†åŒºå‰©ä½™ç©ºé—´
+/// @param[in] logicalDrive é€»è¾‘åˆ†åŒºåç§°
+/// @param[out] pFreeSpace å­˜å‚¨å‰©ä½™ç©ºé—´, å•ä½å­—èŠ‚
+/// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false 
 bool GetLogicalDriveFreeSpace(IN const wstring& logicalDrive, unsigned long long* pFreeSpace);
 
 class CIDEDiskController;
 
-/// @brief IDE(ATA)´ÅÅÌ¿ØÖÆÆ÷
+/// @brief IDE(ATA)ç£ç›˜æ§åˆ¶å™¨
 ///
-/// Ê¹ÓÃ¸ÃÀàĞèÒª¹ÜÀíÔ±È¨ÏŞ
+/// ä½¿ç”¨è¯¥ç±»éœ€è¦ç®¡ç†å‘˜æƒé™
 class LIDEDiskController
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] devicePath Éè±¸Â·¾¶
-    /// Éè±¸Â·¾¶¸ñÊ½Îª(CÓïÑÔ)"\\\\.\\DeviceName"
-    /// Éè±¸Ãû³ÆÈç: PhysicalDrive0, PhysicalDrive1, ...
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] devicePath è®¾å¤‡è·¯å¾„
+    /// è®¾å¤‡è·¯å¾„æ ¼å¼ä¸º(Cè¯­è¨€)"\\\\.\\DeviceName"
+    /// è®¾å¤‡åç§°å¦‚: PhysicalDrive0, PhysicalDrive1, ...
     LIDEDiskController(IN const wstring& devicePath);
     ~LIDEDiskController();
 
-    /// @brief ÅĞ¶ÏÉè±¸ÊÇ·ñ´æÔÚ
-    /// @return ´æÔÚ·µ»Øtrue, ²»´æÔÚ·µ»Øfalse
+    /// @brief åˆ¤æ–­è®¾å¤‡æ˜¯å¦å­˜åœ¨
+    /// @return å­˜åœ¨è¿”å›true, ä¸å­˜åœ¨è¿”å›false
     bool DeviceExist();
 
-    /// @brief »ñÈ¡±ê¶¨×ªËÙ
-    /// @return ±ê¶¨×ªËÙ(µ¥Î»RPM), ·¢Éú´íÎó·µ»Ø0, ·µ»ØÖµÎª1±íÊ¾Ó²ÅÌÎªSSD
+    /// @brief è·å–æ ‡å®šè½¬é€Ÿ
+    /// @return æ ‡å®šè½¬é€Ÿ(å•ä½RPM), å‘ç”Ÿé”™è¯¯è¿”å›0, è¿”å›å€¼ä¸º1è¡¨ç¤ºç¡¬ç›˜ä¸ºSSD
     unsigned long GetRotationRate();
 
-    /// @brief »ñÈ¡SATAÀàĞÍ
-    /// @return SATA½Ó¿ÚÀàĞÍ, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(»ñÈ¡Ê§°Ü)
+    /// @brief è·å–SATAç±»å‹
+    /// @return SATAæ¥å£ç±»å‹, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(è·å–å¤±è´¥)
     unsigned long GetSATAType();
 
-    /// @brief »ñÈ¡SMARTÊı¾İ
-    /// @param[out] smartData[362] ´æ´¢362¸ö×Ö½ÚµÄSMARTÊı¾İ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–SMARTæ•°æ®
+    /// @param[out] smartData[362] å­˜å‚¨362ä¸ªå­—èŠ‚çš„SMARTæ•°æ®
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetSMARTData(OUT unsigned char smartData[SMART_DATA_LENGTH]);
 
 private:
-    CIDEDiskController* m_pIDEDiskController; ///< IDE´ÅÅÌ¿ØÖÆÆ÷ÊµÏÖ¶ÔÏó
+    CIDEDiskController* m_pIDEDiskController; ///< IDEç£ç›˜æ§åˆ¶å™¨å®ç°å¯¹è±¡
 };
 
 #endif

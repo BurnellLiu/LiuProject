@@ -1,13 +1,13 @@
-
+ï»¿
 #include "LAppInstance.h"
 
 #include <Windows.h>
 
-/// @brief Ó¦ÓÃ³ÌĞòÊµÀıÀà
+/// @brief åº”ç”¨ç¨‹åºå®ä¾‹ç±»
 class CAppInstance
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     explicit CAppInstance(IN const wstring& name)
     {
         m_hMutex = NULL;
@@ -23,7 +23,7 @@ public:
         }
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CAppInstance()
     {
         if (NULL != m_hMutex)
@@ -33,15 +33,15 @@ public:
         }
     }
 
-    /// @brief ÅĞ¶ÏÊÇ·ñÒÑ¾­´æÔÚ¸ÃÊµÀı 
+    /// @brief åˆ¤æ–­æ˜¯å¦å·²ç»å­˜åœ¨è¯¥å®ä¾‹ 
     bool IsAlreadyExist()
     {
         return m_bIsAlreadyExist;
     }
 
 private:
-    bool m_bIsAlreadyExist; ///< ±êÖ¾ÊÇ·ñÒÑ¾­´æÔÚ
-    HANDLE m_hMutex; ///< »¥³âÌå¾ä±ú
+    bool m_bIsAlreadyExist; ///< æ ‡å¿—æ˜¯å¦å·²ç»å­˜åœ¨
+    HANDLE m_hMutex; ///< äº’æ–¥ä½“å¥æŸ„
 };
 
 LAppInstance::LAppInstance(IN const wstring& name)

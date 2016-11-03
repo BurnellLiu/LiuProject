@@ -1,4 +1,4 @@
-
+ï»¿
 #include "PerformanceCounter.h"
 
 #include <vector>
@@ -11,34 +11,34 @@ using std::vector;
 
 #include "Pdh\\LPdh.h"
 
-/// @brief PDH´ÅÅÌID
-/// ÔÚÊ¹ÓÃPDH»ñÈ¡´ÅÅÌĞÅÏ¢Ê±, ¸Ã½á¹¹¿ÉÒÔÈ·¶¨Ò»¸ö´ÅÅÌ
+/// @brief PDHç£ç›˜ID
+/// åœ¨ä½¿ç”¨PDHè·å–ç£ç›˜ä¿¡æ¯æ—¶, è¯¥ç»“æ„å¯ä»¥ç¡®å®šä¸€ä¸ªç£ç›˜
 struct PdhDiskId 
 {
-    wchar_t IdIndex; ///< IDË÷Òı, Èç0, 1, 2...
-    wstring DeviceId; ///< Éè±¸ID, Èç"\\\\.\\PhysicalDrive0"
-    wstring LogicalName; ///< Âß¼­´ÅÅÌ·ÖÇøÃû³Æ, ¶à¸ö·ÖÇøÃû³ÆÖ®¼äÓÃ¿Õ¸ñ¸ô¿ª, Èç"C: D:"
+    wchar_t IdIndex; ///< IDç´¢å¼•, å¦‚0, 1, 2...
+    wstring DeviceId; ///< è®¾å¤‡ID, å¦‚"\\\\.\\PhysicalDrive0"
+    wstring LogicalName; ///< é€»è¾‘ç£ç›˜åˆ†åŒºåç§°, å¤šä¸ªåˆ†åŒºåç§°ä¹‹é—´ç”¨ç©ºæ ¼éš”å¼€, å¦‚"C: D:"
 };
 
-/// @brief ĞÔÄÜ¼ÆÊıÆ÷ÊµÏÖÀà
+/// @brief æ€§èƒ½è®¡æ•°å™¨å®ç°ç±»
 class CPerformanceCounter
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CPerformanceCounter()
     {
         this->ScanFixedDiskId(m_fixedDiskIdList);
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CPerformanceCounter()
     {
 
     }
 
-    /// @brief »ñÈ¡ÄÚ´æĞÔÄÜ
-    /// @param[out] memoryPerformance ´æ´¢ÄÚ´æĞÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–å†…å­˜æ€§èƒ½
+    /// @param[out] memoryPerformance å­˜å‚¨å†…å­˜æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetMemoryPerformance(OUT MemoryPerformance& memoryPerformance)
     {
         LMemory memory;
@@ -63,9 +63,9 @@ public:
         return true;
     }
 
-    /// @brief »ñÈ¡´¦ÀíÆ÷ĞÔÄÜ
-    /// @param[out] processorPerformance ´æ´¢´¦ÀíÆ÷ĞÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–å¤„ç†å™¨æ€§èƒ½
+    /// @param[out] processorPerformance å­˜å‚¨å¤„ç†å™¨æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance)
     {
         LWMI::LProcessorManager processorManager;
@@ -76,10 +76,10 @@ public:
         return true;
     }
 
-    /// @brief »ñÈ¡´ÅÅÌĞÔÄÜ
-    /// ¸Ã·½·¨Ö»ÄÜ»ñÈ¡¹Ì¶¨´ÅÅÌµÄĞÔÄÜ
-    /// @param[in] diskPerformance ´æ´¢´ÅÅÌĞÔÄÜ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–ç£ç›˜æ€§èƒ½
+    /// è¯¥æ–¹æ³•åªèƒ½è·å–å›ºå®šç£ç›˜çš„æ€§èƒ½
+    /// @param[in] diskPerformance å­˜å‚¨ç£ç›˜æ€§èƒ½
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetDiskPerformance(OUT DiskPerformance& diskPerformance)
     {
         diskPerformance.Count = m_fixedDiskIdList.size();
@@ -105,8 +105,8 @@ public:
     }
 
 private:
-    /// @brief É¨Ãè¹Ì¶¨´ÅÅÌID
-    /// @param[out] idList ´æ´¢ID
+    /// @brief æ‰«æå›ºå®šç£ç›˜ID
+    /// @param[out] idList å­˜å‚¨ID
     void ScanFixedDiskId(OUT vector<PdhDiskId>& idList)
     {
         idList.clear();
@@ -143,7 +143,7 @@ private:
     }
 
 private:
-    vector<PdhDiskId> m_fixedDiskIdList; ///< ¹Ì¶¨´ÅÅÌIDÁĞ±í
+    vector<PdhDiskId> m_fixedDiskIdList; ///< å›ºå®šç£ç›˜IDåˆ—è¡¨
 };
 
 PerformanceCounter::PerformanceCounter()

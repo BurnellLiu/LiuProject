@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LWebcam.h"
 
 #include <sstream>
@@ -13,7 +13,7 @@ using std::stringstream;
 #pragma comment(lib, "Quartz.lib")
 
 /// <SUMMARY>
-/// °²È«ÊÍ·Åºê
+/// å®‰å…¨é‡Šæ”¾å®
 /// </SUMMARY>
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)\
@@ -29,7 +29,7 @@ do\
 
 
 /// <SUMMARY>
-/// ³õÊ¼»¯COMÀà(µ¥Ïß³ÌÌ×¼ä)
+/// åˆå§‹åŒ–COMç±»(å•çº¿ç¨‹å¥—é—´)
 /// </SUMMARY>
 class CComInitS
 {
@@ -37,8 +37,8 @@ public:
     CComInitS()
         : m_success(false)
     {
-        // CoInitializeµ÷ÓÃºó·µ»ØS_FALSE»òS_OKºó¶¼Ğèµ÷ÓÃCoUninitialize
-        // CoInitializeµ÷ÓÃºó·µ»ØRPC_E_CHANGE_MODE, ±íÃ÷µ±Ç°Ïß³ÌÒÑ±»³õÊ¼»¯(ÇÒºÍµ±Ç°Ä£Ê½²»Í¬),²»ĞèÒªµ÷ÓÃCoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›S_FALSEæˆ–S_OKåéƒ½éœ€è°ƒç”¨CoUninitialize
+        // CoInitializeè°ƒç”¨åè¿”å›RPC_E_CHANGE_MODE, è¡¨æ˜å½“å‰çº¿ç¨‹å·²è¢«åˆå§‹åŒ–(ä¸”å’Œå½“å‰æ¨¡å¼ä¸åŒ),ä¸éœ€è¦è°ƒç”¨CoUninitialize
         HRESULT hr = CoInitialize(0);
         if (hr == S_FALSE || hr == S_OK)
         {
@@ -52,13 +52,13 @@ public:
             CoUninitialize();
     }
 private:
-    bool m_success; // ±êÊ¶COM¿âÊÇ·ñ³õÊ¼»¯³É¹¦
+    bool m_success; // æ ‡è¯†COMåº“æ˜¯å¦åˆå§‹åŒ–æˆåŠŸ
     CComInitS(const CComInitS&);
     CComInitS& operator = (const CComInitS&);
 };
 
 /// <SUMMARY>
-/// ³õÊ¼»¯COMÀà(¶àÏß³ÌÌ×¼ä)
+/// åˆå§‹åŒ–COMç±»(å¤šçº¿ç¨‹å¥—é—´)
 /// </SUMMARY>
 class CComInitM
 {
@@ -66,8 +66,8 @@ public:
     CComInitM()
         : m_success(false)
     {
-        // CoInitializeExµ÷ÓÃºó·µ»ØS_FALSE»òS_OKºó¶¼Ğèµ÷ÓÃCoUninitialize
-        // CoInitializeExµ÷ÓÃºó·µ»ØRPC_E_CHANGE_MODE, ±íÃ÷µ±Ç°Ïß³ÌÒÑ±»³õÊ¼»¯(ÇÒºÍµ±Ç°Ä£Ê½²»Í¬),²»ĞèÒªµ÷ÓÃCoUninitialize
+        // CoInitializeExè°ƒç”¨åè¿”å›S_FALSEæˆ–S_OKåéƒ½éœ€è°ƒç”¨CoUninitialize
+        // CoInitializeExè°ƒç”¨åè¿”å›RPC_E_CHANGE_MODE, è¡¨æ˜å½“å‰çº¿ç¨‹å·²è¢«åˆå§‹åŒ–(ä¸”å’Œå½“å‰æ¨¡å¼ä¸åŒ),ä¸éœ€è¦è°ƒç”¨CoUninitialize
         HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
         if (hr == S_FALSE || hr == S_OK)
         {
@@ -81,7 +81,7 @@ public:
             CoUninitialize();
     }
 private:
-    bool m_success; // ±êÊ¶COM¿âÊÇ·ñ³õÊ¼»¯³É¹¦
+    bool m_success; // æ ‡è¯†COMåº“æ˜¯å¦åˆå§‹åŒ–æˆåŠŸ
     CComInitM(const CComInitM&);
     CComInitM& operator = (const CComInitM);
 };
@@ -112,13 +112,13 @@ bool CDBIImage::GetAvgLuma(OUT int& avgLuma)
     int width = pInfoHeader->biWidth;
     int height = pInfoHeader->biHeight;
 
-    //´ı´æ´¢Í¼ÏñÊı¾İÃ¿ĞĞ×Ö½ÚÊıÎª4µÄ±¶Êı
-    int lineByte=(width * (pInfoHeader->biBitCount/8) + 3)/4 * 4; // Ã¿ĞĞµÄ×Ö½ÚÊı
+    //å¾…å­˜å‚¨å›¾åƒæ•°æ®æ¯è¡Œå­—èŠ‚æ•°ä¸º4çš„å€æ•°
+    int lineByte=(width * (pInfoHeader->biBitCount/8) + 3)/4 * 4; // æ¯è¡Œçš„å­—èŠ‚æ•°
 
     unsigned char* pImageData = this->Data + pInfoHeader->biSize;
     unsigned long lumaSum = 0;
 
-    // 32Î»Í¼
+    // 32ä½å›¾
     if (pInfoHeader->biBitCount == 32)
     {
         for (int i = 0; i < height; i++)
@@ -153,20 +153,20 @@ bool CDBIImage::SaveToBMP(IN const char* fileName)
     BITMAPFILEHEADER fileHeader;
 
     fileHeader.bfType = 0x4d42; // 0x42 = "B" 0x4d = "M"
-    // ¼ÆËãÕû¸öÎÄ¼şµÄ´óĞ¡
+    // è®¡ç®—æ•´ä¸ªæ–‡ä»¶çš„å¤§å°
     fileHeader.bfSize =(DWORD)
-        (sizeof(BITMAPFILEHEADER) + // ÎÄ¼şÍ·´óĞ¡
-        pInfoHeader->biSize + // ĞÅÏ¢Í·´óĞ¡
-        pInfoHeader->biClrUsed * sizeof(RGBQUAD) + //µ÷É«°å´óĞ¡, Ğ¡ÓÚ24Î»Í¼ÓÃµ½µ÷É«°å
-        pInfoHeader->biSizeImage); // Í¼ÏñÊı¾İ´óĞ¡
+        (sizeof(BITMAPFILEHEADER) + // æ–‡ä»¶å¤´å¤§å°
+        pInfoHeader->biSize + // ä¿¡æ¯å¤´å¤§å°
+        pInfoHeader->biClrUsed * sizeof(RGBQUAD) + //è°ƒè‰²æ¿å¤§å°, å°äº24ä½å›¾ç”¨åˆ°è°ƒè‰²æ¿
+        pInfoHeader->biSizeImage); // å›¾åƒæ•°æ®å¤§å°
     fileHeader.bfReserved1 = 0;
     fileHeader.bfReserved2 = 0;
 
-    // ¼ÆËãÍ¼ÏñÊı¾İµÄÆ«ÒÆ
+    // è®¡ç®—å›¾åƒæ•°æ®çš„åç§»
     fileHeader.bfOffBits = 
-        (DWORD)sizeof(BITMAPFILEHEADER) + // ÎÄ¼şÍ·´óĞ¡
-        pInfoHeader->biSize +  // ĞÅÏ¢Í·´óĞ¡
-        pInfoHeader->biClrUsed * sizeof (RGBQUAD); // µ÷É«°å´óĞ¡
+        (DWORD)sizeof(BITMAPFILEHEADER) + // æ–‡ä»¶å¤´å¤§å°
+        pInfoHeader->biSize +  // ä¿¡æ¯å¤´å¤§å°
+        pInfoHeader->biClrUsed * sizeof (RGBQUAD); // è°ƒè‰²æ¿å¤§å°
 
     DWORD	dwWritten;
     HANDLE hFile = CreateFileA(
@@ -188,19 +188,19 @@ bool CDBIImage::SaveToBMP(IN const char* fileName)
 }
 
 /// <SUMMARY>
-/// ÉãÏñÍ·ÊµÏÖÀà
+/// æ‘„åƒå¤´å®ç°ç±»
 /// </SUMMARY>
 class CWebcam : public LWebcam
 {
 public:
     /// <SUMMARY>
-    /// ¹¹Ôìº¯Êı
+    /// æ„é€ å‡½æ•°
     /// </SUMMARY>
     /// <PARAM name = "friendlyName" dir = "IN">
-    /// ÉãÏñÍ·ÓÑºÃÃû³Æ
+    /// æ‘„åƒå¤´å‹å¥½åç§°
     /// </PARAM>
     /// <PARAM name = "pCaptureFilter" dir = "IN">
-    /// ÊÓÆµ²É¼¯¹ıÂËÆ÷Ö¸Õë
+    /// è§†é¢‘é‡‡é›†è¿‡æ»¤å™¨æŒ‡é’ˆ
     /// </PARAM>
     CWebcam(IN const wstring& friendlyName, IN const wstring& displayName, IN IBaseFilter* pCaptureFilter)
         : m_friendlyName(friendlyName), m_displayName(displayName), m_pCaptureFilter(pCaptureFilter)
@@ -220,7 +220,7 @@ public:
     }
 
     /// <SUMMARY>
-    /// Îö¹¹º¯Êı
+    /// ææ„å‡½æ•°
     /// </SUMMARY>
     ~CWebcam()
     {
@@ -237,10 +237,10 @@ public:
     }
 
     /// <SUMMARY>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, Ê¹ÓÃGetErrorMessage()·½·¨»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, ä½¿ç”¨GetErrorMessage()æ–¹æ³•è·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool Init()
     {
@@ -282,7 +282,7 @@ public:
             goto SAFE_EXIT;
         }
 
-        // Ê¹ÓÃCLSID_VideoRenderer¿ÉÄÜµ¼ÖÂ²»ÄÜ½ØÍ¼, ËùÒÔÊ¹ÓÃCLSID_VideoMixingRenderer
+        // ä½¿ç”¨CLSID_VideoRendererå¯èƒ½å¯¼è‡´ä¸èƒ½æˆªå›¾, æ‰€ä»¥ä½¿ç”¨CLSID_VideoMixingRenderer
         hr = CoCreateInstance(CLSID_VideoMixingRenderer,NULL,CLSCTX_INPROC_SERVER,IID_IBaseFilter,(void **)&m_pRenderFilter); 
         if (hr != S_OK)
         {
@@ -674,42 +674,42 @@ SAFE_EXIT:
 
 private:
     CComInitS comInitS;
-    wstring m_friendlyName; // ÉãÏñÍ·ÓÑºÃÃû³Æ
-    wstring m_displayName; // ÏÔÊ¾Ãû³Æ
+    wstring m_friendlyName; // æ‘„åƒå¤´å‹å¥½åç§°
+    wstring m_displayName; // æ˜¾ç¤ºåç§°
 
     IBaseFilter* m_pSmartTeeFilter; // Smart Tee Filter
-    IBaseFilter* m_pRenderFilter; // ÊÓÆµäÖÈ¾¹ıÂËÆ÷
-    IBaseFilter* m_pCaptureFilter; // ÊÓÆµ²É¼¯¹ıÂËÆ÷
-    IGraphBuilder* m_pGraphBuilder; //¹ıÂËÆ÷¹ÜÀíÆ÷
-    ICaptureGraphBuilder2* m_pCaptureGraphBuilder; //ÊÓÆµ²É¼¯¹ıÂËÆ÷¹ÜÀíÆ÷
+    IBaseFilter* m_pRenderFilter; // è§†é¢‘æ¸²æŸ“è¿‡æ»¤å™¨
+    IBaseFilter* m_pCaptureFilter; // è§†é¢‘é‡‡é›†è¿‡æ»¤å™¨
+    IGraphBuilder* m_pGraphBuilder; //è¿‡æ»¤å™¨ç®¡ç†å™¨
+    ICaptureGraphBuilder2* m_pCaptureGraphBuilder; //è§†é¢‘é‡‡é›†è¿‡æ»¤å™¨ç®¡ç†å™¨
 
-    IBasicVideo* m_pBasicVideo; // ÊÓÆµ½Ó¿Ú
-    IVideoWindow* m_pVideoWindow; // ÓÃÓÚ¿ØÖÆÊÓÆµ´°¿ÚµÄÊôĞÔ
-    IMediaControl* m_pMediaControl; // ÓÃ»§ÃüÁî½Ó¿Ú
-    IMediaEvent* m_pMediaEvent; // ÊÂ¼ş½Ó¿Ú
+    IBasicVideo* m_pBasicVideo; // è§†é¢‘æ¥å£
+    IVideoWindow* m_pVideoWindow; // ç”¨äºæ§åˆ¶è§†é¢‘çª—å£çš„å±æ€§
+    IMediaControl* m_pMediaControl; // ç”¨æˆ·å‘½ä»¤æ¥å£
+    IMediaEvent* m_pMediaEvent; // äº‹ä»¶æ¥å£
 
-    IQualProp* m_pQualProp; // ÉãÏñÍ·ÖÊÁ¿ÊôĞÔ½Ó¿Ú
+    IQualProp* m_pQualProp; // æ‘„åƒå¤´è´¨é‡å±æ€§æ¥å£
 
-    bool m_bInitSuccess; // ³õÊ¼»¯±êÊ¶·û
-    stringstream m_errStream; // ´íÎó´¦ÀíÁ÷
+    bool m_bInitSuccess; // åˆå§‹åŒ–æ ‡è¯†ç¬¦
+    stringstream m_errStream; // é”™è¯¯å¤„ç†æµ
 };
 
 /// <SUMMARY>
-/// Ã¶¾ÙÉãÏñÍ·
+/// æšä¸¾æ‘„åƒå¤´
 /// </SUMMARY>
 /// <PARAM name = "webcamList" dir = "OUT">
-/// ´æ´¢ÉãÏñÍ·¶ÔÏó
+/// å­˜å‚¨æ‘„åƒå¤´å¯¹è±¡
 /// </PARAM>
 /// <PARAM name = "errorMessage" dir = "OUT">
-/// ´æ´¢´íÎóĞÅÏ¢
+/// å­˜å‚¨é”™è¯¯ä¿¡æ¯
 /// </PARAM>
 /// <RETURNS>
-/// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+/// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 /// </RETURNS>
 bool LEnumWebcam(OUT vector<LWebcam*>& webcamList, string& errorMessage)
 {
     CComInitS comInitS;
-    stringstream errStream; // ´íÎó´¦ÀíÁ÷
+    stringstream errStream; // é”™è¯¯å¤„ç†æµ
 
     errorMessage.clear();
     webcamList.clear();

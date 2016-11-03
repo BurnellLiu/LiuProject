@@ -1,4 +1,4 @@
-
+ï»¿
 #include <QtGui/QMessageBox>
 #include <QtGui/QApplication>
 #include <QtCore/QDir>
@@ -12,12 +12,12 @@
 
 #define LOG_PATH ".\\Temp\\Log"
 
-// Ó¦ÓÃ³ÌĞòÊµÀıÃû³Æ
+// åº”ç”¨ç¨‹åºå®ä¾‹åç§°
 #define APP_INSTANCE_NAME L"Global\\BLHWScaner{EB83918F-DAFD-47E6-A363-9B874F2CF2AF}"
 
-/// @brief ¼ì²éÂ·¾¶, Â·¾¶²»´æÔÚÔò´´½¨
-/// @param[in] qstrPath Â·¾¶
-/// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+/// @brief æ£€æŸ¥è·¯å¾„, è·¯å¾„ä¸å­˜åœ¨åˆ™åˆ›å»º
+/// @param[in] qstrPath è·¯å¾„
+/// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
 static bool CheckPath(IN const QString& qstrPath)
 {
     QDir logDir;
@@ -29,10 +29,10 @@ static bool CheckPath(IN const QString& qstrPath)
     return true;
 }
 
-/// @brief ¼ì²é¸üĞÂ°²×°³ÌĞòµÄ¿ÉÖ´ĞĞÎÄ¼ş
-/// Èç¹ûÓĞĞÂµÄÔòÉ¾³ı¾ÉÎÄ¼ş, ÖØÃüÃûĞÂÎÄ¼ş
-/// unrar.dllN±ä¸üÎªunrar.dll
-/// UpdateInstall.exeN±ä¸üÎªUpdateInstall.exe
+/// @brief æ£€æŸ¥æ›´æ–°å®‰è£…ç¨‹åºçš„å¯æ‰§è¡Œæ–‡ä»¶
+/// å¦‚æœæœ‰æ–°çš„åˆ™åˆ é™¤æ—§æ–‡ä»¶, é‡å‘½åæ–°æ–‡ä»¶
+/// unrar.dllNå˜æ›´ä¸ºunrar.dll
+/// UpdateInstall.exeNå˜æ›´ä¸ºUpdateInstall.exe
 static void CheckUpdateInstallFile()
 {
     bool bRet = QFile::exists(".\\Update\\unrar.dllN");
@@ -52,23 +52,23 @@ static void CheckUpdateInstallFile()
 
 int main(int argc, char *argv[])
 {
-    // ¼ì²â³ÌĞòÊÇ·ñÒÑ¾­ÔÚÔËĞĞ, Èç¹ûÒÑ¾­ÓĞÒ»¸öÊµÀıÔÚÔËĞĞ, ÔòÍË³öµ±Ç°ÊµÀı
+    // æ£€æµ‹ç¨‹åºæ˜¯å¦å·²ç»åœ¨è¿è¡Œ, å¦‚æœå·²ç»æœ‰ä¸€ä¸ªå®ä¾‹åœ¨è¿è¡Œ, åˆ™é€€å‡ºå½“å‰å®ä¾‹
     LAppInstance appInstance(APP_INSTANCE_NAME);
     if (appInstance.IsAlreadyExist())
         return 0;
 
     QApplication app(argc, argv);
 
-    // ²»¹Ü³ÌĞòÒÔÊ²Ã´ÑùµÄ·½Ê½ÔËĞĞ, ¶¼ÉèÖÃ³ÌĞòµÄ¹¤×÷Â·¾¶Îª³ÌĞò±¾ÉíËùÔÚµÄÂ·¾¶
+    // ä¸ç®¡ç¨‹åºä»¥ä»€ä¹ˆæ ·çš„æ–¹å¼è¿è¡Œ, éƒ½è®¾ç½®ç¨‹åºçš„å·¥ä½œè·¯å¾„ä¸ºç¨‹åºæœ¬èº«æ‰€åœ¨çš„è·¯å¾„
     QString appPath = app.applicationDirPath();
     QDir::setCurrent(appPath);
 
-    // ³õÊ¼»¯APPÆô¶¯Ä£Ê½
+    // åˆå§‹åŒ–APPå¯åŠ¨æ¨¡å¼
     LAppParam::InitAppParam(argc, argv);
     APP_START_MODE startMode = LAppParam::GetStartMode();
 
     CheckPath(LOG_PATH);
-    // Èç¹ûÕıÔÚ½øĞĞÖØ¿ª»úAGING²âÊÔ, ÔòÒÔ×·¼Ó·½Ê½´ò¿ªLOG
+    // å¦‚æœæ­£åœ¨è¿›è¡Œé‡å¼€æœºAGINGæµ‹è¯•, åˆ™ä»¥è¿½åŠ æ–¹å¼æ‰“å¼€LOG
     if (APP_RESTARTAGING == startMode)
     {
         LLog::SetAppendOpen(true);
@@ -91,23 +91,23 @@ int main(int argc, char *argv[])
         PrintLogW(L"AppStartMode: APP_RESTARTAGING");
     }
 
-    // ¼ì²é¸üĞÂ°²×°¿ÉÖ´ĞĞÎÄ¼ş
+    // æ£€æŸ¥æ›´æ–°å®‰è£…å¯æ‰§è¡Œæ–‡ä»¶
     CheckUpdateInstallFile();
    
 
-    // ¶¨ÒåÖ÷Ò³Ãæ
+    // å®šä¹‰ä¸»é¡µé¢
     MainPage mainPage;
 
-    // ÏÔÊ¾Ö÷Ò³Ãæ
+    // æ˜¾ç¤ºä¸»é¡µé¢
     mainPage.show();
 
-    // ½øÈëÏûÏ¢Ñ­»·
+    // è¿›å…¥æ¶ˆæ¯å¾ªç¯
     app.exec();
 
-    // ¹Ø±ÕLOG
+    // å…³é—­LOG
     PrintLogW(L"Log End");
     LLog::Close();
 
-    // ³ÌĞò½áÊø
+    // ç¨‹åºç»“æŸ
     return 0;
 }

@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LAPPINSTANCE_H_
 #define _LAPPINSTANCE_H_
@@ -22,25 +22,25 @@ using std::wstring;
 
 class CAppInstance;
 
-/// @brief Ó¦ÓÃ³ÌĞòÊµÀıÀà
-/// ¸ÃÀàÓÃÓÚ¼ì²âÓ¦ÓÃ³ÌĞòÊÇ·ñÒÑ¾­´æÔÚÒ»¸öÊµÀıÔÚÔËĞĞ, Í¨¹ıÊµÀıÃû³ÆÀ´Ê¶±ğ
-/// Çë±£Ö¤¸ÃÀà¶ÔÏóµÄ×÷ÓÃÓò, ×÷ÓÃÔÚÕû¸öÓ¦ÓÃ³ÌĞòµÄÉúÃüÖÜÆÚ
+/// @brief åº”ç”¨ç¨‹åºå®ä¾‹ç±»
+/// è¯¥ç±»ç”¨äºæ£€æµ‹åº”ç”¨ç¨‹åºæ˜¯å¦å·²ç»å­˜åœ¨ä¸€ä¸ªå®ä¾‹åœ¨è¿è¡Œ, é€šè¿‡å®ä¾‹åç§°æ¥è¯†åˆ«
+/// è¯·ä¿è¯è¯¥ç±»å¯¹è±¡çš„ä½œç”¨åŸŸ, ä½œç”¨åœ¨æ•´ä¸ªåº”ç”¨ç¨‹åºçš„ç”Ÿå‘½å‘¨æœŸ
 class LAppInstance
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] name ÊµÀıÃû³Æ
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] name å®ä¾‹åç§°
     explicit LAppInstance(IN const wstring& name);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LAppInstance();
 
-    /// @brief ÅĞ¶ÏÊÇ·ñÒÑ¾­´æÔÚ¸ÃÊµÀı 
-    /// @return true(ÒÑ¾­´æÔÚ), false(ĞÂÊµÀı)
+    /// @brief åˆ¤æ–­æ˜¯å¦å·²ç»å­˜åœ¨è¯¥å®ä¾‹ 
+    /// @return true(å·²ç»å­˜åœ¨), false(æ–°å®ä¾‹)
     bool IsAlreadyExist();
 
 private:
-    CAppInstance* m_pAppInstance; ///< Ó¦ÓÃ³ÌĞòÊµÀıÊµÏÖ¶ÔÏó
+    CAppInstance* m_pAppInstance; ///< åº”ç”¨ç¨‹åºå®ä¾‹å®ç°å¯¹è±¡
 };
 
 

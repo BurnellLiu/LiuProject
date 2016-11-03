@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef _CORE_TEMP_H_
 #define _CORE_TEMP_H_
 
@@ -20,32 +20,32 @@
 #define OUT
 #endif
 
-/// @brief ×î´ó´¦ÀíÆ÷ÎïÀíºËĞÄÊı
+/// @brief æœ€å¤§å¤„ç†å™¨ç‰©ç†æ ¸å¿ƒæ•°
 #ifndef MAX_PROCESSOR_PHYSICAL_CORE_NUM
 #define MAX_PROCESSOR_PHYSICAL_CORE_NUM 64
 #endif
 
-/// @brief ×î´óGPUÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
+/// @brief æœ€å¤§GPUæ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
 #ifndef MAX_GPU_SENSORS_NUMBER
 #define MAX_GPU_SENSORS_NUMBER 16
 #endif
 
 extern "C"
 {
-    /// @brief »ñÈ¡CPUÎÂ¶È
-    /// ĞèÒª¹ÜÀíÔ±È¨ÏŞ
-    /// @param[out] pCoreNum ´æ´¢CPUÎïÀíºËĞÄÊı
-    /// @param[out] temp ´æ´¢CPUÎïÀíºËĞÄÎÂ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–CPUæ¸©åº¦
+    /// éœ€è¦ç®¡ç†å‘˜æƒé™
+    /// @param[out] pCoreNum å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ•°
+    /// @param[out] temp å­˜å‚¨CPUç‰©ç†æ ¸å¿ƒæ¸©åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     CORETEMP_API_DECLSPEC bool GetCpuTemp(
         OUT unsigned int* pCoreNum, 
         OUT unsigned int temp[MAX_PROCESSOR_PHYSICAL_CORE_NUM]);
 
-    /// @brief »ñÈ¡GPUÎÂ¶È
-    /// Ö»ÄÜ»ñÈ¡¶ÀÁ¢ÏÔ¿¨µÄÎÂ¶È
-    /// @param[out] pSensorNum ´æ´¢GPUÎÂ¶È´«¸ĞÆ÷ÊıÁ¿
-    /// @param[out] temp ´æ´¢ÎÂ¶È
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–GPUæ¸©åº¦
+    /// åªèƒ½è·å–ç‹¬ç«‹æ˜¾å¡çš„æ¸©åº¦
+    /// @param[out] pSensorNum å­˜å‚¨GPUæ¸©åº¦ä¼ æ„Ÿå™¨æ•°é‡
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     CORETEMP_API_DECLSPEC bool GetGpuTemp(
         OUT unsigned int* pSensorNum, 
         OUT unsigned int temp[MAX_GPU_SENSORS_NUMBER]);

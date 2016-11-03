@@ -1,77 +1,77 @@
-
+ï»¿
 
 #ifndef _NEWVERSION_UPDATE_H_
 #define _NEWVERSION_UPDATE_H_
 
 #include "FtpDownload.h"
 
-/// @brief ¼ì²éÐÂ°æ±¾½á¹û
+/// @brief æ£€æŸ¥æ–°ç‰ˆæœ¬ç»“æžœ
 enum CHECKNEW_RESULT
 {
-    CHECKNEW_UNKNOWN = 0, ///< Î´Öª
-    CHECKNEW_RUNNING, ///< ÕýÔÚÔËÐÐ
-    CHECKNEW_WITH_ERROR, ///< ÓÐ´íÎó
-    CHECKNEW_WITH_NEW, ///< ÓÐÐÂµÄ¸üÐÂ
-    CHECKNEW_WITHOUT_NEW ///< Ã»ÓÐÐÂµÄ¸üÐÂ
+    CHECKNEW_UNKNOWN = 0, ///< æœªçŸ¥
+    CHECKNEW_RUNNING, ///< æ­£åœ¨è¿è¡Œ
+    CHECKNEW_WITH_ERROR, ///< æœ‰é”™è¯¯
+    CHECKNEW_WITH_NEW, ///< æœ‰æ–°çš„æ›´æ–°
+    CHECKNEW_WITHOUT_NEW ///< æ²¡æœ‰æ–°çš„æ›´æ–°
 };
 
-/// @brief ¼ì²éÐÂ°æ±¾
+/// @brief æ£€æŸ¥æ–°ç‰ˆæœ¬
 class CheckNew
 {
 public:
-    /// @brief ¹¹Ôìº¯Êý
+    /// @brief æž„é€ å‡½æ•°
     CheckNew();
 
-    /// @brief Îö¹¹º¯Êý
+    /// @brief æžæž„å‡½æ•°
     ~CheckNew();
 
-    /// @brief ÉèÖÃµ±Ç°°æ±¾, ¸ñÊ½: V1.1.1
-    /// @param[in] version µ±Ç°°æ±¾ÓÃÓÚ±È½Ï
+    /// @brief è®¾ç½®å½“å‰ç‰ˆæœ¬, æ ¼å¼: V1.1.1
+    /// @param[in] version å½“å‰ç‰ˆæœ¬ç”¨äºŽæ¯”è¾ƒ
     void SetCurrentVersion(const QString& version);
 
-    /// @brief ¿ªÊ¼¼ì²éÐÂ°æ±¾
-    /// ¸Ã·½·¨ÎªÒì²½·½·¨
-    /// ¸Ã·½·¨±ØÐëÔËÐÐÔÚUIÏß³ÌÖÐ
+    /// @brief å¼€å§‹æ£€æŸ¥æ–°ç‰ˆæœ¬
+    /// è¯¥æ–¹æ³•ä¸ºå¼‚æ­¥æ–¹æ³•
+    /// è¯¥æ–¹æ³•å¿…é¡»è¿è¡Œåœ¨UIçº¿ç¨‹ä¸­
     void StartCheckAsync();
 
-    /// @brief »ñÈ¡½á¹û
-    /// @return ¼ì²éÐÂ°æ±¾½á¹û
+    /// @brief èŽ·å–ç»“æžœ
+    /// @return æ£€æŸ¥æ–°ç‰ˆæœ¬ç»“æžœ
     CHECKNEW_RESULT GetResult();
 
 private:
-    QString m_currentVersion; ///< µ±Ç°°æ±¾, ¸ñÊ½: V1.1.1
-    LFtpDownload* m_pFtpDownload; ///< FTPÏÂÔØ¶ÔÏó
+    QString m_currentVersion; ///< å½“å‰ç‰ˆæœ¬, æ ¼å¼: V1.1.1
+    LFtpDownload* m_pFtpDownload; ///< FTPä¸‹è½½å¯¹è±¡
 };
 
 
-// ÏÂÔØ´íÎó
+// ä¸‹è½½é”™è¯¯
 #define DOWNLOADNEW_ERROR -1
 
-// ÏÂÔØÍê³É
+// ä¸‹è½½å®Œæˆ
 #define DOWNLOADNEW_DONE 101
 
-/// @brief ÏÂÔØÐÂ°æ±¾
+/// @brief ä¸‹è½½æ–°ç‰ˆæœ¬
 class DownloadNew
 {
 public:
-    /// @brief ¹¹Ôìº¯Êý
+    /// @brief æž„é€ å‡½æ•°
     DownloadNew();
 
-    /// @brief Îö¹¹º¯Êý
+    /// @brief æžæž„å‡½æ•°
     ~DownloadNew();
 
-    /// @brief ¿ªÊ¼ÏÂÔØÐÂ°æ±¾
-    /// ¸Ã·½·¨ÎªÒì²½·½·¨
-    /// ¸Ã·½·¨±ØÐëÔËÐÐÔÚUIÏß³ÌÖÐ
+    /// @brief å¼€å§‹ä¸‹è½½æ–°ç‰ˆæœ¬
+    /// è¯¥æ–¹æ³•ä¸ºå¼‚æ­¥æ–¹æ³•
+    /// è¯¥æ–¹æ³•å¿…é¡»è¿è¡Œåœ¨UIçº¿ç¨‹ä¸­
     void StartDownloadAsync();
 
-    /// @brief »ñÈ¡½á¹û
-    /// ·µ»ØÖµ[0, 100]±íÊ¾ÕýÔÚÏÂÔØµÄÏÂÔØ½ø¶È, ·µ»ØÖµÎª-1Ôò±íÊ¾·¢Éú´íÎó, ·µ»ØÖµÎª101Ôò±íÊ¾ÏÂÔØÍê³É
-    /// @return ÏÂÔØÐÂ°æ±¾½á¹û
+    /// @brief èŽ·å–ç»“æžœ
+    /// è¿”å›žå€¼[0, 100]è¡¨ç¤ºæ­£åœ¨ä¸‹è½½çš„ä¸‹è½½è¿›åº¦, è¿”å›žå€¼ä¸º-1åˆ™è¡¨ç¤ºå‘ç”Ÿé”™è¯¯, è¿”å›žå€¼ä¸º101åˆ™è¡¨ç¤ºä¸‹è½½å®Œæˆ
+    /// @return ä¸‹è½½æ–°ç‰ˆæœ¬ç»“æžœ
     int GetResult();
 
 private:
-    LFtpDownload* m_pFtpDownload; ///< FTPÏÂÔØ¶ÔÏó
+    LFtpDownload* m_pFtpDownload; ///< FTPä¸‹è½½å¯¹è±¡
 };
 
 #endif

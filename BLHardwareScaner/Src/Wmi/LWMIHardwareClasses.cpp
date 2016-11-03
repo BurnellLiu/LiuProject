@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LWMIHardwareClasses.h"
 
 #include <Windows.h>
@@ -240,7 +240,7 @@ namespace LWMI
 
     LVideoControllerManager::LVideoControllerManager(IN const wstring& pnpDeviceID)
     {
-        // ²éÑ¯Óï¾äÖĞĞèÒª½«"\\"×Ö·ûÌæ»»Îª"\\\\"
+        // æŸ¥è¯¢è¯­å¥ä¸­éœ€è¦å°†"\\"å­—ç¬¦æ›¿æ¢ä¸º"\\\\"
         wstring pnpDeviceIDFormat;
         for (unsigned int i = 0; i < pnpDeviceID.length(); i++)
         {
@@ -375,7 +375,7 @@ namespace LWMI
             goto SAFE_EXIT;
         }
 
-        // ´ò¿ªÉè±¸¾ä±ú
+        // æ‰“å¼€è®¾å¤‡å¥æŸ„
         hDiskDrive = CreateFileW(deviceId.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
         if (hDiskDrive == INVALID_HANDLE_VALUE)
         {
@@ -524,7 +524,7 @@ SAFE_EXIT:
             }
         }
 
-        // É¾³ı×îºóÒ»¸ö·ÖºÅ
+        // åˆ é™¤æœ€åä¸€ä¸ªåˆ†å·
         if (!logicalName.empty())
         {
             logicalName.erase(logicalName.size()-1, 1);

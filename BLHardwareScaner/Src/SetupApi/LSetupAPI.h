@@ -1,4 +1,4 @@
-#ifndef _LSETUPAPI_H_
+ï»¿#ifndef _LSETUPAPI_H_
 #define _LSETUPAPI_H_
 
 #include <string>
@@ -19,7 +19,7 @@ using std::wstring;
 class CSADevObject;
 
 /// <SUMMARY>
-/// Éè±¸¶ÔÏó½Ó¿Ú
+/// è®¾å¤‡å¯¹è±¡æ¥å£
 /// </SUMMARY>
 class LSetupDev
 {
@@ -27,233 +27,233 @@ public:
     virtual ~LSetupDev();
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÊıÄ¿
+    /// è·å–è®¾å¤‡æ•°ç›®
     /// </SUMMARY>
     /// <RETURNS>
-    /// Éè±¸ÊıÄ¿
+    /// è®¾å¤‡æ•°ç›®
     /// </RETURNS>
     int GetDevNum();
 
     /// <SUMMARY>
-    /// ÆôÓÃÉè±¸
-    /// ¸Ã·½·¨¿ÉÄÜĞèÒª¹ÜÀíÔ±È¨ÏŞ
+    /// å¯ç”¨è®¾å¤‡
+    /// è¯¥æ–¹æ³•å¯èƒ½éœ€è¦ç®¡ç†å‘˜æƒé™
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long Enable(IN int index);
 
     /// <SUMMARY>
-    /// ½ûÓÃÉè±¸
-    /// ¸Ã·½·¨ĞèÒª¹ÜÀíÔ±È¨ÏŞ, ĞèÒªÖØÆô²Å¿ÉDisableµÄÉè±¸, ¸Ã·½·¨Ò²·µ»Ø0
+    /// ç¦ç”¨è®¾å¤‡
+    /// è¯¥æ–¹æ³•éœ€è¦ç®¡ç†å‘˜æƒé™, éœ€è¦é‡å¯æ‰å¯Disableçš„è®¾å¤‡, è¯¥æ–¹æ³•ä¹Ÿè¿”å›0
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long Disable(IN int index);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÃèÊö
+    /// è·å–è®¾å¤‡æè¿°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devDesc" dir = "OUT">
-    /// ±£´æÉè±¸ÃèÊö
+    /// ä¿å­˜è®¾å¤‡æè¿°
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetDevDesc(IN int index, OUT wstring& devDesc);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸Ó²¼şID
+    /// è·å–è®¾å¤‡ç¡¬ä»¶ID
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devHardwareId" dir = "OUT">
-    /// ±£´æÉè±¸Ó²¼şID
+    /// ä¿å­˜è®¾å¤‡ç¡¬ä»¶ID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetHardwareId(IN int index, OUT wstring& devHardwareId);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÓÑºÃÃû³Æ
+    /// è·å–è®¾å¤‡å‹å¥½åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devFrindName" dir = "OUT">
-    /// ±£´æÉè±¸ÓÑºÃÃû³Æ
+    /// ä¿å­˜è®¾å¤‡å‹å¥½åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetFriendlyName(IN int index, OUT wstring& devFrindName);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸Î»ÖÃĞÅÏ¢
+    /// è·å–è®¾å¤‡ä½ç½®ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devLocationInfo" dir = "OUT">
-    /// ±£´æÉè±¸Î»ÖÃĞÅÏ¢
+    /// ä¿å­˜è®¾å¤‡ä½ç½®ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetLoctionInfo(IN int index, OUT wstring& devLocationInfo);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÊµÀıID(´óĞ´)
+    /// è·å–è®¾å¤‡å®ä¾‹ID(å¤§å†™)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devLocationInfo" dir = "OUT">
-    /// ±£´æÉè±¸ÊµÀıID
+    /// ä¿å­˜è®¾å¤‡å®ä¾‹ID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetInstanceID(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
-    /// »ñÈ¡¸¸ÏµÉè±¸ÊµÀıID(´óĞ´)
+    /// è·å–çˆ¶ç³»è®¾å¤‡å®ä¾‹ID(å¤§å†™)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "devLocationInfo" dir = "OUT">
-    /// ±£´æ¸¸ÏµÉè±¸ÊµÀıID
+    /// ä¿å­˜çˆ¶ç³»è®¾å¤‡å®ä¾‹ID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetParentInstanceId(IN int index, OUT wstring& devInstanceID);
 
     /// <SUMMARY>
-    /// »ñÈ¡×Ó´úÉè±¸ÊıÄ¿
+    /// è·å–å­ä»£è®¾å¤‡æ•°ç›®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "number" dir = "OUT">
-    /// ±£´æ×Ó´úÉè±¸ÊıÄ¿
+    /// ä¿å­˜å­ä»£è®¾å¤‡æ•°ç›®
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetChildrenNumber(IN int index, OUT int& number);
 
     /// <SUMMARY>
-    /// »ñÈ¡×Ó´úÉè±¸ÊµÀıIDÁĞ±í(´óĞ´)
+    /// è·å–å­ä»£è®¾å¤‡å®ä¾‹IDåˆ—è¡¨(å¤§å†™)
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "listSize" dir = "IN">
-    /// ÁĞ±í´óĞ¡
+    /// åˆ—è¡¨å¤§å°
     /// </PARAM>
     /// <PARAM name = "devInstanceIDList" dir = "OUT">
-    /// ±£´æ×Ó´úÉè±¸ÊµÀıIDÁĞ±í(ÇëÏÈÊ¹ÓÃGetChildrenNumber·ÖÅäºÃĞèÒªµÄ¿Õ¼ä)
+    /// ä¿å­˜å­ä»£è®¾å¤‡å®ä¾‹IDåˆ—è¡¨(è¯·å…ˆä½¿ç”¨GetChildrenNumberåˆ†é…å¥½éœ€è¦çš„ç©ºé—´)
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0, Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0, å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetChildrenInstanceIdList(IN int index, IN int listSize,OUT wstring* devInstanceIDList);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸Çı¶¯¼üÃû³Æ
+    /// è·å–è®¾å¤‡é©±åŠ¨é”®åç§°
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "driverKeyName" dir = "OUT">
-    /// ±£´æÉè±¸Çı¶¯¼üÃû³Æ
+    /// ä¿å­˜è®¾å¤‡é©±åŠ¨é”®åç§°
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetDriverKeyName(IN int index, OUT wstring& driverKeyName);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸Àà±ğ×Ö·û´®
+    /// è·å–è®¾å¤‡ç±»åˆ«å­—ç¬¦ä¸²
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "strClass" dir = "OUT">
-    /// ±£´æÉè±¸Àà±ğ×Ö·û´®
+    /// ä¿å­˜è®¾å¤‡ç±»åˆ«å­—ç¬¦ä¸²
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetClass(IN int index, OUT wstring& strClass);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸Àà±ğGUID×Ö·û´®
+    /// è·å–è®¾å¤‡ç±»åˆ«GUIDå­—ç¬¦ä¸²
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "strClassGuid" dir = "OUT">
-    /// ±£´æÉè±¸Àà±ğGUID×Ö·û´®
+    /// ä¿å­˜è®¾å¤‡ç±»åˆ«GUIDå­—ç¬¦ä¸²
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetClassGuid(IN int index, OUT wstring& strClassGuid);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸×ÜÏßºÅ
+    /// è·å–è®¾å¤‡æ€»çº¿å·
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "busNumber" dir = "OUT">
-    /// ±£´æÉè±¸×ÜÏßºÅ
+    /// ä¿å­˜è®¾å¤‡æ€»çº¿å·
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetBusNumber(IN int index, OUT unsigned int& busNumber);
 
     /// <SUMMARY>
-    /// »ñÈ¡Éè±¸ÖÆÔìÉÌ
+    /// è·å–è®¾å¤‡åˆ¶é€ å•†
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "manufacturer" dir = "OUT">
-    /// ±£´æÉè±¸ÖÆÔìÉÌ
+    /// ä¿å­˜è®¾å¤‡åˆ¶é€ å•†
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetManufacturer(IN int index, OUT wstring& manufacturer);
 
     /// <SUMMARY>
-    /// »ñÈ¡Æ¥ÅäÉè±¸ID
+    /// è·å–åŒ¹é…è®¾å¤‡ID
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "matchingDeviceId" dir = "OUT">
-    /// ±£´æÆ¥ÅäÉè±¸ID
+    /// ä¿å­˜åŒ¹é…è®¾å¤‡ID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Ø0 Ê§°Ü·µ»ØErrorCode, ·µ»ØÏµÍ³µÄGetLastError()
+    /// æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›ErrorCode, è¿”å›ç³»ç»Ÿçš„GetLastError()
     /// </RETURNS>
     unsigned long GetMatchingDeviceId(IN int index, OUT wstring& matchingDeviceId);
 
@@ -265,7 +265,7 @@ protected:
 };
 
 /// <SUMMARY>
-/// ËùÓĞÉè±¸Àà
+/// æ‰€æœ‰è®¾å¤‡ç±»
 /// </SUMMARY>
 class LSetupDevAll : public LSetupDev
 {
@@ -275,7 +275,7 @@ public:
 };
 
 /// <SUMMARY>
-/// ÏÔ¿¨Éè±¸Àà
+/// æ˜¾å¡è®¾å¤‡ç±»
 /// </SUMMARY>
 class LSetupDisplayCard : public LSetupDev
 {
@@ -285,20 +285,20 @@ public:
 };
 
 /// <SUMMARY>
-/// ÏÔÊ¾Æ÷À©Õ¹ĞÅÏ¢
+/// æ˜¾ç¤ºå™¨æ‰©å±•ä¿¡æ¯
 /// </SUMMARY>
 struct LMonitorExtendInfor
 {
-    wstring Name; ///< Ãû³Æ
-    wstring VendorID; ///< ³§ÉÌID
-    wstring ProductID; ///< ²úÆ·ID
-    wstring Date; ///< ÖÆÔìÈÕÆÚ (Äê.ÔÂ)
+    wstring Name; ///< åç§°
+    wstring VendorID; ///< å‚å•†ID
+    wstring ProductID; ///< äº§å“ID
+    wstring Date; ///< åˆ¶é€ æ—¥æœŸ (å¹´.æœˆ)
 };
 
 struct LMonitorEDID;
 
 /// <SUMMARY>
-/// ÏÔÊ¾Æ÷Éè±¸Àà
+/// æ˜¾ç¤ºå™¨è®¾å¤‡ç±»
 /// </SUMMARY>
 class LSetupMonitor : public LSetupDev
 {
@@ -307,37 +307,37 @@ public:
     ~LSetupMonitor();
 
     /// <SUMMARY>
-    /// »ñÈ¡ÏÔÊ¾Æ÷À©Õ¹ĞÅÏ¢
+    /// è·å–æ˜¾ç¤ºå™¨æ‰©å±•ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "extendInfor" dir = "OUT">
-    /// ´æ´¢À©Õ¹ĞÅÏ¢
+    /// å­˜å‚¨æ‰©å±•ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool GetExtendInfor(IN int index, OUT LMonitorExtendInfor& extendInfor);
 
 private:
     /// <SUMMARY>
-    /// »ñÈ¡ÏÔÊ¾Æ÷À©Õ¹ÏÔÊ¾±êÊ¶Êı¾İ
+    /// è·å–æ˜¾ç¤ºå™¨æ‰©å±•æ˜¾ç¤ºæ ‡è¯†æ•°æ®
     /// </SUMMARY>
     /// <PARAM name = "index" dir = "IN">
-    /// Éè±¸Ë÷Òı
+    /// è®¾å¤‡ç´¢å¼•
     /// </PARAM>
     /// <PARAM name = "extendInfor" dir = "OUT">
-    /// ´æ´¢À©Õ¹ÏÔÊ¾±êÊ¶Êı¾İ
+    /// å­˜å‚¨æ‰©å±•æ˜¾ç¤ºæ ‡è¯†æ•°æ®
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool GetEDID(IN int index, OUT LMonitorEDID& edid);
 };
 
 /// <SUMMARY>
-/// SCSIºÍRAID¿ØÖÆÆ÷Éè±¸Àà
+/// SCSIå’ŒRAIDæ§åˆ¶å™¨è®¾å¤‡ç±»
 /// </SUMMARY>
 class LSetupSCSIController : public LSetupDev
 {
@@ -347,7 +347,7 @@ public:
 };
 
 /// <SUMMARY>
-/// Í¼ÏñÉè±¸Àà
+/// å›¾åƒè®¾å¤‡ç±»
 /// </SUMMARY>
 class LSetupImage : public LSetupDev
 {

@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+ï»¿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
@@ -23,20 +23,20 @@ public:
     ~MainPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
     /*
-    È¥µôÏµÍ³±ß¿òºÍ±êÌâÀ¸ºóµ¼ÖÂ³ÌĞò´°¿ÚÎŞ·¨ÒÆ¶¯
-    ÊÖ¶¯´¦ÀíÒÔÏÂÈı¸öÊÂ¼şÀ´ÊµÏÖ´°¿ÚÒÆ¶¯
+    å»æ‰ç³»ç»Ÿè¾¹æ¡†å’Œæ ‡é¢˜æ åå¯¼è‡´ç¨‹åºçª—å£æ— æ³•ç§»åŠ¨
+    æ‰‹åŠ¨å¤„ç†ä»¥ä¸‹ä¸‰ä¸ªäº‹ä»¶æ¥å®ç°çª—å£ç§»åŠ¨
     */
-    /// @brief Êó±ê°´ÏÂÊÂ¼ş
+    /// @brief é¼ æ ‡æŒ‰ä¸‹äº‹ä»¶
     void mousePressEvent(QMouseEvent *e);
 
-    /// @brief Êó±êÒÆ¶¯ÊÂ¼ş, Ö»ÓĞÊó±ê´¦ÓÚ°´ÏÂ×´Ì¬Ê±²Å»á´¥·¢¸ÃÊÂ¼ş
+    /// @brief é¼ æ ‡ç§»åŠ¨äº‹ä»¶, åªæœ‰é¼ æ ‡å¤„äºæŒ‰ä¸‹çŠ¶æ€æ—¶æ‰ä¼šè§¦å‘è¯¥äº‹ä»¶
     void mouseMoveEvent(QMouseEvent *e);
 
-    /// @brief Êó±êÊÍ·ÅÊÂ¼ş
+    /// @brief é¼ æ ‡é‡Šæ”¾äº‹ä»¶
     void mouseReleaseEvent(QMouseEvent *e);
 
 private slots:
@@ -48,34 +48,34 @@ private slots:
     void CloseButtonClicked();
     void UpdateButtonClicked();
 
-    /// @brief ¼ì²éĞÂ°æ±¾¼ÆÊ±Æ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief æ£€æŸ¥æ–°ç‰ˆæœ¬è®¡æ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void CheckNewTimerTimeout();
 
-    /// @brief ÏÂÔØĞÂ°æ±¾¼ÆÊ±Æ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief ä¸‹è½½æ–°ç‰ˆæœ¬è®¡æ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void DownloadNewTimerTimeout();
 
 private:
-    /// @brief ¼ÓÔØUIÑùÊ½
+    /// @brief åŠ è½½UIæ ·å¼
     void LoadQSS();
 
 private:
     Ui::MainForm ui;
-    QSplashScreen m_splashScreen; ///< Æô¶¯»­Ãæ
+    QSplashScreen m_splashScreen; ///< å¯åŠ¨ç”»é¢
 
-    bool m_mousePressed; ///< ±êÖ¾Êó±êÊÇ·ñ±»°´ÏÂ
-    QPoint m_mouseLastPos; ///< ×îĞÂÊó±êÎ»ÖÃ
+    bool m_mousePressed; ///< æ ‡å¿—é¼ æ ‡æ˜¯å¦è¢«æŒ‰ä¸‹
+    QPoint m_mouseLastPos; ///< æœ€æ–°é¼ æ ‡ä½ç½®
 
     HardwareInforPage* m_pHardwareInforPage;
     TempManagementPage* m_pTempManagementPage;
     TestItemPage* m_pTestItemPage;
 
-    float m_uiRatio; ///< UIĞèÒªµ÷ÕûµÄ±ÈÀı
+    float m_uiRatio; ///< UIéœ€è¦è°ƒæ•´çš„æ¯”ä¾‹
 
-    CheckNew m_checkNew; ///< ¼ì²éĞÂ°æ±¾
-    QTimer m_checkNewTimer; ///< ¼ì²éĞÂ°æ±¾¶¨Ê±Æ÷
+    CheckNew m_checkNew; ///< æ£€æŸ¥æ–°ç‰ˆæœ¬
+    QTimer m_checkNewTimer; ///< æ£€æŸ¥æ–°ç‰ˆæœ¬å®šæ—¶å™¨
 
-    DownloadNew m_downloadNew; ///< ÏÂÔØĞÂ°æ±¾
-    QTimer m_downloadNewTimer; ///< ÏÂÔØĞÂ°æ±¾¶¨Ê±Æ÷
+    DownloadNew m_downloadNew; ///< ä¸‹è½½æ–°ç‰ˆæœ¬
+    QTimer m_downloadNewTimer; ///< ä¸‹è½½æ–°ç‰ˆæœ¬å®šæ—¶å™¨
 };
 
 #endif // MAINWINDOW_H

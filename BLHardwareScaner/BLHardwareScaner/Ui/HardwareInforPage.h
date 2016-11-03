@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _HARDWAREINFORPAGE_H_
 #define _HARDWAREINFORPAGE_H_
@@ -22,186 +22,186 @@
 
 class HWItemInfor;
 
-/// @brief Ó²¼şĞÅÏ¢Ò³Ãæ
+/// @brief ç¡¬ä»¶ä¿¡æ¯é¡µé¢
 class HardwareInforPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     HardwareInforPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~HardwareInforPage();
 
 public:
-    /// @brief ÉèÖÃÆô¶¯»­ÃæÖ¸Õë
-    /// @param[in] pSplashScrren Æô¶¯»­ÃæÖ¸Õë
+    /// @brief è®¾ç½®å¯åŠ¨ç”»é¢æŒ‡é’ˆ
+    /// @param[in] pSplashScrren å¯åŠ¨ç”»é¢æŒ‡é’ˆ
     void SetSplashScreen(IN QSplashScreen* pSplashScrren);
 
-    /// @brief ³õÊ¼»¯Ó²¼şĞÅÏ¢
+    /// @brief åˆå§‹åŒ–ç¡¬ä»¶ä¿¡æ¯
     void InitHardwareInfor();
 
 protected:
     void showEvent(QShowEvent* e);
 
 private slots:
-    /// @brief µ±Ç°ËùÑ¡Ïî¸Ä±ä²Ûº¯Êı
+    /// @brief å½“å‰æ‰€é€‰é¡¹æ”¹å˜æ§½å‡½æ•°
     void CurrentItemChanged();
 
 private:
-    /// @brief ¼ÓÔØUIÑùÊ½
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief åŠ è½½UIæ ·å¼
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     void LoadQSS(IN float uiRatio);
 
-    /// @brief Æô¶¯»­ÃæÏÔÊ¾ÏûÏ¢
-    /// @param[in] msg ÏûÏ¢
+    /// @brief å¯åŠ¨ç”»é¢æ˜¾ç¤ºæ¶ˆæ¯
+    /// @param[in] msg æ¶ˆæ¯
     void SplashScreenShow(IN const QString& msg);
 
 private:
     Ui::HardwareInforForm ui;
-    QSplashScreen* m_pSplashScrreen; ///< Æô¶¯»­Ãæ
+    QSplashScreen* m_pSplashScrreen; ///< å¯åŠ¨ç”»é¢
 
-    QVector<HWItemInfor*> m_hwItemVec; ///< Ó²¼şÏîÁĞ±í
+    QVector<HWItemInfor*> m_hwItemVec; ///< ç¡¬ä»¶é¡¹åˆ—è¡¨
 };
 
-/// @brief Ó²¼şÏîĞÅÏ¢
+/// @brief ç¡¬ä»¶é¡¹ä¿¡æ¯
 class HWItemInfor
 {
 public:
     HWItemInfor();
     virtual ~HWItemInfor();
 
-    /// @brief »ñÈ¡Ïî±êÌâ
-    /// @return Ïî±êÌâ
+    /// @brief è·å–é¡¹æ ‡é¢˜
+    /// @return é¡¹æ ‡é¢˜
     const QString& GetTitle() const;
 
-    /// @brief »ñÈ¡ÏîÄÚÈİ
-    /// @return ÏîÄÚÈİ
+    /// @brief è·å–é¡¹å†…å®¹
+    /// @return é¡¹å†…å®¹
     const QString& GetContent() const;
 
 
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor() = 0;
 
 protected:
-    /// @brief ÉèÖÃÏî±êÌâ
+    /// @brief è®¾ç½®é¡¹æ ‡é¢˜
     ///  
-    /// @param[in] title ±êÌâ
+    /// @param[in] title æ ‡é¢˜
     void SetTitle(IN const QString& title);
 
-    /// @brief ÄÚÈİÖĞÔö¼ÓÒ»Ïî
-    /// @param[in] subTitle ÄÚÈİÖĞµÄ×Ó±êÌâ
-    /// @param[in] text ÎÄ±¾
+    /// @brief å†…å®¹ä¸­å¢åŠ ä¸€é¡¹
+    /// @param[in] subTitle å†…å®¹ä¸­çš„å­æ ‡é¢˜
+    /// @param[in] text æ–‡æœ¬
     void ContentAddItem(IN const QString& subTitle, IN const QString text);
 
-    /// @brief ÄÚÈİÖĞÔö¼Ó¿ÕĞĞ
+    /// @brief å†…å®¹ä¸­å¢åŠ ç©ºè¡Œ
     void ContentAddBlankLine();
 
-    /// @brief Çå³ıÏÖÓĞµÄĞÅÏ¢
+    /// @brief æ¸…é™¤ç°æœ‰çš„ä¿¡æ¯
     void ClearInfor();
 
 private:
-    QString m_title; ///< Ïî±êÌâ
-    QString m_content; ///< ÏîÀàÈİ
+    QString m_title; ///< é¡¹æ ‡é¢˜
+    QString m_content; ///< é¡¹ç±»å®¹
 };
 
-/// @brief ¼ÆËã»úÏîĞÅÏ¢ÏîĞÅÏ¢
+/// @brief è®¡ç®—æœºé¡¹ä¿¡æ¯é¡¹ä¿¡æ¯
 class ComputerItemInfor : public HWItemInfor
 {
 public: 
 
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief Ö÷°åÏîĞÅÏ¢
+/// @brief ä¸»æ¿é¡¹ä¿¡æ¯
 class MotherBoardItemInfor : public HWItemInfor
 {
 public:
 
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ´¦ÀíÆ÷ÏîĞÅÏ¢
+/// @brief å¤„ç†å™¨é¡¹ä¿¡æ¯
 class ProcessorItemInfor : public HWItemInfor
 {
 public:
 
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
 
-/// @brief ÏÔ¿¨ÏîĞÅÏ¢
+/// @brief æ˜¾å¡é¡¹ä¿¡æ¯
 class VideoCardItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ÄÚ´æÏîĞÅÏ¢
+/// @brief å†…å­˜é¡¹ä¿¡æ¯
 class MemoryItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ´ÅÅÌÏîĞÅÏ¢
+/// @brief ç£ç›˜é¡¹ä¿¡æ¯
 class DiskItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief Íø¿¨ÏîĞÅÏ¢
+/// @brief ç½‘å¡é¡¹ä¿¡æ¯
 class NetworkCardItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ÏÔÊ¾Æ÷ÏîĞÅÏ¢
+/// @brief æ˜¾ç¤ºå™¨é¡¹ä¿¡æ¯
 class MonitorItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief µç³ØÏîĞÅÏ¢
+/// @brief ç”µæ± é¡¹ä¿¡æ¯
 class BatteryItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ÉãÏñ»úÏîĞÅÏ¢
+/// @brief æ‘„åƒæœºé¡¹ä¿¡æ¯
 class CameraItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief CDRomÇı¶¯Æ÷ÏîĞÅÏ¢
+/// @brief CDRomé©±åŠ¨å™¨é¡¹ä¿¡æ¯
 class CDRomDriveItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 };
 
-/// @brief ´«¸ĞÆ÷ÏîĞÅÏ¢
+/// @brief ä¼ æ„Ÿå™¨é¡¹ä¿¡æ¯
 class SensorsItemInfor : public HWItemInfor
 {
 public:
-    /// @brief ¼ÓÔØÓ²¼şĞÅÏ¢
+    /// @brief åŠ è½½ç¡¬ä»¶ä¿¡æ¯
     virtual void LoadHWInfor();
 
 };

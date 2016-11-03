@@ -1,7 +1,7 @@
-/// @file LSensorObject.h
-/// @brief ´«¸ĞÆ÷¶ÔÏó 
+ï»¿/// @file LSensorObject.h
+/// @brief ä¼ æ„Ÿå™¨å¯¹è±¡ 
 /// 
-/// Detail: ¸ÃÎÄ¼şÖĞÉùÃ÷µÄÀàLSensorObjectÓÃÓÚ¼ÓÔØSensorObject.dllÎÄ¼şÀ´»ñÈ¡´«¸ĞÆ÷Êı¾İ
+/// Detail: è¯¥æ–‡ä»¶ä¸­å£°æ˜çš„ç±»LSensorObjectç”¨äºåŠ è½½SensorObject.dllæ–‡ä»¶æ¥è·å–ä¼ æ„Ÿå™¨æ•°æ®
 /// @author Burnell Liu Email:burnell_liu@outlook.com
 /// @version   
 /// @date 2016:3:4
@@ -13,192 +13,192 @@
 using std::string;
 using std::wstring;
 
-// ÊäÈë
+// è¾“å…¥
 #ifndef IN
 #define IN 
 #endif
 
-// Êä³ö
+// è¾“å‡º
 #ifndef OUT
 #define OUT 
 #endif
 
-// ×î´ó´«¸ĞÆ÷ÊıÄ¿
+// æœ€å¤§ä¼ æ„Ÿå™¨æ•°ç›®
 #define MAX_SENSOR_NUMBER 8
 
-// ×î´ó×Ö·û´®³¤¶È
+// æœ€å¤§å­—ç¬¦ä¸²é•¿åº¦
 #define MAX_STRING_LEN 256
 
 extern "C"
 {
     /// <SUMMARY>
-    /// ÖØÁ¦¼ÓËÙ¶È´«¸ĞÆ÷(3D)Êı¾İ
+    /// é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨(3D)æ•°æ®
     /// </SUMMARY>
     struct SAccelerometer3DSensorData
     {
-        double X_G; // XÖáµÄÖØÁ¦¼ÓËÙ¶È(G)
-        double Y_G; // YÖáµÄÖØÁ¦¼ÓËÙ¶È(G)
-        double Z_G; // ZÖáµÄÖØÁ¦¼ÓËÙ¶È(G)
+        double X_G; // Xè½´çš„é‡åŠ›åŠ é€Ÿåº¦(G)
+        double Y_G; // Yè½´çš„é‡åŠ›åŠ é€Ÿåº¦(G)
+        double Z_G; // Zè½´çš„é‡åŠ›åŠ é€Ÿåº¦(G)
     };
 
     /// <SUMMARY>
-    /// ÖØÁ¦¼ÓËÙ¶È´«¸ĞÆ÷(3D)ĞÅÏ¢×é
+    /// é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨(3D)ä¿¡æ¯ç»„
     /// </SUMMARY>
     struct SAccelerometer3DInforArray
     {
-        unsigned int Count; // ´«¸ĞÆ÷ÊıÁ¿
-        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // ÓÑºÃÃû³Æ
-        SAccelerometer3DSensorData Data[MAX_SENSOR_NUMBER]; // ´«¸ĞÆ÷Êı¾İ
+        unsigned int Count; // ä¼ æ„Ÿå™¨æ•°é‡
+        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // å‹å¥½åç§°
+        SAccelerometer3DSensorData Data[MAX_SENSOR_NUMBER]; // ä¼ æ„Ÿå™¨æ•°æ®
     };
 
     /// <SUMMARY>
-    /// ÍÓÂİÒÇ´«¸ĞÆ÷(3D)Êı¾İ
+    /// é™€èºä»ªä¼ æ„Ÿå™¨(3D)æ•°æ®
     /// </SUMMARY>
     struct SGyrometer3DSensorData
     {
-        double X_DEGREES_PER_SECOND; // XÖá½ÇËÙ¶È(¶ÈÃ¿Ãë)
-        double Y_DEGREES_PER_SECOND; // YÖá½ÇËÙ¶È(¶ÈÃ¿Ãë)
-        double Z_DEGREES_PER_SECOND; // ZÖá½ÇËÙ¶È(¶ÈÃ¿Ãë)
+        double X_DEGREES_PER_SECOND; // Xè½´è§’é€Ÿåº¦(åº¦æ¯ç§’)
+        double Y_DEGREES_PER_SECOND; // Yè½´è§’é€Ÿåº¦(åº¦æ¯ç§’)
+        double Z_DEGREES_PER_SECOND; // Zè½´è§’é€Ÿåº¦(åº¦æ¯ç§’)
     };
 
     /// <SUMMARY>
-    /// ÍÓÂİÒÇ´«¸ĞÆ÷(3D)ĞÅÏ¢×é
+    /// é™€èºä»ªä¼ æ„Ÿå™¨(3D)ä¿¡æ¯ç»„
     /// </SUMMARY>
     struct SGyrometer3DInforArray
     {
-        unsigned int Count; // ´«¸ĞÆ÷ÊıÁ¿
-        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // ÓÑºÃÃû³Æ
-        SGyrometer3DSensorData Data[MAX_SENSOR_NUMBER]; // ´«¸ĞÆ÷Êı¾İ
+        unsigned int Count; // ä¼ æ„Ÿå™¨æ•°é‡
+        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // å‹å¥½åç§°
+        SGyrometer3DSensorData Data[MAX_SENSOR_NUMBER]; // ä¼ æ„Ÿå™¨æ•°æ®
     };
 
     /// <SUMMARY>
-    /// Ö¸ÄÏÕë´«¸ĞÆ÷(3D)Êı¾İ
+    /// æŒ‡å—é’ˆä¼ æ„Ÿå™¨(3D)æ•°æ®
     /// </SUMMARY>
     struct SCompass3DSensorData
     {
-        double X_MILLIGAUSS; // XÖáµÄ´Å³¡Ç¿¶È(ºÁ¸ßË¹)
-        double Y_MILLIGAUSS; // YÖáµÄ´Å³¡Ç¿¶È(ºÁ¸ßË¹)
-        double Z_MILLIGAUSS; // ZÖáµÄ´Å³¡Ç¿¶È(ºÁ¸ßË¹)
+        double X_MILLIGAUSS; // Xè½´çš„ç£åœºå¼ºåº¦(æ¯«é«˜æ–¯)
+        double Y_MILLIGAUSS; // Yè½´çš„ç£åœºå¼ºåº¦(æ¯«é«˜æ–¯)
+        double Z_MILLIGAUSS; // Zè½´çš„ç£åœºå¼ºåº¦(æ¯«é«˜æ–¯)
     };
 
     /// <SUMMARY>
-    /// Ö¸ÄÏÕë´«¸ĞÆ÷(3D)ĞÅÏ¢×é
+    /// æŒ‡å—é’ˆä¼ æ„Ÿå™¨(3D)ä¿¡æ¯ç»„
     /// </SUMMARY>
     struct SCompass3DInforArray
     {
-        unsigned int Count; // ´«¸ĞÆ÷ÊıÁ¿
-        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // ÓÑºÃÃû³Æ
-        SCompass3DSensorData Data[MAX_SENSOR_NUMBER]; // ´«¸ĞÆ÷Êı¾İ
+        unsigned int Count; // ä¼ æ„Ÿå™¨æ•°é‡
+        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // å‹å¥½åç§°
+        SCompass3DSensorData Data[MAX_SENSOR_NUMBER]; // ä¼ æ„Ÿå™¨æ•°æ®
     };
 
     /// <SUMMARY>
-    /// ¹â´«¸ĞÆ÷Êı¾İ
+    /// å…‰ä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     struct SAmbientLightSensorData
     {
-        float LIGHT_LEVEL; // ¹âÕÕÇ¿¶È
+        float LIGHT_LEVEL; // å…‰ç…§å¼ºåº¦
     };
 
     /// <SUMMARY>
-    /// ¹â´«¸ĞÆ÷ĞÅÏ¢×é
+    /// å…‰ä¼ æ„Ÿå™¨ä¿¡æ¯ç»„
     /// </SUMMARY>
     struct SAmbientLightInforArray
     {
-        unsigned int Count; // ´«¸ĞÆ÷ÊıÁ¿
-        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // ÓÑºÃÃû³Æ
-        SAmbientLightSensorData Data[MAX_SENSOR_NUMBER]; // ´«¸ĞÆ÷Êı¾İ
+        unsigned int Count; // ä¼ æ„Ÿå™¨æ•°é‡
+        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // å‹å¥½åç§°
+        SAmbientLightSensorData Data[MAX_SENSOR_NUMBER]; // ä¼ æ„Ÿå™¨æ•°æ®
     };
 
     /// <SUMMARY>
-    /// GPS´«¸ĞÆ÷Êı¾İ
+    /// GPSä¼ æ„Ÿå™¨æ•°æ®
     /// </SUMMARY>
     struct SGpsSensorData
     {
-        double LAYITUDE_DEGREES; // Î³¶ÈÖµ
-        double LONGITUDE_GERREES; // ¾­¶ÈÖµ
+        double LAYITUDE_DEGREES; // çº¬åº¦å€¼
+        double LONGITUDE_GERREES; // ç»åº¦å€¼
     };
 
     /// <SUMMARY>
-    /// GPS´«¸ĞÆ÷ĞÅÏ¢×é
+    /// GPSä¼ æ„Ÿå™¨ä¿¡æ¯ç»„
     /// </SUMMARY>
     struct SGpsInforArray
     {
-        unsigned int Count; // ´«¸ĞÆ÷ÊıÁ¿
-        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // ÓÑºÃÃû³Æ
-        SGpsSensorData Data[MAX_SENSOR_NUMBER]; // ´«¸ĞÆ÷Êı¾İ
+        unsigned int Count; // ä¼ æ„Ÿå™¨æ•°é‡
+        wchar_t FriendlyName[MAX_SENSOR_NUMBER][MAX_STRING_LEN]; // å‹å¥½åç§°
+        SGpsSensorData Data[MAX_SENSOR_NUMBER]; // ä¼ æ„Ÿå™¨æ•°æ®
     };
 };
 
 
 class CSensorObject;
 
-/// @brief ´«¸ĞÆ÷¶ÔÏó
+/// @brief ä¼ æ„Ÿå™¨å¯¹è±¡
 class LSensorObject
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LSensorObject();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LSensorObject();
 
     /// <SUMMARY>
-    /// »ñÈ¡ÖØÁ¦¼ÓËÙ¶È´«¸ĞÆ÷(3D)ĞÅÏ¢
+    /// è·å–é‡åŠ›åŠ é€Ÿåº¦ä¼ æ„Ÿå™¨(3D)ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "pInforArray" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ĞÅÏ¢
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetAccelerometer3DInfor(OUT SAccelerometer3DInforArray* pInforArray);
 
     /// <SUMMARY>
-    /// »ñÈ¡ÍÓÂİÒÇ´«¸ĞÆ÷(3D)ĞÅÏ¢
+    /// è·å–é™€èºä»ªä¼ æ„Ÿå™¨(3D)ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "pInforArray" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ĞÅÏ¢
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetGyrometer3DInfor(OUT SGyrometer3DInforArray* pInforArray);
 
     /// <SUMMARY>
-    /// »ñÈ¡Ö¸ÄÏÕë´«¸ĞÆ÷(3D)ĞÅÏ¢
+    /// è·å–æŒ‡å—é’ˆä¼ æ„Ÿå™¨(3D)ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "pInforArray" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ĞÅÏ¢
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetCompass3DInfor(OUT SCompass3DInforArray* pInforArray);
 
     /// <SUMMARY>
-    /// »ñÈ¡¹â´«¸ĞÆ÷ĞÅÏ¢
+    /// è·å–å…‰ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "pInforArray" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ĞÅÏ¢
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetAmbientLightInfor(OUT SAmbientLightInforArray* pInforArray);
 
     /// <SUMMARY>
-    /// »ñÈ¡GPS´«¸ĞÆ÷ĞÅÏ¢
+    /// è·å–GPSä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </SUMMARY>
     /// <PARAM name = "pInforArray" dir = "OUT">
-    /// ´æ´¢´«¸ĞÆ÷ĞÅÏ¢
+    /// å­˜å‚¨ä¼ æ„Ÿå™¨ä¿¡æ¯
     /// </PARAM>
     /// <RETURNS>
-    /// true(»ñÈ¡³É¹¦), false(»ñÈ¡Ê§°Ü)
+    /// true(è·å–æˆåŠŸ), false(è·å–å¤±è´¥)
     /// </RETURNS>
     bool GetGpsInfor(OUT SGpsInforArray* pInforArray);
 
 private:
-    CSensorObject* m_pSensorObject; ///< ´«¸ĞÆ÷ÊµÏÖ¶ÔÏó
+    CSensorObject* m_pSensorObject; ///< ä¼ æ„Ÿå™¨å®ç°å¯¹è±¡
 };
 
 #endif

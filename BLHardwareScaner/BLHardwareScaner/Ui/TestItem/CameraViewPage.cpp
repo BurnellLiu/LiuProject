@@ -1,4 +1,4 @@
-
+ï»¿
 #include "CameraViewPage.h"
 
 #include <QtCore/QFile>
@@ -120,7 +120,7 @@ LWebcam* CameraViewPage::GetWebcam(IN unsigned int index)
     QVector<LWebcam*> webcamQVec;
 
     const CameraInforArray& cameraInfor = LHardwareInfor::GetCameraInfor();
-    // Ã¶¾Ù³öÕæÊµÉãÏñÍ·
+    // æšä¸¾å‡ºçœŸå®æ‘„åƒå¤´
     vector<LWebcam*> webcamList;
     string error;
     LEnumWebcam(webcamList, error);

@@ -1,4 +1,4 @@
-
+ï»¿
 
 
 
@@ -23,69 +23,69 @@
 #define OUT
 #endif
 
-/// @brief ÖØ¸´¿ª»ú²âÊÔ²ÎÊı
+/// @brief é‡å¤å¼€æœºæµ‹è¯•å‚æ•°
 struct RestartAgingParam
 {
-    int IntervalTime; ///< ¼ä¸ôÊ±¼ä
-    int AgingTimes; ///< ²âÊÔ´ÎÊı
-    int CompletedTimes; ///< ÒÑÍê³É²âÊÔ´ÎÊı
-    int BSODTimes; ///< ·¢ÉúÀ¶ÆÁµÄ´ÎÊı
-    QString LastRestartTime; ///< ×îĞÂÖØ¿ª»úÊ±¼ä, ¸ñÊ½"yyyy-MM-dd hh:mm:ss"
+    int IntervalTime; ///< é—´éš”æ—¶é—´
+    int AgingTimes; ///< æµ‹è¯•æ¬¡æ•°
+    int CompletedTimes; ///< å·²å®Œæˆæµ‹è¯•æ¬¡æ•°
+    int BSODTimes; ///< å‘ç”Ÿè“å±çš„æ¬¡æ•°
+    QString LastRestartTime; ///< æœ€æ–°é‡å¼€æœºæ—¶é—´, æ ¼å¼"yyyy-MM-dd hh:mm:ss"
 };
 
-/// @brief ÖØ¸´¿ª»ú²âÊÔÒ³Ãæ
+/// @brief é‡å¤å¼€æœºæµ‹è¯•é¡µé¢
 class RestartAgingPage : public QDialog
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     RestartAgingPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~RestartAgingPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
 private slots:
     void TestButtonClicked();
     void ResetButtonClicked();
 
-    /// @brief µ¹¼ÆÊ±¶¨Ê±Æ÷³¬Ê±»Øµ÷º¯Êı
+    /// @brief å€’è®¡æ—¶å®šæ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
     void CountDownTimerTimeout();
 
 private:
-    /// @brief ×¢²áÈÎÎñ¼Æ»®
+    /// @brief æ³¨å†Œä»»åŠ¡è®¡åˆ’
     void RegisterTaskScheduler();
 
-    /// @brief É¾³ıÈÎÎñ¼Æ»®
+    /// @brief åˆ é™¤ä»»åŠ¡è®¡åˆ’
     void DeleteTaskScheduler();
 
-    /// @brief ±£´æ²âÊÔ²ÎÊıµ½ÎÄ¼şÖĞ
+    /// @brief ä¿å­˜æµ‹è¯•å‚æ•°åˆ°æ–‡ä»¶ä¸­
     void SaveTestParamToFile(IN const RestartAgingParam& param);
 
-    /// @brief ´ÓÎÄ¼şÖĞ»ñÈ¡²âÊÔ²ÎÊı
+    /// @brief ä»æ–‡ä»¶ä¸­è·å–æµ‹è¯•å‚æ•°
     void GetTestParamFromFile(OUT RestartAgingParam& param);
 
-    /// @brief ÅĞ¶ÏÊÇ·ñ·¢ÉúÀ¶ÆÁ
-    /// @param[in] lastRestartTime ÉÏ´Î¹Ø»úÊ±¼ä
-    /// @return ·¢ÉúÀ¶ÆÁ·µ»Øtrue, Î´·¢ÉúÀ¶ÆÁ·µ»Øfalse
+    /// @brief åˆ¤æ–­æ˜¯å¦å‘ç”Ÿè“å±
+    /// @param[in] lastRestartTime ä¸Šæ¬¡å…³æœºæ—¶é—´
+    /// @return å‘ç”Ÿè“å±è¿”å›true, æœªå‘ç”Ÿè“å±è¿”å›false
     bool IsBSODHappened(IN const QString& lastRestartTime);
 
-    /// @brief ¼ì²éÂ·¾¶, Â·¾¶²»´æÔÚÔò´´½¨
-    /// @param[in] qstrPath Â·¾¶
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ£€æŸ¥è·¯å¾„, è·¯å¾„ä¸å­˜åœ¨åˆ™åˆ›å»º
+    /// @param[in] qstrPath è·¯å¾„
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool CheckPath(IN const QString& qstrPath);
 
-    /// @brief ¼ÓÔØUIÑùÊ½
+    /// @brief åŠ è½½UIæ ·å¼
     void LoadQSS();
 
 private:
     Ui::RestartAgingForm ui;
-    int m_currentCountDown; ///< µ±Ç°µ¹¼ÆÊ±
-    QTimer m_countDownTimer; ///< µ¹¼ÆÊ±¶¨Ê±Æ÷
+    int m_currentCountDown; ///< å½“å‰å€’è®¡æ—¶
+    QTimer m_countDownTimer; ///< å€’è®¡æ—¶å®šæ—¶å™¨
 };
 
 #endif

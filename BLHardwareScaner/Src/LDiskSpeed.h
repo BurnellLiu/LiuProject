@@ -1,5 +1,5 @@
-/// @file LDiskSpeed.h
-/// @brief ¸ÃÍ·ÎÄ¼şÖĞÉùÃ÷ÁË´ÅÅÌËÙ¶È²âÊÔÀà 
+ï»¿/// @file LDiskSpeed.h
+/// @brief è¯¥å¤´æ–‡ä»¶ä¸­å£°æ˜äº†ç£ç›˜é€Ÿåº¦æµ‹è¯•ç±» 
 /// 
 /// Detail:
 /// @author Burnell Liu Email:burnell_liu@outlook.com
@@ -24,101 +24,101 @@ using std::wstring;
 class CDiskSequenceTest;
 class CDisk4KRandomTest;
 
-/// @brief ´ÅÅÌËÙ¶È²âÊÔ´íÎóÂë
+/// @brief ç£ç›˜é€Ÿåº¦æµ‹è¯•é”™è¯¯ç 
 enum LDiskSpeedTestError
 {
-    DST_NO_ERROR = 0, ///< Ã»ÓĞ´íÎó
-    DST_OPEN_FILE_ERROR, ///< ´ò¿ªÎÄ¼ş´íÎó
-    DST_WRITE_FILE_ERROR, ///< Ğ´ÎÄ¼ş´íÎó
-    DST_READ_FILE_ERROR, ///< ¶ÁÎÄ¼ş´íÎó
-    DST_ALLOC_MEMORY_ERROR, ///< ·ÖÅäÄÚ´æ´íÎó
-    DST_TEST_ABORT_ERROR ///< ²âÊÔÖĞ¶Ï´íÎó
+    DST_NO_ERROR = 0, ///< æ²¡æœ‰é”™è¯¯
+    DST_OPEN_FILE_ERROR, ///< æ‰“å¼€æ–‡ä»¶é”™è¯¯
+    DST_WRITE_FILE_ERROR, ///< å†™æ–‡ä»¶é”™è¯¯
+    DST_READ_FILE_ERROR, ///< è¯»æ–‡ä»¶é”™è¯¯
+    DST_ALLOC_MEMORY_ERROR, ///< åˆ†é…å†…å­˜é”™è¯¯
+    DST_TEST_ABORT_ERROR ///< æµ‹è¯•ä¸­æ–­é”™è¯¯
 };
 
-/// @brief ´ÅÅÌËÙ¶È²âÊÔ×´Ì¬
+/// @brief ç£ç›˜é€Ÿåº¦æµ‹è¯•çŠ¶æ€
 struct LDiskSpeedTestState 
 {
-    bool TestDone; ///< ±ê¼Ç²âÊÔÊÇ·ñÒÑ¾­½áÊø
-    float ReadSpeed; ///< ¶ÁËÙ¶È, µ¥Î»M/S
-    float WriteSpeed; ///< Ğ´ËÙ¶È, µ¥Î»M/S
-    LDiskSpeedTestError Error; ///< ´íÎóÂë
-    wstring ErrorMsg; ///< ¼òÂÔ´íÎóÏûÏ¢
-    wstring ErrorMsgWindows; ///< Windows´íÎóÏûÏ¢
+    bool TestDone; ///< æ ‡è®°æµ‹è¯•æ˜¯å¦å·²ç»ç»“æŸ
+    float ReadSpeed; ///< è¯»é€Ÿåº¦, å•ä½M/S
+    float WriteSpeed; ///< å†™é€Ÿåº¦, å•ä½M/S
+    LDiskSpeedTestError Error; ///< é”™è¯¯ç 
+    wstring ErrorMsg; ///< ç®€ç•¥é”™è¯¯æ¶ˆæ¯
+    wstring ErrorMsgWindows; ///< Windowsé”™è¯¯æ¶ˆæ¯
 };
 
-/// @brief ´ÅÅÌËÙ¶È²âÊÔ½Ó¿Ú
+/// @brief ç£ç›˜é€Ÿåº¦æµ‹è¯•æ¥å£
 class IDiskSpeedTest
 {
 public:
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     virtual ~IDiskSpeedTest() = 0 {};
 
-    /// @brief ¿ªÊ¼²âÊÔ
-    /// ¸Ã·½·¨ÎªÒì²½·½·¨, ¿ªÊ¼²âÊÔºóÊ¹ÓÃGetState¿ÉÒÔ»ñµÃ²âÊÔ½á¹û
-    /// ×¢Òâ: Õë¶ÔÏµÍ³ÅÌÄ¿Â¼ĞèÒª¹ÜÀíÔ±È¨ÏŞ
-    /// @param[in] filePath ²âÊÔÎÄ¼şÍêÕûÂ·¾¶
-    /// @param[in] fileSize ²âÊÔÎÄ¼ş´óĞ¡, µ¥Î»ÎªM
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, ²âÊÔÕıÔÚ½øĞĞÔò»áÊ§°Ü
+    /// @brief å¼€å§‹æµ‹è¯•
+    /// è¯¥æ–¹æ³•ä¸ºå¼‚æ­¥æ–¹æ³•, å¼€å§‹æµ‹è¯•åä½¿ç”¨GetStateå¯ä»¥è·å¾—æµ‹è¯•ç»“æœ
+    /// æ³¨æ„: é’ˆå¯¹ç³»ç»Ÿç›˜ç›®å½•éœ€è¦ç®¡ç†å‘˜æƒé™
+    /// @param[in] filePath æµ‹è¯•æ–‡ä»¶å®Œæ•´è·¯å¾„
+    /// @param[in] fileSize æµ‹è¯•æ–‡ä»¶å¤§å°, å•ä½ä¸ºM
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, æµ‹è¯•æ­£åœ¨è¿›è¡Œåˆ™ä¼šå¤±è´¥
     virtual bool Start(IN const wstring& filePath, IN unsigned int fileSize) = 0;
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
-    /// @return ²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
+    /// @return æµ‹è¯•çŠ¶æ€
     virtual LDiskSpeedTestState GetState() = 0;
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     virtual void Stop() = 0;
 };
 
 
 
-/// @brief ´ÅÅÌË³Ğò²âÊÔ
-/// ´ÅÅÌË³Ğò²âËÙÒªÇóÎÄ¼ş´óĞ¡´óÓÚµÈÓÚ16M, Ğ¡ÓÚ4G
+/// @brief ç£ç›˜é¡ºåºæµ‹è¯•
+/// ç£ç›˜é¡ºåºæµ‹é€Ÿè¦æ±‚æ–‡ä»¶å¤§å°å¤§äºç­‰äº16M, å°äº4G
 class LDiskSequenceTest : public IDiskSpeedTest
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LDiskSequenceTest();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LDiskSequenceTest();
 
-    /// @brief ¿ªÊ¼²âÊÔ
+    /// @brief å¼€å§‹æµ‹è¯•
     bool Start(IN const wstring& filePath, IN unsigned int fileSize);
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
     LDiskSpeedTestState GetState();
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop();
 
 private:
-    CDiskSequenceTest* m_pDiskSequenceTest; ///< Ë³Ğò²âÊÔÊµÏÖ¶ÔÏó
+    CDiskSequenceTest* m_pDiskSequenceTest; ///< é¡ºåºæµ‹è¯•å®ç°å¯¹è±¡
 };
 
 
 
-/// @brief ´ÅÅÌ4KBËæ»ú²âÊÔ
-/// ´ÅÅÌË³Ğò²âËÙÒªÇóÎÄ¼şĞ¡ÓÚµÈÓÚ4G
+/// @brief ç£ç›˜4KBéšæœºæµ‹è¯•
+/// ç£ç›˜é¡ºåºæµ‹é€Ÿè¦æ±‚æ–‡ä»¶å°äºç­‰äº4G
 class LDisk4KRandomTest : public IDiskSpeedTest
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LDisk4KRandomTest();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LDisk4KRandomTest();
 
-    /// @brief ¿ªÊ¼²âÊÔ
+    /// @brief å¼€å§‹æµ‹è¯•
     bool Start(IN const wstring& filePath, IN unsigned int fileSize);
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
     LDiskSpeedTestState GetState();
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop();
 
 private:
-    CDisk4KRandomTest* m_pDisk4KRandomTest; ///< 4KËæ»ú²âÊÔÊµÏÖ¶ÔÏó
+    CDisk4KRandomTest* m_pDisk4KRandomTest; ///< 4Kéšæœºæµ‹è¯•å®ç°å¯¹è±¡
 };
 
 #endif

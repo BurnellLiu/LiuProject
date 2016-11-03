@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LHARDWAREINFOR_H_
 #define _LHARDWAREINFOR_H_
@@ -19,263 +19,263 @@ using std::wstring;
 #define OUT
 #endif
 
-/// @brief »ñÈ¡¼ÆËã»úÀàĞÍ
+/// @brief è·å–è®¡ç®—æœºç±»å‹
 enum COMPUTER_TYPE
 {
-    COMPUTER_TYPE_UNKNOWN = 0, ///< Î´Öª
-    COMPUTER_TYPE_DESKTOP = 1, ///< Ì¨Ê½»ú
-    COMPUTER_TYPE_NOTE_BOOK = 2, ///< ±Ê¼Ç±¾
-    COMPUTER_TYPE_TABLET = 3 ///< Æ½°åµçÄÔ
+    COMPUTER_TYPE_UNKNOWN = 0, ///< æœªçŸ¥
+    COMPUTER_TYPE_DESKTOP = 1, ///< å°å¼æœº
+    COMPUTER_TYPE_NOTE_BOOK = 2, ///< ç¬”è®°æœ¬
+    COMPUTER_TYPE_TABLET = 3 ///< å¹³æ¿ç”µè„‘
 };
 
-/// @brief ¼ÆËã»úÏµÍ³ĞÅÏ¢½á¹¹
+/// @brief è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯ç»“æ„
 struct ComputerSystemInfor
 {
-    wstring ModelName; ////< ¼ÆËã»ú»úÖÖÃû
-    wstring Manufacturer; ///< ¼ÆËã»úÖÆÔìÉÌ
-    string Version; ///< ¼ÆËã»ú°æ±¾
-    string SerialNumber; ///< ¼ÆËã»úĞòÁĞºÅ
-    unsigned char UUID[16]; ///< ¼ÆËã»úÎ¨Ò»±êÊ¶·û
-    COMPUTER_TYPE Type; ///< ¼ÆËã»úÀàĞÍ
+    wstring ModelName; ////< è®¡ç®—æœºæœºç§å
+    wstring Manufacturer; ///< è®¡ç®—æœºåˆ¶é€ å•†
+    string Version; ///< è®¡ç®—æœºç‰ˆæœ¬
+    string SerialNumber; ///< è®¡ç®—æœºåºåˆ—å·
+    unsigned char UUID[16]; ///< è®¡ç®—æœºå”¯ä¸€æ ‡è¯†ç¬¦
+    COMPUTER_TYPE Type; ///< è®¡ç®—æœºç±»å‹
 };
 
-/// @brief ²Ù×÷ÏµÍ³ĞÅÏ¢½á¹¹
+/// @brief æ“ä½œç³»ç»Ÿä¿¡æ¯ç»“æ„
 struct OperatingSystemInfor
 {
-    wstring Caption; ////< ±êÌâ
-    wstring Architecture; ////< ¼Ü¹¹
-    wstring Version; ////< °æ±¾
-    wstring SystemDrive; ////< ÏµÍ³ÅÌ
+    wstring Caption; ////< æ ‡é¢˜
+    wstring Architecture; ////< æ¶æ„
+    wstring Version; ////< ç‰ˆæœ¬
+    wstring SystemDrive; ////< ç³»ç»Ÿç›˜
 };
 
-/// @brief Ö÷°åĞÅÏ¢½á¹¹
+/// @brief ä¸»æ¿ä¿¡æ¯ç»“æ„
 struct MotherBoardInfor
 {
-    string ProductName; ///< Ö÷°å²úÆ·Ãû
-    string Manufacturer; ///< Ö÷°åÖÆÔìÉÌ
-    string Version; ///< Ö÷°å°æ±¾
-    string SerialNumber; ///< Ö÷°åĞòÁĞºÅ
+    string ProductName; ///< ä¸»æ¿äº§å“å
+    string Manufacturer; ///< ä¸»æ¿åˆ¶é€ å•†
+    string Version; ///< ä¸»æ¿ç‰ˆæœ¬
+    string SerialNumber; ///< ä¸»æ¿åºåˆ—å·
 
-    string BiosVendor; ///< Bios³§ÉÌ
-    string BiosVersion; ///< Bios°æ±¾
-    string BiosReleaseDate; ///< Bios·¢²¼ÈÕÆÚ
-    unsigned long BiosRomSize; ///< Bios Rom´óĞ¡, µ¥Î»K
+    string BiosVendor; ///< Bioså‚å•†
+    string BiosVersion; ///< Biosç‰ˆæœ¬
+    string BiosReleaseDate; ///< Bioså‘å¸ƒæ—¥æœŸ
+    unsigned long BiosRomSize; ///< Bios Romå¤§å°, å•ä½K
 };
 
-/// @brief ´¦ÀíÆ÷ĞÅÏ¢
+/// @brief å¤„ç†å™¨ä¿¡æ¯
 struct ProcessorInfor
 {
-    wstring Name; ///< Ãû³Æ
-    wstring Description; ///< ÃèÊö
-    wstring Manufacturer; ///< ÖÆÔìÉÌ
-    unsigned long CoresNumber; ///< ºËĞÄÊı
-    unsigned long LogicalProcessorNumber; ///< Âß¼­´¦ÀíÆ÷ÊıÁ¿
-    unsigned long MaxClockSpeed; ///< ×î´óÆµÂÊ(MHz)
+    wstring Name; ///< åç§°
+    wstring Description; ///< æè¿°
+    wstring Manufacturer; ///< åˆ¶é€ å•†
+    unsigned long CoresNumber; ///< æ ¸å¿ƒæ•°
+    unsigned long LogicalProcessorNumber; ///< é€»è¾‘å¤„ç†å™¨æ•°é‡
+    unsigned long MaxClockSpeed; ///< æœ€å¤§é¢‘ç‡(MHz)
 };
 
-/// @brief ÏÔ¿¨ÀàĞÍ
+/// @brief æ˜¾å¡ç±»å‹
 enum VIDEO_CARD_TYPE
 {
-    VIDEO_CARD_UNKNOWN = 0, ///< Î´Öª
-    VIDEO_CARD_INTERNAL, ///< ¼¯³ÉÏÔ¿¨
-    VIDEO_CARD_EXTERNAL ///< ¶ÀÁ¢ÏÔ¿¨
+    VIDEO_CARD_UNKNOWN = 0, ///< æœªçŸ¥
+    VIDEO_CARD_INTERNAL, ///< é›†æˆæ˜¾å¡
+    VIDEO_CARD_EXTERNAL ///< ç‹¬ç«‹æ˜¾å¡
 };
 
-/// @brief ×î´óÏÔ¿¨ÊıÁ¿
+/// @brief æœ€å¤§æ˜¾å¡æ•°é‡
 #define MAX_VIDEOCARD_NUMBER 4
 
-/// @brief ÏÔ¿¨ĞÅÏ¢×é
+/// @brief æ˜¾å¡ä¿¡æ¯ç»„
 struct VideoCardInforArray
 {
-    unsigned long Count; ///< ÏÔ¿¨ÊıÁ¿
-    wstring Description[MAX_VIDEOCARD_NUMBER]; ///< ÏÔ¿¨ÃèÊö
-    VIDEO_CARD_TYPE Type[MAX_VIDEOCARD_NUMBER]; ///< ÏÔ¿¨ÀàĞÍ
-    unsigned long RAMSize[MAX_VIDEOCARD_NUMBER]; ///< ÏÔ´æ´óĞ¡, µ¥Î»(M)
+    unsigned long Count; ///< æ˜¾å¡æ•°é‡
+    wstring Description[MAX_VIDEOCARD_NUMBER]; ///< æ˜¾å¡æè¿°
+    VIDEO_CARD_TYPE Type[MAX_VIDEOCARD_NUMBER]; ///< æ˜¾å¡ç±»å‹
+    unsigned long RAMSize[MAX_VIDEOCARD_NUMBER]; ///< æ˜¾å­˜å¤§å°, å•ä½(M)
 };
 
-/// @brief ×î´óÎïÀíÄÚ´æÊıÁ¿
+/// @brief æœ€å¤§ç‰©ç†å†…å­˜æ•°é‡
 #define MAX_PHYSICAL_MEMORY_NUMBER 8
 
-/// @brief ÄÚ´æĞÅÏ¢×é
+/// @brief å†…å­˜ä¿¡æ¯ç»„
 struct PhysicalMemoryInforArray
 {
-    unsigned long Count; ///< ÄÚ´æÊıÁ¿
-    wstring Manufacturer[MAX_PHYSICAL_MEMORY_NUMBER]; ///< ÖÆÔìÉÌ
-    wstring SerialNumber[MAX_PHYSICAL_MEMORY_NUMBER]; ///< ĞòÁĞºÅ
-    wstring PartNumbe[MAX_PHYSICAL_MEMORY_NUMBER]; ///< ĞÍºÅ
-    unsigned long Capacity[MAX_PHYSICAL_MEMORY_NUMBER]; ///< ÄÚ´æÈİÁ¿, µ¥Î»(M)
-    unsigned long Speed[MAX_PHYSICAL_MEMORY_NUMBER]; ///< ÄÚ´æÆµÂÊ
+    unsigned long Count; ///< å†…å­˜æ•°é‡
+    wstring Manufacturer[MAX_PHYSICAL_MEMORY_NUMBER]; ///< åˆ¶é€ å•†
+    wstring SerialNumber[MAX_PHYSICAL_MEMORY_NUMBER]; ///< åºåˆ—å·
+    wstring PartNumbe[MAX_PHYSICAL_MEMORY_NUMBER]; ///< å‹å·
+    unsigned long Capacity[MAX_PHYSICAL_MEMORY_NUMBER]; ///< å†…å­˜å®¹é‡, å•ä½(M)
+    unsigned long Speed[MAX_PHYSICAL_MEMORY_NUMBER]; ///< å†…å­˜é¢‘ç‡
 };
 
-/// @brief ×î´ó´ÅÅÌÇı¶¯Æ÷ÊıÁ¿
+/// @brief æœ€å¤§ç£ç›˜é©±åŠ¨å™¨æ•°é‡
 #define MAX_DISK_NUMBER 8
 
-/// @brief ´ÅÅÌÀàĞÍ
+/// @brief ç£ç›˜ç±»å‹
 enum DISK_TYPE
 {
-    UNKNOWN_DISK = 0, // Î´ÖªÀàĞÍ
-    FIXED_DISK = 1, // ¹Ì¶¨´ÅÅÌ(Èç±¾µØÓ²ÅÌ)
-    EXTERNAL_USB_DISK = 2, // À©Õ¹´ÅÅÌ(ÈçUSBÒÆ¶¯Ó²ÅÌ)
-    VIRTUAL_DISK = 3, // ĞéÄâÓ²ÅÌ(ÈçVHD)
-    REMOVABLE_DISK = 4, // ¿ÉÒÆ¶¯ÅÌ
+    UNKNOWN_DISK = 0, // æœªçŸ¥ç±»å‹
+    FIXED_DISK = 1, // å›ºå®šç£ç›˜(å¦‚æœ¬åœ°ç¡¬ç›˜)
+    EXTERNAL_USB_DISK = 2, // æ‰©å±•ç£ç›˜(å¦‚USBç§»åŠ¨ç¡¬ç›˜)
+    VIRTUAL_DISK = 3, // è™šæ‹Ÿç¡¬ç›˜(å¦‚VHD)
+    REMOVABLE_DISK = 4, // å¯ç§»åŠ¨ç›˜
 };
 
-/// @brief ¹Ì¶¨´ÅÅÌÀàĞÍ
+/// @brief å›ºå®šç£ç›˜ç±»å‹
 enum FIXED_DISK_TYPE
 {
-    FIXED_DISK_UNKNOWN = 0, // Î´ÖªÀàĞÍ
-    FIXED_DISK_HDD = 1, // »úĞµÓ²ÅÌ
-    FIXED_DISK_SSD = 2, // ¹ÌÌ¬Ó²ÅÌ
-    FIXED_DISK_EMMC = 3, // EMMCÓ²ÅÌ
-    FIXED_DISK_RAID = 4 // Ó²ÅÌÕóÁĞ
+    FIXED_DISK_UNKNOWN = 0, // æœªçŸ¥ç±»å‹
+    FIXED_DISK_HDD = 1, // æœºæ¢°ç¡¬ç›˜
+    FIXED_DISK_SSD = 2, // å›ºæ€ç¡¬ç›˜
+    FIXED_DISK_EMMC = 3, // EMMCç¡¬ç›˜
+    FIXED_DISK_RAID = 4 // ç¡¬ç›˜é˜µåˆ—
 };
 
-/// @brief ´ÅÅÌĞÅÏ¢×é
+/// @brief ç£ç›˜ä¿¡æ¯ç»„
 struct DiskInforArray 
 {
-    unsigned long Count; ///< ´ÅÅÌÊıÁ¿
-    wstring Model[MAX_DISK_NUMBER]; ///< ´ÅÅÌĞÍºÅ
-    wstring SerialNumber[MAX_DISK_NUMBER]; ///< ´ÅÅÌĞòÁĞºÅ
-    unsigned long TotalSize[MAX_DISK_NUMBER]; ///< ´ÅÅÌ×Ü´óĞ¡, µ¥Î»(G)
-    wstring InterfaceType[MAX_DISK_NUMBER]; ///< ´ÅÅÌ½Ó¿ÚÀàĞÍ(SCSI, HDC, IDE, USB 1394)
-    DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< ´ÅÅÌÀàĞÍ
-    wstring LogicalName[MAX_DISK_NUMBER]; ///< ´ÅÅÌÂß¼­·ÖÇøÃû³Æ, ¶à¸ö·ÖÇøÒÔ·ÖºÅ¸ô¿ª, ÈçC:;D:;E:
+    unsigned long Count; ///< ç£ç›˜æ•°é‡
+    wstring Model[MAX_DISK_NUMBER]; ///< ç£ç›˜å‹å·
+    wstring SerialNumber[MAX_DISK_NUMBER]; ///< ç£ç›˜åºåˆ—å·
+    unsigned long TotalSize[MAX_DISK_NUMBER]; ///< ç£ç›˜æ€»å¤§å°, å•ä½(G)
+    wstring InterfaceType[MAX_DISK_NUMBER]; ///< ç£ç›˜æ¥å£ç±»å‹(SCSI, HDC, IDE, USB 1394)
+    DISK_TYPE DiskType[MAX_DISK_NUMBER]; ///< ç£ç›˜ç±»å‹
+    wstring LogicalName[MAX_DISK_NUMBER]; ///< ç£ç›˜é€»è¾‘åˆ†åŒºåç§°, å¤šä¸ªåˆ†åŒºä»¥åˆ†å·éš”å¼€, å¦‚C:;D:;E:
 
-    bool IsATA[MAX_DISK_NUMBER]; ///< ±êÊ¶ÊÇ·ñÎªATA½Ó¿ÚÓ²ÅÌ
+    bool IsATA[MAX_DISK_NUMBER]; ///< æ ‡è¯†æ˜¯å¦ä¸ºATAæ¥å£ç¡¬ç›˜
     struct  
     {
-        unsigned long RotationRate; ///< ´ÅÅÌ×ªËÙ, Èç¹ûÖµÎª1±íÊ¾Îª¹ÌÌ¬Ó²ÅÌ(SSD), 0±íÊ¾»ñÈ¡Ê§°Ü
-        unsigned long SATAType; ///< SATA½Ó¿ÚÀàĞÍ, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(»ñÈ¡Ê§°Ü)
-        unsigned long PowerOnHours; ///< Í¨µç×ÜÊ±¼ä, µ¥Î»hours(Ğ¡Ê±)
-    }ATAInfor[MAX_DISK_NUMBER]; ///< Ö»ÓĞIDE(ATA)½Ó¿ÚµÄÓ²ÅÌ²ÅÓ¦¸ÃÊ¹ÓÃ¸Ã½á¹¹ÖĞµÄÖµ
+        unsigned long RotationRate; ///< ç£ç›˜è½¬é€Ÿ, å¦‚æœå€¼ä¸º1è¡¨ç¤ºä¸ºå›ºæ€ç¡¬ç›˜(SSD), 0è¡¨ç¤ºè·å–å¤±è´¥
+        unsigned long SATAType; ///< SATAæ¥å£ç±»å‹, 1(SATA1.0 1.5Gb/s), 2(SATA2.0 3.0Gb/s), 3(SATA3.0 6.0Gb/s), 0(è·å–å¤±è´¥)
+        unsigned long PowerOnHours; ///< é€šç”µæ€»æ—¶é—´, å•ä½hours(å°æ—¶)
+    }ATAInfor[MAX_DISK_NUMBER]; ///< åªæœ‰IDE(ATA)æ¥å£çš„ç¡¬ç›˜æ‰åº”è¯¥ä½¿ç”¨è¯¥ç»“æ„ä¸­çš„å€¼
 
-    FIXED_DISK_TYPE FixedDiskType[MAX_DISK_NUMBER]; ///< Ö»ÓĞÊôÓÚFIXED_DISK·ÖÀàµÄÓ²ÅÌ, ¸ÃÖµ²ÅÓĞĞ§
+    FIXED_DISK_TYPE FixedDiskType[MAX_DISK_NUMBER]; ///< åªæœ‰å±äºFIXED_DISKåˆ†ç±»çš„ç¡¬ç›˜, è¯¥å€¼æ‰æœ‰æ•ˆ
 };
 
-/// @brief ×î´óÏÔÊ¾Æ÷ÊıÁ¿
+/// @brief æœ€å¤§æ˜¾ç¤ºå™¨æ•°é‡
 #define MAX_MONITOR_NUMBER 8
 
-/// @brief ÏÔÊ¾Æ÷ĞÅÏ¢×é
+/// @brief æ˜¾ç¤ºå™¨ä¿¡æ¯ç»„
 struct MonitorInforArray
 {
-    unsigned long Count; ///< ÏÔÊ¾Æ÷ÊıÁ¿
-    wstring Name[MAX_MONITOR_NUMBER]; ///< ÏÔÊ¾Æ÷Ãû³Æ
-    wstring Date[MAX_MONITOR_NUMBER]; ////< ÏÔÊ¾Æ÷Éú²úÈÕÆÚ
+    unsigned long Count; ///< æ˜¾ç¤ºå™¨æ•°é‡
+    wstring Name[MAX_MONITOR_NUMBER]; ///< æ˜¾ç¤ºå™¨åç§°
+    wstring Date[MAX_MONITOR_NUMBER]; ////< æ˜¾ç¤ºå™¨ç”Ÿäº§æ—¥æœŸ
 };
 
-/// @brief µç³Ø¾²Ì¬ĞÅÏ¢
+/// @brief ç”µæ± é™æ€ä¿¡æ¯
 struct BatteryStaticInfor
 {
-    bool Exist; ///< ±êÊ¶ÊÇ·ñ´æÔÚµç³Ø
-    wstring Name; ///< µç³ØÃû
-    wstring Manufacturer; ///< µç³ØÖÆÔìÉÌ
-    wstring SerialNumber; ///< µç³ØĞòÁĞºÅ
+    bool Exist; ///< æ ‡è¯†æ˜¯å¦å­˜åœ¨ç”µæ± 
+    wstring Name; ///< ç”µæ± å
+    wstring Manufacturer; ///< ç”µæ± åˆ¶é€ å•†
+    wstring SerialNumber; ///< ç”µæ± åºåˆ—å·
 
-    unsigned long DesignedCapacity; ///< Éè¼ÆÈİÁ¿, µ¥Î»mWh
-    unsigned long FullChargedCapacity; ///< ³äÂúµçÈİÁ¿. µ¥Î»mWh
-    unsigned long DesignedVoltage; ///< Éè¼ÆµçÑ¹, µ¥Î»mV
+    unsigned long DesignedCapacity; ///< è®¾è®¡å®¹é‡, å•ä½mWh
+    unsigned long FullChargedCapacity; ///< å……æ»¡ç”µå®¹é‡. å•ä½mWh
+    unsigned long DesignedVoltage; ///< è®¾è®¡ç”µå‹, å•ä½mV
 };
 
-/// @brief ×î´óÍø¿¨ÊıÁ¿
+/// @brief æœ€å¤§ç½‘å¡æ•°é‡
 #define MAX_NETWORKCARD_NUMBER 16
 
-/// @brief Íø¿¨ÀàĞÍ
+/// @brief ç½‘å¡ç±»å‹
 enum NETWORKCARD_TYPE
 {
-    UNKNOWN_NETCARD = 0, ///< Î´ÖªÍø¿¨
-    WIFI_NETCARD = 1, ///< ÎŞÏßÍø¿¨
-    ETHERNET_NETCARD = 2, ///< Íø¿¨
-    BLUETOOTH_NETCARD = 3 ///< À¶ÑÀ¿¨ 
+    UNKNOWN_NETCARD = 0, ///< æœªçŸ¥ç½‘å¡
+    WIFI_NETCARD = 1, ///< æ— çº¿ç½‘å¡
+    ETHERNET_NETCARD = 2, ///< ç½‘å¡
+    BLUETOOTH_NETCARD = 3 ///< è“ç‰™å¡ 
 };
 
-/// @brief Íø¿¨ĞÅÏ¢×é
+/// @brief ç½‘å¡ä¿¡æ¯ç»„
 struct NetworkCardInforArray
 {
-    unsigned long Count; ///< Íø¿¨ÊıÁ¿
-    NETWORKCARD_TYPE Type[MAX_NETWORKCARD_NUMBER]; ///< Íø¿¨ÀàĞÍ
-    wstring Name[MAX_NETWORKCARD_NUMBER]; ///< Íø¿¨Ãû³Æ
-    wstring Manufacturer[MAX_NETWORKCARD_NUMBER]; ///< Íø¿¨ÖÆÔìÉÌ
-    wstring MACAddress[MAX_NETWORKCARD_NUMBER]; ///< MACµØÖ·
+    unsigned long Count; ///< ç½‘å¡æ•°é‡
+    NETWORKCARD_TYPE Type[MAX_NETWORKCARD_NUMBER]; ///< ç½‘å¡ç±»å‹
+    wstring Name[MAX_NETWORKCARD_NUMBER]; ///< ç½‘å¡åç§°
+    wstring Manufacturer[MAX_NETWORKCARD_NUMBER]; ///< ç½‘å¡åˆ¶é€ å•†
+    wstring MACAddress[MAX_NETWORKCARD_NUMBER]; ///< MACåœ°å€
 };
 
-/// @brief ×î´óÍø¿¨ÊıÁ¿
+/// @brief æœ€å¤§ç½‘å¡æ•°é‡
 #define MAX_CDROMDRIVE_NUMBER 8
 
-/// @brief ¹âÇıĞÅÏ¢×é
+/// @brief å…‰é©±ä¿¡æ¯ç»„
 struct CDRomDriveInforArray
 {
-    unsigned long Count; ///< ¹âÇıÊıÁ¿
-    wstring Name[MAX_CDROMDRIVE_NUMBER]; ///< ¹âÇıÃû³Æ
+    unsigned long Count; ///< å…‰é©±æ•°é‡
+    wstring Name[MAX_CDROMDRIVE_NUMBER]; ///< å…‰é©±åç§°
 };
 
-/// @brief ×î´óÉãÏñ»úÊıÁ¿
+/// @brief æœ€å¤§æ‘„åƒæœºæ•°é‡
 #define MAX_CAMERA_NUMBER 8
 
-/// @brief ÉãÏñ»úĞÅÏ¢×é
+/// @brief æ‘„åƒæœºä¿¡æ¯ç»„
 struct CameraInforArray
 {
-    unsigned long Count; ///< ÉãÏñ»úÊıÁ¿
-    wstring Name[MAX_CAMERA_NUMBER]; ///< ÉãÏñ»úÃû³Æ
+    unsigned long Count; ///< æ‘„åƒæœºæ•°é‡
+    wstring Name[MAX_CAMERA_NUMBER]; ///< æ‘„åƒæœºåç§°
 };
 
-/// @brief Ó²¼şĞÅÏ¢Àà
+/// @brief ç¡¬ä»¶ä¿¡æ¯ç±»
 ///
-/// ¸ÃÀà»ñÈ¡µÄ¶¼ÊÇ¹Ì¶¨ĞÅÏ¢
+/// è¯¥ç±»è·å–çš„éƒ½æ˜¯å›ºå®šä¿¡æ¯
 class LHardwareInfor
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     LHardwareInfor();
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~LHardwareInfor();
 
-    /// @brief »ñÈ¡¼ÆËã»úÏµÍ³ĞÅÏ¢
-    /// @return ¼ÆËã»úÏµÍ³ĞÅÏ¢
+    /// @brief è·å–è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
+    /// @return è®¡ç®—æœºç³»ç»Ÿä¿¡æ¯
     static const ComputerSystemInfor& GetComputerSystemInfor(); 
 
-    /// @brief »ñÈ¡²Ù×÷ÏµÍ³ĞÅÏ¢
-    /// @return ²Ù×÷ÏµÍ³ĞÅÏ¢
+    /// @brief è·å–æ“ä½œç³»ç»Ÿä¿¡æ¯
+    /// @return æ“ä½œç³»ç»Ÿä¿¡æ¯
     static const OperatingSystemInfor& GetOperatingSystemInfor();
 
-    /// @brief »ñÈ¡Ö÷°åĞÅÏ¢
-    /// @return Ö÷°åĞÅÏ¢
+    /// @brief è·å–ä¸»æ¿ä¿¡æ¯
+    /// @return ä¸»æ¿ä¿¡æ¯
     static const MotherBoardInfor& GetMotherBoardInfor();
 
-    /// @brief »ñÈ¡´¦ÀíÆ÷ĞÅÏ¢
-    /// @return ´¦ÀíÆ÷ĞÅÏ¢
+    /// @brief è·å–å¤„ç†å™¨ä¿¡æ¯
+    /// @return å¤„ç†å™¨ä¿¡æ¯
     static const ProcessorInfor& GetProcessorInfor();
 
-    /// @brief »ñÈ¡ÏÔ¿¨ĞÅÏ¢
-    /// @return ÏÔ¿¨ĞÅÏ¢
+    /// @brief è·å–æ˜¾å¡ä¿¡æ¯
+    /// @return æ˜¾å¡ä¿¡æ¯
     static const VideoCardInforArray& GetVideoCardInfor();
 
-    /// @brief »ñÈ¡ÎïÀíÄÚ´æĞÅÏ¢
-    /// @return ÎïÀíÄÚ´æĞÅÏ¢
+    /// @brief è·å–ç‰©ç†å†…å­˜ä¿¡æ¯
+    /// @return ç‰©ç†å†…å­˜ä¿¡æ¯
     static const PhysicalMemoryInforArray& GetPhysicalMemoryInfor();
 
-    /// @brief »ñÈ¡´ÅÅÌĞÅÏ¢
-    /// @return ´ÅÅÌĞÅÏ¢
+    /// @brief è·å–ç£ç›˜ä¿¡æ¯
+    /// @return ç£ç›˜ä¿¡æ¯
     static const DiskInforArray& GetDiskInfor();
 
-    /// @brief »ñÈ¡ÏÔÊ¾Æ÷ĞÅÏ¢
-    /// @return ÏÔÊ¾Æ÷ĞÅÏ¢
+    /// @brief è·å–æ˜¾ç¤ºå™¨ä¿¡æ¯
+    /// @return æ˜¾ç¤ºå™¨ä¿¡æ¯
     static const MonitorInforArray& GetMonitorInfor();
 
-    /// @brief »ñÈ¡µç³Ø¾²Ì¬ĞÅÏ¢
-    /// @return µç³Ø¾²Ì¬ĞÅÏ¢
+    /// @brief è·å–ç”µæ± é™æ€ä¿¡æ¯
+    /// @return ç”µæ± é™æ€ä¿¡æ¯
     static const BatteryStaticInfor& GetBatteryStaticInfor();
 
-    /// @brief »ñÈ¡Íø¿¨ĞÅÏ¢
-    /// @return Íø¿¨ĞÅÏ¢
+    /// @brief è·å–ç½‘å¡ä¿¡æ¯
+    /// @return ç½‘å¡ä¿¡æ¯
     static const NetworkCardInforArray& GetNetworkCardInfor();
 
-    /// @brief »ñÈ¡¹âÇıĞÅÏ¢
-    /// @return ¹âÇıĞÅÏ¢
+    /// @brief è·å–å…‰é©±ä¿¡æ¯
+    /// @return å…‰é©±ä¿¡æ¯
     static const CDRomDriveInforArray& GetCDRomDriveInfor();
 
-    /// @brief »ñÈ¡ÉãÏñ»úĞÅÏ¢
-    /// @return ÉãÏñ»úĞÅÏ¢
+    /// @brief è·å–æ‘„åƒæœºä¿¡æ¯
+    /// @return æ‘„åƒæœºä¿¡æ¯
     static const CameraInforArray& GetCameraInfor();
 };
 

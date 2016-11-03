@@ -1,44 +1,44 @@
-
+ï»¿
 
 #include "LSMBiosPaser.h"
 
-///@ brief BIOSĞÅÏ¢ÀàĞÍÖµ
+///@ brief BIOSä¿¡æ¯ç±»å‹å€¼
 #define BIOS_INFOR_TYPE 0
 
-///@ brief ÏµÍ³ĞÅÏ¢ÀàĞÍÖµ
+///@ brief ç³»ç»Ÿä¿¡æ¯ç±»å‹å€¼
 #define SYSTEM_INFOR_TYPE 1
 
-///@ brief Ö÷°åÀàĞÍÖµ
+///@ brief ä¸»æ¿ç±»å‹å€¼
 #define BASEBOARD_INFOR_TYPE 2
 
-/// @brief SMBiosÀàĞÍ½á¹¹
+/// @brief SMBiosç±»å‹ç»“æ„
 struct SMBiosType 
 {
-    unsigned int Type; ///< ÀàĞÍ
-    vector<unsigned char> TypeData; ///< Êı¾İ
+    unsigned int Type; ///< ç±»å‹
+    vector<unsigned char> TypeData; ///< æ•°æ®
 };
 
-/// @brief SMBios½âÎöÀà
+/// @brief SMBiosè§£æç±»
 class CSMBiosPaser
 {
 public:
     CSMBiosPaser(IN const vector<unsigned char>& smBiosData)
     {
-        // °´ÕÕType½âÎöSMBiosĞÅÏ¢
+        // æŒ‰ç…§Typeè§£æSMBiosä¿¡æ¯
 
-        // Type½á¹¹¿ªÊ¼Ë÷ÒıÎ»ÖÃ
+        // Typeç»“æ„å¼€å§‹ç´¢å¼•ä½ç½®
         unsigned typeStartIndex = 0;
         while (typeStartIndex < smBiosData.size())
         {
             SMBiosType newType;
 
-            // »ñÈ¡TypeÖµ
+            // è·å–Typeå€¼
             newType.Type = (unsigned int)smBiosData[typeStartIndex];
 
-            // »ñÈ¡¸ñÊ½ÇøÓò³¤¶È
+            // è·å–æ ¼å¼åŒºåŸŸé•¿åº¦
             unsigned int length = (unsigned int)smBiosData[typeStartIndex + 1];
 
-            // ²éÕÒ×Ö·û´®ÇøÓò½áÊøÎ»ÖÃ
+            // æŸ¥æ‰¾å­—ç¬¦ä¸²åŒºåŸŸç»“æŸä½ç½®
             unsigned int typeEndIndex = 0;
             for (unsigned int i = length + typeStartIndex; i < smBiosData.size()-1; i++)
             {
@@ -67,9 +67,9 @@ public:
 
     }
 
-    /// @brief »ñÈ¡BIOSĞÅÏ¢
-    /// @param[out] biosInfor ´æ´¢BIOSĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è·å–BIOSä¿¡æ¯
+    /// @param[out] biosInfor å­˜å‚¨BIOSä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool GetBiosInfor(OUT SMBiosBIOSInfor& biosInfor)
     {
         bool success = false;
@@ -166,9 +166,9 @@ public:
     }
 
 private:
-    /// @brief ´ÓType½á¹¹ÖĞ»ñÈ¡×Ö·ûÁĞ±í
-    /// @param[in] type Type½á¹¹
-    /// @param[out] strList ´æ´¢×Ö·û´®ÁĞ±í
+    /// @brief ä»Typeç»“æ„ä¸­è·å–å­—ç¬¦åˆ—è¡¨
+    /// @param[in] type Typeç»“æ„
+    /// @param[out] strList å­˜å‚¨å­—ç¬¦ä¸²åˆ—è¡¨
     void GetTypeStringList(IN const SMBiosType& typeInfor, OUT vector<string>& strList)
     {
         strList.clear();
@@ -187,7 +187,7 @@ private:
     }
 
 private:
-    vector<SMBiosType> m_smBiosTypeList; ///< SMBIOSĞÅÏ¢TypeÁĞ±í
+    vector<SMBiosType> m_smBiosTypeList; ///< SMBIOSä¿¡æ¯Typeåˆ—è¡¨
 };
 
 LSMBiosPaser::LSMBiosPaser(IN const vector<unsigned char>& smBiosData)

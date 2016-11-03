@@ -1,4 +1,4 @@
-
+ï»¿
 #include "AppParam.h"
 
 #include <QtCore/QFile>
@@ -8,13 +8,13 @@
 #define STRING_PARAM_RESTARTAGING "-RestartAging"
 
 
-static APP_START_MODE s_appStartMode = APP_NORMAL; ///< ³ÌÐòÆô¶¯Ä£Ê½
-static QString s_appVersion = ""; ///< ³ÌÐò°æ±¾
+static APP_START_MODE s_appStartMode = APP_NORMAL; ///< ç¨‹åºå¯åŠ¨æ¨¡å¼
+static QString s_appVersion = ""; ///< ç¨‹åºç‰ˆæœ¬
 
-/// @brief ½âÎö³ÌÐòÆô¶¯Ä£Ê½
-/// @param[in] argc ÃüÁîÐÐ²ÎÊýÊýÄ¿
-/// @param[in] argv[] ÃüÁîÐÐ²ÎÊý
-/// @return ³ÌÐòÆô¶¯Ä£Ê½
+/// @brief è§£æžç¨‹åºå¯åŠ¨æ¨¡å¼
+/// @param[in] argc å‘½ä»¤è¡Œå‚æ•°æ•°ç›®
+/// @param[in] argv[] å‘½ä»¤è¡Œå‚æ•°
+/// @return ç¨‹åºå¯åŠ¨æ¨¡å¼
 static APP_START_MODE ParseStartMode(int argc, char *argv[])
 {
     APP_START_MODE startMode = APP_NORMAL;
@@ -39,8 +39,8 @@ static APP_START_MODE ParseStartMode(int argc, char *argv[])
     return startMode;
 }
 
-/// @brief ¶ÁÈ¡³ÌÐò°æ±¾ÐÅÏ¢
-/// @return ³ÌÐò°æ±¾ÐÅÏ¢
+/// @brief è¯»å–ç¨‹åºç‰ˆæœ¬ä¿¡æ¯
+/// @return ç¨‹åºç‰ˆæœ¬ä¿¡æ¯
 static QString ReadAppVersion()
 {
     QFile versionFile(VERSION_FILE_PATH);

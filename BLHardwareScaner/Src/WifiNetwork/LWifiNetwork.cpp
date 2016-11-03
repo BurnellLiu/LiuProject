@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LWifiNetwork.h"
 
 
@@ -18,17 +18,17 @@ using std::vector;
 #pragma comment(lib, "Rpcrt4.lib")
 
 /// <SUMMARY>
-/// WIFI½á¹¹
+/// WIFIç»“æ„
 /// </SUMMARY>
 struct SWifiNetwork
 {
-    string SSID; // ÍøÂçÃû³Æ
-    bool IsCurrentConnected; // ÊÇ·ñÎªµ±Ç°Á¬½ÓµÄÍøÂç
+    string SSID; // ç½‘ç»œåç§°
+    bool IsCurrentConnected; // æ˜¯å¦ä¸ºå½“å‰è¿æ¥çš„ç½‘ç»œ
 };
 
 
 /// <SUMMARY>
-/// WIFIÍøÂçÊµÏÖÀà
+/// WIFIç½‘ç»œå®ç°ç±»
 /// </SUMMARY>
 class CWifiNetwork
 {
@@ -37,173 +37,173 @@ public:
     ~CWifiNetwork();
 
     /// <SUMMARY>
-    /// WLANÊÇ·ñ´æÔÚ
+    /// WLANæ˜¯å¦å­˜åœ¨
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´æÔÚ·µ»Øtrue, ²»´æÔÚ·µ»Øfalse
+    /// å­˜åœ¨è¿”å›true, ä¸å­˜åœ¨è¿”å›false
     /// </RETURNS>
     bool IsWLANExist();
 
     /// <SUMMARY>
-    /// »ñÈ¡WLANÃèÊö
+    /// è·å–WLANæè¿°
     /// </SUMMARY>
     /// <PARAM name = "desc" dir = "OUT">
-    /// ÃèÊö
+    /// æè¿°
     /// </PARAM>
     /// <RETURNS>
-    ///  ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse
+    ///  æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false
     /// </RETURNS>
     bool GetWLANDesc(OUT wstring& desc);
 
     /// <SUMMARY>
-    /// »ñÈ¡WLAN GUID
+    /// è·å–WLAN GUID
     /// </SUMMARY>
     /// <PARAM name = "guid" dir = "OUT">
     /// GUID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse
+    /// æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false
     /// </RETURNS>
     bool GetWLANGUID(OUT GUID& guid);
 
     /// <SUMMARY>
-    /// ÅĞ¶ÏÓ²¼şWifi¿ª¹ØÊÇ·ñ±»¿ªÆô
+    /// åˆ¤æ–­ç¡¬ä»¶Wifiå¼€å…³æ˜¯å¦è¢«å¼€å¯
     /// </SUMMARY>
     /// <RETURNS>
-    /// ÒÑ¾­¿ªÆô·µ»Øtrue, Ã»ÓĞ¿ªÆô·µ»Øfalse
+    /// å·²ç»å¼€å¯è¿”å›true, æ²¡æœ‰å¼€å¯è¿”å›false
     /// </RETURNS>
     bool HardwareWLANIsEnabled();
 
     /// <SUMMARY>
-    /// ÅĞ¶ÏÈí¼şWifi¿ª¹ØÊÇ·ñ±»¿ªÆô
+    /// åˆ¤æ–­è½¯ä»¶Wifiå¼€å…³æ˜¯å¦è¢«å¼€å¯
     /// </SUMMARY>
     /// <RETURNS>
-    /// ÒÑ¾­¿ªÆô·µ»Øtrue, Ã»ÓĞ¿ªÆô·µ»Øfalse
+    /// å·²ç»å¼€å¯è¿”å›true, æ²¡æœ‰å¼€å¯è¿”å›false
     /// </RETURNS>
     bool SoftwareWLANIsEnabled();
 
     /// <SUMMARY>
-    /// ÈíÌå¿ªÆôWifi
+    /// è½¯ä½“å¼€å¯Wifi
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦¿ªÆô·µ»Øtrue, ¿ªÆôÊ§°Ü·µ»Øfalse
+    /// æˆåŠŸå¼€å¯è¿”å›true, å¼€å¯å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool SoftwareEnableWLAN();
 
     /// <SUMMARY>
-    /// ÈíÌå¹Ø±ÕWifi
+    /// è½¯ä½“å…³é—­Wifi
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦¹Ø±Õ·µ»Øtrue, ¹Ø±ÕÊ§°Ü·µ»Øfalse
+    /// æˆåŠŸå…³é—­è¿”å›true, å…³é—­å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool SoftwareDisableWLAN();
 
     /// <SUMMARY>
-    /// ÅĞ¶ÏWLANÊÇ·ñÁ¬½ÓÉÏÎŞÏßÍøÂç
+    /// åˆ¤æ–­WLANæ˜¯å¦è¿æ¥ä¸Šæ— çº¿ç½‘ç»œ
     /// </SUMMARY>
     /// <RETURNS>
-    /// ÒÑ¾­Á¬½Ó·µ»Øtrue, Ã»ÓĞÁ¬½Ó·µ»Øfalse
+    /// å·²ç»è¿æ¥è¿”å›true, æ²¡æœ‰è¿æ¥è¿”å›false
     /// </RETURNS>
     bool WLANIsConnected();
 
     /// <SUMMARY>
-    /// ÅĞ¶ÏWLANÊÇ·ñÁ¬½ÓÉÏÎŞÏßÍøÂç
+    /// åˆ¤æ–­WLANæ˜¯å¦è¿æ¥ä¸Šæ— çº¿ç½‘ç»œ
     /// </SUMMARY>
     /// <PARAM name = "ssid" dir = "OUT">
-    /// ±£´æÍøÂçSSID(wifiÃû³Æ)
+    /// ä¿å­˜ç½‘ç»œSSID(wifiåç§°)
     /// </PARAM>
     /// <RETURNS>
-    /// ÒÑ¾­Á¬½Ó·µ»Øtrue, Ã»ÓĞÁ¬½Ó·µ»Øfalse
+    /// å·²ç»è¿æ¥è¿”å›true, æ²¡æœ‰è¿æ¥è¿”å›false
     /// </RETURNS>
     bool WLANIsConnected(OUT string& ssid);
 
     /// <SUMMARY>
-    /// ¶Ï¿ªÎŞÏßÍøÂçÁ¬½Ó
+    /// æ–­å¼€æ— çº¿ç½‘ç»œè¿æ¥
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     /// </RETURNS>
     bool WLANDisconnect();
 
     /// <SUMMARY>
-    /// Á¬½Óµ½Ö¸¶¨ÍøÂç
+    /// è¿æ¥åˆ°æŒ‡å®šç½‘ç»œ
     /// </SUMMARY>
     /// <PARAM name = "ssid" dir = "IN">
-    /// ÍøÂçSSID(wifiÃû³Æ)
+    /// ç½‘ç»œSSID(wifiåç§°)
     /// </PARAM>
     /// <PARAM name = "key" dir = "IN">
-    /// ÍøÂçÃÜÔ¿(wifiÃÜÂë)
+    /// ç½‘ç»œå¯†é’¥(wifiå¯†ç )
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse, ¿ÉÊ¹ÓÃGetErrorMessage»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false, å¯ä½¿ç”¨GetErrorMessageè·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool WLANConnect(IN const string& ssid, IN const string& key);
 
     /// <SUMMARY>
-    /// Á¬½Óµ½Ö¸¶¨ÍøÂç
-    /// ÒªÇóÏµÍ³ÖĞÒÑ¾­´æÔÚ¸ÃÍøÂçÁ¬½ÓµÄÅäÖÃÎÄ¼ş
+    /// è¿æ¥åˆ°æŒ‡å®šç½‘ç»œ
+    /// è¦æ±‚ç³»ç»Ÿä¸­å·²ç»å­˜åœ¨è¯¥ç½‘ç»œè¿æ¥çš„é…ç½®æ–‡ä»¶
     /// </SUMMARY>
     /// <PARAM name = "ssid" dir = "IN">
-    /// ÍøÂçSSID(wifiÃû³Æ)
+    /// ç½‘ç»œSSID(wifiåç§°)
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse, ¿ÉÊ¹ÓÃGetErrorMessage»ñÈ¡´íÎóĞÅÏ¢
+    /// æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false, å¯ä½¿ç”¨GetErrorMessageè·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool WLANConnect(IN const string& ssid);
 
     /// <SUMMARY>
-    /// »ñÈ¡¿ÉÓÃÍøÂçÁĞ±í
+    /// è·å–å¯ç”¨ç½‘ç»œåˆ—è¡¨
     /// </SUMMARY>
     /// <PARAM name = "networkist" dir = "OUT">
-    /// ÍøÂçÁĞ±í
+    /// ç½‘ç»œåˆ—è¡¨
     /// </PARAM>
     /// <RETURNS>
-    ///  ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse, ¿ÉÊ¹ÓÃGetErrorMessage»ñÈ¡´íÎóĞÅÏ¢
+    ///  æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false, å¯ä½¿ç”¨GetErrorMessageè·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool GetAvailableNetworkList(OUT vector<SWifiNetwork>& networkist);
 
     /// <SUMMARY>
-    /// »ñÈ¡´íÎóĞÅÏ¢
+    /// è·å–é”™è¯¯ä¿¡æ¯
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´íÎóĞÅÏ¢
+    /// é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     string GetErrorMessage();
 
 private:
     /// <SUMMARY>
-    /// WIFIÍøÂçÅäÖÃÎÄ¼ş½á¹¹
+    /// WIFIç½‘ç»œé…ç½®æ–‡ä»¶ç»“æ„
     /// </SUMMARY>
     struct SWifiProfile
     {
-        string SSID; // ÍøÂçSSID
-        string Key; // ÍøÂçÃÜÔ¿
-        DOT11_AUTH_ALGORITHM AuthAlgo; // ÈÏÖ¤Ëã·¨
-        DOT11_CIPHER_ALGORITHM CipherAlgo; // ¼ÓÃÜËã·¨
+        string SSID; // ç½‘ç»œSSID
+        string Key; // ç½‘ç»œå¯†é’¥
+        DOT11_AUTH_ALGORITHM AuthAlgo; // è®¤è¯ç®—æ³•
+        DOT11_CIPHER_ALGORITHM CipherAlgo; // åŠ å¯†ç®—æ³•
     };    
 
     /// <SUMMARY>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </SUMMARY>
     /// <RETURNS>
-    /// ³õÊ¼»¯³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, ¿ÉÊ¹ÓÃGetErrorMessage»ñÈ¡´íÎóĞÅÏ¢
+    /// åˆå§‹åŒ–æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, å¯ä½¿ç”¨GetErrorMessageè·å–é”™è¯¯ä¿¡æ¯
     /// </RETURNS>
     bool Init();
 
     /// <SUMMARY>
-    /// ÇåÀí×ÊÔ´
+    /// æ¸…ç†èµ„æº
     /// </SUMMARY>
     void UnInit();
 
     void CreateWifiProfile(const SWifiProfile& wifiProfile, OUT wstring& profileStr);
 
 private:
-    bool m_bWLANExist; // ±êÊ¶WLANÊÇ·ñ´æÔÚ
-    bool m_bInitSuccess; // ±êÊ¶ÊÇ·ñÒÑ¾­³õÊ¼»¯³É¹¦
-    HANDLE m_hWLAN; // ÎŞÏßÍø¿¨¾ä±ú
-    GUID m_guidWLAN; // ÎŞÏßÍø¿¨½Ó¿ÚGUID
-    wstring m_descWLAN; // ÎŞÏßÍø¿¨½Ó¿ÚÃèÊö
-    stringstream m_errStream; // ´íÎó´¦ÀíÁ÷
+    bool m_bWLANExist; // æ ‡è¯†WLANæ˜¯å¦å­˜åœ¨
+    bool m_bInitSuccess; // æ ‡è¯†æ˜¯å¦å·²ç»åˆå§‹åŒ–æˆåŠŸ
+    HANDLE m_hWLAN; // æ— çº¿ç½‘å¡å¥æŸ„
+    GUID m_guidWLAN; // æ— çº¿ç½‘å¡æ¥å£GUID
+    wstring m_descWLAN; // æ— çº¿ç½‘å¡æ¥å£æè¿°
+    stringstream m_errStream; // é”™è¯¯å¤„ç†æµ
 };
 
 CWifiNetwork::CWifiNetwork()
@@ -733,7 +733,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid, IN const string& key)
         goto SAFE_EXIT;
     }
 
-    // »ñÈ¡ÍøÂçÁĞ±í
+    // è·å–ç½‘ç»œåˆ—è¡¨
     dwRet = WlanGetAvailableNetworkList(m_hWLAN, &m_guidWLAN, 
         WLAN_AVAILABLE_NETWORK_INCLUDE_ALL_ADHOC_PROFILES, NULL, &pNetworkList);
     if (dwRet != ERROR_SUCCESS)
@@ -745,7 +745,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid, IN const string& key)
     }
 
 
-    // ËÑË÷Ö¸¶¨ÍøÂç
+    // æœç´¢æŒ‡å®šç½‘ç»œ
     for (unsigned int i = 0; i < pNetworkList->dwNumberOfItems; i++ )
     {
         if (ssid.compare((char*)(pNetworkList->Network[i].dot11Ssid.ucSSID)) == 0)
@@ -755,7 +755,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid, IN const string& key)
         }
     }
 
-    // Ã»ÓĞÕÒµ½Ö¸¶¨µÄÍøÂç
+    // æ²¡æœ‰æ‰¾åˆ°æŒ‡å®šçš„ç½‘ç»œ
     if (destNetworkIndex == -1)
     {
         m_errStream.str("");
@@ -764,7 +764,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid, IN const string& key)
         goto SAFE_EXIT;
     }
 
-    // Ö¸¶¨ÍøÂçÒÑ¾­±»Á¬½Ó
+    // æŒ‡å®šç½‘ç»œå·²ç»è¢«è¿æ¥
     if ((pNetworkList->Network[destNetworkIndex].dwFlags & WLAN_AVAILABLE_NETWORK_CONNECTED) ==
         WLAN_AVAILABLE_NETWORK_CONNECTED)
     {
@@ -772,14 +772,14 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid, IN const string& key)
         goto SAFE_EXIT;
     }
 
-    // ´´½¨ÍøÂçÅäÖÃÎÄ¼ş
+    // åˆ›å»ºç½‘ç»œé…ç½®æ–‡ä»¶
     wifiProfile.SSID = ssid;
     wifiProfile.Key = key;
     wifiProfile.AuthAlgo = pNetworkList->Network[destNetworkIndex].dot11DefaultAuthAlgorithm;
     wifiProfile.CipherAlgo = pNetworkList->Network[destNetworkIndex].dot11DefaultCipherAlgorithm;
     this->CreateWifiProfile(wifiProfile, profileStr);
 
-    // ÉèÖÃÍøÂçÅäÖÃÎÄ¼ş
+    // è®¾ç½®ç½‘ç»œé…ç½®æ–‡ä»¶
     dwRet = WlanSetProfile(m_hWLAN, &(m_guidWLAN), 0, profileStr.c_str(), NULL, TRUE, NULL, &reasonCode);
     if (dwRet != ERROR_SUCCESS)
     {
@@ -839,7 +839,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid)
         goto SAFE_EXIT;
     }
 
-    // »ñÈ¡ÍøÂçÁĞ±í
+    // è·å–ç½‘ç»œåˆ—è¡¨
     dwRet = WlanGetAvailableNetworkList(m_hWLAN, &m_guidWLAN, 
         WLAN_AVAILABLE_NETWORK_INCLUDE_ALL_ADHOC_PROFILES, NULL, &pNetworkList);
     if (dwRet != ERROR_SUCCESS)
@@ -851,7 +851,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid)
     }
 
 
-    // ËÑË÷Ö¸¶¨ÍøÂç
+    // æœç´¢æŒ‡å®šç½‘ç»œ
     for (unsigned int i = 0; i < pNetworkList->dwNumberOfItems; i++ )
     {
         if (ssid.compare((char*)(pNetworkList->Network[i].dot11Ssid.ucSSID)) == 0)
@@ -861,7 +861,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid)
         }
     }
 
-    // Ã»ÓĞÕÒµ½Ö¸¶¨µÄÍøÂç
+    // æ²¡æœ‰æ‰¾åˆ°æŒ‡å®šçš„ç½‘ç»œ
     if (destNetworkIndex == -1)
     {
         m_errStream.str("");
@@ -870,7 +870,7 @@ bool CWifiNetwork::WLANConnect(IN const string& ssid)
         goto SAFE_EXIT;
     }
 
-    // Ö¸¶¨ÍøÂçÒÑ¾­±»Á¬½Ó
+    // æŒ‡å®šç½‘ç»œå·²ç»è¢«è¿æ¥
     if ((pNetworkList->Network[destNetworkIndex].dwFlags & WLAN_AVAILABLE_NETWORK_CONNECTED) ==
         WLAN_AVAILABLE_NETWORK_CONNECTED)
     {

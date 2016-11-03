@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _TESTITEMPAGE_H_
 #define _TESTITEMPAGE_H_
@@ -21,32 +21,32 @@ class DiskSpeedPage;
 class CameraViewPage;
 class RestartAgingPage;
 
-/// @brief ²âÊÔÏîÒ³Ãæ
+/// @brief æµ‹è¯•é¡¹é¡µé¢
 class TestItemPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     TestItemPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
     ~TestItemPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
 private:
 
-    /// @brief ³õÊ¼»¯²âÊÔÏîÒ³Ãæ
+    /// @brief åˆå§‹åŒ–æµ‹è¯•é¡¹é¡µé¢
     void Init();
 
-    /// @brief Ôö¼ÓÒ»¸ö²âÊÔÏî
-    /// @param[in] name ²âÊÔÏîÃû³Æ
-    /// @param[in] icon ²âÊÔÏîÍ¼±ê
+    /// @brief å¢åŠ ä¸€ä¸ªæµ‹è¯•é¡¹
+    /// @param[in] name æµ‹è¯•é¡¹åç§°
+    /// @param[in] icon æµ‹è¯•é¡¹å›¾æ ‡
     void AddTestItem(IN const QString& name, IN const QIcon& icon);
 
-    /// @brief ¼ÓÔØUIÑùÊ½
+    /// @brief åŠ è½½UIæ ·å¼
     void LoadQSS();
 
 private slots:
@@ -59,10 +59,10 @@ private:
     CameraViewPage* m_pCameraViewPage;
     RestartAgingPage* m_pRestartAgingPage;
 
-    bool m_bCameraExist; ///< ±ê¼ÇÊÇ·ñ´æÔÚÉãÏñÍ·
+    bool m_bCameraExist; ///< æ ‡è®°æ˜¯å¦å­˜åœ¨æ‘„åƒå¤´
 
-    float m_uiRatio; ///< UIĞèÒªµ÷ÕûµÄ±ÈÀı
-    bool m_bInitDone; ///< ±ê¼ÇÊÇ·ñ³õÊ¼»¯Íê³É
+    float m_uiRatio; ///< UIéœ€è¦è°ƒæ•´çš„æ¯”ä¾‹
+    bool m_bInitDone; ///< æ ‡è®°æ˜¯å¦åˆå§‹åŒ–å®Œæˆ
 };
 
 #endif

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LWinRing0.h"
 
 #include <Windows.h>
@@ -81,9 +81,9 @@ typedef DWORD (WINAPI *_FindPciDeviceByClass) (BYTE baseClass, BYTE subClass, BY
 
 namespace LWinRing0
 {
-    static HMODULE ghModule = NULL; ///< ¶¯Ì¬¿âÄ£¿é¾ä±ú
-    static int gReferenceCount = 0; ///< ¼ÇÂ¼¶¯Ì¬¿â±»ÒýÓÃµÄ´ÎÊý
-    static LManualLock gManualLock; ///< ÊÖ¶¯Ëø, ÓÃÓÚÍ¬²½
+    static HMODULE ghModule = NULL; ///< åŠ¨æ€åº“æ¨¡å—å¥æŸ„
+    static int gReferenceCount = 0; ///< è®°å½•åŠ¨æ€åº“è¢«å¼•ç”¨çš„æ¬¡æ•°
+    static LManualLock gManualLock; ///< æ‰‹åŠ¨é”, ç”¨äºŽåŒæ­¥
 
     // DLL
     _GetDllStatus GetDllStatus = NULL;
@@ -376,12 +376,12 @@ namespace LWinRing0
 
     bool InitializeWinRing0(const wstring& filePath)
     {
-        // ÉêÇëËø¶ÔÏó, ÓÃÓÚÍ¬²½
+        // ç”³è¯·é”å¯¹è±¡, ç”¨äºŽåŒæ­¥
         LAutoLock autoLock(&gManualLock);
 
         bool bRet = false;
 
-        // ÒÑ¾­Íê³É³õÊ¼»¯, ÔòÍË³ö
+        // å·²ç»å®Œæˆåˆå§‹åŒ–, åˆ™é€€å‡º
         if (NULL != ghModule)
         {
             bRet = true;
@@ -437,7 +437,7 @@ SAFE_EXIT:
 
     void DeinitializeWinRing0()
     {
-        // ÉêÇëËø¶ÔÏó, ÓÃÓÚÍ¬²½
+        // ç”³è¯·é”å¯¹è±¡, ç”¨äºŽåŒæ­¥
         LAutoLock autoLock(&gManualLock);
 
         if (0 == gReferenceCount)

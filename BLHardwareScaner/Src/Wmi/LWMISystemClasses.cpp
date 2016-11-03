@@ -1,4 +1,4 @@
-#include "LWMISystemClasses.h"
+﻿#include "LWMISystemClasses.h"
 
 #include "LWMICoreManager.h"
 

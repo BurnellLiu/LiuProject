@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LLog.h"
 
 #include <cstdio>
@@ -12,29 +12,29 @@ using std::map;
 
 #include <Windows.h>
 
-/// @brief ÊÖ¶¯ËøÀà
+/// @brief æ‰‹åŠ¨é”ç±»
 class CManuLock
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CManuLock()
     {
         InitializeCriticalSection(&m_criSection);
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CManuLock()
     {
         DeleteCriticalSection(&m_criSection);
     }
 
-    /// @brief ÉÏËø
+    /// @brief ä¸Šé”
     void Lock()
     {
         EnterCriticalSection(&m_criSection);
     }
 
-    /// @brief ½âËø
+    /// @brief è§£é”
     void UnLock()
     {
         LeaveCriticalSection(&m_criSection);
@@ -44,15 +44,15 @@ private:
     CManuLock(const CManuLock&);
     void operator = (const CManuLock&);
 
-    CRITICAL_SECTION m_criSection; ///< ÁÙ½çÇø±äÁ¿
+    CRITICAL_SECTION m_criSection; ///< ä¸´ç•ŒåŒºå˜é‡
 };
 
-/// @brief ×Ô¶¯ËøÀà
+/// @brief è‡ªåŠ¨é”ç±»
 class CAutoLock
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı 
-    /// @param[in] pLock ÊÖ¶¯Ëø¶ÔÏó
+    /// @brief æ„é€ å‡½æ•° 
+    /// @param[in] pLock æ‰‹åŠ¨é”å¯¹è±¡
     CAutoLock(IN CManuLock* pLock)
     {
         if (pLock != 0)
@@ -63,7 +63,7 @@ public:
         
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CAutoLock()
     {
         if (m_pManuLock != 0)
@@ -76,15 +76,15 @@ private:
     CAutoLock(const CAutoLock& );
     void operator = (const CAutoLock&);
 
-    CManuLock* m_pManuLock; ///< ÊÖ¶¯Ëø¶ÔÏó
+    CManuLock* m_pManuLock; ///< æ‰‹åŠ¨é”å¯¹è±¡
 };
 
-/// @brief µ÷ÊÔLOGÀà
-/// Ê¹ÓÃ¸ÃÀàĞ´LOGºó¿ÉÒÔÖ±½ÓĞ´µ½Ó²ÅÌÖĞ, ²»»á´æÔÚĞ´µ½»º´æÖĞµÄÇé¿ö
+/// @brief è°ƒè¯•LOGç±»
+/// ä½¿ç”¨è¯¥ç±»å†™LOGåå¯ä»¥ç›´æ¥å†™åˆ°ç¡¬ç›˜ä¸­, ä¸ä¼šå­˜åœ¨å†™åˆ°ç¼“å­˜ä¸­çš„æƒ…å†µ
 class CDebugLog
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CDebugLog()
     {
         m_hFile = NULL;
@@ -95,21 +95,21 @@ public:
         m_fillChar = '\0';
     }
 
-    /// @briefÎö¹¹º¯Êı
+    /// @briefææ„å‡½æ•°
     ~CDebugLog()
     {
         this->Clear();
     }
 
-    /// @brief ×·¼Ó´ò¿ªÎÄ¼ş
-    /// Èç¹ûÎÄ¼ş´æÔÚÔò¶¨Î»µ½ÎÄ¼şÎ´½øĞĞĞ´
-    /// @param[in] fileName ÎÄ¼şÃû
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è¿½åŠ æ‰“å¼€æ–‡ä»¶
+    /// å¦‚æœæ–‡ä»¶å­˜åœ¨åˆ™å®šä½åˆ°æ–‡ä»¶æœªè¿›è¡Œå†™
+    /// @param[in] fileName æ–‡ä»¶å
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool AppendOpen(IN const wstring& fileName)
     {
         this->Clear();
 
-        // ´ò¿ªÎÄ¼ş
+        // æ‰“å¼€æ–‡ä»¶
         m_hFile = CreateFileW(
             fileName.c_str(), 
             GENERIC_READ | GENERIC_WRITE, 
@@ -120,7 +120,7 @@ public:
             NULL);
         if (0 == m_hFile || INVALID_HANDLE_VALUE == m_hFile)
         {
-            // Èç¹ûÎÄ¼ş²»´æÔÚÔò´´½¨ĞÂÎÄ¼ş
+            // å¦‚æœæ–‡ä»¶ä¸å­˜åœ¨åˆ™åˆ›å»ºæ–°æ–‡ä»¶
             return this->NewOpen(fileName);
         }
 
@@ -133,23 +133,23 @@ public:
 
         memset(m_pWriteBuffer, m_fillChar, m_bufferTotalSize);
 
-        // ÒÆ¶¯µ½ÎÄ¼şÎ²
+        // ç§»åŠ¨åˆ°æ–‡ä»¶å°¾
         SetFilePointer(m_hFile, 0, 0, FILE_END);
-        // »»ĞĞ
+        // æ¢è¡Œ
         this->Write(L"\r\n", 4);
 
         return true;
     }
 
-    /// @brief ĞÂ´ò¿ªÎÄ¼ş
-    /// Èç¹ûÎÄ¼şÒÑ¾­´æÔÚ, ÔòÌæ»»Ô­ÓĞÎÄ¼ş
-    /// @param[in] fileName ÎÄ¼şÃû
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ–°æ‰“å¼€æ–‡ä»¶
+    /// å¦‚æœæ–‡ä»¶å·²ç»å­˜åœ¨, åˆ™æ›¿æ¢åŸæœ‰æ–‡ä»¶
+    /// @param[in] fileName æ–‡ä»¶å
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool NewOpen(IN const wstring& fileName)
     {
         this->Clear();
 
-        // ´´½¨ÎÄ¼ş
+        // åˆ›å»ºæ–‡ä»¶
         m_hFile = CreateFileW(
             fileName.c_str(), 
             GENERIC_READ | GENERIC_WRITE, 
@@ -173,7 +173,7 @@ public:
 
         memset(m_pWriteBuffer, m_fillChar, m_bufferTotalSize);
 
-        // Ô¤ÏÈÔÚÎÄ¼şÍ·Ğ´ÉÏUNICODE±êÖ¾·û
+        // é¢„å…ˆåœ¨æ–‡ä»¶å¤´å†™ä¸ŠUNICODEæ ‡å¿—ç¬¦
         char unicode[2] = {0};
         unicode[0] = (char)0xFF;
         unicode[1] = (char)0xFE;
@@ -182,9 +182,9 @@ public:
         return true;
     }
 
-    /// @brief ´òÓ¡Ò»ĞĞLOG
-    /// @param[in] wstr LOGĞÅÏ¢
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ‰“å°ä¸€è¡ŒLOG
+    /// @param[in] wstr LOGä¿¡æ¯
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool PrintLine(IN const wstring& wstr)
     {
         CAutoLock lock(&m_fileLock);
@@ -192,17 +192,17 @@ public:
         return this->Write(L"\r\n", 4);
     }
 
-    /// @brief ¹Ø±ÕÎÄ¼ş
+    /// @brief å…³é—­æ–‡ä»¶
     void Close()
     {
         this->Clear();
     }
 
 private:
-    /// @brief Ğ´ÎÄ¼ş
-    /// @param[in] pBuffer Ğ´»º³åÇø
-    /// @param[in] size Ğ´»º³åÇø´óĞ¡
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief å†™æ–‡ä»¶
+    /// @param[in] pBuffer å†™ç¼“å†²åŒº
+    /// @param[in] size å†™ç¼“å†²åŒºå¤§å°
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool Write(IN const void* pBuffer, unsigned int size)
     {
         if (NULL == m_hFile || 
@@ -271,7 +271,7 @@ private:
         return false;
     }
 
-    /// @brief ÇåÀí×ÊÔ´
+    /// @brief æ¸…ç†èµ„æº
     void Clear()
     {
         if (NULL != m_hFile &&
@@ -291,27 +291,27 @@ private:
     }
 
 private:
-    HANDLE m_hFile; ///< ÎÄ¼ş¾ä±ú
+    HANDLE m_hFile; ///< æ–‡ä»¶å¥æŸ„
 
-    char m_fillChar; ///< Ìî³ä×Ö·û
-    unsigned char* m_pWriteBuffer; ///< Ğ´»º³åÇø
-    unsigned int m_bufferUsedSize; ///< »º³åÇøÖĞÒÑ±»Ê¹ÓÃµÄ´óĞ¡
-    unsigned int m_bufferTotalSize; ///< »º³åÇø×Ü´óĞ¡
+    char m_fillChar; ///< å¡«å……å­—ç¬¦
+    unsigned char* m_pWriteBuffer; ///< å†™ç¼“å†²åŒº
+    unsigned int m_bufferUsedSize; ///< ç¼“å†²åŒºä¸­å·²è¢«ä½¿ç”¨çš„å¤§å°
+    unsigned int m_bufferTotalSize; ///< ç¼“å†²åŒºæ€»å¤§å°
 
-    CManuLock m_fileLock; ///< ÎÄ¼şËø¶ÔÏó, ÓÃÓÚ¶àÏß³Ì
+    CManuLock m_fileLock; ///< æ–‡ä»¶é”å¯¹è±¡, ç”¨äºå¤šçº¿ç¨‹
 };
 
 namespace LLog
 {
    
 
-    /// @brief LOGÊôĞÔ½á¹¹
+    /// @brief LOGå±æ€§ç»“æ„
     struct SLogProperty 
     {
-        CDebugLog* DebugLog; ///< ÎÄ¼şÖ¸Õë
-        bool ShowThreadId; ///< ±êÊ¶ÊÇ·ñÏÔÊ¾Ïß³ÌId
-        bool ShowTime; ///< ±êÊ¶ÊÇ·ñÏÔÊ¾µ±Ç°Ê±¼ä
-        bool IsAppendOpen; ///< ±êÖ¾ÊÇ·ñÒÔ×·¼Ó·½·¨´ò¿ªLOG
+        CDebugLog* DebugLog; ///< æ–‡ä»¶æŒ‡é’ˆ
+        bool ShowThreadId; ///< æ ‡è¯†æ˜¯å¦æ˜¾ç¤ºçº¿ç¨‹Id
+        bool ShowTime; ///< æ ‡è¯†æ˜¯å¦æ˜¾ç¤ºå½“å‰æ—¶é—´
+        bool IsAppendOpen; ///< æ ‡å¿—æ˜¯å¦ä»¥è¿½åŠ æ–¹æ³•æ‰“å¼€LOG
     };
 
     static SLogProperty s_logProperty = 
@@ -322,10 +322,10 @@ namespace LLog
         false
     };
 
-    /// @brief ×ª»»Îª¿í×Ö½Ú×Ö·û´®
-    /// @param[in] strSrc Ô´×Ö·û´®
-    /// @param[in] strDest ´æ´¢×ª»»ºóµÄ×Ö·û´®
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief è½¬æ¢ä¸ºå®½å­—èŠ‚å­—ç¬¦ä¸²
+    /// @param[in] strSrc æºå­—ç¬¦ä¸²
+    /// @param[in] strDest å­˜å‚¨è½¬æ¢åçš„å­—ç¬¦ä¸²
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool StringToWString(const string& strSrc, wstring& strDest)
     {
         int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);  
@@ -345,7 +345,7 @@ namespace LLog
         return true;
     }
 
-    /// @brief »ñÈ¡¸¨ÖúĞÅÏ¢
+    /// @brief è·å–è¾…åŠ©ä¿¡æ¯
     void GetAssistInfor(OUT wstring* pWStr)
     {
         if (pWStr == 0)
@@ -355,7 +355,7 @@ namespace LLog
         if (s_logProperty.ShowThreadId)
         {
             static map<DWORD, DWORD> s_threadIdMap;
-            // LOGÖĞÔö¼Óµ±Ç°Ïß³ÌID, ÓÃÒÔÔÚ¶àÏß³ÌÖĞÇø·Ö²»Í¬Ïß³ÌµÄLOG
+            // LOGä¸­å¢åŠ å½“å‰çº¿ç¨‹ID, ç”¨ä»¥åœ¨å¤šçº¿ç¨‹ä¸­åŒºåˆ†ä¸åŒçº¿ç¨‹çš„LOG
             DWORD dwId = GetCurrentThreadId();
             if (s_threadIdMap.count(dwId) == 0)
             {
@@ -372,7 +372,7 @@ namespace LLog
 
         if (s_logProperty.ShowTime)
         {
-            // LOGÖĞÔö¼Óµ±Ç°Ê±¼ä
+            // LOGä¸­å¢åŠ å½“å‰æ—¶é—´
             time_t t = time(0);
             wchar_t szTime[64] = {0}; 
             tm tmTemp;

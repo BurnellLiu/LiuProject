@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _CAMERAVIRW_PAGE_H_
 #define _CAMERAVIEW_PAGE_H_
@@ -23,51 +23,51 @@
 #define OUT
 #endif
 
-/// @brief ÉãÏñÍ·Ô¤ÀÀÒ³Ãæ
+/// @brief æ‘„åƒå¤´é¢„è§ˆé¡µé¢
 class CameraViewPage : public QDialog
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CameraViewPage(IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CameraViewPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
-    /// @brief ´°¿ÚÒş²ØÊÂ¼ş
+    /// @brief çª—å£éšè—äº‹ä»¶
     void hideEvent(QHideEvent* e);
 
 private slots:
-   /// @brief ×ª»»°´Å¥µ¥»÷²Ûº¯Êı
+   /// @brief è½¬æ¢æŒ‰é’®å•å‡»æ§½å‡½æ•°
    void SwitchButtonClicked();
 
 private:
-   /// @brief ¼ÓÔØUIÑùÊ½
+   /// @brief åŠ è½½UIæ ·å¼
    void LoadQSS();
 
 private:
-    /// @brief ÏÔÊ¾µ±Ç°ÉãÏñÍ·
+    /// @brief æ˜¾ç¤ºå½“å‰æ‘„åƒå¤´
     void ShowCurrentCamera();
 
-    /// @brief ¹Ø±Õµ±Ç°ÉãÏñÍ·
+    /// @brief å…³é—­å½“å‰æ‘„åƒå¤´
     void CloseCurrentCamera();
 
-    /// @brief »ñÈ¡Webcam½Ó¿ÚÖ¸Õë
-    /// @param[in] index WebcamË÷Òı
+    /// @brief è·å–Webcamæ¥å£æŒ‡é’ˆ
+    /// @param[in] index Webcamç´¢å¼•
     LWebcam* GetWebcam(IN unsigned int index);
 
 
 private:
     Ui::CameraViewForm ui;
 
-    int m_currentCameraIndex; ///< µ±Ç°ÏÔÊ¾µÄÉãÏñÍ·Ë÷Òı
-    unsigned int m_cameraTotalCount; ///< ÉãÏñÍ·×ÜÊı
-    LWebcam* m_pCurrentWebcam; ///< µ±Ç°ÏÔÊ¾µÄÉãÏñÍ·
+    int m_currentCameraIndex; ///< å½“å‰æ˜¾ç¤ºçš„æ‘„åƒå¤´ç´¢å¼•
+    unsigned int m_cameraTotalCount; ///< æ‘„åƒå¤´æ€»æ•°
+    LWebcam* m_pCurrentWebcam; ///< å½“å‰æ˜¾ç¤ºçš„æ‘„åƒå¤´
 };
 
 #endif

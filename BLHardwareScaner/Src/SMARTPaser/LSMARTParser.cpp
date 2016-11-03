@@ -1,60 +1,60 @@
-
+ï»¿
 #include "LSMARTPaser.h"
 
 #include <cstring>
 
 #define MAX_SMART_ATTRIBUTES 30
 
-/// @brief SMARTÊôÐÔID
+/// @brief SMARTå±žæ€§ID
 enum SMART_ATTRIB_ID
 {
-    POWN_ON_HOURS = 0x09, ///< Í¨µçÊ±¼ä
-    TEMPERATURE = 0xC2 //ÎÂ¶È
+    POWN_ON_HOURS = 0x09, ///< é€šç”µæ—¶é—´
+    TEMPERATURE = 0xC2 //æ¸©åº¦
 };
 
-// ÒÔÏÂ½á¹¹È¡ÏûÄÚ´æ¶ÔÆë
-#pragma pack (1) // È¡ÏûÄÚ´æ¶ÔÆë
+// ä»¥ä¸‹ç»“æž„å–æ¶ˆå†…å­˜å¯¹é½
+#pragma pack (1) // å–æ¶ˆå†…å­˜å¯¹é½
 
-/// @brief SMARTÃ¿ÏîÊôÐÔ½á¹¹
+/// @brief SMARTæ¯é¡¹å±žæ€§ç»“æž„
 struct SSMARTAttribute
 {
-    unsigned char Id; // ÊôÐÔID
-    unsigned short StatusFlags; // ×´Ì¬Öµ
-    unsigned char Current; // µ±Ç°Öµ
-    unsigned char Worst; // ×î²îÖµ
-    unsigned char RawValue[6]; // ÕæÊµÖµ
-    unsigned char Reserved; // ±£Áô
+    unsigned char Id; // å±žæ€§ID
+    unsigned short StatusFlags; // çŠ¶æ€å€¼
+    unsigned char Current; // å½“å‰å€¼
+    unsigned char Worst; // æœ€å·®å€¼
+    unsigned char RawValue[6]; // çœŸå®žå€¼
+    unsigned char Reserved; // ä¿ç•™
 };
 
-/// @brief SMARTÊý¾Ý½á¹¹
+/// @brief SMARTæ•°æ®ç»“æž„
 struct SSMARTData
 {
-    unsigned short Version; // SMART°æ±¾
-    SSMARTAttribute AttributeArray[MAX_SMART_ATTRIBUTES]; // SMARTÊôÐÔÊý×é, ×î¶à30Ïî
+    unsigned short Version; // SMARTç‰ˆæœ¬
+    SSMARTAttribute AttributeArray[MAX_SMART_ATTRIBUTES]; // SMARTå±žæ€§æ•°ç»„, æœ€å¤š30é¡¹
 };
 
-#pragma pack () // »Ö¸´ÄÚ´æ¶ÔÆë
+#pragma pack () // æ¢å¤å†…å­˜å¯¹é½
 
-/// @brief SMART½âÎöÊµÏÖÀà
+/// @brief SMARTè§£æžå®žçŽ°ç±»
 class CSMARTParser
 {
 public:
     CSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH]);
     ~CSMARTParser();
 
-    /// @brief »ñÈ¡ÎÂ¶ÈÖµ, µ¥Î»ÉãÊÏ¶È
-    /// @param[out] temp ´æ´¢ÎÂ¶ÈÖµ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief èŽ·å–æ¸©åº¦å€¼, å•ä½æ‘„æ°åº¦
+    /// @param[out] temp å­˜å‚¨æ¸©åº¦å€¼
+    /// @return æˆåŠŸè¿”å›žtrue, å¤±è´¥è¿”å›žfalse
     bool GetTemperature(OUT unsigned int& temp);
 
-    /// @brief »ñÈ¡Í¨µçÊ±¼ä, µ¥Î»Ð¡Ê±
+    /// @brief èŽ·å–é€šç”µæ—¶é—´, å•ä½å°æ—¶
     ///  
-    /// @param[out] hours ´æ´¢Í¨µçÊ±¼ä
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @param[out] hours å­˜å‚¨é€šç”µæ—¶é—´
+    /// @return æˆåŠŸè¿”å›žtrue, å¤±è´¥è¿”å›žfalse
     bool GetPowerOnHours(OUT unsigned long& hours);
 
 private:
-    SSMARTData m_smartData; ///< ´æ´¢SMARTÊý¾Ý
+    SSMARTData m_smartData; ///< å­˜å‚¨SMARTæ•°æ®
 };
 
 CSMARTParser::CSMARTParser(IN unsigned char smartData[SMART_DATA_LENGTH])

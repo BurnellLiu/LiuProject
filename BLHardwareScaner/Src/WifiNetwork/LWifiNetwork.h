@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _LWIFINetwork_H_
 #define _LWIFINetwork_H_
@@ -22,7 +22,7 @@ using std::wstring;
 class CWifiNetwork;
 
 /// <SUMMARY>
-/// WIFIÍøÂçÀà
+/// WIFIç½‘ç»œç±»
 /// </SUMMARY>
 class LWifiNetwork
 {
@@ -31,32 +31,32 @@ public:
     ~LWifiNetwork();
 
     /// <SUMMARY>
-    /// WLANÊÇ·ñ´æÔÚ
+    /// WLANæ˜¯å¦å­˜åœ¨
     /// </SUMMARY>
     /// <RETURNS>
-    /// ´æÔÚ·µ»Øtrue, ²»´æÔÚ·µ»Øfalse
+    /// å­˜åœ¨è¿”å›true, ä¸å­˜åœ¨è¿”å›false
     /// </RETURNS>
     bool IsWLANExist();
 
     /// <SUMMARY>
-    /// »ñÈ¡WLANÃèÊö
+    /// è·å–WLANæè¿°
     /// </SUMMARY>
     /// <PARAM name = "desc" dir = "OUT">
-    /// ÃèÊö
+    /// æè¿°
     /// </PARAM>
     /// <RETURNS>
-    ///  ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse
+    ///  æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false
     /// </RETURNS>
     bool GetWLANDesc(OUT wstring& desc);
 
     /// <SUMMARY>
-    /// »ñÈ¡WLAN GUID
+    /// è·å–WLAN GUID
     /// </SUMMARY>
     /// <PARAM name = "guid" dir = "OUT">
     /// strGUID
     /// </PARAM>
     /// <RETURNS>
-    /// ³É¹¦»ñÈ¡·µ»Øtrue, »ñÈ¡Ê§·µ»Øfalse
+    /// æˆåŠŸè·å–è¿”å›true, è·å–å¤±è¿”å›false
     /// </RETURNS>
     bool GetWLANGUID(OUT wstring& strGUID);
 

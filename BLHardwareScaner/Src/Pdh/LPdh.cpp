@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LPdh.h"
 
 #include <Pdh.h>
@@ -7,12 +7,12 @@
 #pragma comment(lib, "Pdh.lib")
 
 
-/// @brief PDH½Ó¿ÚÀà
+/// @brief PDHæ¥å£ç±»
 class CPdh
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] counterPath ÊÕ¼¯Æ÷Â·¾¶
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] counterPath æ”¶é›†å™¨è·¯å¾„
     explicit CPdh(IN const wstring& counterPath)
     {
         m_hQuery = NULL;
@@ -28,7 +28,7 @@ public:
         PdhAddCounterW(m_hQuery, counterPath.c_str(), NULL, &m_hCounter);
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CPdh()
     {
         if (NULL != m_hCounter)
@@ -46,11 +46,11 @@ public:
         
     }
 
-    /// @brief ÊÕ¼¯ÕûĞÎÊı¾İ
-    /// ¸Ãº¯ÊıºÄ·ÑÖ¸¶¨µÄÊÕ¼¯Ê±¼ä
-    /// @param[in] time ÊÕ¼¯Ê±¼ä, µ¥Î»ºÁÃë
-    /// @param[in] value ´æ´¢ÊÕ¼¯ºóµÄÊı¾İ
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse
+    /// @brief æ”¶é›†æ•´å½¢æ•°æ®
+    /// è¯¥å‡½æ•°è€—è´¹æŒ‡å®šçš„æ”¶é›†æ—¶é—´
+    /// @param[in] time æ”¶é›†æ—¶é—´, å•ä½æ¯«ç§’
+    /// @param[in] value å­˜å‚¨æ”¶é›†åçš„æ•°æ®
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
     bool CollectDataLong(IN unsigned long time, OUT long& value)
     {
         if (NULL == m_hCounter)
@@ -79,8 +79,8 @@ public:
     }
 
 private:
-    HQUERY  m_hQuery; ///< ²éÑ¯¾ä±ú
-    HCOUNTER m_hCounter; ///< ÊÕ¼¯Æ÷¾ä±ú
+    HQUERY  m_hQuery; ///< æŸ¥è¯¢å¥æŸ„
+    HCOUNTER m_hCounter; ///< æ”¶é›†å™¨å¥æŸ„
 };
 
 LPdh::LPdh(IN const wstring& counterPath)

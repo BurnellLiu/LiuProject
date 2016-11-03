@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "LCpuStress.h"
 
@@ -6,17 +6,17 @@
 
 #include <Windows.h>
 
-/// @¸ß¾«¶È¼ÆÊ±Æ÷Àà
+/// @é«˜ç²¾åº¦è®¡æ—¶å™¨ç±»
 class LTimer
 {
 public:
     LTimer()
     {
-        // »ñÈ¡CPUµÄÊ±ÖÓÆµÂÊ(¼´Ã¿ÃëµÄµÎ´ğÊı)
+        // è·å–CPUçš„æ—¶é’Ÿé¢‘ç‡(å³æ¯ç§’çš„æ»´ç­”æ•°)
         QueryPerformanceFrequency((LARGE_INTEGER*)&m_performanceFreq);
     }
 
-    /// @brief ¿ªÊ¼¼ÆÊ±
+    /// @brief å¼€å§‹è®¡æ—¶
     void Start()
     {
         m_startTime = 0;
@@ -24,7 +24,7 @@ public:
         QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
     }
 
-    /// @brief ½áÊø¼ÆÊ±
+    /// @brief ç»“æŸè®¡æ—¶
     void End()
     {
         LONGLONG currentTime = 0;
@@ -32,8 +32,8 @@ public:
         m_time = currentTime - m_startTime;
     }
 
-    /// @brief »ñÈ¡¼ÆÊ±Ê±¼ä
-    /// @return ¼ÆÊ±Ê±¼ä(µ¥Î»ºÁÃë)
+    /// @brief è·å–è®¡æ—¶æ—¶é—´
+    /// @return è®¡æ—¶æ—¶é—´(å•ä½æ¯«ç§’)
     double Time()
     {
         double time = 0.0f;
@@ -42,23 +42,23 @@ public:
     }
 
 private:
-    LONGLONG m_time; ///< ¼ÆÊ±Ê±¼ä 
-    LONGLONG m_startTime; ///< ¼ÆÊ±Æ÷¿ªÊ¼Ê±¼ä 
-    LONGLONG m_performanceFreq; ///< CPUÊ±ÖÓÆµÂÊ(¼´Ã¿ÃëÖÓµÄµÎ´ğÊı)
+    LONGLONG m_time; ///< è®¡æ—¶æ—¶é—´ 
+    LONGLONG m_startTime; ///< è®¡æ—¶å™¨å¼€å§‹æ—¶é—´ 
+    LONGLONG m_performanceFreq; ///< CPUæ—¶é’Ÿé¢‘ç‡(å³æ¯ç§’é’Ÿçš„æ»´ç­”æ•°)
 };
 
-/// @brief Ïß³Ì²ÎÊı
+/// @brief çº¿ç¨‹å‚æ•°
 struct SThreadParam
 {
-    unsigned int Id; ///< ±ê¼ÇÏß³ÌID
-    CCpuStressTest* PStressTest; ///< CPUÑ¹Á¦²âÊÔ¶ÔÏóÖ¸Õë
+    unsigned int Id; ///< æ ‡è®°çº¿ç¨‹ID
+    CCpuStressTest* PStressTest; ///< CPUå‹åŠ›æµ‹è¯•å¯¹è±¡æŒ‡é’ˆ
 };
 
-/// @brief CPUÑ¹Á¦²âÊÔÊµÏÖÀà
+/// @brief CPUå‹åŠ›æµ‹è¯•å®ç°ç±»
 class CCpuStressTest
 {
 public:
-    /// @brief ¹¹Ôìº¯Êı
+    /// @brief æ„é€ å‡½æ•°
     CCpuStressTest()
     {
         m_testState.TestDone = true;
@@ -74,15 +74,15 @@ public:
         m_timeOut = 0;
     }
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~CCpuStressTest()
     {
 
     }
 
-    /// @brief ¿ªÊ¼²âÊÔ
-    /// @param[in] timeOut ³¬Ê±Ê±¼ä, µ¥Î»Ãë
-    /// @return ³É¹¦·µ»Øtrue, Ê§°Ü·µ»Øfalse, ²âÊÔÕıÔÚ½øĞĞÖĞ»á·µ»Øfalse
+    /// @brief å¼€å§‹æµ‹è¯•
+    /// @param[in] timeOut è¶…æ—¶æ—¶é—´, å•ä½ç§’
+    /// @return æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false, æµ‹è¯•æ­£åœ¨è¿›è¡Œä¸­ä¼šè¿”å›false
     bool Start(IN unsigned int timeOut)
     {
         if (!m_testState.TestDone)
@@ -99,7 +99,7 @@ public:
 
         m_timeOut = timeOut;
 
-        // »ñÈ¡Âß¼­ºËĞÄÊıÁ¿
+        // è·å–é€»è¾‘æ ¸å¿ƒæ•°é‡
         SYSTEM_INFO systemInfo = {0};
         GetNativeSystemInfo(&systemInfo);
         m_testState.LogicalCoreNum = systemInfo.dwNumberOfProcessors;
@@ -117,30 +117,30 @@ public:
         return true;
     }
 
-    /// @brief »ñÈ¡²âÊÔ×´Ì¬
-    /// @return ²âÊÔ×´Ì¬
+    /// @brief è·å–æµ‹è¯•çŠ¶æ€
+    /// @return æµ‹è¯•çŠ¶æ€
     const LCpuStressTestState& GetState()
     {
         return m_testState;
     }
 
-    /// @brief Í£Ö¹²âÊÔ
+    /// @brief åœæ­¢æµ‹è¯•
     void Stop()
     {
         m_bStopTest = true;
     }
 
 private:
-    unsigned int m_timeOut; ///< ³¬Ê±Ê±¼ä
-    bool m_bStopTest; ///< ±ê¼ÇÊÇ·ñ½áÊø²âÊÔ
-    unsigned int m_threadNum; ///< Ïß³ÌÊıÁ¿
-    bool m_threadTestDone[MAX_CPU_LOGICAL_CORE_NUM]; ///< ±ê¼ÇÃ¿¸ö²âÊÔÏß³ÌÊÇ·ñ½áÊø
-    LCpuStressTestState m_testState; ///< ²âÊÔ×´Ì¬
+    unsigned int m_timeOut; ///< è¶…æ—¶æ—¶é—´
+    bool m_bStopTest; ///< æ ‡è®°æ˜¯å¦ç»“æŸæµ‹è¯•
+    unsigned int m_threadNum; ///< çº¿ç¨‹æ•°é‡
+    bool m_threadTestDone[MAX_CPU_LOGICAL_CORE_NUM]; ///< æ ‡è®°æ¯ä¸ªæµ‹è¯•çº¿ç¨‹æ˜¯å¦ç»“æŸ
+    LCpuStressTestState m_testState; ///< æµ‹è¯•çŠ¶æ€
 
-    SThreadParam m_threadParam[MAX_CPU_LOGICAL_CORE_NUM]; ///< ¼ÇÂ¼Ïß³ÌID
+    SThreadParam m_threadParam[MAX_CPU_LOGICAL_CORE_NUM]; ///< è®°å½•çº¿ç¨‹ID
 
 private:
-        /// @brief CPUÑ¹Á¦¼àÊÓÏß³Ì
+        /// @brief CPUå‹åŠ›ç›‘è§†çº¿ç¨‹
     static void CpuStressMonitorThread(void* pParam)
     {
         CCpuStressTest* pCpuStressTest = (CCpuStressTest*)pParam;
@@ -166,13 +166,13 @@ private:
         
     }
 
-    /// @brief CPUÑ¹Á¦²âÊÔÏß³Ì
-    /// @param[in] pParam ²ÎÊı
+    /// @brief CPUå‹åŠ›æµ‹è¯•çº¿ç¨‹
+    /// @param[in] pParam å‚æ•°
     static void CpuStressTestThread(void* pParam)
     {
         SThreadParam* pThreadParam = (SThreadParam*)pParam;
 
-        // ½«²âÊÔÏß³ÌÏà¹Øµ½Ö¸¶¨CPUºËĞÄÉÏÔËĞĞ
+        // å°†æµ‹è¯•çº¿ç¨‹ç›¸å…³åˆ°æŒ‡å®šCPUæ ¸å¿ƒä¸Šè¿è¡Œ
         DWORD threadMask = 1;
         threadMask = threadMask << pThreadParam->Id;
         SetThreadAffinityMask(GetCurrentThread(), threadMask);
@@ -187,27 +187,27 @@ private:
         
     }
 
-    /// @brief ¼ÆËãPI
-    /// @param[in] timeOut ³¬Ê±Ê±¼ä, µ¥Î»Ãë
-    /// @param[in] bStopTest ±ê¼ÇÊÇ·ñÍ£Ö¹²âÊÔ
-    /// @param[out] floatLen ´æ´¢¼ÆËã³öµÄ¾«¶ÈÖµ
-    /// @return ¼ÆËã³öPIµÄ¾«¶ÈÖµ
+    /// @brief è®¡ç®—PI
+    /// @param[in] timeOut è¶…æ—¶æ—¶é—´, å•ä½ç§’
+    /// @param[in] bStopTest æ ‡è®°æ˜¯å¦åœæ­¢æµ‹è¯•
+    /// @param[out] floatLen å­˜å‚¨è®¡ç®—å‡ºçš„ç²¾åº¦å€¼
+    /// @return è®¡ç®—å‡ºPIçš„ç²¾åº¦å€¼
     static void CalculatePI(IN unsigned int timeOut, IN bool& bStopTest, OUT unsigned long& floatLen)
     {
         /*
         PI/2 = 1 + 1/3 + 1/3 * 2/5 + 1/3 * 2/5 * 3/7...
         */
 
-        const int MAX_FLOAT_LEN = 80000; //¶¨Òå×î´ó¼ÆËã¾«¶È
+        const int MAX_FLOAT_LEN = 80000; //å®šä¹‰æœ€å¤§è®¡ç®—ç²¾åº¦
 
-        unsigned long pi[MAX_FLOAT_LEN] = {0}; // ´æ´¢¼ÆËã³öµÄPIÖµ, Êı×éÖĞµÄÃ¿¸öÖµ´ú±íÊ®½øÖÆÖĞµÄÒ»Î»
-        unsigned long z[MAX_FLOAT_LEN] = {0}; // Ã¿´Îµü´úpiÖµµÄĞÂ²¿·Ö, Èç2/3, 2/3 * 2/5, ...
+        unsigned long pi[MAX_FLOAT_LEN] = {0}; // å­˜å‚¨è®¡ç®—å‡ºçš„PIå€¼, æ•°ç»„ä¸­çš„æ¯ä¸ªå€¼ä»£è¡¨åè¿›åˆ¶ä¸­çš„ä¸€ä½
+        unsigned long z[MAX_FLOAT_LEN] = {0}; // æ¯æ¬¡è¿­ä»£piå€¼çš„æ–°éƒ¨åˆ†, å¦‚2/3, 2/3 * 2/5, ...
 
-        pi[1] = 2; // ÉèÖÃPIµÄ¿ªÊ¼ÖµÎª2
-        z[1] = 2; // ÉèÖÃĞÂ²¿·ÖµÄ¿ªÊ¼ÖµÎª2
+        pi[1] = 2; // è®¾ç½®PIçš„å¼€å§‹å€¼ä¸º2
+        z[1] = 2; // è®¾ç½®æ–°éƒ¨åˆ†çš„å¼€å§‹å€¼ä¸º2
 
-        unsigned long a = 1; // Ã¿´Îµü´úÖµÎª 1, 2, 3, 4, ...
-        unsigned long b = 3; // Ã¿´Îµü´úÖµÎª 3, 5, 7, 9, ...
+        unsigned long a = 1; // æ¯æ¬¡è¿­ä»£å€¼ä¸º 1, 2, 3, 4, ...
+        unsigned long b = 3; // æ¯æ¬¡è¿­ä»£å€¼ä¸º 3, 5, 7, 9, ...
 
         floatLen = 0;
 
@@ -220,7 +220,7 @@ private:
             unsigned long c = 0; 
 
             // z *= a;
-            d = 0; // ³Ë·¨ÖĞµÄ½øÎ»Öµ
+            d = 0; // ä¹˜æ³•ä¸­çš„è¿›ä½å€¼
             for (int i = MAX_FLOAT_LEN - 1; i > 0; i--)
             {
                 c = z[i] * a + d;
@@ -229,7 +229,7 @@ private:
             }
 
             // z /= b;
-            d = 0; // ³ı·¨ÖĞµÄÓàÊıÖµ
+            d = 0; // é™¤æ³•ä¸­çš„ä½™æ•°å€¼
             for (int i = 0; i < MAX_FLOAT_LEN; i++)
             {
                 c = z[i] + d * 10;
@@ -238,7 +238,7 @@ private:
             }
 
             // pi += z;
-            unsigned long maxFloatFlag = 0; // Èç¹ûz[i]È«²¿Îª0, ÔòmaxFloatFlagÎª0, ±íÊ¾¼ÆËã´ïµ½×î´ó¾«¶È
+            unsigned long maxFloatFlag = 0; // å¦‚æœz[i]å…¨éƒ¨ä¸º0, åˆ™maxFloatFlagä¸º0, è¡¨ç¤ºè®¡ç®—è¾¾åˆ°æœ€å¤§ç²¾åº¦
             for (int i = MAX_FLOAT_LEN - 1; i > 0; i--)
             {
                 c = pi[i] + z[i];
@@ -250,14 +250,14 @@ private:
             a++;
             b += 2;
 
-            // ´ïµ½×î´ó¾«¶È, Ö±½Ó·µ»Ø
+            // è¾¾åˆ°æœ€å¤§ç²¾åº¦, ç›´æ¥è¿”å›
             if (maxFloatFlag == 0)
             {
                 floatLen = MAX_FLOAT_LEN;
                 break;
             }
 
-            // ¼ÆËã¾«¶È
+            // è®¡ç®—ç²¾åº¦
             for (int i = 0; i < MAX_FLOAT_LEN; i++)
             {
                 if (z[i] != 0)
@@ -268,7 +268,7 @@ private:
 
             }
 
-            // ³¬Ê±»òÕßÍ£Ö¹²âÊÔ, ÔòÍË³ö
+            // è¶…æ—¶æˆ–è€…åœæ­¢æµ‹è¯•, åˆ™é€€å‡º
             timer.End();
             if (timer.Time() >= timeOut * 1000 || bStopTest)
             {

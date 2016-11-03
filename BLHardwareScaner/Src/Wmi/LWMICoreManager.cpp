@@ -1,4 +1,4 @@
-
+﻿
 #define _WIN32_DCOM
 
 #include "LWMICoreManager.h"
@@ -24,8 +24,8 @@
 
 namespace LWMI
 {
-    /// @brief COM��ʼ����
-    /// ֻ֧�ֵ��߳�
+    /// @brief COM初始化类
+    /// 只支持单线程
     class LInitCom
     {
     public:
@@ -33,8 +33,8 @@ namespace LWMI
         {
             this->bSuccess = false;
 
-            // CoInitialize���ú󷵻�S_FALSE��S_OK�������CoUninitialize
-            // CoInitialize���ú󷵻�RPC_E_CHANGE_MODE, ������ǰ�߳��ѱ���ʼ��(�Һ͵�ǰģʽ��ͬ),����Ҫ����CoUninitialize
+            // CoInitialize调用后返回S_FALSE或S_OK后都需调用CoUninitialize
+            // CoInitialize调用后返回RPC_E_CHANGE_MODE, 表明当前线程已被初始化(且和当前模式不同),不需要调用CoUninitialize
             HRESULT hr = CoInitialize(NULL);
             if (hr == S_OK || hr == S_FALSE)
             {
@@ -54,7 +54,7 @@ namespace LWMI
             }
         }
     private:
-        bool bSuccess; ///< ��ʶ�Ƿ��ʼ���ɹ�
+        bool bSuccess; ///< 标识是否初始化成功
     };
 
     LWMICoreManager::LWMICoreManager()
@@ -663,7 +663,7 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
         /*
-        64λ�������ַ����ķ�ʽ������VARIANT��
+        64位整数以字符串的方式保存在VARIANT中
         */
         bRet = true;
         ui64Property = _wcstoui64(vtProp.bstrVal, L'\0', 0);
@@ -724,7 +724,7 @@ SAFE_EXIT:
             goto SAFE_EXIT;
         }
         /*
-        64λ�������ַ����ķ�ʽ������VARIANT��
+        64位整数以字符串的方式保存在VARIANT中
         */
         bRet = true;
         ui64Property = _wcstoui64(vtProp.bstrVal, L'\0', 0);

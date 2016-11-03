@@ -1,4 +1,4 @@
-
+ï»¿
 #include "MainPage.h"
 
 #include <QtGui/QPaintDevice>
@@ -37,7 +37,7 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
      QObject::connect(&m_checkNewTimer, SIGNAL(timeout()), this, SLOT(CheckNewTimerTimeout()));
      QObject::connect(&m_downloadNewTimer, SIGNAL(timeout()), this, SLOT(DownloadNewTimerTimeout()));
 
-     // Òþ²ØÄ¬ÈÏ´°¿Ú±ß¿òºÍ±êÌâÀ¸
+     // éšè—é»˜è®¤çª—å£è¾¹æ¡†å’Œæ ‡é¢˜æ 
      this->setWindowFlags(Qt::Window|Qt::FramelessWindowHint|Qt::WindowSystemMenuHint
          |Qt::WindowMinimizeButtonHint|Qt::WindowMaximizeButtonHint);
 
@@ -49,8 +49,8 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
 
      this->ui.pushButtonUpdate->setVisible(false);
 
-    // »ñÈ¡µ±Ç°ÏµÍ³DPI, µ±Ç°ÏµÍ³DPI³ýÒÔÉè¼ÆÊ±DPIÖµ, ÔòµÃµ½UI·Å´óÏµÊý
-    const float DESIGN_DPI = 96.0f; // Éè¼ÆÊ±DPI
+    // èŽ·å–å½“å‰ç³»ç»ŸDPI, å½“å‰ç³»ç»ŸDPIé™¤ä»¥è®¾è®¡æ—¶DPIå€¼, åˆ™å¾—åˆ°UIæ”¾å¤§ç³»æ•°
+    const float DESIGN_DPI = 96.0f; // è®¾è®¡æ—¶DPI
     QPainter painter(this);
     QPaintDevice* pDevice = painter.device();
     PrintLogW(L"System DPI X: %d, Y: %d", pDevice->logicalDpiX(), pDevice->logicalDpiY());
@@ -61,14 +61,14 @@ MainPage::MainPage(QWidget *parent, Qt::WFlags flags)
         m_uiRatio = 1.0f;
     PrintLogW(L"UI Ratio: %f", m_uiRatio);
 
-    // ¸ù¾Ý±ÈÀýÖØÐÂµ÷ÕûÖ÷UI´óÐ¡, ²¢¾ÓÖÐÏÔÊ¾
+    // æ ¹æ®æ¯”ä¾‹é‡æ–°è°ƒæ•´ä¸»UIå¤§å°, å¹¶å±…ä¸­æ˜¾ç¤º
     int width = this->geometry().width() * m_uiRatio;
     int height = this->geometry().height() * m_uiRatio;
     this->setFixedSize(width, height);
     QDesktopWidget* pDesk = QApplication::desktop();
     this->move((pDesk->width() - width) / 2, (pDesk->height() - height) / 2);
 
-    // ÏÔÊ¾Æô¶¯»­Ãæ
+    // æ˜¾ç¤ºå¯åŠ¨ç”»é¢
     QPixmap originalImage(".\\Image\\Background\\splash.png");
     QSize imageSize(originalImage.width() * m_uiRatio, originalImage.height() * m_uiRatio);
     QPixmap scaledImage = originalImage.scaled(imageSize, Qt::KeepAspectRatio);
@@ -147,17 +147,17 @@ void MainPage::showEvent(QShowEvent* e)
         ui.toolButtonTestItem->setIconSize(iconSize);
         ui.toolButtonTestItem->setIcon(QIcon(".\\Image\\TestItem"));
 
-        // Ê×´ÎÏÔÊ¾, »ñÈ¡½¹µã
+        // é¦–æ¬¡æ˜¾ç¤º, èŽ·å–ç„¦ç‚¹
         this->setFocus(Qt::ActiveWindowFocusReason);
 
-        // ¼ì²éÐÂ°æ±¾
+        // æ£€æŸ¥æ–°ç‰ˆæœ¬
         m_checkNew.SetCurrentVersion(LAppParam::GetAppVersion());
         m_checkNew.StartCheckAsync();
         m_checkNewTimer.setInterval(1000);
         m_checkNewTimer.start();
     }
 
-    // ½áÊøÆô¶¯»­Ãæ
+    // ç»“æŸå¯åŠ¨ç”»é¢
     m_splashScreen.finish(this);
 
     PrintLogW((L"End MainPage::showEvent()"));
@@ -214,7 +214,7 @@ void MainPage::UpdateButtonClicked()
 {
     if (ui.pushButtonUpdate->text() == "Update")
     {
-        // ¿ªÊ¼ÏÂÔØÐÂ°æ±¾
+        // å¼€å§‹ä¸‹è½½æ–°ç‰ˆæœ¬
         m_downloadNew.StartDownloadAsync();
         m_downloadNewTimer.setInterval(1000);
         m_downloadNewTimer.start();
@@ -250,7 +250,7 @@ void MainPage::CheckNewTimerTimeout()
     m_checkNewTimer.stop();
 
     
-    // ÓÐÐÂ°æ±¾ÐèÒª¸üÐÂ
+    // æœ‰æ–°ç‰ˆæœ¬éœ€è¦æ›´æ–°
     if (CHECKNEW_WITH_NEW == result)
     {
         ui.pushButtonUpdate->setText("Update");
@@ -264,14 +264,14 @@ void MainPage::DownloadNewTimerTimeout()
 {
     int iRet = m_downloadNew.GetResult();
 
-    // ÕýÔÚÏÂÔØÐÂ°æ±¾
+    // æ­£åœ¨ä¸‹è½½æ–°ç‰ˆæœ¬
     if (iRet >= 0 && iRet <= 100)
     {
         ui.labelUpdate->setText(QObject::tr("Downloading: %1% ").arg(iRet));
         return;
     }
 
-    // ÏÂÔØÐÂ°æ±¾´íÎó
+    // ä¸‹è½½æ–°ç‰ˆæœ¬é”™è¯¯
     if (DOWNLOADNEW_ERROR == iRet)
     {
         ui.labelUpdate->setText("Download Error! ");
@@ -281,7 +281,7 @@ void MainPage::DownloadNewTimerTimeout()
         return;
     }
 
-    // ÐÂ°æ±¾ÏÂÔØÍê³É
+    // æ–°ç‰ˆæœ¬ä¸‹è½½å®Œæˆ
     if (DOWNLOADNEW_DONE == iRet)
     {
         ui.labelUpdate->setText("Download Completed! ");
