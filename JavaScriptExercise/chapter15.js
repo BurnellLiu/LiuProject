@@ -29,7 +29,14 @@ $(document).ready(function() {
        });
     });
 
+    var stateList = "Alabama*Alaska*Arizona*Arkansas*California*Colorado*Connecticut*Delaware*Florida*Georgia*Hawaii*Idaho*Illinois*Indiana*Iowa*Kansas*Kentucky*Louisiana*Maine*Maryland*MassachusettsMichigan*Minnesota*Mississippi*Missouri*Montana*Nebraska*Nevada*New Hampshire*New Jersey*New MexicoNew York*North Carolina*North Dakota*Ohio*Oklahoma*Oregon*Pennsylvania*Rhode Island*South CarolinaSouth Dakota*Tennessee*Texas*Utah*Vermont*Virginia*Washington*West Virginia*Wisconsin*Wyoming*";
+    $("#searchField").autocomplete({
+        source: stateList.split("*")
+    });
+
 });
+
+
 
 
 
