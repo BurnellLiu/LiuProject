@@ -21,6 +21,7 @@ def get(path):
     :param path: URL路径
     """
     def decorator(func):
+        # 设置被装饰的函数签名为原始的签名
         @functools.wraps(func)
         def wrapper(*args, **kw):
             return func(*args, **kw)
@@ -36,6 +37,7 @@ def post(path):
     :param path: URL路径
     """
     def decorator(func):
+        # 设置被装饰的函数签名为原始的签名
         @functools.wraps(func)
         def wrapper(*args, **kw):
             return func(*args, **kw)
