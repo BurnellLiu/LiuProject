@@ -1,22 +1,12 @@
 /**
- * 注册页面逻辑处理
+ * 登录页面逻辑处理
  * 作者: burnell liu
  * 邮箱: burnell_liu@outlook.com
  */
 
 /**
- * 验证邮箱的是否有效
- * @param {String} email 邮箱字符串
- * @returns {boolean} true(合法邮箱)， false(非法邮箱)
- */
-function validateEmail(email){
-    var re = /^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$/;
-    return re.test(email.toLowerCase());
-}
-
-/**
  * 显示错误消息
- * @param {String} msg 错误消息
+ * @param {String} msg 错误消息, 如果为null则清除错误消息
  */
 function showErrorMessage(msg){
 
@@ -37,17 +27,37 @@ function showErrorMessage(msg){
 }
 
 /**
+ * 设置表单是否处于加载状态
+ * @param {Boolean} isLoading true(加载状态), false(非加载状态)
+ */
+function showFormLoading(isLoading){
+    var $button = $('#vm').find('button');
+    var $i = $('#vm').find('button[type=submit]').find('i');
+
+    if (isLoading) {
+        $button.attr('disabled', 'disabled');
+        $i.addClass('uk-icon-spinner').addClass('uk-icon-spin');
+    }
+    else {
+        $button.removeAttr('disabled');
+        $i.removeClass('uk-icon-spinner').removeClass('uk-icon-spin');
+    }
+}
+
+/**
  * 请求结束处理函数
  * @param {Object} data 返回的数据
  */
 function requestDone(data){
+
     // 如果有错则显示错误消息
     if (data.error){
+        showFormLoading(false);
         showErrorMessage(data.message);
         return;
     }
 
-    // 如果成功注册, 则定位到首页
+    // 如果成功登录, 则定位到首页
     location.assign('/');
 }
 
@@ -57,8 +67,10 @@ function requestDone(data){
  * @param status
  */
 function requestFail(xhr, status){
+    showFormLoading(false);
     showErrorMessage('网络出了问题 (HTTP '+ xhr.status+')');
 }
+
 
 /**
  * 提交账号信息
@@ -67,7 +79,7 @@ function requestFail(xhr, status){
 function postAccount(data){
     var opt = {
         type: 'POST',
-        url: '/api/users',
+        url: '/api/authenticate',
         dataType: 'json',
         data: JSON.stringify(data || {}),
         contentType: 'application/json'
@@ -79,6 +91,7 @@ function postAccount(data){
     jqxhr.fail(requestFail);
 }
 
+
 /**
  * 账号提交处理函数
  * @param event
@@ -87,37 +100,20 @@ function accountSubmit(event){
     // 通知浏览器提交已被处理， 阻止默认行为的发生
     event.preventDefault();
 
+    showFormLoading(true);
     showErrorMessage(null);
 
-    // 检查账号信息是否合法
-    if (!this.name.trim()){
-        showErrorMessage('请输入名字');
-        return;
-    }
-    if (!validateEmail(this.email.trim().toLowerCase())) {
-        showErrorMessage('请输入正确的Email地址');
-        return;
-    }
-    if (this.password1.length < 6){
-        showErrorMessage('密码长度至少为6个字符');
-        return;
-    }
-    if (this.password1 !== this.password2){
-        showErrorMessage('两次输入的密码不一致');
-        return;
-    }
 
+    var $form = $('#vm');
     var email = this.email.trim().toLowerCase();
     var account = {
-        name: this.name.trim(),
         email: email,
-        password: CryptoJS.SHA1(email + ':' + this.password1).toString()
+        password: CryptoJS.SHA1(email + ':' + this.password).toString()
     };
 
     // 将账号信息POST出去
     postAccount(account);
 }
-
 
 /**
  * 初始化页面
@@ -128,19 +124,14 @@ function initPage(){
     var model = {
         el: '#vm',
         data: {
-            name: '',
             email: '',
-            password1: '',
-            password2: ''
+            password: ''
         },
         methods: {
             submit: accountSubmit
         }
     };
     var vm = new Vue(model);
-
-    // 显示视图
-    $('#vm').show();
 }
 
 

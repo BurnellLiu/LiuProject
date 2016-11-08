@@ -9,37 +9,8 @@
     <script src="/static/js/sha1.min.js"></script>
     <script src="/static/js/uikit.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/awesome.js"></script>
-    <script>
+    <script src="/static/js/signin.js"></script>
 
-$(function() {
-    var vmAuth = new Vue({
-        el: '#vm',
-        data: {
-            email: '',
-            password: ''
-        },
-        methods: {
-            submit: function(event) {
-                event.preventDefault();
-                var
-                    $form = $('#vm'),
-                    email = this.email.trim().toLowerCase(),
-                    data = {
-                        email: email,
-                        password: this.password==='' ? '' : CryptoJS.SHA1(email + ':' + this.password).toString()
-                    };
-                $form.postJSON('/api/authenticate', data, function(err, result) {
-                    if (! err) {
-                        location.assign('/');
-                    }
-                });
-            }
-        }
-    });
-});
-
-    </script>
 </head>
 <body class="uk-height-1-1">
     <div class="uk-vertical-align uk-text-center uk-height-1-1">
