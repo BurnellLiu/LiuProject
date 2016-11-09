@@ -4,28 +4,8 @@
 
 {% block beforehead %}
 
-<script>
 
-var comment_url = '/api/blogs/{{ blog.id }}/comments';
-
-$(function () {
-    var $form = $('#form-comment');
-    $form.submit(function (e) {
-        e.preventDefault();
-        $form.showFormError('');
-        var content = $form.find('textarea').val().trim();
-        if (content==='') {
-            return $form.showFormError('请输入评论内容！');
-        }
-        $form.postJSON(comment_url, { content: content }, function (err, result) {
-            if (err) {
-                return $form.showFormError(err);
-            }
-            refresh();
-        });
-    });
-});
-</script>
+<script src="/static/js/blog_detail.js"></script>
 
 {% endblock %}
 
