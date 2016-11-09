@@ -8,6 +8,7 @@ import json
 import logging
 import base64
 import asyncio
+import random
 
 from aiohttp import web
 
@@ -47,14 +48,14 @@ async def index(*, page='1'):
     """
     page_index = get_page_index(page)
     num = await Blog.find_number('count(id)')
-    page = Page(num)
+    page = Page(num, page_index)
     if num == 0:
         blogs = []
     else:
         # 以创建时间降序的方式查找指定的博客
         blogs = await Blog.find_all(order_by='created_at desc', limit=(page.offset, page.limit))
     return {
-        '__template__': 'blogs.html',
+        '__template__': 'index.html',
         'page': page,
         'blogs': blogs
     }
@@ -298,10 +299,10 @@ async def api_register_user(*, email, name, password):
     sha1_password = generate_sha1_password(uid, password)
 
     # 生成头像图片URL
-    gravatar_url = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest()
+    head_img_url = '/static/img/head_%s.jpg' % random.randint(1, 15)
 
     # 将新用户数据保存到数据库中
-    user = User(id=uid, name=name.strip(), email=email, password=sha1_password, image=gravatar_url)
+    user = User(id=uid, name=name.strip(), email=email, password=sha1_password, image=head_img_url)
     await user.save()
 
     # 生成COOKIE

@@ -27,13 +27,21 @@
                 <ul class="uk-navbar-nav">
                 {% if __user__ %}
                     <li class="uk-parent" data-uk-dropdown>
-                        <a href="#0"><i class="uk-icon-user"></i> {{ __user__['name'] }}</a>
+                        <a href="#0">
+                            <img class="uk-border-circle" height="40" width="40" src="{{ __user__['image'] }}">
+                            {{ __user__['name'] }}
+                        </a>
                         <div class="uk-dropdown uk-dropdown-navbar">
                             <ul class="uk-nav uk-nav-navbar">
                                 <li><a href="/signout"><i class="uk-icon-sign-out"></i> 登出</a></li>
                             </ul>
                         </div>
                     </li>
+
+                {% if __user__['admin'] %}
+                    <li><a href="/manage/blogs"><i class="uk-icon-gears"></i>后台管理</a></li>
+                {% endif %}
+
                 {% else %}
                     <li><a href="/signin"><i class="uk-icon-sign-in"></i> 登陆</a></li>
                     <li><a href="/register"><i class="uk-icon-edit"></i> 注册</a></li>

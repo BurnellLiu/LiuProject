@@ -139,8 +139,6 @@ function initPage(){
     };
     var vm = new Vue(model);
 
-    // 显示视图
-    $('#vm').show();
 }
 
 
