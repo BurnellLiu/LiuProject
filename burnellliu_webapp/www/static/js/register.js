@@ -37,12 +37,31 @@ function showErrorMessage(msg){
 }
 
 /**
+ * 设置表单是否处于加载状态
+ * @param {Boolean} isLoading true(加载状态), false(非加载状态)
+ */
+function showFormLoading(isLoading){
+    var $button = $('#vm').find('button');
+    var $i = $('#vm').find('button[type=submit]').find('i');
+
+    if (isLoading) {
+        $button.attr('disabled', 'disabled');
+        $i.addClass('uk-icon-spinner').addClass('uk-icon-spin');
+    }
+    else {
+        $button.removeAttr('disabled');
+        $i.removeClass('uk-icon-spinner').removeClass('uk-icon-spin');
+    }
+}
+
+/**
  * 请求结束处理函数
  * @param {Object} data 返回的数据
  */
 function requestDone(data){
     // 如果有错则显示错误消息
     if (data.error){
+        showFormLoading(false);
         showErrorMessage(data.message);
         return;
     }
@@ -57,6 +76,7 @@ function requestDone(data){
  * @param status
  */
 function requestFail(xhr, status){
+    showFormLoading(false);
     showErrorMessage('网络出了问题 (HTTP '+ xhr.status+')');
 }
 
@@ -87,8 +107,6 @@ function accountSubmit(event){
     // 通知浏览器提交已被处理， 阻止默认行为的发生
     event.preventDefault();
 
-    showErrorMessage(null);
-
     // 检查账号信息是否合法
     if (!this.name.trim()){
         showErrorMessage('请输入名字');
@@ -106,6 +124,8 @@ function accountSubmit(event){
         showErrorMessage('两次输入的密码不一致');
         return;
     }
+
+    showFormLoading(true);
 
     var email = this.email.trim().toLowerCase();
     var account = {
