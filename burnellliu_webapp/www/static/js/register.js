@@ -21,7 +21,7 @@ function validateEmail(email){
 function showErrorMessage(msg){
 
     // 找到显示错误消息的标签
-    var $alert = $('#vm').find(".uk-alert-danger");
+    var $alert = $accountForm.find(".uk-alert-danger");
     if ($alert.length === 0){
         return;
     }
@@ -41,8 +41,8 @@ function showErrorMessage(msg){
  * @param {Boolean} isLoading true(加载状态), false(非加载状态)
  */
 function showFormLoading(isLoading){
-    var $button = $('#vm').find('button');
-    var $i = $('#vm').find('button[type=submit]').find('i');
+    var $button = $accountForm.find('button');
+    var $i = $accountForm.find('button[type=submit]').find('i');
 
     if (isLoading) {
         $button.attr('disabled', 'disabled');
@@ -107,31 +107,36 @@ function accountSubmit(event){
     // 通知浏览器提交已被处理， 阻止默认行为的发生
     event.preventDefault();
 
+    var name = $accountForm.find("#name").val();
+    var email = $accountForm.find("#email").val();
+    var password1 = $accountForm.find("#password1").val();
+    var password2 = $accountForm.find("#password2").val();
+
     // 检查账号信息是否合法
-    if (!this.name.trim()){
+    if (!name.trim()){
         showErrorMessage('请输入名字');
         return;
     }
-    if (!validateEmail(this.email.trim().toLowerCase())) {
+    if (!validateEmail(email.trim().toLowerCase())) {
         showErrorMessage('请输入正确的Email地址');
         return;
     }
-    if (this.password1.length < 6){
+    if (password1.length < 6){
         showErrorMessage('密码长度至少为6个字符');
         return;
     }
-    if (this.password1 !== this.password2){
+    if (password1 !== password2){
         showErrorMessage('两次输入的密码不一致');
         return;
     }
 
     showFormLoading(true);
 
-    var email = this.email.trim().toLowerCase();
+    email = email.trim().toLowerCase();
     var account = {
-        name: this.name.trim(),
+        name: name.trim(),
         email: email,
-        password: CryptoJS.SHA1(email + ':' + this.password1).toString()
+        password: CryptoJS.SHA1(email + ':' + password1).toString()
     };
 
     // 将账号信息POST出去
@@ -143,21 +148,8 @@ function accountSubmit(event){
  * 初始化页面
  */
 function initPage(){
-
-    // 创建模型
-    var model = {
-        el: '#vm',
-        data: {
-            name: '',
-            email: '',
-            password1: '',
-            password2: ''
-        },
-        methods: {
-            submit: accountSubmit
-        }
-    };
-    var vm = new Vue(model);
+    window.$accountForm = $("#account-form");
+    window.$accountForm.submit(accountSubmit);
 
 }
 
