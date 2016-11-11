@@ -11,7 +11,7 @@
 function showErrorMessage(msg){
 
     // 找到显示错误消息的标签
-    var $alert = $('#vm').find(".uk-alert-danger");
+    var $alert = $accountForm.find(".uk-alert-danger");
     if ($alert.length === 0){
         return;
     }
@@ -31,8 +31,8 @@ function showErrorMessage(msg){
  * @param {Boolean} isLoading true(加载状态), false(非加载状态)
  */
 function showFormLoading(isLoading){
-    var $button = $('#vm').find('button');
-    var $i = $('#vm').find('button[type=submit]').find('i');
+    var $button = $accountForm.find('button');
+    var $i = $accountForm.find('button[type=submit]').find('i');
 
     if (isLoading) {
         $button.attr('disabled', 'disabled');
@@ -101,14 +101,15 @@ function accountSubmit(event){
     event.preventDefault();
 
     showFormLoading(true);
-    showErrorMessage(null);
 
+    var email = $accountForm.find("#email").val();
+    email = email.trim().toLowerCase();
 
-    var $form = $('#vm');
-    var email = this.email.trim().toLowerCase();
+    var password = $accountForm.find("#password").val();
+
     var account = {
         email: email,
-        password: CryptoJS.SHA1(email + ':' + this.password).toString()
+        password: CryptoJS.SHA1(email + ':' + password).toString()
     };
 
     // 将账号信息POST出去
@@ -119,19 +120,8 @@ function accountSubmit(event){
  * 初始化页面
  */
 function initPage(){
-
-    // 创建模型
-    var model = {
-        el: '#vm',
-        data: {
-            email: '',
-            password: ''
-        },
-        methods: {
-            submit: accountSubmit
-        }
-    };
-    var vm = new Vue(model);
+    window.$accountForm = $("#account-form");
+    window.$accountForm.submit(accountSubmit);
 }
 
 
