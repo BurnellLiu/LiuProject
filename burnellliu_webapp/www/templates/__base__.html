@@ -6,7 +6,6 @@
     <title>{% block title %} ? {% endblock %} - 刘杰的个人网站</title>
     <link rel="stylesheet" href="/static/css/uikit.min.css">
     <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
-    <link rel="stylesheet" href="/static/css/awesome.css" />
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/sha1.min.js"></script>
     <script src="/static/js/uikit.min.js"></script>
@@ -39,7 +38,7 @@
                     </li>
 
                 {% if __user__['admin'] %}
-                    <li><a href="/manage/blogs"><i class="uk-icon-gears"></i>后台管理</a></li>
+                    <li><a href="/manage/blogs?page=1"><i class="uk-icon-gears"></i>后台管理</a></li>
                 {% endif %}
 
                 {% else %}
