@@ -1,45 +1,4 @@
 
-
-/*
-function initVM(data) {
-    var vm = new Vue({
-        el: '#vm',
-        data: {
-            blogs: data.blogs,
-            page: data.page
-        },
-        methods: {
-            edit_blog: function (blog) {
-                location.assign('/manage/blogs/edit?id=' + blog.id);
-            },
-            delete_blog: function (blog) {
-                if (confirm('确认要删除“' + blog.name + '”？删除后不可恢复！')) {
-                    postJSON('/api/blogs/' + blog.id + '/delete', function (err, r) {
-                        if (err) {
-                            return alert(err.message || err.error || err);
-                        }
-                        refresh();
-                    });
-                }
-            }
-        }
-    });
-    $('#vm').show();
-}
-
-$(function() {
-    getJSON('/api/blogs', {
-        page: {{ page_index }}
-    }, function (err, results) {
-        if (err) {
-            return fatal(err);
-        }
-        $('#loading').hide();
-        initVM(results);
-    });
-});
-    */
-
 if (!Number.prototype.toDateTime) {
     var replaces = {
         'yyyy': function(dt) {
