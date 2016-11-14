@@ -4,31 +4,6 @@
  * 邮箱: burnell_liu@outlook.com
  */
 
-/*
-function initVM(data) {
-    $('#vm').show();
-    var vm = new Vue({
-        el: '#vm',
-        data: {
-            users: data.users,
-            page: data.page
-        }
-    });
-}
-
-$(function() {
-    getJSON('/api/users', {
-        page: {{ page_index }}
-    }, function (err, results) {
-        if (err) {
-            return fatal(err);
-        }
-        $('#loading').hide();
-        initVM(results);
-    });
-});
-    */
-
 
 /**
  * 显示错误消息
@@ -74,16 +49,20 @@ function showUsersData(data){
     var $table = $('#users-table tbody');
     var users = data.users;
     for (var i in users){
+        var nameSpan = '<span>' + users[i].name + '</span>';
+        if (users[i].admin){
+            nameSpan += '<span style="color:#d05"><i class="uk-icon-key"></i> 管理员</span>';
+        }
         $table.append(
             '<tr >' +
             '<td>' +
-            '<span>' + users[i].name + '</span>' +
+            nameSpan +
             '</td>' +
             '<td>' +
             '<span>' + users[i].email + '</span>' +
             '</td>' +
             '<td>' +
-            '<span>' + users[i].created_at + '</span>' +
+            '<span>' + users[i].created_at.toDateTime() + '</span>' +
             '</td>' +
             '</tr>');
     }
