@@ -44,10 +44,14 @@ class Page(object):
         # 页面数量
         self.page_count = item_count // page_size + (1 if item_count % page_size > 0 else 0)
 
-        if (item_count == 0) or (page_index > self.page_count):
+        if item_count == 0:
             self.offset = 0
             self.limit = 0
             self.page_index = 1
+        elif page_index > self.page_count:
+            self.page_index = self.page_count
+            self.offset = self.page_size * (self.page_index - 1)
+            self.limit = self.page_size
         else:
             self.page_index = page_index
             self.offset = self.page_size * (page_index - 1)

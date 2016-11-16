@@ -33,10 +33,10 @@ function showErrorMessage(msg){
  */
 function showDataLoading(isLoading){
     if (isLoading){
-        $('#loading').show();
+        $('#loading').css("visibility", "visible");
     }
     else {
-        $('#loading').hide();
+        $('#loading').css("visibility", "hidden");
     }
 
 }
@@ -217,6 +217,10 @@ function requestFail(xhr, status){
  * @param {String} pageIndex 页面索引
  */
 function postGetCommentsRequest(pageIndex){
+
+    showErrorMessage(null);
+    showDataLoading(true);
+
     var opt = {
         type: 'GET',
         url: '/api/comments?page=' + pageIndex,
@@ -234,9 +238,6 @@ function postGetCommentsRequest(pageIndex){
  * 初始化页面
  */
 function initPage(){
-    showErrorMessage(null);
-    showDataLoading(true);
-
     postGetCommentsRequest('1');
 }
 

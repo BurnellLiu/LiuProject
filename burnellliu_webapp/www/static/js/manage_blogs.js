@@ -13,18 +13,18 @@
 function showErrorMessage(msg){
 
     // 找到显示错误消息的标签
-    var $alert = $('#error');
-    if ($alert.length === 0){
+    var $error = $('#error');
+    if ($error.length === 0){
         return;
     }
 
     if (!msg){
-        $alert.hide();
+        $error.hide();
         return;
     }
 
-    $alert.text(msg);
-    $alert.show();
+    $error.text(msg);
+    $error.show();
 }
 
 /**
@@ -33,10 +33,10 @@ function showErrorMessage(msg){
  */
 function showDataLoading(isLoading){
     if (isLoading){
-        $('#loading').show();
+        $('#loading').css("visibility", "visible");
     }
     else {
-        $('#loading').hide();
+        $('#loading').css("visibility", "hidden");
     }
 
 }
@@ -51,8 +51,8 @@ function deleteBlogRequestDone(data){
         return;
     }
     // 如果成功删除博客, 则刷新页面
-    var url = location.pathname;
-    location.assign(url);
+    var index = window.currentPageIndex;
+    postGetBlogsRequest(index.toString());
 }
 
 /**
@@ -75,15 +75,6 @@ function postDeleteBlogRequest(blogId){
 }
 
 /**
- * 编辑博客处理函数
- * @param {Object} e 标签对象
- */
-function editIconClicked(e){
-    var id = $(e).attr("blog-id");
-    location.assign('/manage/blogs/edit?id=' + id);
-}
-
-/**
  * 删除博客处理函数
  * @param {Object} e 标签对象
  */
@@ -96,12 +87,30 @@ function trashIConClicked(e){
 }
 
 /**
+ * 前一页博客处理函数
+ */
+function previousPageClicked(){
+    var index = window.currentPageIndex - 1;
+    postGetBlogsRequest(index.toString());
+}
+
+/**
+ * 后一页博客处理函数
+ */
+function nextPageClicked(){
+    var index = window.currentPageIndex + 1;
+    postGetBlogsRequest(index.toString());
+}
+
+/**
  * 显示博客数据
  * @param {Object} data 博客数据
  */
 function showBlogsData(data){
     // 创建博客表
     var $table = $('#blogs-table tbody');
+    // 先清空子节点
+    $table.children('tr').remove();
     var blogs = data.blogs;
     for (var i in blogs){
         $table.append(
@@ -116,9 +125,9 @@ function showBlogsData(data){
             '<span>'+ blogs[i].created_at.toDateTime() + '</span>'+
             '</td>' +
             '<td>' +
-            '<a href="#0" onclick="editIconClicked(this)" blog-id="' + blogs[i].id + '">' +
+            '<a target="_blank" href="/manage/blogs/edit?id=' + blogs[i].id + '">' +
             '<i class="uk-icon-edit"></i> </a>' +
-            '<a href="#0" onclick="trashIConClicked(this)" blog-id="' + blogs[i].id + '" blog-name="' + blogs[i].name + '">' +
+            '<a onclick="trashIConClicked(this)" blog-id="' + blogs[i].id + '" blog-name="' + blogs[i].name + '">' +
             '<i class="uk-icon-trash-o"></i></a>' +
             '</td>' +
             '</tr>');
@@ -126,11 +135,12 @@ function showBlogsData(data){
 
     // 创建分页列
     var $ul = $('ul.uk-pagination');
+    // 先清空子节点
+    $ul.children('li').remove();
     if (data.page.has_previous){
-        var prePageIndex = parseInt(data.page.page_index) - 1;
         var previousLi =
             '<li>' +
-            '<a href="/manage/blogs?page=' + prePageIndex + '">' +
+            '<a onclick="previousPageClicked()">' +
             '<i class="uk-icon-angle-double-left"></i>' +
             '</a>' +
             '</li>'
@@ -146,10 +156,9 @@ function showBlogsData(data){
     $ul.append('<li class="uk-active"><span>' + data.page.page_index + '</span></li>');
 
     if (data.page.has_next){
-        var nextPageIndex = parseInt(data.page.page_index) + 1;
         var nextLi =
             '<li>' +
-            '<a href="/manage/blogs?page='+ nextPageIndex + '">' +
+            '<a onclick="nextPageClicked()">' +
             '<i class="uk-icon-angle-double-right"></i>' +
             '</a>' +
             '</li>';
@@ -177,6 +186,7 @@ function getBlogsRequestDone(data){
         return;
     }
 
+    window.currentPageIndex = data.page.page_index;
     showBlogsData(data);
 }
 
@@ -195,6 +205,10 @@ function requestFail(xhr, status){
  * @param {String} pageIndex 页面索引
  */
 function postGetBlogsRequest(pageIndex){
+
+    showErrorMessage(null);
+    showDataLoading(true);
+
     var opt = {
         type: 'GET',
         url: '/api/blogs?page=' + pageIndex,
@@ -211,14 +225,8 @@ function postGetBlogsRequest(pageIndex){
  * 初始化页面
  */
 function initPage(){
-    showErrorMessage(null);
-    showDataLoading(true);
 
-    var pageIndex = location.search.replace('?page=', '');
-    if (!pageIndex){
-        pageIndex = '1';
-    }
-    postGetBlogsRequest(pageIndex);
+    postGetBlogsRequest('1');
 }
 
 $(document).ready(initPage)
