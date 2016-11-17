@@ -138,6 +138,10 @@ function showCommentsData(data){
             '</td>' +
             '</tr>');
     }
+    // 少于10行的填充空白
+    for (var i = 0; i < 10-comments.length; i++){
+        $table.append('<tr><td>&nbsp</td><td></td><td></td><td></td></tr>');
+    }
 
     // 创建分页列
     var $ul = $('ul.uk-pagination');

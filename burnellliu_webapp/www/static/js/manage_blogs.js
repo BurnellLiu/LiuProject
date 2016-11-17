@@ -126,11 +126,15 @@ function showBlogsData(data){
             '</td>' +
             '<td>' +
             '<a target="_blank" href="/manage/blogs/edit?id=' + blogs[i].id + '">' +
-            '<i class="uk-icon-edit"></i> </a>' +
+            '<i class="uk-icon-edit">&nbsp;&nbsp;</i></a>' +
             '<a onclick="trashIConClicked(this)" blog-id="' + blogs[i].id + '" blog-name="' + blogs[i].name + '">' +
-            '<i class="uk-icon-trash-o"></i></a>' +
+            '<i class="uk-icon-trash-o">&nbsp;&nbsp;</i></a>' +
             '</td>' +
             '</tr>');
+    }
+    // 少于10行的填充空白
+    for (var i = 0; i < 10-blogs.length; i++){
+        $table.append('<tr><td>&nbsp</td><td></td><td></td><td></td></tr>');
     }
 
     // 创建分页列
