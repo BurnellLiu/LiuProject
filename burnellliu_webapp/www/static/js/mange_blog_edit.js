@@ -4,52 +4,6 @@
  * 邮箱: burnell_liu@outlook.com
  */
 
-/*
-var
-    ID = '{{ id }}',
-    action = '{{ action }}';
-function initVM(blog) {
-    var vm = new Vue({
-        el: '#vm',
-        data: blog,
-        methods: {
-            submit: function (event) {
-                event.preventDefault();
-                var $form = $('#vm').find('form');
-                $form.postJSON(action, this.$data, function (err, r) {
-                    if (err) {
-                        $form.showFormError(err);
-                    }
-                    else {
-                        return location.assign('/manage/blogs');
-                    }
-                });
-            }
-        }
-    });
-    $('#vm').show();
-}
-$(function () {
-    if (ID) {
-        getJSON('/api/blogs/' + ID, function (err, blog) {
-            if (err) {
-                return fatal(err);
-            }
-            $('#loading').hide();
-            initVM(blog);
-        });
-    }
-    else {
-        $('#loading').hide();
-        initVM({
-            name: '',
-            summary: '',
-            content: ''
-        });
-    }
-});
- */
-
 /**
  * 显示错误消息
  * @param {String} msg 错误消息, 如果设置为null, 则隐藏错误消息标签
@@ -74,14 +28,8 @@ function showErrorMessage(msg){
 /**
  * 设置数据是否处于加载状态
  * @param {Boolean} isLoading true(加载状态), false(非加载状态)
- * @param {String} msg, 显示的消息
  */
-function showDataLoading(isLoading, msg){
-    if (!msg){
-        $('#loading span').text(' ');
-    }
-
-
+function showDataLoading(isLoading){
     if (isLoading){
         $('#loading').css("visibility", "visible");
     }
@@ -92,11 +40,29 @@ function showDataLoading(isLoading, msg){
 }
 
 /**
+ * 设置表单提交是否处于加载状态
+ * @param {Boolean} isLoading true(加载状态), false(非加载状态)
+ */
+function showButtonLoading(isLoading){
+    var $button = $blogForm.find('button[type=submit]');
+    var $i = $blogForm.find('button[type=submit]').find('i');
+
+    if (isLoading) {
+        $button.attr('disabled', 'disabled');
+        $i.addClass('uk-icon-spinner').addClass('uk-icon-spin');
+    }
+    else {
+        $button.removeAttr('disabled');
+        $i.removeClass('uk-icon-spinner').removeClass('uk-icon-spin');
+    }
+}
+
+/**
  * 上传博客请求结束处理函数
  * @param {Object} data 返回的数据
  */
 function postBlogRequestDone(data){
-    showDataLoading(false, null);
+    showButtonLoading(false);
 
     // 如果有错则显示错误消息
     if (data.error){
@@ -115,12 +81,32 @@ function postBlogRequestDone(data){
 }
 
 /**
+ * 获取博客请求结束处理函数
+ * @param {Object} data 返回的数据
+ */
+function getBlogRequestDone(data){
+    showDataLoading(false);
+
+    // 如果有错则显示错误消息
+    if (data.error){
+        showErrorMessage(data.message);
+        return;
+    }
+
+    $blogForm.find("#title").val(data.name);
+    $blogForm.find("#summary").val(data.summary);
+    $blogForm.find("#content").val(data.content);
+
+}
+
+/**
  * 请求错误处理函数
  * @param xhr
  * @param status
  */
 function requestFail(xhr, status){
-    showDataLoading(false, null);
+    showButtonLoading(false);
+    showDataLoading(false);
     showErrorMessage('网络出了问题 (HTTP '+ xhr.status+')');
 }
 
@@ -129,7 +115,8 @@ function requestFail(xhr, status){
  * @param {Object} data 博客数据
  */
 function postBlog(data){
-    showDataLoading(true, '正在上传');
+
+    showButtonLoading(true);
 
     var opt = {
         type: 'POST',
@@ -142,6 +129,25 @@ function postBlog(data){
     var jqxhr = $.ajax(opt);
     // 设置请求完成和请求失败的处理函数
     jqxhr.done(postBlogRequestDone);
+    jqxhr.fail(requestFail);
+}
+
+/**
+ * 发送获取博客信息请求
+ */
+function getBlogRequest(){
+
+    showDataLoading(true);
+
+    var opt = {
+        type: 'GET',
+        url: window.blogAction,
+        dataType: 'json',
+    };
+    // 发送请求
+    var jqxhr = $.ajax(opt);
+    // 设置请求完成和请求失败的处理函数
+    jqxhr.done(getBlogRequestDone);
     jqxhr.fail(requestFail);
 }
 
@@ -185,7 +191,7 @@ function blogSubmit(event) {
  */
 function initPage(){
     showErrorMessage(null);
-    showDataLoading(false, null);
+    showDataLoading(false);
 
     window.$blogForm = $("#blog-form");
     window.$blogForm.submit(blogSubmit);
@@ -198,8 +204,8 @@ function initPage(){
 
     if (path === '/manage/blogs/edit'){
         var id = window.location.search.replace('?id=', '');
-        console.log(id);
         window.blogAction = '/api/blogs/' + id;
+        getBlogRequest();
         return;
     }
 }

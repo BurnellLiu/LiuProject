@@ -98,9 +98,8 @@ function requestFail(xhr, status){
 
 /**
  * 发送获取用户信息请求
- * @param {String} pageIndex 页面索引
  */
-function postGetUsersRequest(){
+function getUsersRequest(){
     var opt = {
         type: 'GET',
         url: '/api/users',
@@ -120,7 +119,7 @@ function postGetUsersRequest(){
 function initPage(){
     showErrorMessage(null);
     showDataLoading(true);
-    postGetUsersRequest();
+    getUsersRequest();
 }
 
 $(document).ready(initPage)
