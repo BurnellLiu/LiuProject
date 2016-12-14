@@ -54,12 +54,12 @@ def exercise5():
     # 统计文本中词长的分布
     len_list = [len(w) for w in text1]
     freq_dist = FreqDist(len_list)
-    print freq_dist.keys()
-    print freq_dist.items()
+    print(freq_dist.keys())
+    print(freq_dist.items())
     max_len = freq_dist.max()
     print(max_len)
     print(freq_dist[max_len])
     print(freq_dist.freq(max_len))
 
 
-exercise5()
+exercise1()
