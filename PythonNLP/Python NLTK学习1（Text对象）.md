@@ -1,6 +1,6 @@
 # Python NLTK学习1（Text对象） #
 
-本系列博客为学习《用Python进行自然语言处理》一书的学习笔记
+本系列博客为学习《用Python进行自然语言处理》一书的学习笔记。
 
 ## 搭建环境 ##
 
@@ -30,11 +30,11 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 
 ![](http://www.burnelltek.com/static/img/1481795185592NLTK.PNG)
 
-我们可以看到nltk预先帮我们加载了一些书籍数据text1~text9，text1~text9为Text类的实例对象名称，它们都代表一本书籍。
+我们可以看到nltk预先帮我们加载了一些书籍数据text1~text9，text1~text9为Text类的实例对象名称，它们都代表一本书籍。实际上Text类的构造函数接受一个单词列表作为参数，NLTK库预先帮我们构造了几个Text对象。
 
 ## 搜索文本 ##
 
-**Text::concordance()**：该方法接受一个单词字符串，会**打印出输入单词在文本中出现的上下文**，查看单词的上下文可以帮助我们了解单词的词性
+**Text::concordance()**：该方法接受一个单词字符串，会打印出输入单词在文本中出现的上下文，查看单词的上下文可以帮助我们了解单词的词性。
 
     text1.concordance('monstrous')
 
@@ -63,9 +63,9 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 
 >of Whale - Bones ; for Whales of a monstrous size are oftentimes cast up dead u
 
-从输出结果我们可以看到monstrous这个单词的上下文，如a _ size，the _ Pictures等
+从输出结果我们可以看到monstrous这个单词的上下文，如a _ size，the _ Pictures等。
 
-**Text::similar()**：该方法接受一个单词字符串，会**打印出和输入单词具有相同上下文的其他单词**，也就是说找出和指定单词相似的其他单词，比如monstrous用在the _ Pictures上下文中，similar方法会打印出所有使用the _ Pictures上下文的单词
+**Text::similar()**：该方法接受一个单词字符串，会打印出和输入单词具有相同上下文的其他单词，也就是说找出和指定单词相似的其他单词，比如monstrous用在the _ Pictures上下文中，similar方法会打印出所有使用the _ Pictures上下文的单词。
 
     text1.similar('monstrous')
 
@@ -74,18 +74,18 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 contemptible few domineering vexatious imperial careful impalpable
 puzzled mouldy determined abundant
 
-使用方法text1.concordance('gamesome')，我们可以看到gamesome和monstrous具有相同的上下文most _ and
+使用方法text1.concordance('gamesome')，我们可以看到gamesome和monstrous具有相同的上下文most _ and。
 
-**Text::common_contexts()**：该方法接受一个单词列表，会**打印出列表中所有单词共同的上下文**
+**Text::common_contexts()**：该方法接受一个单词列表，会打印出列表中所有单词共同的上下文。
 
     text1.common_contexts(['monstrous', 'gamesome'])
 
 结果为：
 >most_and
 
-这和我们使用concordance方法，自己观察的结果一致
+这和我们使用concordance方法，自己观察的结果一致。
 
-**Text::dispersion_plot()**：该方法接受一个单词列表，会**显示每个单词在文本中的分布情况**
+**Text::dispersion_plot()**：该方法接受一个单词列表，会绘制每个单词在文本中的分布情况。
 
     text4.dispersion_plot(['freedom', 'America'])
 
@@ -93,7 +93,7 @@ puzzled mouldy determined abundant
 
 ![](http://www.burnelltek.com/static/img/1481869173511NLTK.PNG)
 
-我们可以看到freedom和America基本都集中在文本的后半段
+我们可以看到freedom和America基本都集中在文本的后半段。
 
 ## 计数词汇 ##
 定位到NLTK的text.py文件中，我们可以看到Text中实现了如下代码：
@@ -107,31 +107,44 @@ puzzled mouldy determined abundant
     def __len__(self):
         return len(self.tokens)
 
-说明**Text对象支持len()以及索引和切片**
+说明**Text对象支持len()以及索引和切片，我们可以把Text对象看做是一个单词列表**。
 
-获取文本单词长度：
+获取文本单词总数目：
 
     len(text1)
 
-获取不重复单词长度：
+获取不重复单词数目：
     
     len(set(text1))
 
-**Text::count()**：该方法接受一个单词，返回该**单词在文本中出现的次数**
+**Text::count()**：该方法接受一个单词，返回该单词在文本中出现的次数。
     
     text1.count('monstrous')
 
 结果为：
 >10
 
+## 词语搭配和双连词 ##
+
+**Text::collocations()**：该方法会打印出文本中频繁出现的双连词。
+
+    text1.collocations()
+
+结果为：
+> Sperm Whale; Moby Dick; White Whale; old man; Captain Ahab; sperm
+> whale; Right Whale; Captain Peleg; New Bedford; Cape Horn; cried Ahab;
+> years ago; lower jaw; never mind; Father Mapple; cried Stubb; chief
+
 ## 总结 ##
 
 **Text类成员方法**：
 
+- __ init __(words)，构造函数接受单词列表作为参数
+- collocations()，打印出频繁出现的双连词
 - concordance(word)，打印指定单词在文本中的所有上下文
 - similar(word)，打印和指定单词具有相同上下文的所有单词
 - common_contexts([word1, word2...])，打印出列表中所有单词的共同上下文
-- dispersion_plot([word1, word2...])，显示列表中所有单词在文本中的分布情况
+- dispersion_plot([word1, word2...])，绘制列表中所有单词在文本中的分布情况
 - count(word)，返回指定单词在文本中出现的次数
 
 **Text类对象支持操作**：

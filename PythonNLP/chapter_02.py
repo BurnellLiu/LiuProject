@@ -65,13 +65,13 @@ cfdist1 < cfdist2 测试样本在cfdist1  中出现次数是否小于在cfdist2 
 
 def exercise_gutenberg():
     # 打印古腾堡项目的文件列表
-    print gutenberg.fileids()
+    print(gutenberg.fileids())
 
     # 挑选一个文本： 简-奥斯丁的《爱玛》
     emma = gutenberg.words("austen-emma.txt")
 
     # 查看书的长度
-    print len(emma)
+    print(len(emma))
 
     # 导入文本
     emma_text = nltk.Text(emma)
@@ -91,31 +91,31 @@ def exercise_gutenberg():
         # 统计文件的非重复单词数
         num_vocab = len(set([w.lower() for w in words_list]))
         # 打印词的平均字符数， 句子的平均单词数， 每个单词出现的平均次数， 文件名
-        print num_chars/num_words, num_words/num_sents, num_words/num_vocab, file_id
+        print(num_chars/num_words, num_words/num_sents, num_words/num_vocab, file_id)
 
 
 def exercise_webtext():
     # 打印网络文本的文件名
     for file_id in webtext.fileids():
-        print file_id
+        print(file_id)
 
 
 def exercise_nps_chat():
     # 打印聊天室文本名， 名称由日期，年龄，包含的帖子数量注册
     # 如： 10-19-20s_706posts.xml，包含10月19号从20多岁聊天室收集的706个帖子
     for file_id in nps_chat.fileids():
-        print file_id
+        print(file_id)
 
 
 def exercise_brown():
     # 打印布朗语料库中的分类
-    print brown.categories()
+    print(brown.categories())
     # 打印分类为新闻的文本词汇
-    print brown.words(categories='news')
+    print(brown.words(categories='news'))
     # 打印文本'cg22'
-    print brown.words(fileids=['cg22'])
+    print(brown.words(fileids=['cg22']))
     # 打印句子
-    print brown.sents(categories=['news', 'reviews'])
+    print(brown.sents(categories=['news', 'reviews']))
 
     """比较不同文体中的情态动词的用法"""
     # 获取文本
@@ -125,7 +125,7 @@ def exercise_brown():
     # 定义情态动词表
     modals = ['can', 'could', 'may', 'might', 'must', 'will']
     for m in modals:
-        print m + ':', fdist[m]
+        print(m + ':', fdist[m])
 
 
 def exercise_brown2():
@@ -140,30 +140,30 @@ def exercise_brown2():
 
 
 def exercise_reuters():
-    print reuters.fileids()
-    print reuters.categories()
+    print(reuters.fileids())
+    print(reuters.categories())
     # 查看单个文档的主题
-    print reuters.categories('training/9865')
+    print(reuters.categories('training/9865'))
     # 查看多个文档的主题
-    print reuters.categories(['training/9865', 'training/9880'])
+    print(reuters.categories(['training/9865', 'training/9880']))
     # 查看每个主题的文档
-    print reuters.fileids('barley')
+    print(reuters.fileids('barley'))
     # 查看多个主题的文档
-    print reuters.fileids(['barley', 'corn'])
+    print(reuters.fileids(['barley', 'corn']))
     # 查看某个文档的词汇
-    print reuters.words('training/9865')
+    print(reuters.words('training/9865'))
     # 查看多个文档的词汇
-    print reuters.words(['training/9865', 'training/9880'])
+    print(reuters.words(['training/9865', 'training/9880']))
     # 查看某个主题的词汇
-    print reuters.words(categories='barley')
+    print(reuters.words(categories='barley'))
     # 查看多个主题的词汇
-    print reuters.words(categories=['barley', 'corn'])
+    print(reuters.words(categories=['barley', 'corn']))
 
 
 def exercise_inaugural():
-    print inaugural.fileids()
+    print(inaugural.fileids())
     # 提取每个演讲文本的年代名
-    print [file_id[:4] for file_id in inaugural.fileids()]
+    print([file_id[:4] for file_id in inaugural.fileids()])
 
     # 观察词汇america和citizen在不同年份演讲中的出现频率
     cfd = nltk.ConditionalFreqDist((target, file_id[:4])
@@ -175,7 +175,7 @@ def exercise_inaugural():
 
 
 def exercise_udhr():
-    print udhr.fileids()
+    print(udhr.fileids())
 
     # 查看不同语言的世界人权宣言的字长差异
     languages = ['Chickasaw', 'English', 'German_Deutsch',
@@ -195,18 +195,18 @@ def exercise_cfd():
     genre_word = [(genre, word)
                   for genre in ['news', 'romance']
                   for word in brown.words(categories=genre)]
-    print len(genre_word)
+    print(len(genre_word))
     cfd = nltk.ConditionalFreqDist(genre_word)
-    print cfd.conditions()
+    print(cfd.conditions())
 
-    print cfd['romance']
+    print(cfd['romance'])
     list(cfd['romance'])
-    print cfd['romance']['could']
+    print(cfd['romance']['could'])
 
 
 def exercise_bigrams():
     sent = ['In', 'the', 'beginning', 'God', 'created', 'the heaven', 'and', 'the earth']
-    print list(nltk.bigrams(sent))
+    print(list(nltk.bigrams(sent)))
 
     text = nltk.corpus.genesis.words('english-kjv.txt')
     bigrams = nltk.bigrams(text)
@@ -214,7 +214,7 @@ def exercise_bigrams():
 
     word = 'living'
     for i in range(15):
-        print word
+        print(word)
         word = cfd[word].max()
 
 
@@ -230,12 +230,12 @@ def exercise_unusual_words():
     # 找出文本中的非常用词汇(错误词汇)
     unusual_vocab = text_vocab.difference(english_vocab)
 
-    print sorted(unusual_vocab)
+    print(sorted(unusual_vocab))
 
 
 def exercise_stopwords():
     stop_words = stopwords.words('english')
-    print stop_words
+    print(stop_words)
 
     text_words = reuters.words()
 

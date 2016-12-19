@@ -44,9 +44,9 @@ def exercise3():
 def exercise4():
     # 获取词汇表中长度大于7并且出现次数超过7次的单词
     # 这样的次可能是文本的特征词汇
-    freq_dist = FreqDist(text5)
-    words_set = set(text5)
-    long_words = [w for w in words_set if len(w) > 7 and freq_dist[w] > 7]
+    fdist1 = FreqDist(text1)
+    words = set(text1)
+    long_words = [w for w in words if len(w) > 7 and fdist1[w] > 7]
     print(sorted(long_words))
 
 
@@ -62,4 +62,4 @@ def exercise5():
     print(freq_dist.freq(max_len))
 
 
-exercise1()
+exercise4()
