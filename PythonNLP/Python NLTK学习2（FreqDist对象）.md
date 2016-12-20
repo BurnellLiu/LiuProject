@@ -30,7 +30,7 @@
 
 > ...
 
-**FreqDist::plot()**：该方法接受一个数字N，会绘制出现次数最多的前N项，在本例中即绘制高频词汇。
+**FreqDist::plot(n)**：该方法接受一个数字n，会绘制出现次数最多的前n项，在本例中即绘制高频词汇。
 
     fdist1.plot(10)
 
@@ -70,8 +70,17 @@
 
 **FreqDist成员方法**：
 
-- plot(N)，绘制出现次数最多的前N项
+- plot(n)，绘制出现次数最多的前n项
 - hapaxes()，返回一个低频项列表
+
+
+##其他章节链接##
+
+[Python NLTK学习1（Text对象）](http://www.burnelltek.com/blog/8658d836c36111e6841d00163e0c0e36)
+
+[Python NLTK学习2（FreqDist对象）](http://www.burnelltek.com/blog/e21021eec69411e6841d00163e0c0e36)
+
+[Python NLTK学习3（语料库）](http://www.burnelltek.com/blog/0376c9eac69611e6841d00163e0c0e36)
 
 
 

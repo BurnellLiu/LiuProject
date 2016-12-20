@@ -34,7 +34,7 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 
 ## 搜索文本 ##
 
-**Text::concordance()**：该方法接受一个单词字符串，会打印出输入单词在文本中出现的上下文，查看单词的上下文可以帮助我们了解单词的词性。
+**Text::concordance(word)**：该方法接受一个单词字符串，会打印出输入单词在文本中出现的上下文，查看单词的上下文可以帮助我们了解单词的词性。
 
     text1.concordance('monstrous')
 
@@ -65,7 +65,7 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 
 从输出结果我们可以看到monstrous这个单词的上下文，如a _ size，the _ Pictures等。
 
-**Text::similar()**：该方法接受一个单词字符串，会打印出和输入单词具有相同上下文的其他单词，也就是说找出和指定单词相似的其他单词，比如monstrous用在the _ Pictures上下文中，similar方法会打印出所有使用the _ Pictures上下文的单词。
+**Text::similar(word)**：该方法接受一个单词字符串，会打印出和输入单词具有相同上下文的其他单词，也就是说找出和指定单词相似的其他单词，比如monstrous用在the _ Pictures上下文中，similar方法会打印出所有使用the _ Pictures上下文的单词。
 
     text1.similar('monstrous')
 
@@ -76,7 +76,7 @@ puzzled mouldy determined abundant
 
 使用方法text1.concordance('gamesome')，我们可以看到gamesome和monstrous具有相同的上下文most _ and。
 
-**Text::common_contexts()**：该方法接受一个单词列表，会打印出列表中所有单词共同的上下文。
+**Text::common_contexts(words)**：该方法接受一个单词列表，会打印出列表中所有单词共同的上下文。
 
     text1.common_contexts(['monstrous', 'gamesome'])
 
@@ -85,7 +85,7 @@ puzzled mouldy determined abundant
 
 这和我们使用concordance方法，自己观察的结果一致。
 
-**Text::dispersion_plot()**：该方法接受一个单词列表，会绘制每个单词在文本中的分布情况。
+**Text::dispersion_plot(words)**：该方法接受一个单词列表，会绘制每个单词在文本中的分布情况。
 
     text4.dispersion_plot(['freedom', 'America'])
 
@@ -117,7 +117,7 @@ puzzled mouldy determined abundant
     
     len(set(text1))
 
-**Text::count()**：该方法接受一个单词，返回该单词在文本中出现的次数。
+**Text::count(word)**：该方法接受一个单词，返回该单词在文本中出现的次数。
     
     text1.count('monstrous')
 
@@ -137,17 +137,26 @@ puzzled mouldy determined abundant
 
 ## 总结 ##
 
-**Text类成员方法**：
+**Text成员方法**：
 
 - __ init __(words)，构造函数接受单词列表作为参数
 - collocations()，打印出频繁出现的双连词
 - concordance(word)，打印指定单词在文本中的所有上下文
 - similar(word)，打印和指定单词具有相同上下文的所有单词
-- common_contexts([word1, word2...])，打印出列表中所有单词的共同上下文
-- dispersion_plot([word1, word2...])，绘制列表中所有单词在文本中的分布情况
+- common_contexts(words)，打印出列表中所有单词的共同上下文
+- dispersion_plot(words)，绘制列表中所有单词在文本中的分布情况
 - count(word)，返回指定单词在文本中出现的次数
 
-**Text类对象支持操作**：
+**Text对象支持操作**：
 
 - len()函数
 - 索引和切片
+
+
+##其他章节链接##
+
+[Python NLTK学习1（Text对象）](http://www.burnelltek.com/blog/8658d836c36111e6841d00163e0c0e36)
+
+[Python NLTK学习2（FreqDist对象）](http://www.burnelltek.com/blog/e21021eec69411e6841d00163e0c0e36)
+
+[Python NLTK学习3（语料库）](http://www.burnelltek.com/blog/0376c9eac69611e6841d00163e0c0e36)
