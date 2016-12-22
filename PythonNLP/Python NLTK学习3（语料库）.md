@@ -1,4 +1,3 @@
-# Python NLTK学习3（语料库） #
 
 本系列博客为学习《用Python进行自然语言处理》一书的学习笔记。
 
@@ -72,7 +71,7 @@ inaugural同样可以看做是一个PlaintextCorpusReader对象。
     print(nps_chat.fileids())
 
 结果为：
-> ['10-19-20s_706posts.xml', '10-19-30s_705posts.xml', '10-19-40s_686posts.xml', '10-19-adults_706posts.xml', '10-24-40s_706posts.xml', '10-26-teens_706posts.xml', '11-06-adults_706posts.xml', '11-08-20s_705posts.xml', '11-08-40s_706posts.xml', '11-08-adults_705posts.xml', '11-08-teens_706posts.xml', '11-09-20s_706posts.xml', '11-09-40s_706posts.xml', '11-09-adults_706posts.xml', '11-09-teens_706posts.xml']
+> ['10-19-20s\_706posts.xml', '10-19-30s\_705posts.xml', '10-19-40s\_686posts.xml', '10-19-adults\_706posts.xml', '10-24-40s\_706posts.xml', '10-26-teens\_706posts.xml', '11-06-adults\_706posts.xml', '11-08-20s\_705posts.xml', '11-08-40s\_706posts.xml', '11-08-adults\_705posts.xml', '11-08-teens_706posts.xml', '11-09-20s\_706posts.xml', '11-09-40s\_706posts.xml', '11-09-adults\_706posts.xml', '11-09-teens\_706posts.xml']
 
 nps_chat可以看做是一个NPSChatCorpusReader对象。
 
@@ -93,7 +92,7 @@ nps_chat可以看做是一个NPSChatCorpusReader对象。
     print(brown.categories())
 
 结果为：
-> ['adventure', 'belles_lettres', 'editorial', 'fiction', 'government', 'hobbies', 'humor', 'learned', 'lore', 'mystery', 'news', 'religion', 'reviews', 'romance', 'science_fiction']
+> ['adventure', 'belles\_lettres', 'editorial', 'fiction', 'government', 'hobbies', 'humor', 'learned', 'lore', 'mystery', 'news', 'religion', 'reviews', 'romance', 'science\_fiction']
 
 brown可以看做是一个CategorizedTaggedCorpusReader对象。
 
@@ -161,12 +160,3 @@ reuters也可以看做是一个CategorizedTaggedCorpusReader对象。
 - fileids(categories)，该方法接受一个或多个类别标识作为参数，返回文本标识列表
 - words(fileids, categories)，该方法接受文本标识或者类别标识作为参数，返回文本单词列表
 - sents(fileids, categories)，该方法接受文本标识或者类别标识作为参数，返回文本句子列表，句子本身是词列表
-
-
-##其他章节链接##
-
-[Python NLTK学习1（Text对象）](http://www.burnelltek.com/blog/8658d836c36111e6841d00163e0c0e36)
-
-[Python NLTK学习2（FreqDist对象）](http://www.burnelltek.com/blog/e21021eec69411e6841d00163e0c0e36)
-
-[Python NLTK学习3（语料库）](http://www.burnelltek.com/blog/0376c9eac69611e6841d00163e0c0e36)

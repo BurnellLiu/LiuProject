@@ -1,4 +1,3 @@
-# Python NLTK学习2（FreqDist对象） #
 
 本系列博客为学习《用Python进行自然语言处理》一书的学习笔记。
 
@@ -72,15 +71,6 @@
 
 - plot(n)，绘制出现次数最多的前n项
 - hapaxes()，返回一个低频项列表
-
-
-##其他章节链接##
-
-[Python NLTK学习1（Text对象）](http://www.burnelltek.com/blog/8658d836c36111e6841d00163e0c0e36)
-
-[Python NLTK学习2（FreqDist对象）](http://www.burnelltek.com/blog/e21021eec69411e6841d00163e0c0e36)
-
-[Python NLTK学习3（语料库）](http://www.burnelltek.com/blog/0376c9eac69611e6841d00163e0c0e36)
 
 
 

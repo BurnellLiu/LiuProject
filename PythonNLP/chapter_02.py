@@ -243,4 +243,4 @@ def exercise_stopwords():
     content = [w for w in text_words if w.lower() not in stop_words]
 
 
-exercise_stopwords()
+exercise_brown2()

@@ -6,8 +6,9 @@ import nltk
 
 def exercise1():
     # 进行词性标注
-    text = nltk.word_tokenize("And now for something completely different")
-    print nltk.pos_tag(text)
+    text = nltk.word_tokenize("You are a good man, but i don't like you!")
+    print(text)
+    print(nltk.pos_tag(text))
 
 
 if __name__ == '__main__':
