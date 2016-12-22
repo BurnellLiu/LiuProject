@@ -54,7 +54,7 @@
 
 ##双连词##
 
-**nltk::bigrams(words)**：根据给定的单词列表，生成所有的双连词组。
+**nltk.bigrams(words)**：根据给定的单词列表，生成所有的双连词组。
 
     sent = ['I', 'am', 'a', 'good', 'man']
     print(list(nltk.bigrams(sent)))
@@ -78,6 +78,9 @@ ConditionalFreqDist继承自dict，ConditionalFreqDist对象的每个键对应�
 
 我们可以看到can单词最常见的后续词是be。
 
+##总结##
+
+**nltk.bigrams(words)**：根据给定的单词列表，生成所有的双连词组
 
 **ConditionalFreqDist类**
 
