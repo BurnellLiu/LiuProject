@@ -38,6 +38,15 @@ NLTK中的很多语料库都已经标注了词性，我们之前学习过的布�
 
 **CategorizedTaggedCorpusReader::tagged_words(fileids, categories)**：该方法接受文本标识或者类别标识作为参数，返回这些文本被标注词性后的单词列表。
 
+**CategorizedTaggedCorpusReader::tagged_sents(fileids, categories)**：该方法接受文本标识或者类别标识作为参数，返回这些文本被标注词性后的句子列表，句子为单词列表。
+    
+    tagged_sents = brown.tagged_sents(categories='news')
+    print(tagged_sents)
+
+结果为：
+> [[('The', 'AT'), ('Fulton', 'NP-TL'), ('County', 'NN-TL'), ('Grand', 'JJ-TL'), ('Jury', 'NN-TL'), ('said', 'VBD'), ('Friday', 'NR'), ('an', 'AT'), ('investigation', 'NN'), ('of', 'IN'), ("Atlanta's", 'NP$'), ('recent', 'JJ'), ('primary', 'NN'), ('election', 'NN'), ('produced', 'VBD'), ('``', '``'), ('no', 'AT'), ('evidence', 'NN'), ("''", "''"), ('that', 'CS'), ('any', 'DTI'), ('irregularities', 'NNS'), ('took', 'VBD'), ('place', 'NN'), ('.', '.')], [('The', 'AT'), ('jury', 'NN'), ('further', 'RBR'), ('said', 'VBD'), ('in', 'IN'), ('term-end', 'NN'), ('presentments', 'NNS'), ('that', 'CS'), ('the', 'AT'), ('City', 'NN-TL'), ('Executive', 'JJ-TL'), ('Committee', 'NN-TL'), (',', ','), ('which', 'WDT'), ('had', 'HVD'), ('over-all', 'JJ'), ('charge', 'NN'), ('of', 'IN'), ('the', 'AT'), ('election', 'NN'), (',', ','), ('``', '``'), ('deserves', 'VBZ'), ('the', 'AT'), ('praise', 'NN'), ('and', 'CC'), ('thanks', 'NNS'), ('of', 'IN'), ('the', 'AT'), ('City', 'NN-TL'), ('of', 'IN-TL'), ('Atlanta', 'NP-TL'), ("''", "''"), ('for', 'IN'), ('the', 'AT'), ('manner', 'NN'), ('in', 'IN'), ('which', 'WDT'), ('the', 'AT'), ('election', 'NN'), ('was', 'BEDZ'), ('conducted', 'VBN'), ('.', '.')], ...]
+
+
 NLTK中还包含一个中文语料库sinica_treebank，该库使用繁体中文，该库也被标注了词性，我们来看看该库。
 
     from nltk.corpus import sinica_treebank
@@ -76,4 +85,16 @@ NLTK中还包含一个中文语料库sinica_treebank，该库使用繁体中文�
 
 我们可以看到Nab标记出现了9520次。
 
+##总结##
 
+- **nltk.word_tokenize（text）**：对指定的句子进行分词，返回单词列表
+
+- **nltk.pos_tag(words)**：对指定的单词列表进行词性标记，返回标记列表
+
+- **CategorizedTaggedCorpusReader::tagged_words(fileids, categories)**：该方法接受文本标识或者类别标识作为参数，返回这些文本被标注词性后的单词列表
+
+- **CategorizedTaggedCorpusReader::tagged_sents(fileids, categories)**：该方法接受文本标识或者类别标识作为参数，返回这些文本被标注词性后的句子列表，句子为单词列表
+
+- **SinicaTreebankCorpusReader::tagged_words(fileids)**：该方法接受文本标识作为参数，返回文本被标注词性后的单词列表
+
+- **SinicaTreebankCorpusReader::tagged_sents(fileids)**：该方法接受文本标识作为参数，返回文本被标注词性后的句子列表，句子为单词列表
