@@ -52,7 +52,7 @@ DefaultTagger的构造函数接受一个标记字符串作为参数，生成一�
 结果为：
 > 0.45578495136941344
 
-这次我们创建的标注器的准确率为0.45，比我们的默认标注器要好很多。UnigramTagger类的构造函数接受一个(单词-标记)字典作为模型，可以直接生成一个标注器。事实上UnigramTagger和DefaultTagger类都继承自TaggerI，TaggerI具有tag和evaluete方法，所以UnigramTagger也具有tag和evaluete方法。
+这次我们创建的标注器的正确率为0.45，比我们的默认标注器要好很多。UnigramTagger类的构造函数接受一个(单词-标记)字典作为模型，可以直接生成一个标注器。事实上UnigramTagger和DefaultTagger类都继承自TaggerI，TaggerI具有tag和evaluete方法，所以UnigramTagger也具有tag和evaluete方法。
 
 因为我们只指定了100个单词的标记，我们来看看我们创建的标注器对未指定的单词是如何标记的。
 
@@ -130,7 +130,7 @@ DefaultTagger的构造函数接受一个标记字符串作为参数，生成一�
 > 
 > 0.8115219774743347
 
-我们可以看到一元标注器在测试集上的准确率为0.81
+我们可以看到一元标注器在测试集上的正确率为0.81
 
 ##二元标注器##
 
@@ -151,8 +151,61 @@ DefaultTagger的构造函数接受一个标记字符串作为参数，生成一�
 > 
 > 0.10186384929731884
 
-二元标注器会考查一个单词本身和它前一个单词的标记，如果遇到一个新词，那么二元标注器就没法标记它，并且还会导致接下来的单词都没法标记，所以我们会看到二元标注器在测试集上准确率很低。
+二元标注器会考查一个单词本身和它前一个单词的标记，如果遇到一个新词，那么二元标注器就没法标记它，并且还会导致接下来的单词都没法标记，所以我们会看到二元标注器在测试集上正确率很低。
 
 ##组合标注器##
+前面我们对查询标注器设置了一个回退标注器（默认标注器），事实上大部分的NLTK标注器都可以设置回退标注器，这样我们就可以把二元标注器、一元标注器、默认标注器组合起来得到一个组合标注器，例如我们可以按照下列方式组合：
+
+1. 尝试使用bigram标注器标注单词。
+2. 如果bigram标注器无法找到一个标记，尝试unigram标注器。
+3. 如果unigram标注器无法找到一个标记，使用默认标注器。
+
+代码如下：
+
+    import nltk
+    from nltk.corpus import brown
+    
+    # 划分训练集和测试集
+    tagged_sents = brown.tagged_sents(categories='news')
+    size = int(len(tagged_sents) * 0.9)
+    train_sets = tagged_sents[:size]
+    test_sets = tagged_sents[size:]
+    
+    # 训练标注器，并把它们组合起来
+    t0 = nltk.DefaultTagger('NN')
+    t1 = nltk.UnigramTagger(train=train_sets, backoff=t0)
+    t2 = nltk.BigramTagger(train=train_sets, backoff=t1)
+    
+    # 查看标注器性能
+    print(t2.evaluate(train_sets))
+    print(t2.evaluate(test_sets))
+
+结果为：
+> 0.9735641453364413
+> 
+> 0.8459085019435861
+
+从结果我们可以看到相比于一元标注器，我们的组合标注器还是有提高的。
+
+##总结##
+- **TaggerI：tag(tokens)**：对指定的单词列表进行标记，返回被标记后的单词列表
+- **TaggerI::evaluete(tagged_sents)**：使用已经被标记的句子评价标注器，返回正确率0~1.0
+
+*DefaultTagger, UnigramTagger, BigramTagger都继承至TaggerI*
+
+**DefaultTagger**
+
+默认标注器的构造函数接受一个标记作为参数，生成标注器
+
+**UnigramTagger**
+
+一元标注器接受被标记的句子列表作为参数，生成标注器
+
+**BigramTagger**
+
+二元标注器接受被标记的句子列表作为参数，生成标注器
+    
+
+
     
     
