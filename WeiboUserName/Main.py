@@ -28,8 +28,8 @@ def set_current_url_id(url_id):
 
 
 def main():
-    fp_male = open('male.txt', 'a', encoding='utf-8')
-    fp_female = open('female.txt', 'a', encoding='utf-8')
+    fp_male = open('./male.txt', 'a', encoding='utf-8')
+    fp_female = open('./female.txt', 'a', encoding='utf-8')
 
     cookie = get_cookie()
     url_record = UrlRecord()
@@ -54,7 +54,7 @@ def main():
 
         info_page = PeopleInfoPage(info_url, cookie)
         info = info_page.get_people_info()
-        print(info)
+
         if 'name' in info and 'gender' in info:
             if info['gender'] == u'男':
                 fp_male.write(info['name'])
