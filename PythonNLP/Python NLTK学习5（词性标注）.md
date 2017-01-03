@@ -98,3 +98,15 @@ NLTK中还包含一个中文语料库sinica_treebank，该库使用繁体中文�
 - **SinicaTreebankCorpusReader::tagged_words(fileids)**：该方法接受文本标识作为参数，返回文本被标注词性后的单词列表
 
 - **SinicaTreebankCorpusReader::tagged_sents(fileids)**：该方法接受文本标识作为参数，返回文本被标注词性后的句子列表，句子为单词列表
+
+###其他章节链接###
+
+[Python NLTK学习1（Text对象）](http://www.burnelltek.com/blog/8658d836c36111e6841d00163e0c0e36)
+
+[Python NLTK学习2（FreqDist对象）](http://www.burnelltek.com/blog/e21021eec69411e6841d00163e0c0e36)
+
+[Python NLTK学习3（语料库）](http://www.burnelltek.com/blog/0376c9eac69611e6841d00163e0c0e36)
+
+[Python NLTK学习4（条件频率分布）](http://www.burnelltek.com/blog/e08e0bbecb1811e6841d00163e0c0e36)
+
+Python NLTK学习5（词性标注）
