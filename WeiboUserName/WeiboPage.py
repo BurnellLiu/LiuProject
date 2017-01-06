@@ -172,16 +172,18 @@ class PeopleInfoPage:
         """
 
         soup = BeautifulSoup(page_content, 'html.parser')
-
         div_list = soup.find_all('div', attrs={'class': 'c'})
         for div in div_list:
             div_text = div.get_text()
             if div_text.find(u'昵称') != -1 and div_text.find(u'性别') != -1:
                 for info in div.strings:
+                    pair_info = info.split(':')
+                    if len(pair_info) < 2:
+                        continue
                     if info.find(u'昵称') != -1:
-                        self.__people_info['name'] = info.split(':')[1].strip()
+                        self.__people_info['name'] = pair_info[1].strip()
                     if info.find(u'性别') != -1:
-                        self.__people_info['gender'] = info.split(':')[1].strip()
+                        self.__people_info['gender'] = pair_info[1].strip()
                 return
 
 
@@ -205,11 +207,14 @@ class PeoplePage:
         self.__care_people_page_url = None
         self.__people_info_page_url = None
 
+        self.__current_state = None;
+
         request = urllib.request.Request(url, headers=self.__headers)
         try:
             content = urllib.request.urlopen(request)
         except Exception as e:
             print(e)
+            self.__current_state = e.__str__()
             return
 
         page_content = content.read()
@@ -226,6 +231,9 @@ class PeoplePage:
         self.__care_people_page_url = self.__parse_care_people_page_url(page_content)
 
         self.__people_info_page_url = self.__parse_people_info_page_url(page_content)
+
+    def get_state(self):
+        return self.__current_state
 
     def get_people_info_page_url(self):
         return self.__people_info_page_url

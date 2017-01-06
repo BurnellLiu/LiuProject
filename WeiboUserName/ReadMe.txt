@@ -1,6 +1,6 @@
-ÔËĞĞ»·¾³£º
+è¿è¡Œç¯å¢ƒï¼š
 Python3
 
-ÒÀÀµ¿â£º
+ä¾èµ–åº“ï¼š
 beautifulsoup4
 configparser
