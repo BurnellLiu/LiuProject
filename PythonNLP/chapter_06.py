@@ -6,7 +6,7 @@ import random
 from nltk.corpus import names
 
 
-def gender_feature1(name):
+def gender_feature(name):
     return {'last_letter': name[-1]}
 
 
@@ -18,7 +18,7 @@ def exercise1():
     random.shuffle(total_names)
 
     # 生成性别特征集
-    feature_set = [(gender_feature1(n), g) for (n, g) in total_names]
+    feature_set = [(gender_feature(n), g) for (n, g) in total_names]
 
     # 将特征集拆分为训练集和测试集
     train_set_size = int(len(feature_set) * 0.6)
@@ -26,8 +26,10 @@ def exercise1():
     test_set = feature_set[:train_set_size]
 
     classifier = nltk.NaiveBayesClassifier.train(train_set)
-    # print(classifier.prob_classify(gender_feature1('Burnell')).prob('male'))
+
+    print(classifier.classify(gender_feature('Neo')))
     print(nltk.classify.accuracy(classifier, test_set))
+    classifier.show_most_informative_features()
 
 
 def gender_feature2(name):
@@ -58,5 +60,3 @@ def exercise2():
 
 
 exercise1()
-
-exercise2()
