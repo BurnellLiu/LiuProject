@@ -3,60 +3,48 @@
 
 import nltk
 import random
+from nltk.corpus import movie_reviews
 from nltk.corpus import names
 
-
-def gender_feature(name):
-    return {'last_letter': name[-1]}
-
-
-def exercise1():
-    # 获取名字，性别数据列表
-    male_names = [(name, 'male') for name in names.words('male.txt')]
-    female_names = [(name, 'female') for name in names.words('female.txt')]
-    total_names = male_names + female_names
-    random.shuffle(total_names)
-
-    # 生成性别特征集
-    feature_set = [(gender_feature(n), g) for (n, g) in total_names]
-
-    # 将特征集拆分为训练集和测试集
-    train_set_size = int(len(feature_set) * 0.6)
-    train_set = feature_set[:train_set_size]
-    test_set = feature_set[:train_set_size]
-
-    classifier = nltk.NaiveBayesClassifier.train(train_set)
-
-    print(classifier.classify(gender_feature('Neo')))
-    print(nltk.classify.accuracy(classifier, test_set))
-    classifier.show_most_informative_features()
+# 从所有文本中取出最频繁的2000个单词作为词特征
+word_freq = nltk.FreqDist(w.lower() for w in movie_reviews.words())
+word_freq_most = word_freq.most_common(2000)
+word_features = [word for (word, count) in word_freq_most]
 
 
-def gender_feature2(name):
-    feature = {}
-    for letter in 'abcdefghijklmnopqrstuvwxyz':
-        feature[letter] = letter in name.lower()
+def doc_features(doc):
+    """
+    文本特征提取
+    :param doc: 文本
+    :return: 文本特征
+    """
+    doc_words = set([w.lower() for w in doc])
+    features = {}
+    for w in word_features:
+        features['contain(%s)' % w] = (w in doc_words)
+    return features
 
-    return feature
 
+def doc_classify():
+    documents = [(list(movie_reviews.words(fileid)), category)
+                 for category in movie_reviews.categories()
+                 for fileid in movie_reviews.fileids(category)]
+    random.shuffle(documents)
 
-def exercise2():
-    male_names = [(name, 'male') for name in names.words('male.txt')]
-    female_names = [(name, 'female') for name in names.words('female.txt')]
-    total_names = male_names + female_names
-    random.shuffle(total_names)
-
-    # 生成性别特征集
-    feature_set = [(gender_feature2(n), g) for (n, g) in total_names]
-
-    # 将特征集拆分为训练集和测试集
-    train_set_size = int(len(feature_set) * 0.6)
-    train_set = feature_set[:train_set_size]
-    test_set = feature_set[:train_set_size]
+    features_set = [(doc_features(words), c) for(words, c) in documents]
+    train_set_size = int(len(features_set) * 0.6)
+    train_set = features_set[:train_set_size]
+    test_set = features_set[train_set_size:]
 
     classifier = nltk.NaiveBayesClassifier.train(train_set)
-    # print(classifier.prob_classify(gender_feature2('Burnell')).prob('male'))
     print(nltk.classify.accuracy(classifier, test_set))
+    classifier.show_most_informative_features(5)
+
+doc_classify()
 
 
-exercise1()
+
+
+
+
+
