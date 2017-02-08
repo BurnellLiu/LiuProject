@@ -2,10 +2,13 @@
 #include "LGpuTemp.h"
 #include <Windows.h>
 
+#include "DebugPrint.h"
+
 #include ".\\nvapi\\nvapi.h"
 #include ".\\adlapi\\adl_sdk.h"
 
 #pragma comment(lib, ".\\nvapi\\nvapi.lib")
+
 
 /*
 * 该文件中声明了CGpuTemp, CNvGpuTemp, CAMDGpuTemp3个类, 
@@ -44,6 +47,8 @@ public:
     LNvGpuTemp()
         : INVALID_GPU_INDEX(-1)
     {
+        DebugPrint("LNvGpuTemp()\n");
+
         m_usingGpuIndex = INVALID_GPU_INDEX;
 
         NvAPI_Status nvRet = NvAPI_Initialize();
@@ -199,6 +204,8 @@ public:
     LAMDGpuTemp()
         : INVALID_ADAPTER_INDEX(-1)
     {
+        DebugPrint("LAMDGpuTemp()\n");
+
         m_hADLContext = NULL;
         ADL2_Main_Control_Create = NULL;
         ADL2_Main_Control_Destroy = NULL;
@@ -213,20 +220,26 @@ public:
         if (m_hADLDll == NULL)
             m_hADLDll = LoadLibraryA("atiadlxy.dll");
         if (m_hADLDll == NULL)
+        {
+            DebugPrint("Can't Find atiadlxx.dll or atiadlxy.dll\n");
             return;
+        }
 
         ADL2_Main_Control_Create = (ADL2_MAIN_CONTROL_CREATE)GetProcAddress(m_hADLDll, "ADL2_Main_Control_Create");
         ADL2_Main_Control_Destroy = (ADL2_MAIN_CONTROL_DESTROY)GetProcAddress(m_hADLDll, "ADL2_Main_Control_Destroy");
         ADL2_Adapter_NumberOfAdapters_Get = (ADL2_ADAPTER_NUMBEROFADAPTERS_GET)GetProcAddress(m_hADLDll, "ADL2_Adapter_NumberOfAdapters_Get");
         ADL2_Adapter_AdapterInfo_Get = (ADL2_ADAPTER_ADAPTERINFO_GET)GetProcAddress(m_hADLDll, "ADL2_Adapter_AdapterInfo_Get");
-        ADL2_Overdrive5_Temperature_Get = (ADL2_OVERDRIVE5_TEMPERATURE_GET)(m_hADLDll, "ADL2_Overdrive5_Temperature_Get ");
+        ADL2_Overdrive5_Temperature_Get = (ADL2_OVERDRIVE5_TEMPERATURE_GET)GetProcAddress(m_hADLDll, "ADL2_Overdrive5_Temperature_Get");
 
         if (ADL2_Main_Control_Create == NULL ||
             ADL2_Main_Control_Destroy == NULL ||
             ADL2_Adapter_NumberOfAdapters_Get == NULL ||
             ADL2_Adapter_AdapterInfo_Get == NULL ||
             ADL2_Overdrive5_Temperature_Get == NULL)
+        {
+            DebugPrint("Can't Get AMD Function Address\n");
             return;
+        }
 
         int iRet;
 
