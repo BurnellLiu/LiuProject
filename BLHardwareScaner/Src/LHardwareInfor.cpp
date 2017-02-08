@@ -533,9 +533,9 @@ private:
                 continue;
             }
 
-            networkCardManager.GetNetworkCardName(networkCardInfor.Count, networkCardInfor.Name[i]);
-            networkCardManager.GetNetworkCardManufacturer(networkCardInfor.Count, networkCardInfor.Manufacturer[i]);
-            networkCardManager.GetNetworkCardMACAddress(networkCardInfor.Count, networkCardInfor.MACAddress[i]);
+            networkCardManager.GetNetworkCardName(i, networkCardInfor.Name[networkCardInfor.Count]);
+            networkCardManager.GetNetworkCardManufacturer(i, networkCardInfor.Manufacturer[networkCardInfor.Count]);
+            networkCardManager.GetNetworkCardMACAddress(i, networkCardInfor.MACAddress[networkCardInfor.Count]);
 
             networkCardInfor.Count++;
         }
