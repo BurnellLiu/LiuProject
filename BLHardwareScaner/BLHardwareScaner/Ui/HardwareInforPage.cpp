@@ -723,14 +723,17 @@ void DiskItemInfor::LoadHWInfor()
         case FIXED_DISK_HDD:
             fixedDiskType = "HDD";
             break;
-        case FIXED_DISK_SSD:
-            fixedDiskType = "SSD";
+        case FIXED_DISK_SATA_SSD:
+            fixedDiskType = "SATA SSD";
             break;
         case FIXED_DISK_EMMC:
             fixedDiskType = "EMMC";
             break;
         case FIXED_DISK_RAID:
             fixedDiskType = "RAID";
+            break;
+        case FIXED_DISK_NVME_SSD:
+            fixedDiskType = "NVME SSD";
             break;
         default:
             fixedDiskType = "UNKNOWN";

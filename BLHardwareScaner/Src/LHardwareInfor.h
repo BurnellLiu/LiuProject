@@ -125,9 +125,10 @@ enum FIXED_DISK_TYPE
 {
     FIXED_DISK_UNKNOWN = 0, // 未知类型
     FIXED_DISK_HDD = 1, // 机械硬盘
-    FIXED_DISK_SSD = 2, // 固态硬盘
+    FIXED_DISK_SATA_SSD = 2, // SATA固态硬盘
     FIXED_DISK_EMMC = 3, // EMMC硬盘
-    FIXED_DISK_RAID = 4 // 硬盘阵列
+    FIXED_DISK_RAID = 4, // 硬盘阵列
+    FIXED_DISK_NVME_SSD = 5 // NVME固态硬盘
 };
 
 /// @brief 磁盘信息组

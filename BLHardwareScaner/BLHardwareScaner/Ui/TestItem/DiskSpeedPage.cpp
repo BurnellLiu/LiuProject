@@ -307,14 +307,17 @@ void DiskSpeedPage::UpdateDiskInformation()
             case FIXED_DISK_HDD:
                 modelName += "(HDD)";
                 break;
-            case FIXED_DISK_SSD:
-                modelName += "(SSD)";
+            case FIXED_DISK_SATA_SSD:
+                modelName += "(SATA SSD)";
                 break;
             case FIXED_DISK_EMMC:
                 modelName += "(EMMC)";
                 break;
             case FIXED_DISK_RAID:
                 modelName += "(RAID)";
+                break;
+            case FIXED_DISK_NVME_SSD:
+                modelName += "(NVME SSD)";
                 break;
             default:
                 modelName += "(Unknown)";

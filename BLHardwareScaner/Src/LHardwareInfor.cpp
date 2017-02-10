@@ -399,6 +399,7 @@ private:
             // 获取磁盘驱动器的类别和匹配设备ID
             wstring diskControllerClass;
             wstring diskControllerMatchingDeviceID;
+            wstring diskControllerDesc;
             for (int j = 0; j < devAll.GetDevNum(); j++)
             {
                 wstring instanceID;
@@ -407,17 +408,24 @@ private:
                 {
                     devAll.GetClass(j,diskControllerClass);
                     devAll.GetMatchingDeviceId(j, diskControllerMatchingDeviceID);
+                    devAll.GetDevDesc(j, diskControllerDesc);
                     break;
                 }
             }
 
+            diskControllerClass = this->WStringToUpper(diskControllerClass);
+            diskControllerDesc = this->WStringToUpper(diskControllerDesc);
+            diskControllerMatchingDeviceID = this->WStringToUpper(diskControllerMatchingDeviceID);
+
             PrintLogW(L"Disk Controller Class: %s", diskControllerClass.c_str());
             PrintLogW(L"Disk Controller Matching DeviceID: %s", diskControllerMatchingDeviceID.c_str());
+            PrintLogW(L"Disk Controller Desc: %s", diskControllerDesc.c_str());
             if (diskControllerClass.empty())
                 continue;
+            if (diskControllerDesc.empty())
+                continue;
 
-            if (diskControllerClass.compare(L"hdc") == 0 ||
-                diskControllerClass.compare(L"HDC") == 0) // Hard Disk Controller
+            if (diskControllerClass.compare(L"HDC") == 0) // Hard Disk Controller
             {
                 diskInfor.IsATA[i] = true;
                 wstring deviceID;
@@ -426,7 +434,7 @@ private:
                 diskInfor.ATAInfor[i].RotationRate = ideDiskController.GetRotationRate();
                 diskInfor.ATAInfor[i].SATAType = ideDiskController.GetSATAType();
                 if (diskInfor.ATAInfor[i].RotationRate == 1)
-                    diskInfor.FixedDiskType[i] = FIXED_DISK_SSD;
+                    diskInfor.FixedDiskType[i] = FIXED_DISK_SATA_SSD;
                 else
                     diskInfor.FixedDiskType[i] = FIXED_DISK_HDD;
 
@@ -436,12 +444,14 @@ private:
                 diskInfor.ATAInfor[i].PowerOnHours = 0;
                 smartParser.GetPowerOnHours(diskInfor.ATAInfor[i].PowerOnHours);
             }
-            else if (diskControllerClass.compare(L"SCSIAdapter") == 0) // SCSI and RAID Controllers
+            else if (diskControllerClass.compare(L"SCSIADAPTER") == 0) // SCSI and RAID Controllers
             {
                 if (diskControllerMatchingDeviceID.compare(L"SD\\CLASS_MMC") == 0)
                     diskInfor.FixedDiskType[i] = FIXED_DISK_EMMC;
-                else
+                if (diskControllerDesc.find(L"RAID") != wstring::npos)
                     diskInfor.FixedDiskType[i] = FIXED_DISK_RAID;
+                if (diskControllerDesc.find(L"NVM EXPRESS") != wstring::npos)
+                    diskInfor.FixedDiskType[i] = FIXED_DISK_NVME_SSD;
             }
             else
             {
