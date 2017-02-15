@@ -46,7 +46,7 @@ def collect_text_from_network():
 
     # 进行分词
     tokens = nltk.word_tokenize(text)
-    print tokens[:50]
+    print(tokens[:50])
 
 
 def collect_text_from_html():
@@ -60,7 +60,7 @@ def collect_text_from_html():
 
     # 进行分词
     tokens = nltk.word_tokenize(text)
-    print tokens[:50]
+    print(tokens[:50])
 
 
 def exercise_re():
@@ -71,43 +71,43 @@ def exercise_re():
 
     # 使用正则表达式搜索以ed结尾的单词
     # "$" 表示为单词的末尾
-    print [w for w in word_list if re.search('ed$', w)]
+    print([w for w in word_list if re.search('ed$', w)])
 
     #  "^" 表示单词的开头
     # "." 匹配任何单个字符
-    print [w for w in word_list if re.search('^..j..t..$', w)]
+    print([w for w in word_list if re.search('^..j..t..$', w)])
 
     # "?" 表示前面的字符是可选的
     # "^e-?mail$" 表示匹配email和e-mail
-    print sum(1 for w in word_list if re.search('^e-?mail$', w))
+    print(sum(1 for w in word_list if re.search('^e-?mail$', w)))
 
     # "[]" 中括号表示闭包, 表示匹配其中的一个字符
     # "[a-e]" 表示匹配a到e之间的一个字符
-    print [w for w in word_list if re.search('^[ghi][mno][jlk][def]$', w)]
+    print([w for w in word_list if re.search('^[ghi][mno][jlk][def]$', w)])
 
     # 加载网络聊天语料库中的词汇
     chat_words = sorted(set(w for w in nltk.corpus.nps_chat.words()))
 
     # "+" 表示前面的字符为一个或多个
-    print [w for w in chat_words if re.search('^m+i+n+e+$', w)]
+    print([w for w in chat_words if re.search('^m+i+n+e+$', w)])
 
     # "*" 表示前面的字符为0个或多个
-    print [w for w in chat_words if re.search('^m*i*n*e*$', w)]
+    print([w for w in chat_words if re.search('^m*i*n*e*$', w)])
 
 
 def exercise_05():
     # 找出一个单词中的所有元音字符
     word = 'Hello, world! This is a python program!'
-    print re.findall('[aeiou]', word)
+    print(re.findall('[aeiou]', word))
 
     # 统计文本中两个或两个以上的元音序列的频率
     words = sorted(set(nltk.corpus.treebank.words()))
     fd = nltk.FreqDist(vs for word in words
                        for vs in re.findall('[aeiou]{2,}', word))
-    print fd.items()
+    print(fd.items())
 
     # 使用正则表达式格式话日期
-    print [int(n) for n in re.findall('[0-9]{2,}', '2009-12-31')]
+    print([int(n) for n in re.findall('[0-9]{2,}', '2009-12-31')])
 
     rotokas_words = nltk.corpus.toolbox.words('rotokas.dic')
     cvs = [cv for w in rotokas_words for cv in re.findall('[ptksvr][aeiou]', w)]
@@ -128,8 +128,8 @@ def exercise_06():
     # Lancaster词干提取器
     lancaster = nltk.LancasterStemmer()
 
-    print [porter.stem(t) for t in tokens]
-    print [lancaster.stem(t) for t in tokens]
+    print([porter.stem(t) for t in tokens])
+    print([lancaster.stem(t) for t in tokens])
 
 
 exercise_06()
