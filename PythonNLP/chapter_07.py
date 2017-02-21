@@ -2,6 +2,8 @@
 
 import nltk
 
+from nltk.corpus import conll2000
+
 
 """
      CC      连接词
@@ -140,4 +142,7 @@ def regexp_parser_sample4():
     tree.draw()
 
 
-regexp_parser_sample4()
+def regexp_parser_sample5():
+    print(conll2000.chunked_sents("train.txt", chunk_types=["NP"])[0])
+
+regexp_parser_sample5()
