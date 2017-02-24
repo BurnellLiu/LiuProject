@@ -143,6 +143,8 @@ def regexp_parser_sample4():
 
 
 def regexp_parser_sample5():
-    print(conll2000.chunked_sents("train.txt", chunk_types=["NP"])[0])
+    cp = nltk.RegexpParser("")
+    test_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
+    print(cp.evaluate(test_sents))
 
 regexp_parser_sample5()
