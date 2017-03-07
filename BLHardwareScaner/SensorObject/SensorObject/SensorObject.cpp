@@ -11,6 +11,13 @@ using std::wstring;
 
 #include <objbase.h>
 
+#include "DebugPrint.h"
+
+/*
+注意不能在DLLMain中释放Sensor对象，
+不然可能会导致线程卡死
+*/
+
 
 #pragma comment(lib, "Sensorsapi.lib")
 
@@ -35,7 +42,7 @@ public:
         }
     }
 
-    virtual ~CComInitS()
+    ~CComInitS()
     {
         if (m_success)
             CoUninitialize();
@@ -69,7 +76,7 @@ public:
     /// </SUMMARY>
     virtual ~CSensorObject()
     {
-        SafeRelease();
+        this->SafeRelease();
     }
 
     /// <SUMMARY>
@@ -83,13 +90,13 @@ public:
     /// </RETURNS>
     bool TypeInit(IN REFSENSOR_TYPE_ID sensorType)
     {
-        SafeRelease();
+        this->SafeRelease();
 
         HRESULT hr = CoCreateInstance(CLSID_SensorManager, NULL, CLSCTX_INPROC_SERVER,
             IID_PPV_ARGS(&m_pSensorManager));
         if (hr == HRESULT_FROM_WIN32(ERROR_ACCESS_DISABLED_BY_POLICY))
         {
-            SafeRelease();
+            this->SafeRelease();
             m_errorMessage = "CoCreateInstance: Unable to retrieve sensor manager due to group policy settings";
             return false;
         }
@@ -98,7 +105,7 @@ public:
         hr = m_pSensorManager->GetSensorsByType(sensorType, &m_pSensorCollection);
         if (hr == HRESULT_FROM_WIN32(ERROR_NOT_FOUND))
         {
-            SafeRelease();
+            this->SafeRelease();
             m_errorMessage = "ISensorManager::GetSensorsByType: No sensors are available for the specified type";
             return false;
         }
@@ -107,7 +114,7 @@ public:
 
         if (m_sensorCount == 0)
         {
-            SafeRelease();
+            this->SafeRelease();
             m_errorMessage = "Sensors count is Zero, no sensors of the requested type";
             return false;
         }
@@ -132,7 +139,7 @@ public:
                 if (hr == HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED)
                     || hr == HRESULT_FROM_WIN32(ERROR_CANCELLED))
                 {
-                    SafeRelease();
+                    this->SafeRelease();
                     m_errorMessage = "ISensorManager::RequestPermissions: User have previously denied access to this sensor";
                     return false;
                 }
@@ -242,11 +249,13 @@ private:
     /// </SUMMARY>
     void SafeRelease()
     {
+        DebugPrint("Enter CSensorObject::SafeRelease\n");
         ISensor* pSensor = NULL;
         for (unsigned long i = 0; i < m_sensorCount; i++)
         {
             pSensor = m_pSensorArray[i];
             SAFE_RELEASE(pSensor);
+            DebugPrint("Delete Sensor\n");
             m_pSensorArray[i] = NULL;
         }
         SAFE_DEL_ARRAY(m_pSensorArray);
@@ -254,7 +263,11 @@ private:
         m_sensorCount = 0;
 
         SAFE_RELEASE(m_pSensorCollection);
+        DebugPrint("Delete SensorCollection\n");
         SAFE_RELEASE(m_pSensorManager);
+        DebugPrint("Delete SensorManager\n");
+
+        DebugPrint("Leave CSensorObject::SafeRelease\n");
     }
 
 private:
@@ -746,82 +759,34 @@ private:
 
 };
 
-LAccelerometer3DSensor* gAccelerometer3D = NULL;
-LGyrometer3DSensor* gGyrometer3D = NULL;
-LCompass3DSensor* gCompass3D = NULL;
-LAmbientLightSensor* gAmbientLight = NULL;
-LLocationGpsSensor* gLocationGps = NULL;
-
-/// @brief 进程卸载DLL
-static void DllProcessDetach()
-{
-    if (gAccelerometer3D != NULL)
-    {
-        delete gAccelerometer3D;
-        gAccelerometer3D = NULL;
-    }
-
-    if (gGyrometer3D != NULL)
-    {
-        delete gGyrometer3D;
-        gGyrometer3D = NULL;
-    }
-
-    if (gCompass3D != NULL)
-    {
-        delete gCompass3D;
-        gCompass3D = NULL;
-    }
-
-    if (gLocationGps != NULL)
-    {
-        delete gLocationGps;
-        gLocationGps = NULL;
-    }
-
-    if (gAmbientLight != NULL)
-    {
-        delete gAmbientLight;
-        gAmbientLight = NULL;
-    }
-}
-
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD canReason, LPVOID lpReserved)
-{
-    switch (canReason)
-    {
-    case DLL_PROCESS_ATTACH:
-        break;
-    case DLL_THREAD_ATTACH:
-        break;
-    case DLL_THREAD_DETACH:
-        break;
-    case DLL_PROCESS_DETACH:
-        DllProcessDetach();
-        break;
-    }
-    return TRUE;
-}
-
 bool GetAccelerometer3DSensorInfor(OUT SAccelerometer3DInforArray* pInforArray)
 {
+    LAccelerometer3DSensor* pAccelerometer3D = NULL;
+
     if (pInforArray == NULL)
         return false;
 
-    if (gAccelerometer3D == NULL)
+    if (pAccelerometer3D == NULL)
     {
-        gAccelerometer3D = new LAccelerometer3DSensor();
+        pAccelerometer3D = new LAccelerometer3DSensor();
     }
 
     ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
 
-    pInforArray->Count = gAccelerometer3D->GetCount();
+    pInforArray->Count = pAccelerometer3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
-        gAccelerometer3D->GetData(i, pInforArray->Data[i]);
+        pAccelerometer3D->GetData(i, pInforArray->Data[i]);
         wstring name;
-        gAccelerometer3D->GetFriendlyName(i, name);
+        pAccelerometer3D->GetFriendlyName(i, name);
         wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
+    }
+
+    if (pAccelerometer3D != NULL)
+    {
+        delete pAccelerometer3D;
+        pAccelerometer3D = NULL;
+        DebugPrint("Delete Accelerometer3D Object\n");
     }
 
     return true;
@@ -829,24 +794,33 @@ bool GetAccelerometer3DSensorInfor(OUT SAccelerometer3DInforArray* pInforArray)
 
 bool GetGyrometer3DSensorInfor(OUT SGyrometer3DInforArray* pInforArray)
 {
+    LGyrometer3DSensor* pGyrometer3D = NULL;
+
     if (pInforArray == NULL)
         return false;
 
-    if (gGyrometer3D == NULL)
+    if (pGyrometer3D == NULL)
     {
-        gGyrometer3D = new LGyrometer3DSensor();
+        pGyrometer3D = new LGyrometer3DSensor();
     }
 
     ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
 
-    pInforArray->Count = gGyrometer3D->GetCount();
+    pInforArray->Count = pGyrometer3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
-        gGyrometer3D->GetData(i, pInforArray->Data[i]);
+        pGyrometer3D->GetData(i, pInforArray->Data[i]);
 
         wstring name;
-        gGyrometer3D->GetFriendlyName(i, name);
+        pGyrometer3D->GetFriendlyName(i, name);
         wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
+    }
+
+    if (pGyrometer3D != NULL)
+    {
+        delete pGyrometer3D;
+        pGyrometer3D = NULL;
+        DebugPrint("Delete Gyrometer3D Object\n");
     }
 
     return true;
@@ -854,24 +828,33 @@ bool GetGyrometer3DSensorInfor(OUT SGyrometer3DInforArray* pInforArray)
 
 bool GetCompass3DSensorInfor(OUT SCompass3DInforArray* pInforArray)
 {
+    LCompass3DSensor* pCompass3D = NULL;
+
     if (pInforArray == NULL)
         return false;
 
-    if (gCompass3D == NULL)
+    if (pCompass3D == NULL)
     {
-        gCompass3D = new LCompass3DSensor();
+        pCompass3D = new LCompass3DSensor();
     }
 
     ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
 
-    pInforArray->Count = gCompass3D->GetCount();
+    pInforArray->Count = pCompass3D->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
-        gCompass3D->GetData(i, pInforArray->Data[i]);
+        pCompass3D->GetData(i, pInforArray->Data[i]);
 
         wstring name;
-        gCompass3D->GetFriendlyName(i, name);
+        pCompass3D->GetFriendlyName(i, name);
         wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
+    }
+
+    if (pCompass3D != NULL)
+    {
+        delete pCompass3D;
+        pCompass3D = NULL;
+        DebugPrint("Delete Compass3D Object\n");
     }
 
     return true;
@@ -879,24 +862,33 @@ bool GetCompass3DSensorInfor(OUT SCompass3DInforArray* pInforArray)
 
 bool GetGpsSensorInfor(OUT SGpsInforArray* pInforArray)
 {
+    LLocationGpsSensor* pLocationGps = NULL;
+
     if (pInforArray == NULL)
         return false;
 
-    if (gLocationGps == NULL)
+    if (pLocationGps == NULL)
     {
-        gLocationGps = new LLocationGpsSensor();
+        pLocationGps = new LLocationGpsSensor();
     }
 
     ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
 
-    pInforArray->Count = gLocationGps->GetCount();
+    pInforArray->Count = pLocationGps->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
-        gLocationGps->GetData(i, pInforArray->Data[i]);
+        pLocationGps->GetData(i, pInforArray->Data[i]);
 
         wstring name;
-        gLocationGps->GetFriendlyName(i, name);
+        pLocationGps->GetFriendlyName(i, name);
         wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
+    }
+
+    if (pLocationGps != NULL)
+    {
+        delete pLocationGps;
+        pLocationGps = NULL;
+        DebugPrint("Delete LocationGps Object\n");
     }
 
     return true;
@@ -904,24 +896,33 @@ bool GetGpsSensorInfor(OUT SGpsInforArray* pInforArray)
 
 bool GetAmbientLightSensorInfor(OUT SAmbientLightInforArray* pInforArray)
 {
+    LAmbientLightSensor* pAmbientLight = NULL;
+
     if (pInforArray == NULL)
         return false;
 
-    if (gAmbientLight == NULL)
+    if (pAmbientLight == NULL)
     {
-        gAmbientLight = new LAmbientLightSensor();
+        pAmbientLight = new LAmbientLightSensor();
     }
 
     ZeroMemory(pInforArray->FriendlyName, MAX_SENSOR_NUMBER * MAX_STRING_LEN);
 
-    pInforArray->Count = gAmbientLight->GetCount();
+    pInforArray->Count = pAmbientLight->GetCount();
     for (unsigned int i = 0; i < pInforArray->Count && i < MAX_SENSOR_NUMBER; i++)
     {
-        gAmbientLight->GetData(i, pInforArray->Data[i]);
+        pAmbientLight->GetData(i, pInforArray->Data[i]);
 
         wstring name;
-        gAmbientLight->GetFriendlyName(i, name);
+        pAmbientLight->GetFriendlyName(i, name);
         wcscpy_s(pInforArray->FriendlyName[i], MAX_STRING_LEN, name.c_str());
+    }
+
+    if (pAmbientLight != NULL)
+    {
+        delete pAmbientLight;
+        pAmbientLight = NULL;
+        DebugPrint("Delete AmbientLight Object\n");
     }
 
     return true;
