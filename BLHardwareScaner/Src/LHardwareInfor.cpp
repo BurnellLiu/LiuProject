@@ -21,6 +21,8 @@ using std::transform;
 
 #include "Webcam/LWebcam.h"
 
+#include "SystemMetrics/LSystemMetrics.h"
+
 
 
 
@@ -187,6 +189,15 @@ public:
         
 
         return m_cameraInfor;
+    }
+
+    /// @brief 获取系统度量信息
+    /// @return 系统度量信息
+    const SystemMetricsInfor& GetSystemMetricsInfor()
+    {
+        this->ScanSystemMetricsInfo(m_systemMetricsInfor);
+
+        return m_systemMetricsInfor;
     }
 
     /// @brief 析构函数
@@ -624,6 +635,13 @@ private:
         }
     }
 
+    /// @brief 扫描系统度量信息
+    /// @param[out] systemMetricsInfor 存储系统度量信息
+    void ScanSystemMetricsInfo(OUT SystemMetricsInfor& systemMetricsInfor)
+    {
+        systemMetricsInfor.TouchScreenSupported = LSystemMetrics::IsTouchScreenSupported();
+    }
+
     /// @brief 将字符串的小写字母转换为大写
     ///  
     /// 不要尝试将非uicode字符串转换大小写, 因为在中文在多字节编码中使用两个字节表示
@@ -656,6 +674,7 @@ private:
     NetworkCardInforArray m_networkCardInfor; ///< 网卡信息
     CDRomDriveInforArray m_cdRomDriveInfor; ///< 光驱信息
     CameraInforArray m_cameraInfor; ///< 摄像机信息
+    SystemMetricsInfor m_systemMetricsInfor; ///< 系统度量信息
 };
 
 
@@ -727,6 +746,11 @@ const CDRomDriveInforArray& LHardwareInfor::GetCDRomDriveInfor()
 const CameraInforArray& LHardwareInfor::GetCameraInfor()
 {
     return CHardwareInfor::GetInstance().GetCameraInfor();
+}
+
+const SystemMetricsInfor& LHardwareInfor::GetSystemMetricsInfor()
+{
+    return CHardwareInfor::GetInstance().GetSystemMetricsInfor();
 }
 
 

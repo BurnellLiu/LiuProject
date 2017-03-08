@@ -219,6 +219,12 @@ struct CameraInforArray
     wstring Name[MAX_CAMERA_NUMBER]; ///< 摄像机名称
 };
 
+/// @brief 系统度量信息
+struct SystemMetricsInfor
+{
+    bool TouchScreenSupported; ///< 是否支持触摸屏
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -278,6 +284,10 @@ public:
     /// @brief 获取摄像机信息
     /// @return 摄像机信息
     static const CameraInforArray& GetCameraInfor();
+
+    /// @brief 获取系统度量信息
+    /// @return 系统度量信息
+    static const SystemMetricsInfor& GetSystemMetricsInfor();
 };
 
 #endif
