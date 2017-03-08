@@ -459,6 +459,7 @@ private:
 
         if (returnCode == 0)
         {
+            strProperty.clear();
             strProperty.append(pBuffer);
         }
 
@@ -978,7 +979,7 @@ LSetupBiometric::LSetupBiometric()
     m_pSADevObject->Scan(&GUID_DEVCLASS_BIOMETRIC);
 }
 
-LSetupBiometric::LSetupBiometric()
+LSetupBiometric::~LSetupBiometric()
 {
 
 }

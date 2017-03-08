@@ -658,12 +658,16 @@ private:
     /// @param[out] biometricInfor 存储生物识别设备信息
     void ScanBiometricInfo(OUT BiometricInforArray& biometricInfor)
     {
+        PrintLogW(L"Scan Biometric Infor Function");
         LSetupBiometric biometric;
         biometricInfor.Count = (unsigned long)biometric.GetDevNum();
         for (int i = 0; (i < biometric.GetDevNum()) && (i < MAX_BIOMETRIC_NUMBER); i++)
         {
+            PrintLogW(L"Biometric Index: %d", i);
             biometric.GetDevDesc(i, biometricInfor.Description[i]);
+            PrintLogW(L"Biometric Desc: %s", biometricInfor.Description[i].c_str());
             biometric.GetManufacturer(i, biometricInfor.Manufacturer[i]);
+            PrintLogW(L"Biometric Manufacturer: %s", biometricInfor.Manufacturer[i].c_str());
         }
     }
 

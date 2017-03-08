@@ -214,4 +214,13 @@ public:
 
 };
 
+/// @brief 生物识别设备项信息
+class BiometricItemInfor : public HWItemInfor
+{
+public:
+    /// @brief 加载硬件信息
+    virtual void LoadHWInfor();
+
+};
+
 #endif

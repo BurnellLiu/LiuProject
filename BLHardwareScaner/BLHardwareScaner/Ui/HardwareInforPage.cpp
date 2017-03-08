@@ -174,6 +174,16 @@ void HardwareInforPage::InitHardwareInfor()
         pSensorsItem->LoadHWInfor();
     }
 
+    this->SplashScreenShow(QObject::tr("Loading Biometric Information..."));
+    const BiometricInforArray& biometricInfor = LHardwareInfor::GetBiometricInfor();
+    if (biometricInfor.Count > 0)
+    {
+        ui.listWidgetHWItem->addItem(QObject::tr("Biometric"));
+        HWItemInfor* pBiometric = new BiometricItemInfor();
+        m_hwItemVec.push_back(pBiometric);
+        pBiometric->LoadHWInfor();
+    }
+
     // 计算机整体信息延后加载, 等待各个硬件信息加载完成再加载
     pComputerItem->LoadHWInfor();
 
@@ -317,6 +327,13 @@ void HardwareInforPage::CollectTips()
     if (systemMetricsInfor.TouchScreenSupported)
     {
         this->AddTips("Touch Screen");
+    }
+
+    // 查看是否存在生物识别设备
+    const BiometricInforArray& biometricInfor = LHardwareInfor::GetBiometricInfor();
+    if (biometricInfor.Count > 0)
+    {
+        this->AddTips("Biometric");
     }
 }
 
@@ -1084,4 +1101,30 @@ void SensorsItemInfor::LoadHWInfor()
         PrintLogW(L"\tGPS: %s", gpsSensor.FriendlyName[i]);
     }
     this->ContentAddBlankLine();
+}
+
+void BiometricItemInfor::LoadHWInfor()
+{
+    this->ClearInfor();
+
+    this->SetTitle("Biometric");
+
+    PrintLogW(L"Biometric Information:");
+
+    const BiometricInforArray& biometricInfor = LHardwareInfor::GetBiometricInfor();
+    for (unsigned long i = 0; i < biometricInfor.Count; i++)
+    {
+        PrintLogW(L"\tBiometric Index: %u", i);
+        QString desc = QString::fromStdWString(biometricInfor.Description[i]);
+        this->ContentAddItem(QObject::tr("Name"), desc);
+        PrintLogW(L"\tName: %s", biometricInfor.Description[i].c_str());
+
+        QString manufacturer = QString::fromStdWString(biometricInfor.Manufacturer[i]);
+        this->ContentAddItem(QObject::tr("Manufacturer"), manufacturer);
+        PrintLogW(L"\tManufacturer: %s", biometricInfor.Manufacturer[i].c_str());
+
+        this->ContentAddBlankLine();
+    }
+
+    PrintLogW(L"");
 }
