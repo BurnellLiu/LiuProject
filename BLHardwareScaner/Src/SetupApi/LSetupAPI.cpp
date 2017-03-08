@@ -972,3 +972,14 @@ LSetupImage::~LSetupImage()
 
 }
 
+LSetupBiometric::LSetupBiometric()
+    : LSetupDev()
+{
+    m_pSADevObject->Scan(&GUID_DEVCLASS_BIOMETRIC);
+}
+
+LSetupBiometric::LSetupBiometric()
+{
+
+}
+

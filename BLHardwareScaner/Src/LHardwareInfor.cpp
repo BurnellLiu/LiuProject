@@ -195,9 +195,21 @@ public:
     /// @return 系统度量信息
     const SystemMetricsInfor& GetSystemMetricsInfor()
     {
+        /*
+        系统度量信息会发生变化所以需要在每次获取的时候重新扫描
+        */
         this->ScanSystemMetricsInfo(m_systemMetricsInfor);
 
         return m_systemMetricsInfor;
+    }
+
+    const BiometricInforArray& GetBiometricInfo()
+    {
+        /*
+        生物识别设备信息会发生变化所以需要在每次获取的时候重新扫描
+        */
+        this->ScanBiometricInfo(m_biometricInfor);
+        return m_biometricInfor;
     }
 
     /// @brief 析构函数
@@ -642,6 +654,19 @@ private:
         systemMetricsInfor.TouchScreenSupported = LSystemMetrics::IsTouchScreenSupported();
     }
 
+    /// @brief 扫描生物识别设备信息
+    /// @param[out] biometricInfor 存储生物识别设备信息
+    void ScanBiometricInfo(OUT BiometricInforArray& biometricInfor)
+    {
+        LSetupBiometric biometric;
+        biometricInfor.Count = (unsigned long)biometric.GetDevNum();
+        for (int i = 0; (i < biometric.GetDevNum()) && (i < MAX_BIOMETRIC_NUMBER); i++)
+        {
+            biometric.GetDevDesc(i, biometricInfor.Description[i]);
+            biometric.GetManufacturer(i, biometricInfor.Manufacturer[i]);
+        }
+    }
+
     /// @brief 将字符串的小写字母转换为大写
     ///  
     /// 不要尝试将非uicode字符串转换大小写, 因为在中文在多字节编码中使用两个字节表示
@@ -675,6 +700,7 @@ private:
     CDRomDriveInforArray m_cdRomDriveInfor; ///< 光驱信息
     CameraInforArray m_cameraInfor; ///< 摄像机信息
     SystemMetricsInfor m_systemMetricsInfor; ///< 系统度量信息
+    BiometricInforArray m_biometricInfor; ///< 生物识别设备信息
 };
 
 
@@ -751,6 +777,11 @@ const CameraInforArray& LHardwareInfor::GetCameraInfor()
 const SystemMetricsInfor& LHardwareInfor::GetSystemMetricsInfor()
 {
     return CHardwareInfor::GetInstance().GetSystemMetricsInfor();
+}
+
+const BiometricInforArray& LHardwareInfor::GetBiometricInfor()
+{
+    return CHardwareInfor::GetInstance().GetBiometricInfo();
 }
 
 

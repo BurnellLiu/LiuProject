@@ -356,4 +356,14 @@ public:
     ~LSetupImage();
 };
 
+/// <SUMMARY>
+/// 生物识别设备类（例如：指纹识别）
+/// </SUMMARY>
+class LSetupBiometric : public LSetupDev
+{
+public:
+    LSetupBiometric();
+    ~LSetupBiometric();
+};
+
 #endif

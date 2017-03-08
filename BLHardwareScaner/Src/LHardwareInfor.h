@@ -225,6 +225,17 @@ struct SystemMetricsInfor
     bool TouchScreenSupported; ///< 是否支持触摸屏
 };
 
+/// @brief 最大生物识别设备数量
+#define MAX_BIOMETRIC_NUMBER 8
+
+/// @brief 生物识别设备信息组
+struct BiometricInforArray
+{
+    unsigned long Count; ///< 生物识别设备数量
+    wstring Description[MAX_BIOMETRIC_NUMBER]; ///< 设备描述
+    wstring Manufacturer[MAX_BIOMETRIC_NUMBER]; ///< 设置制造商
+};
+
 /// @brief 硬件信息类
 ///
 /// 该类获取的都是固定信息
@@ -288,6 +299,10 @@ public:
     /// @brief 获取系统度量信息
     /// @return 系统度量信息
     static const SystemMetricsInfor& GetSystemMetricsInfor();
+
+    /// @brief 获取生物识别设备信息
+    /// @return 生物识别设备信息
+    static const BiometricInforArray& GetBiometricInfor();
 };
 
 #endif
