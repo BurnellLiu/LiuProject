@@ -60,6 +60,9 @@
     <Filter Include="Src\TaskScheduler">
       <UniqueIdentifier>{84d70c82-a4ba-46e8-a605-7048e67f38ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\SystemMetrics">
+      <UniqueIdentifier>{0ee9cb7f-13b6-4184-ab64-7af76d2ce14a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="App\AppParam.cpp">
       <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\SystemMetrics\LSystemMetrics.cpp">
+      <Filter>Src\SystemMetrics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -323,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="App\AppParam.h">
       <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\SystemMetrics\LSystemMetrics.h">
+      <Filter>Src\SystemMetrics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

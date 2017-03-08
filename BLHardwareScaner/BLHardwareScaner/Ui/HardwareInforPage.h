@@ -57,11 +57,19 @@ private:
     /// @param[in] msg 消息
     void SplashScreenShow(IN const QString& msg);
 
+    /// @brief 增加一个提示消息
+    /// @param[in] msg 消息
+    void AddTips(IN const QString& msg);
+
+    /// @brief 收集提示信息
+    void CollectTips();
+
 private:
     Ui::HardwareInforForm ui;
     QSplashScreen* m_pSplashScrreen; ///< 启动画面
 
     QVector<HWItemInfor*> m_hwItemVec; ///< 硬件项列表
+    QVector<QLabel*> m_tipsLabelVec; ///< 提示标签列表
 };
 
 /// @brief 硬件项信息

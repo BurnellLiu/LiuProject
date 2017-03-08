@@ -19,7 +19,21 @@ HardwareInforPage::HardwareInforPage(float uiRatio, QWidget *parent, Qt::WFlags 
 
     this->LoadQSS(uiRatio);
 
-    QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));    
+    QObject::connect(ui.listWidgetHWItem, SIGNAL(itemSelectionChanged()), this, SLOT(CurrentItemChanged()));
+
+    m_tipsLabelVec.append(ui.label_1);
+    m_tipsLabelVec.append(ui.label_2);
+    m_tipsLabelVec.append(ui.label_3);
+    m_tipsLabelVec.append(ui.label_4);
+    m_tipsLabelVec.append(ui.label_5);
+    m_tipsLabelVec.append(ui.label_6);
+    m_tipsLabelVec.append(ui.label_7);
+    m_tipsLabelVec.append(ui.label_8);
+
+    for (int i = 0; i < m_tipsLabelVec.size(); i++)
+    {
+        m_tipsLabelVec[i]->setText("");
+    }
 }
 
 HardwareInforPage::~HardwareInforPage()
@@ -163,6 +177,8 @@ void HardwareInforPage::InitHardwareInfor()
     // 计算机整体信息延后加载, 等待各个硬件信息加载完成再加载
     pComputerItem->LoadHWInfor();
 
+    this->CollectTips();
+
     PrintLogW(L"End HardwareInforPage::InitHardwareInfor()");
 }
 
@@ -224,6 +240,84 @@ void HardwareInforPage::SplashScreenShow(IN const QString& msg)
         return;
 
     m_pSplashScrreen->showMessage(msg, Qt::AlignLeft | Qt::AlignTop, Qt::red);
+}
+
+void HardwareInforPage::AddTips(IN const QString& msg)
+{
+    for (int i = 0; i < m_tipsLabelVec.size(); i++)
+    {
+        if (m_tipsLabelVec[i]->text() == "")
+        {
+            m_tipsLabelVec[i]->setText(msg);
+            break;
+        }
+    }
+}
+
+void HardwareInforPage::CollectTips()
+{
+    // 查看计算机类型
+    const ComputerSystemInfor& computerSystemInfor = LHardwareInfor::GetComputerSystemInfor();
+    switch (computerSystemInfor.Type)
+    {
+    case COMPUTER_TYPE_DESKTOP:
+        this->AddTips("Desktop");
+        break;
+    case COMPUTER_TYPE_NOTE_BOOK:
+        this->AddTips("NoteBook");
+        break;
+    case COMPUTER_TYPE_TABLET:
+        this->AddTips("Tablet");
+        break;
+    default:
+        break;
+    }
+
+    // 查看是否存在独立显卡
+    const VideoCardInforArray& videoCardInforArray = LHardwareInfor::GetVideoCardInfor();
+    for (int i = 0; i < videoCardInforArray.Count; i++)
+    {
+        if(videoCardInforArray.Type[i] == VIDEO_CARD_EXTERNAL)
+        {
+            this->AddTips("Discrete Graphics");
+            break;
+        }
+    }
+
+    // 查看是否是固态硬盘
+    const DiskInforArray& diskInforArray = LHardwareInfor::GetDiskInfor();
+    for (unsigned long i = 0; i < diskInforArray.Count; i++)
+    {
+        if (diskInforArray.DiskType[i] != FIXED_DISK)
+            continue;
+
+        QString fixedDiskType;
+        switch (diskInforArray.FixedDiskType[i])
+        {
+        case FIXED_DISK_SATA_SSD:
+            this->AddTips("SATA SSD");
+            break;
+        case FIXED_DISK_EMMC:
+            this->AddTips("EMMC Disk");
+            break;
+        case FIXED_DISK_RAID:
+            this->AddTips("Raid Disk");
+            break;
+        case FIXED_DISK_NVME_SSD:
+            this->AddTips("NVME SSD");
+            break;
+        default:
+            break;
+        }
+        
+    }
+
+    // 查看是否支持触摸屏
+    const SystemMetricsInfor& systemMetricsInfor = LHardwareInfor::GetSystemMetricsInfor();
+    if (systemMetricsInfor.TouchScreenSupported)
+    {
+        this->AddTips("Touch Screen");
+    }
 }
 
 HWItemInfor::HWItemInfor()
