@@ -472,7 +472,7 @@ void DiskSpeedPage::GetTestFileSize()
     }
     if (SIZE_512M == randSizeStr)
     {
-        m_seqSize = 512;
+        m_randSize = 512;
     }
     if (SIZE_1G == randSizeStr)
     {
