@@ -139,12 +139,67 @@ def regexp_parser_sample4():
 
     # 分块
     tree = cp.parse(sentence_tag)
+    for n in tree.subtrees():
+        print(n)
     tree.draw()
 
 
 def regexp_parser_sample5():
-    cp = nltk.RegexpParser("")
+    grammar = r"NP: {<[CDJNP].*>+}"
+    cp = nltk.RegexpParser(grammar)
+
+    # 加载训练文本中的NP块
     test_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
     print(cp.evaluate(test_sents))
 
-regexp_parser_sample5()
+
+class UnigramChunker(nltk.ChunkParserI):
+    """
+    一元分块器，
+    该分块器可以从训练句子集中找出每个词性标注最有可能的分块标记，
+    然后使用这些信息进行分块
+    """
+    def __init__(self, train_sents):
+        """
+        构造函数
+        :param train_sents: Tree对象列表
+        """
+        train_data = []
+        for sent in train_sents:
+            # 将Tree对象转换为IOB标记列表[(word, tag, IOB-tag), ...]
+            conlltags = nltk.chunk.tree2conlltags(sent)
+
+            # 找出每个词性标注对应的IOB标记
+            ti_list = [(t, i) for w, t, i in conlltags]
+            train_data.append(ti_list)
+
+        # 使用一元标注器进行训练
+        self.__tagger = nltk.UnigramTagger(train_data)
+
+    def parse(self, tokens):
+        """
+        对句子进行分块
+        :param tokens: 标注词性的单词列表
+        :return: Tree对象
+        """
+        # 取出词性标注
+        tags = [tag for (word, tag) in tokens]
+        # 对词性标注进行分块标记
+        ti_list = self.__tagger.tag(tags)
+        # 取出IOB标记
+        iob_tags = [iob_tag for (tag, iob_tag) in ti_list]
+        # 组合成conll标记
+        conlltags = [(word, pos, iob_tag) for ((word, pos), iob_tag) in zip(tokens, iob_tags)]
+
+        return nltk.chunk.conlltags2tree(conlltags)
+
+
+def regexp_parser_sample6():
+    test_sents = conll2000.chunked_sents("test.txt", chunk_types=["NP"])
+    train_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
+
+    unigram_chunker = UnigramChunker(train_sents)
+    print(unigram_chunker.evaluate(test_sents))
+
+
+regexp_parser_sample6()
