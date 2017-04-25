@@ -658,6 +658,19 @@ void MotherBoardItemInfor::LoadHWInfor()
 
     this->ContentAddBlankLine();
 
+    BIOS_MODE biosMode = motherBoardInfor.BiosMode;
+    if (biosMode != BIOS_MODE_UNKNOWN)
+    {
+        QString biosModeStr;
+        if (biosMode == BIOS_MODE_LEGACY)
+            biosModeStr = "Legacy";
+        if (biosMode == BIOS_MODE_UEFI)
+            biosModeStr = "UEFI";
+
+        this->ContentAddItem(QObject::tr("BIOS Mode"), biosModeStr);
+        PrintLogA("\tBIOS Mode: %s", biosModeStr.toAscii());
+    }
+
     QString biosVendor = QString::fromStdString(motherBoardInfor.BiosVendor).trimmed();
     this->ContentAddItem(QObject::tr("BIOS Vendor"), biosVendor);
     PrintLogA("\tBIOS Vendor: %s", motherBoardInfor.BiosVendor.c_str());

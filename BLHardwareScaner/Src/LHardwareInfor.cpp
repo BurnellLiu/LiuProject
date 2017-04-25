@@ -23,6 +23,8 @@ using std::transform;
 
 #include "SystemMetrics/LSystemMetrics.h"
 
+#include "Win8API/Win8API.h"
+
 
 
 
@@ -282,6 +284,8 @@ private:
         motherBoardInfor.BiosVersion = biosInfor.Version;
         motherBoardInfor.BiosReleaseDate = biosInfor.ReleaseDate;
         motherBoardInfor.BiosRomSize = biosInfor.RomSize;
+
+        motherBoardInfor.BiosMode = (BIOS_MODE)GetBIOSMode();
     }
 
     /// @brief 扫描处理器信息

@@ -63,6 +63,9 @@
     <Filter Include="Src\SystemMetrics">
       <UniqueIdentifier>{0ee9cb7f-13b6-4184-ab64-7af76d2ce14a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Win8API">
+      <UniqueIdentifier>{1b6cf6ab-73cb-4a42-886e-6bcf745bcdac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_HardwareInforPage.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\SystemMetrics\LSystemMetrics.cpp">
       <Filter>Src\SystemMetrics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Win8API\Win8API.cpp">
+      <Filter>Src\Win8API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\SystemMetrics\LSystemMetrics.h">
       <Filter>Src\SystemMetrics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Win8API\Win8API.h">
+      <Filter>Src\Win8API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

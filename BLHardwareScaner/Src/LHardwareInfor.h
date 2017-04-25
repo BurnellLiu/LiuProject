@@ -48,6 +48,14 @@ struct OperatingSystemInfor
     wstring SystemDrive; ////< 系统盘
 };
 
+/// @brief 获取BIOS模式
+enum BIOS_MODE
+{
+    BIOS_MODE_UNKNOWN = 0, ///< 未知模式
+    BIOS_MODE_LEGACY = 1, ///< 传统模式
+    BIOS_MODE_UEFI = 2 ///< UEFI模式
+};
+
 /// @brief 主板信息结构
 struct MotherBoardInfor
 {
@@ -59,6 +67,7 @@ struct MotherBoardInfor
     string BiosVendor; ///< Bios厂商
     string BiosVersion; ///< Bios版本
     string BiosReleaseDate; ///< Bios发布日期
+    BIOS_MODE BiosMode; ///< Bios模式
     unsigned long BiosRomSize; ///< Bios Rom大小, 单位K
 };
 
