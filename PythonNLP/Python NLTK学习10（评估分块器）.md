@@ -145,7 +145,86 @@ UnigramChunker类的构造函数接受一个训练集，训练集由Tree对象�
 >     
 > F-Measure:     83.2%
 
-## 总结 ##
+##训练基于分类器的分快器##
+无论是基于正则表达式的分块器还是n-gram分块器，决定创建什么块完全基于词性标记。有时词性标记不足以确定一个句子应如何分块，我们可能需要词的内容作为词性标记的补充。
+包含词的内容信息的方法之一是创建基于分类器的分块器，我们创建如下的分块器：
+
+```python
+    
+    class ClassifierChunker(nltk.ChunkParserI):
+        """
+        分类器分块器
+        """
+        @classmethod
+        def generate_feature(cls, word_tag):
+            """
+            根据单词和词性标记生成特征
+            :param word_tag: 单词-词性标记
+            :return: 特征
+            """
+            word, tag = word_tag
+            return {"tag": tag, "word": word}
+    
+        def __init__(self, train_sents):
+            """
+            构造函数
+            :param train_sents: 训练句子列表的内容为：[[((word, tag), iob-tag), ...], ...]
+            """
+            train_set = []
+            for tagged_sent in train_sents:
+                for word_tag, iob_tag in tagged_sent:
+                    feature = self.generate_feature(word_tag)
+                    train_set.append((feature, iob_tag))
+    
+            self.__classifier = nltk.NaiveBayesClassifier.train(train_set)
+    
+        def parse(self, sentence):
+            """
+            对句子进行分块
+            :param sentence: 标注词性的单词列表
+            :return: Tree对象
+            """
+            # 对词性标注进行分块标记
+            iob_tags = []
+            for word_tag in sentence:
+                feature = self.generate_feature(word_tag)
+                iob_tag = self.__classifier.classify(feature)
+                iob_tags.append(iob_tag)
+            # 组合成conll标记
+            conlltags = [(word, pos, iob_tag) for ((word, pos), iob_tag) in zip(sentence, iob_tags)]
+            return nltk.chunk.conlltags2tree(conlltags)
+    
+```
+
+分类器分块器根据训练集中的每个单词内容和词性标记生成特征，再使用朴素贝叶斯分类器进行训练。
+
+测试ClassifierChunker的性能：
+
+```python
+    
+    train_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
+    test_sents = conll2000.chunked_sents("test.txt", chunk_types=["NP"])
+    tagged_sents = [[((w, t), c) for (w, t, c) in nltk.chunk.tree2conlltags(sent)] for sent in train_sents]
+    chunker = ClassifierChunker(tagged_sents)
+    print(chunker.evaluate(test_sents))
+
+```
+
+以上代码输出：
+
+> ChunkParse score:
+> 
+>    IOB Accuracy:  92.4%
+>    
+>    Precision:     74.9%
+>    
+>    Recall:        85.0%
+>    
+>    F-Measure:     79.7%
+
+
+
+##总结##
 
 - conll2000，分块语料库
 - nltk.chunk.tree2conlltags(t)，将Tree对象转换为IOB标记列表

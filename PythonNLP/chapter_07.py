@@ -202,4 +202,65 @@ def regexp_parser_sample6():
     print(unigram_chunker.evaluate(test_sents))
 
 
-regexp_parser_sample6()
+class ClassifierChunker(nltk.ChunkParserI):
+    """
+    分类器分块器
+    """
+    @classmethod
+    def generate_feature(cls, word_tag):
+        """
+        根据单词和词性标记生成特征
+        :param word_tag: 单词-词性标记
+        :return: 特征
+        """
+        word, tag = word_tag
+        return {"tag": tag, "word": word}
+
+    def __init__(self, train_sents):
+        """
+        构造函数
+        :param train_sents: 训练句子列表的内容为：[[((word, tag), iob-tag), ...], ...]
+        """
+        train_set = []
+        for tagged_sent in train_sents:
+            for word_tag, iob_tag in tagged_sent:
+                feature = self.generate_feature(word_tag)
+                train_set.append((feature, iob_tag))
+
+        self.__classifier = nltk.NaiveBayesClassifier.train(train_set)
+
+    def parse(self, sentence):
+        """
+        对句子进行分块
+        :param sentence: 标注词性的单词列表
+        :return: Tree对象
+        """
+        # 对词性标注进行分块标记
+        iob_tags = []
+        for word_tag in sentence:
+            feature = self.generate_feature(word_tag)
+            iob_tag = self.__classifier.classify(feature)
+            iob_tags.append(iob_tag)
+        # 组合成conll标记
+        conlltags = [(word, pos, iob_tag) for ((word, pos), iob_tag) in zip(sentence, iob_tags)]
+        return nltk.chunk.conlltags2tree(conlltags)
+
+
+def chunker_sample7():
+    train_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
+    test_sents = conll2000.chunked_sents("test.txt", chunk_types=["NP"])
+    tagged_sents = [[((w, t), c) for (w, t, c) in nltk.chunk.tree2conlltags(sent)] for sent in train_sents]
+    chunker = ClassifierChunker(tagged_sents)
+    print(chunker.evaluate(test_sents))
+
+# 取出语料库中的一个句子
+sent = nltk.corpus.treebank.tagged_sents()[22]
+
+# 使用NE分块器进行命名实体识别，返回Tree对象，
+# Tree对象的label()方法可以查看命名实体的标签
+for tree in nltk.ne_chunk(sent).subtrees():
+    # 过滤根树
+    if tree.label() == "S":
+        continue
+
+    print(tree)
