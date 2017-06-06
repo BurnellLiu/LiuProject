@@ -22,7 +22,9 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
 ![](http://www.burnelltek.com/static/img/1489111899420.PNG)
 
 使用thshare下载股票数据代码如下：
-    
+   
+```python 
+
     import tushare as ts
     
     
@@ -76,11 +78,14 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
     if __name__ == '__main__':
         industry_stock_download('电子信息')
 
+```
 
 ##股票数据加载##
 我们先写一个股票数据加载的函数：
 
 该函数会从股票数据文件中加载我们感兴趣的数据，返回一个数据列表，列表中越新的数据越靠前
+
+```python 
 
     def stock_load(file_name):
         """
@@ -107,11 +112,15 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
         file.close()
         return stock_list
 
+```
+
 ##股票数据切割##
 上面函数返回的股票数据是按照时间顺序排列的，然而我们需要的是某一天股票涨跌和它前几日的数据，所以我们完成一个切割函数如下：
 
 我们将涨的股票标记为'+'，跌的股票标记为'-'
-    
+
+```python 
+
     def stock_split(data_list, days=5):
         """
         股票数据分割，将某天涨跌情况和前几天数据关联在一起
@@ -133,10 +142,14 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
     
         return stock_days
 
+```
+
 ##股票数据特征提取##
 原始的数据是不能作为朴素贝叶斯分类器的特征值的，我们完成一个特征提取函数它会从前几日的数据中提取特征值：
 
 每一天的数据中提取7个特征，包括股票是否涨，当天最高值和开盘价收盘价的比较，当天最低值和开盘价收盘价的比较等
+
+```python 
     
     def stock_feature(before_days):
         """
@@ -163,9 +176,12 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
     
         return features
 
+```
 
 ##训练模型##
 我们先从股票行业信息文件中加载某一行业的所有股票代码和名称，然后分别加载该行业的每只股票的数据，把数据集分割为训练集和测试集，之后使用贝叶斯分类器进行训练
+
+```python 
 
     def train_model(industry_name):
         """
@@ -198,6 +214,8 @@ data(日期)，open(开盘价)，high(最高价)，close(收盘价)，low(最低
     
     if __name__ == '__main__':
         train_model('电子信息')
+
+```
 
 以上代码运行结果为：
 
