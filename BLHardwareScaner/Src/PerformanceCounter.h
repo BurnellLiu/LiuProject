@@ -30,7 +30,8 @@ struct MemoryPerformance
 /// @brief 处理器性能
 struct ProcessorPerformance
 {
-    unsigned long LoadPercentage; ///< CPU使用率, 范围(1-100)
+    unsigned long LoadPercentage; ///< 当前CPU使用率, 范围(1-100)
+    unsigned long SpeedPercentage; ///< 当前CPU频率百分比(针对最大频率)
 };
 
 /// @brief 最大获取磁盘性能数量
@@ -64,12 +65,13 @@ public:
     bool GetMemoryPerformance(OUT MemoryPerformance& memoryPerformance);
 
     /// @brief 获取处理器性能
+    /// 使用该方法会耗费当前线程200毫秒时间
     /// @param[out] processorPerformance 存储处理器性能
     /// @return 成功返回true, 失败返回false
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance);
 
     /// @brief 获取磁盘性能
-    /// 该方法只能获取固定磁盘的性能
+    /// 该方法只能获取固定磁盘的性能, 使用该方法会耗费当前线程200毫秒时间
     /// @param[in] diskPerformance 存储磁盘性能
     /// @return 成功返回true, 失败返回false
     bool GetDiskPerformance(OUT DiskPerformance& diskPerformance);

@@ -28,12 +28,18 @@ public:
     CPerformanceCounter()
     {
         this->ScanFixedDiskId(m_fixedDiskIdList);
+        m_pCPUSpeedPdh = NULL;
+        m_pCPUSpeedPdh = new LPdh(L"\\Processor Information(_Total)\\% Processor Performance");
     }
 
     /// @brief 析构函数
     ~CPerformanceCounter()
     {
-
+        if (NULL != m_pCPUSpeedPdh)
+        {
+            delete m_pCPUSpeedPdh;
+            m_pCPUSpeedPdh = NULL;
+        }
     }
 
     /// @brief 获取内存性能
@@ -68,6 +74,10 @@ public:
     /// @return 成功返回true, 失败返回false
     bool GetProcessorPerformance(OUT ProcessorPerformance& processorPerformance)
     {
+        long speedData = 0;
+        m_pCPUSpeedPdh->CollectDataLong(200, speedData);
+        processorPerformance.SpeedPercentage = (unsigned long)speedData;
+
         LWMI::LProcessorManager processorManager;
         if (!processorManager.GetProcessorLoadPercentage(0, processorPerformance.LoadPercentage))
             return false;
@@ -144,6 +154,7 @@ private:
 
 private:
     vector<PdhDiskId> m_fixedDiskIdList; ///< 固定磁盘ID列表
+    LPdh* m_pCPUSpeedPdh; ///< CPU当前频率数据收集器
 };
 
 PerformanceCounter::PerformanceCounter()

@@ -277,6 +277,10 @@ TempManagementPage::TempManagementPage(IN QWidget *parent, IN Qt::WFlags flags)
     ui.progressBarGpuTemp->setValue(0);
     ui.progressBarDiskTemp->setValue(0);
 
+    const ProcessorInfor& processorInfor = LHardwareInfor::GetProcessorInfor();
+    QString maxSpeed = QString::number(processorInfor.MaxClockSpeed/1000.0f, 'f', 2);
+    ui.labelMaxSpeed->setText(QString("%1 GHz").arg(maxSpeed));
+
     m_bExternalVideoCardExist = false;
     const VideoCardInforArray& videoCardInfor = LHardwareInfor::GetVideoCardInfor();
     for (unsigned int i = 0; i < videoCardInfor.Count; i++)
@@ -406,6 +410,11 @@ void TempManagementPage::RefreshUi()
             break;
         }
     }
+
+    const ProcessorInfor& processorInfor = LHardwareInfor::GetProcessorInfor();
+    unsigned long currentSpeed = (processorInfor.MaxClockSpeed * processorPerf.SpeedPercentage)/100;
+    QString speed = QString::number(currentSpeed/1000.0f, 'f', 2);
+    ui.labelCurrentSpeed->setText(QString("%1 GHz").arg(speed));
    
 }
 
