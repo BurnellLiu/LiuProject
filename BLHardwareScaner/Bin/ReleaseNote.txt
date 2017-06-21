@@ -7,6 +7,9 @@ Email: burnell_liu@outlook.com
 ************************************
 * Update Log
 ************************************
+2017/06/21 V1.4.7 Release
+1. 增加功能: 温度监视页面显示当前CPU频率
+
 2017/04/25 V1.4.6 Release
 1. 增加功能: Win8之后机器显示BIOS模式(Legacy, 或UEFI) 
 
