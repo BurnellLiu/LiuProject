@@ -34,10 +34,10 @@ struct MandelbrotImage
 struct MandelbrotParam
 {
     double RealMin; // 实部最小值
-    double imagMin; // 虚部最小值
+    double ImgMin; // 虚部最小值
     double RealMax; // 实部最大值
-    double ImagMax; // 虚部最大值
-    unsigned int maxIter; // 最大迭代次数
+    double ImgMax; // 虚部最大值
+    unsigned int MaxIter; // 最大迭代次数
 };
 
 /// <SUMMARY>
