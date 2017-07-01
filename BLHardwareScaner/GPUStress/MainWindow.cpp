@@ -4,24 +4,24 @@
 #define CENTER_REAL -0.56220389591658670447
 #define  CEMTER_IMG 0.64281771463971582037
 double  DIS = 1.0;
-double DIF = 0.99;
+double DIF = 0.995;
 
-LMainWindow::LMainWindow()
+LGameWindow::LGameWindow()
 {
     
 
 
 }
 
-LMainWindow::~LMainWindow()
+LGameWindow::~LGameWindow()
 {
 
 }
 
-void LMainWindow::InitGame()
+void LGameWindow::InitGame()
 {
-    int width = GetClientWidth();
-    int height = GetClientHeight();
+    int width = this->GetClientWidth();
+    int height = this->GetClientHeight();
 
     // 初始化背景缓冲区
     HWND hWnd = this->GetWndHandle();
@@ -39,7 +39,7 @@ void LMainWindow::InitGame()
     m_image.PData = new unsigned int[m_image.Width * m_image.Height];
 }
 
-void LMainWindow::RunGame()
+void LGameWindow::RunGame()
 {
     m_param.RealMin = CENTER_REAL - DIS;
     m_param.RealMax = CENTER_REAL + DIS;
@@ -50,33 +50,27 @@ void LMainWindow::RunGame()
     
     if (DIS < 0.000000001)
     {
-        DIF = 1.01;
+        DIF = 1.005;
     }
     
     if (DIS > 1.0)
     {
-        DIF = 0.99;
+        DIF = 0.995;
     }
 
     DIS = DIS * DIF;
-    
-
 }
 
-void LMainWindow::PaintGame()
+void LGameWindow::PaintGame()
 {
     m_backDC.Clear(255, 255, 255);
 
     HDC hBackDC = m_backDC.GetBackDC();
 
-    int width = GetClientWidth();
-    int height = GetClientHeight();
-    HBITMAP bitmap = CreateCompatibleBitmap(GetDC(this->GetWndHandle()), width, height);
-
-    SelectObject(hBackDC, bitmap);    //将位图资源装入显示缓冲
+    int width = this->GetClientWidth();
+    int height = this->GetClientHeight();
 
     SetStretchBltMode(hBackDC, COLORONCOLOR);
-
     BITMAPINFO  bmi;
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = width;
@@ -90,17 +84,15 @@ void LMainWindow::PaintGame()
     StretchDIBits(hBackDC, 0, 0, width, height, 0, 0, width, height, m_image.PData, &bmi, DIB_RGB_COLORS, SRCCOPY);
 
     m_backDC.CopyToFrontDC();
+
 }
 
-void LMainWindow::Exe()
+void LGameWindow::Exe()
 {
 	this->InitGame();
 
 	bool bDone = false;
 	MSG msg;
-
-	LFrameTimer frameTimer(120);
-	frameTimer.Start();
 
 	while(!bDone)
 	{
@@ -117,24 +109,18 @@ void LMainWindow::Exe()
 			}
 		}
 
-		if (true)
-		{
-			this->RunGame();
+        this->RunGame();
 
-			InvalidateRect(GetWndHandle(), NULL, TRUE);
-			UpdateWindow(GetWndHandle());
-		}
-		else
-		{
-			Sleep(0);
-		}
+        InvalidateRect(this->GetWndHandle(), NULL, TRUE);
+        UpdateWindow(this->GetWndHandle());
+
 
 	}
 }
 
 
 
-LRESULT LMainWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
+LRESULT LGameWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 {
 	switch (message)
 	{	
@@ -165,8 +151,8 @@ LRESULT LMainWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lP
 
 int LMain()
 {
-	LMainWindow mainWnd;
-    mainWnd.SetSize(800, 800);
+	LGameWindow mainWnd;
+    mainWnd.SetSize(500, 500);
     mainWnd.SetSizingBorder(false);
     mainWnd.SetShowSysMenu(true);
     mainWnd.SetShowMinimizeBox(false);

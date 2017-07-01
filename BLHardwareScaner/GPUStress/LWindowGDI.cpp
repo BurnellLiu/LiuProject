@@ -1,7 +1,10 @@
 
 #include "LWindowGDI.h"
 
-#include "LString.h"
+#include <string>
+using std::string;
+#include <sstream>
+using std::stringstream;
 
 
 #ifndef SAFE_DELETE_GDI
@@ -15,6 +18,14 @@ do\
     }\
 }while(0)
 #endif
+
+template<typename T>
+string ConvertToString(IN T value)
+{
+    stringstream strStream;
+    strStream << value;
+    return strStream.str();
+}
 
 HINSTANCE LApParam::m_hInstance = NULL;
 string LApParam::m_cmdLine;

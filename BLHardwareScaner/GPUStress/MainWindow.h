@@ -6,11 +6,11 @@
 
 #include "Mandelbrot.h"
 
-class LMainWindow : public LWindow
+class LGameWindow : public LWindow
 {
 public:
-	LMainWindow();
-	virtual ~LMainWindow();
+	LGameWindow();
+	virtual ~LGameWindow();
 
 	virtual void Exe();
 
@@ -21,10 +21,10 @@ private:
 	virtual LRESULT MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
 
 private:
-	LBackBufferDC m_backDC;
+	LBackBufferDC m_backDC; // 背景缓冲区
 
-    MandelbrotParam m_param;
-    MandelbrotImage m_image;
+    MandelbrotParam m_param; // 曼德勃罗特参数
+    MandelbrotImage m_image; // 曼德菠萝特图像参数
 };
 
 #endif
