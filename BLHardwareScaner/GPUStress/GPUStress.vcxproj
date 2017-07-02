@@ -113,7 +113,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LWindowGDI.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Mandelbrot.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>

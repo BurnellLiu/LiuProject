@@ -338,58 +338,5 @@ void LBackBufferDC::Init(HWND hWnd, int width, int height)
 	ReleaseDC(hWnd, hdc);
 }
 
-LFrameTimer::LFrameTimer(int fps)
-	: m_fps(fps)
-{
-	//LASSERT(fps > 0);
 
-	// 获取CPU的时钟频率(即每秒的滴答数)
-	QueryPerformanceFrequency((LARGE_INTEGER*)&m_performanceFreq);
-
-	// 计算每帧需要的滴答数
-	m_frameTime = (LONGLONG)(m_performanceFreq/m_fps);
-}
-
-LFrameTimer::~LFrameTimer()
-{
-
-}
-
-void LFrameTimer::Start()
-{
-	QueryPerformanceCounter((LARGE_INTEGER*)&m_lastTime);
-}
-
-bool LFrameTimer::ReadyForNextFrame()
-{
-	QueryPerformanceCounter( (LARGE_INTEGER*)&m_currentTime);
-
-	LONGLONG timeSpan = m_currentTime-m_lastTime;
-	if (timeSpan > m_frameTime)
-	{
-		m_lastTime = m_currentTime;
-		return true;
-	}
-
-	return false;
-}
-
-bool LFrameTimer::ReadyForNextFrameEx()
-{
-	QueryPerformanceCounter( (LARGE_INTEGER*)&m_currentTime);
-
-	LONGLONG timeSpan = m_currentTime-m_lastTime; // 间隔时间
-	LONGLONG frameCount =timeSpan/m_frameTime; // 需要追赶的帧数
-	if (timeSpan > m_frameTime)
-	{
-		if (frameCount > 10) // 需要追赶的帧数大于10, 就对time进行复位, 不进行追赶
-			m_lastTime = m_currentTime;
-		else
-			m_lastTime = m_currentTime-(timeSpan-m_frameTime);
-
-		return true;
-	}
-
-	return false;
-}
 

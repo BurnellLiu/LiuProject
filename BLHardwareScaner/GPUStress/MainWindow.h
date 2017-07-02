@@ -2,9 +2,19 @@
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
+#include <vector>
+using std::vector;
+
 #include "LWindowGDI.h"
 
 #include "Mandelbrot.h"
+
+
+struct CenterPoint 
+{
+    double X;
+    double Y;
+};
 
 class LGameWindow : public LWindow
 {
@@ -24,7 +34,17 @@ private:
 	LBackBufferDC m_backDC; // 背景缓冲区
 
     MandelbrotParam m_param; // 曼德勃罗特参数
-    MandelbrotImage m_image; // 曼德菠萝特图像参数
+    MandelbrotImage m_image; // 曼德勃罗特图像参数
+
+    double m_dis; // 曼德勃罗特计算空间, 左右上下距离中心点的距离
+    double m_scale; // 曼德勃罗特计算空间缩放系数
+
+    unsigned int m_cPointIndex; // 中心点索引
+    vector<CenterPoint> m_cPointList; // 中心点列表
+
+    unsigned int m_frameCount; // 画面帧计数
+    unsigned int m_fps; // 每秒帧速度
+    double m_timeM; // 耗时, 单位分钟
 };
 
 #endif

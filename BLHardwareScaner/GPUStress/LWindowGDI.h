@@ -218,37 +218,44 @@ private:
 	HBITMAP m_hOldBitMap; ///< 后备缓冲区原始位图
 };
 
-/// @brief 帧定时器类
-/// 
-/// 
-class LFrameTimer
+/// @高精度计时器类
+class LTimer
 {
 public:
-	/// @brief 构造函数
-	/// @param[in] fps 每秒帧数
-	explicit LFrameTimer(IN int fps);
-	~LFrameTimer();
+    LTimer()
+    {
+        // 获取CPU的时钟频率(即每秒的滴答数)
+        QueryPerformanceFrequency((LARGE_INTEGER*)&m_performanceFreq);
+    }
 
-	/// @brief 开始计时
-	void Start();
+    /// @brief 开始计时
+    void Start()
+    {
+        m_startTime = 0;
+        m_time = 0;
+        QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
+    }
 
-	/// @brief 是否到达下一帧时间
-	/// @return true(到达), false(未到达)
-	bool ReadyForNextFrame();
+    /// @brief 结束计时
+    void End()
+    {
+        LONGLONG currentTime = 0;
+        QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
+        m_time = currentTime - m_startTime;
+    }
 
-	/// @brief 是否到达下一帧时间
-	///
-	/// 该方法会追赶
-	/// @return true(到达), false(未到达)
-	bool ReadyForNextFrameEx();
+    /// @brief 获取计时时间
+    /// @return 计时时间(单位毫秒)
+    double Time()
+    {
+        double time = 0.0f;
+        time = (double)(m_time * 1000) / (double)m_performanceFreq;
+        return time;
+    }
 
 private:
-	int m_fps; ///< 每秒帧数
-	LONGLONG m_performanceFreq; ///< CPU时钟频率(即每秒钟的滴答数)
-	LONGLONG m_frameTime; ///< 每帧的滴答数
-	LONGLONG m_lastTime; ///< 上次时间
-	LONGLONG m_currentTime; ///< 当前时间
-	
-	
+    LONGLONG m_time; ///< 计时时间 
+    LONGLONG m_startTime; ///< 计时器开始时间 
+    LONGLONG m_performanceFreq; ///< CPU时钟频率(即每秒钟的滴答数)
 };
 #endif
