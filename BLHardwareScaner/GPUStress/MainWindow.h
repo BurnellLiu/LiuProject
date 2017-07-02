@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef _MAINWINDOW_H_
 #define _MAINWINDOW_H_
 
@@ -31,20 +31,23 @@ private:
 	virtual LRESULT MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
 
 private:
-	LBackBufferDC m_backDC; // ±³¾°»º³åÇø
+	LBackBufferDC m_backDC; // èƒŒæ™¯ç¼“å†²åŒº
 
-    MandelbrotParam m_param; // ÂüµÂ²ªÂŞÌØ²ÎÊı
-    MandelbrotImage m_image; // ÂüµÂ²ªÂŞÌØÍ¼Ïñ²ÎÊı
+    AccDevice m_defaultAcc; // é»˜è®¤åŠ é€Ÿå™¨è®¾å¤‡
 
-    double m_dis; // ÂüµÂ²ªÂŞÌØ¼ÆËã¿Õ¼ä, ×óÓÒÉÏÏÂ¾àÀëÖĞĞÄµãµÄ¾àÀë
-    double m_scale; // ÂüµÂ²ªÂŞÌØ¼ÆËã¿Õ¼äËõ·ÅÏµÊı
+    MandelbrotParam<float> m_paramFloat; // æ›¼å¾·å‹ƒç½—ç‰¹å‚æ•°(å•ç²¾åº¦ç‰ˆ)
+    MandelbrotParam<double> m_paramDouble; // æ›¼å¾·å‹ƒç½—ç‰¹å‚æ•°(åŒç²¾åº¦ç‰ˆ)
+    MandelbrotImage m_image; // æ›¼å¾·å‹ƒç½—ç‰¹å›¾åƒå‚æ•°
 
-    unsigned int m_cPointIndex; // ÖĞĞÄµãË÷Òı
-    vector<CenterPoint> m_cPointList; // ÖĞĞÄµãÁĞ±í
+    double m_dis; // æ›¼å¾·å‹ƒç½—ç‰¹è®¡ç®—ç©ºé—´, å·¦å³ä¸Šä¸‹è·ç¦»ä¸­å¿ƒç‚¹çš„è·ç¦»
+    double m_scale; // æ›¼å¾·å‹ƒç½—ç‰¹è®¡ç®—ç©ºé—´ç¼©æ”¾ç³»æ•°
 
-    unsigned int m_frameCount; // »­ÃæÖ¡¼ÆÊı
-    unsigned int m_fps; // Ã¿ÃëÖ¡ËÙ¶È
-    double m_timeM; // ºÄÊ±, µ¥Î»·ÖÖÓ
+    unsigned int m_cPointIndex; // ä¸­å¿ƒç‚¹ç´¢å¼•
+    vector<CenterPoint> m_cPointList; // ä¸­å¿ƒç‚¹åˆ—è¡¨
+
+    unsigned int m_frameCount; // ç”»é¢å¸§è®¡æ•°
+    unsigned int m_fps; // æ¯ç§’å¸§é€Ÿåº¦
+    double m_timeM; // è€—æ—¶, å•ä½åˆ†é’Ÿ
 };
 
 #endif

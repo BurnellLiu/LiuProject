@@ -1,10 +1,15 @@
-/*
+ï»¿/*
  * Author: Burnell Liu  Date:  Email: burnell_liu@outlook.com 
  * Description:
- * ¸ÃÍ·ÎÄ¼şÖĞÉùÃ÷ÁËÊ¹ÓÃGPU¼ÆËãÂüµÂ²ªÂŞÌØ¼¯µÄ·½·¨
+ * è¯¥å¤´æ–‡ä»¶ä¸­å£°æ˜äº†ä½¿ç”¨å¹¶è¡ŒåŠ é€Ÿå™¨è®¡ç®—æ›¼å¾·å‹ƒç½—ç‰¹é›†çš„æ–¹æ³•
  */
 
 #pragma once
+
+#include <string>
+using std::wstring;
+#include <vector>
+using std::vector;
 
 #ifndef IN
 #define IN
@@ -18,40 +23,100 @@
 #define OUT
 #endif
 
+#ifndef LTEMPLATE
+#define LTEMPLATE template<typename Type>
+#endif
+
 /// <SUMMARY>
-/// ÂüµÂ²ªÂŞÌØÍ¼Ïñ½á¹¹
+/// æ›¼å¾·å‹ƒç½—ç‰¹å›¾åƒç»“æ„
 /// </SUMMARY>
 struct MandelbrotImage
 {
-    unsigned int Width; // Í¼Ïñ¿í
-    unsigned int Height; // Í¼Ïñ¸ß
-    unsigned int* PData; // ´æ´¢Í¼ÏñÊı¾İ, Çë×ÔĞĞ·ÖÅäºÍÊÍ·Å¸ÃÄÚ´æ»º³åÇø, Ó¦¸Ã·ÖÅäWidth*Height´óĞ¡µÄÄÚ´æ
+    unsigned int Width; // å›¾åƒå®½
+    unsigned int Height; // å›¾åƒé«˜
+    unsigned int* PData; // å­˜å‚¨å›¾åƒæ•°æ®, è¯·è‡ªè¡Œåˆ†é…å’Œé‡Šæ”¾è¯¥å†…å­˜ç¼“å†²åŒº, åº”è¯¥åˆ†é…Width*Heightå¤§å°çš„å†…å­˜
 };
 
 /// <SUMMARY>
-/// ÂüµÂ²ªÂŞÌØ²ÎÊı½á¹¹
+/// æ›¼å¾·å‹ƒç½—ç‰¹å‚æ•°ç»“æ„
 /// </SUMMARY>
-struct MandelbrotParam
+LTEMPLATE struct MandelbrotParam
 {
-    double RealMin; // Êµ²¿×îĞ¡Öµ
-    double ImgMin; // Ğé²¿×îĞ¡Öµ
-    double RealMax; // Êµ²¿×î´óÖµ
-    double ImgMax; // Ğé²¿×î´óÖµ
-    unsigned int MaxIter; // ×î´óµü´ú´ÎÊı
+    Type RealMin; // å®éƒ¨æœ€å°å€¼
+    Type ImgMin; // è™šéƒ¨æœ€å°å€¼
+    Type RealMax; // å®éƒ¨æœ€å¤§å€¼
+    Type ImgMax; // è™šéƒ¨æœ€å¤§å€¼
+    unsigned int MaxIter; // æœ€å¤§è¿­ä»£æ¬¡æ•°
 };
 
 /// <SUMMARY>
-/// Éú³ÉÂüµÂ²ªÂŞÌØ¼¯
+/// åŠ é€Ÿå™¨ç”Ÿæˆæ›¼å¾·å‹ƒç½—ç‰¹é›†(å•ç²¾åº¦ç‰ˆæœ¬)
 /// </SUMMARY>
 /// <PARAM name="param" dir="IN">
-/// ÂüµÂ²ªÂŞÌØ¼ÆËã²ÎÊı
+/// æ›¼å¾·å‹ƒç½—ç‰¹è®¡ç®—å‚æ•°
 /// </PARAM>
 /// <PARAM name="image" dir="INOUT">
-/// ÂüµÂ²ªÂŞÌØÍ¼Ïñ
-/// ¼ÆËã½áÊøºó»áÌî³äPData
+/// æ›¼å¾·å‹ƒç½—ç‰¹å›¾åƒ
+/// è®¡ç®—ç»“æŸåä¼šå¡«å……PData
 /// </PARAM>
 /// <RETURN>
-/// ²ÎÊıÓĞÎó·µ»Øfalse
+/// å‚æ•°æœ‰è¯¯è¿”å›false
 /// </RETURN>
-bool GPUGenerateMandelbrot(IN MandelbrotParam& param, INOUT MandelbrotImage& image);
+bool AccGenerateMandelbrot(IN const MandelbrotParam<float>& param, INOUT MandelbrotImage& image);
+
+/// <SUMMARY>
+/// åŠ é€Ÿå™¨ç”Ÿæˆæ›¼å¾·å‹ƒç½—ç‰¹é›†(åŒç²¾åº¦ç‰ˆæœ¬)
+/// </SUMMARY>
+/// <PARAM name="param" dir="IN">
+/// æ›¼å¾·å‹ƒç½—ç‰¹è®¡ç®—å‚æ•°
+/// </PARAM>
+/// <PARAM name="image" dir="INOUT">
+/// æ›¼å¾·å‹ƒç½—ç‰¹å›¾åƒ
+/// è®¡ç®—ç»“æŸåä¼šå¡«å……PData
+/// </PARAM>
+/// <RETURN>
+/// å‚æ•°æœ‰è¯¯è¿”å›false
+/// </RETURN>
+bool AccGenerateMandelbrot(IN const MandelbrotParam<double>& param, INOUT MandelbrotImage& image);
+
+
+/// <SUMMARY>
+/// åŠ é€Ÿå™¨è®¾å¤‡ç»“æ„
+/// </SUMMARY>
+struct AccDevice
+{
+    bool SupportDouble; // æ ‡å¿—æ˜¯å¦æ”¯æŒåŒç²¾åº¦æµ®ç‚¹æ•°
+    bool IsEmulated; // æ ‡å¿—æ˜¯å¦æ˜¯ä»¿çœŸåŠ é€Ÿå™¨
+    wstring DevicePath; // è®¾å¤‡è·¯å¾„
+    wstring DeviceDesc; // è®¾å¤‡æè¿°
+};
+
+
+/// <SUMMARY>
+/// è·å–æ‰€æœ‰çš„åŠ é€Ÿå™¨è®¾å¤‡
+/// </SUMMARY>
+/// <PARAM name="accDevice" dir="OUT">
+/// å­˜å‚¨è®¾å¤‡å±æ€§
+/// </PARAM>
+void GetAccelerators(OUT vector<AccDevice>& accDevicesVec);
+
+
+/// <SUMMARY>
+/// è®¾ç½®æŒ‡å®šçš„è®¾å¤‡ä½œä¸ºé»˜è®¤åŠ é€Ÿå™¨
+/// </SUMMARY>
+/// <PARAM name="devicePath" dir="IN">
+/// æŒ‡å®šçš„è®¾å¤‡è·¯å¾„
+/// </PARAM>
+/// <RETURN>
+/// æˆåŠŸè¿”å›true, å¤±è´¥è¿”å›false
+/// </RETURN>
+bool SetDefaultAccelerator(IN const wstring& devicePath);
+
+/// <SUMMARY>
+/// è·å–é»˜è®¤åŠ é€Ÿå™¨
+/// </SUMMARY>
+/// <PARAM name="accDevice" dir="OUT">
+/// å­˜å‚¨åŠ é€Ÿå™¨å±æ€§
+/// </PARAM>
+void GetDefaultAccelerator(OUT AccDevice& accDevice);
     

@@ -1,8 +1,10 @@
-
+ï»¿
 #include "MainWindow.h"
 
-#define ZOOM_IN 1.005 // ·Å´óÏµÊı
-#define ZOOM_OUT 0.995 // ËõĞ¡ÏµÊı
+#define ZOOM_IN 1.005 // æ”¾å¤§ç³»æ•°
+#define ZOOM_OUT 0.995 // ç¼©å°ç³»æ•°
+
+#define MAX_ITER 256 // æœ€å¤§è¿­ä»£æ¬¡æ•°
 
 LGameWindow::LGameWindow()
 {
@@ -26,21 +28,22 @@ void LGameWindow::InitGame()
     int width = this->GetClientWidth();
     int height = this->GetClientHeight();
 
-    // ³õÊ¼»¯±³¾°»º³åÇø
+    // åˆå§‹åŒ–èƒŒæ™¯ç¼“å†²åŒº
     HWND hWnd = this->GetWndHandle();
     m_backDC.Init(hWnd, width, height);
     
-    // ÉèÖÃ×î´óµü´úÊı
-    m_param.MaxIter = 256;
+    // è®¾ç½®æœ€å¤§è¿­ä»£æ•°
+    m_paramFloat.MaxIter = MAX_ITER;
+    m_paramDouble.MaxIter = MAX_ITER;
 
-    // ÉêÇëÍ¼ÏñĞèÒªµÄÄÚ´æ
+    // ç”³è¯·å›¾åƒéœ€è¦çš„å†…å­˜
     m_image.Width = width;
     m_image.Height = height;
     m_image.PData = new unsigned int[m_image.Width * m_image.Height];
 
-    // ³õÊ¼»¯¾àÀëÎª0.999
+    // åˆå§‹åŒ–è·ç¦»ä¸º0.999
     m_dis = 0.999;
-    // ³õÊ¼»¯ÎªËõĞ¡ÏµÊı
+    // åˆå§‹åŒ–ä¸ºç¼©å°ç³»æ•°
     m_scale = ZOOM_OUT;
 
     CenterPoint cPoint;
@@ -62,31 +65,50 @@ void LGameWindow::InitGame()
 
     m_cPointIndex = 0;
 
+    GetDefaultAccelerator(m_defaultAcc);
 }
 
 void LGameWindow::RunGame()
 {
     static unsigned int g_changeCount = 0;
 
-    // È¡³öÖĞĞÄµãÎ»ÖÃ
+    // å–å‡ºä¸­å¿ƒç‚¹ä½ç½®
     CenterPoint cPoint = m_cPointList[m_cPointIndex];
 
-    // ÂüµÂ²ªÂŞÌØ¼ÆËã¿Õ¼ä
-    m_param.RealMin = cPoint.X - m_dis;
-    m_param.RealMax = cPoint.X + m_dis;
-    m_param.ImgMin = cPoint.Y - m_dis;
-    m_param.ImgMax = cPoint.Y + m_dis;
+    // æ›¼å¾·å‹ƒç½—ç‰¹è®¡ç®—ç©ºé—´
+    m_paramFloat.RealMin = float(cPoint.X - m_dis);
+    m_paramFloat.RealMax = float(cPoint.X + m_dis);
+    m_paramFloat.ImgMin = float(cPoint.Y - m_dis);
+    m_paramFloat.ImgMax = float(cPoint.Y + m_dis);
 
-    GPUGenerateMandelbrot(m_param, m_image);
+    m_paramDouble.RealMin = cPoint.X - m_dis;
+    m_paramDouble.RealMax = cPoint.X + m_dis;
+    m_paramDouble.ImgMin = cPoint.Y - m_dis;
+    m_paramDouble.ImgMax = cPoint.Y + m_dis;
 
-    // Èç¹û¾àÀëÖµ´ïµ½×îĞ¡, ÔòËõ·ÅÏµÊı¸ÄÎª·Å´ó
-    if (m_dis <= 0.0000000001)
+    if (m_defaultAcc.SupportDouble)
     {
-        m_scale = ZOOM_IN;
-        g_changeCount++;
+        AccGenerateMandelbrot(m_paramDouble, m_image);
+        // å¦‚æœè·ç¦»å€¼è¾¾åˆ°æœ€å°, åˆ™ç¼©æ”¾ç³»æ•°æ”¹ä¸ºæ”¾å¤§
+        if (m_dis <= 0.000000000001)
+        {
+            m_scale = ZOOM_IN;
+            g_changeCount++;
+        }
+    }
+    else
+    {
+        AccGenerateMandelbrot(m_paramFloat, m_image);
+        // å¦‚æœè·ç¦»å€¼è¾¾åˆ°æœ€å°, åˆ™ç¼©æ”¾ç³»æ•°æ”¹ä¸ºæ”¾å¤§
+        if (m_dis <= 0.00001)
+        {
+            m_scale = ZOOM_IN;
+            g_changeCount++;
+        }
     }
     
-    // Èç¹û¾àÀëÖµ´ïµ½×î´ó, ÔòËõ·ÅÏµÊı¸ÄÎªËõĞ¡
+    
+    // å¦‚æœè·ç¦»å€¼è¾¾åˆ°æœ€å¤§, åˆ™ç¼©æ”¾ç³»æ•°æ”¹ä¸ºç¼©å°
     if (m_dis >= 1.0)
     {
         m_scale = ZOOM_OUT;
@@ -95,7 +117,7 @@ void LGameWindow::RunGame()
 
     m_dis = m_dis * m_scale;
 
-    // ÇĞ»»µ½±ğµÄÖĞĞÄµã
+    // åˆ‡æ¢åˆ°åˆ«çš„ä¸­å¿ƒç‚¹
     if (g_changeCount == 2)
     {
         g_changeCount = 0;
@@ -128,15 +150,28 @@ void LGameWindow::PaintGame()
     bmi.bmiHeader.biSizeImage = 0;
     StretchDIBits(hBackDC, 0, 0, width, height, 0, 0, width, height, m_image.PData, &bmi, DIB_RGB_COLORS, SRCCOPY);
 
-    // »æÖÆÖ¡ËÙÂÊºÍÀÛ¼ÆºÄÊ±
+    // ç»˜åˆ¶æ–‡æœ¬
     char strText[256] = {0};
-    int length = sprintf_s(strText, 256, "FPS: %u", m_fps);
+    
     SetTextColor(hBackDC, RGB(255, 0, 0));
-    SetBkMode(hBackDC, TRANSPARENT); // ÉèÖÃÎÄ±¾±³¾°Í¸Ã÷
+    SetBkMode(hBackDC, TRANSPARENT); // è®¾ç½®æ–‡æœ¬èƒŒæ™¯é€æ˜
+
+    int length = sprintf_s(strText, 256, "FPS: %u", m_fps);
     TextOutA(hBackDC, 10, 10, strText, length);
+
     length = sprintf_s(strText, 256, "Time: %.1lfM", m_timeM);
     TextOutA(hBackDC, 10, 30, strText, length);
-    SetBkMode(hBackDC, OPAQUE); // ÉèÖÃÎÄ±¾±³¾°²»Í¸Ã÷
+
+    length = sprintf_s(strText, 256, "IsEmulated: %s", m_defaultAcc.IsEmulated ? "True" : "False");
+    TextOutA(hBackDC, 10, 50, strText, length);
+
+    length = sprintf_s(strText, 256, "SupportDouble: %s", m_defaultAcc.SupportDouble ? "True" : "False");
+    TextOutA(hBackDC, 10, 70, strText, length);
+
+    length = sprintf_s(strText, 256, "Device: %ws", m_defaultAcc.DeviceDesc.c_str());
+    TextOutA(hBackDC, 10, 90, strText, length);
+
+    SetBkMode(hBackDC, OPAQUE); // è®¾ç½®æ–‡æœ¬èƒŒæ™¯ä¸é€æ˜
 
     m_backDC.CopyToFrontDC();
 
@@ -179,7 +214,7 @@ void LGameWindow::Exe()
 
         this->RunGame();
 
-        // Ë¢ĞÂUI
+        // åˆ·æ–°UI
         InvalidateRect(this->GetWndHandle(), NULL, TRUE);
         UpdateWindow(this->GetWndHandle());
 
@@ -189,7 +224,7 @@ void LGameWindow::Exe()
             m_fps = (unsigned int)(m_frameCount * 1000 / timer.Time());
             m_frameCount = 0;
 
-            // ÀÛ¼ÆºÄÊ±
+            // ç´¯è®¡è€—æ—¶
             m_timeM += timer.Time() / 60000.0;
         }
 
@@ -208,7 +243,7 @@ LRESULT LGameWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lP
 		return 0;
 	case WM_SIZE:
 		{
-			// ´°¿Ú´óĞ¡¸Ä±äÖØĞÂ³õÊ¼»¯ºó±¸»º³åÇø
+			// çª—å£å¤§å°æ”¹å˜é‡æ–°åˆå§‹åŒ–åå¤‡ç¼“å†²åŒº
 			int width = LOWORD(lParam);
 			int height = HIWORD(lParam);
 			this->SetSize(width, height);

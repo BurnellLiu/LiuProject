@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "Mandelbrot.h"
 
@@ -9,21 +9,21 @@ using namespace concurrency;
 using namespace fast_math;
 
 /// <SUMMARY>
-/// HSBÄ£Ê½×ª»»ÎªRGBÄ£Ê½
+/// HSBæ¨¡å¼è½¬æ¢ä¸ºRGBæ¨¡å¼
 /// </SUMMARY>
 /// <PARAM name="hue" dir="IN">
-/// É«Ïà, ÔÚ0~360¡ãµÄ±ê×¼É«ÂÖÉÏ, É«ÏàÊÇ°´Î»ÖÃ¶ÈÁ¿µÄ, È¡Öµ·¶Î§0.0~1.0
+/// è‰²ç›¸, åœ¨0~360Â°çš„æ ‡å‡†è‰²è½®ä¸Š, è‰²ç›¸æ˜¯æŒ‰ä½ç½®åº¦é‡çš„, å–å€¼èŒƒå›´0.0~1.0
 /// </PARAM>
 /// <PARAM name="saturate" dir="IN">
-/// ±¥ºÍ¶È, ±íÊ¾É«²ÊµÄ´¿¶È, È¡Öµ·¶Î§0.0~1.0
+/// é¥±å’Œåº¦, è¡¨ç¤ºè‰²å½©çš„çº¯åº¦, å–å€¼èŒƒå›´0.0~1.0
 /// </PARAM>
 /// <PARAM name="bright" dir="IN">
-/// ÁÁ¶È, ±íÊ¾É«²ÊµÄÃ÷ÁÁ¶È, È¡Öµ·¶Î§0.0~1.0
+/// äº®åº¦, è¡¨ç¤ºè‰²å½©çš„æ˜äº®åº¦, å–å€¼èŒƒå›´0.0~1.0
 /// </PARAM>
 /// <RETURN>
-/// ·µ»ØRGBÑÕÉ«Öµ
+/// è¿”å›RGBé¢œè‰²å€¼
 /// </RETURN>
-unsigned int HSB2RGB(IN float hue, IN float saturate, IN float bright) restrict(amp)
+static unsigned int HSB2RGB(IN float hue, IN float saturate, IN float bright) restrict(amp)
 {
 
     float red, green, blue;
@@ -63,9 +63,9 @@ unsigned int HSB2RGB(IN float hue, IN float saturate, IN float bright) restrict(
 }
 
 
-bool GPUGenerateMandelbrot(IN MandelbrotParam& param, INOUT MandelbrotImage& image)
+LTEMPLATE static bool AMPGenerateMandelbrot(IN const MandelbrotParam<Type>& param, INOUT MandelbrotImage& image)
 {
-    // ¼ì²é²ÎÊı
+    // æ£€æŸ¥å‚æ•°
     if (image.Width == 0 || 
         image.Height == 0 || 
         image.PData == 0)
@@ -79,54 +79,54 @@ bool GPUGenerateMandelbrot(IN MandelbrotParam& param, INOUT MandelbrotImage& ima
         return false;
     }
 
-    const double REAL_MIN = param.RealMin;
-    const double REAL_MAX = param.RealMax;
-    const double IMG_MIN = param.ImgMin;
-    const double IMG_MAX = param.ImgMax;
+    const Type REAL_MIN = param.RealMin;
+    const Type REAL_MAX = param.RealMax;
+    const Type IMG_MIN = param.ImgMin;
+    const Type IMG_MAX = param.ImgMax;
     const unsigned int HEIGHT = image.Height;
     const unsigned int WIDTH = image.Width;
     const unsigned int MAX_ITER = param.MaxIter;
 
-    // Êµ²¿µİ½ø±ÈÀı
-    const double SCALE_REAL = (REAL_MAX - REAL_MIN) / WIDTH;
-    // Ğé²¿µİ½ø±ÈÀı
-    const double SCALE_IMG = (IMG_MAX - IMG_MIN) / HEIGHT;
+    // å®éƒ¨é€’è¿›æ¯”ä¾‹
+    const Type SCALE_REAL = (REAL_MAX - REAL_MIN) / WIDTH;
+    // è™šéƒ¨é€’è¿›æ¯”ä¾‹
+    const Type SCALE_IMG = (IMG_MAX - IMG_MIN) / HEIGHT;
 
-    // ¶¨ÒåÍ¼ÏñÔÚÏÔ´æÖĞµÄÓ³Éä
+    // å®šä¹‰å›¾åƒåœ¨æ˜¾å­˜ä¸­çš„æ˜ å°„
     array_view<unsigned int, 2> imageView(HEIGHT, WIDTH, image.PData);
-    // ·ÅÆúÄÚ´æµ½ÏÔ´æµÄ¸´ÖÆ
+    // æ”¾å¼ƒå†…å­˜åˆ°æ˜¾å­˜çš„å¤åˆ¶
     imageView.discard_data();
 
-    // Ê¹ÓÃGPU½øĞĞ²¢ĞĞÔËËã
+    // ä½¿ç”¨GPUè¿›è¡Œå¹¶è¡Œè¿ç®—
     parallel_for_each(imageView.extent, [=](index<2> i) restrict(amp)
     {
-        int iReal = i[1]; // ÁĞË÷Òı, Ò²¾ÍÊÇXÖá(ÊµÖá)
-        int iImg = i[0]; // ĞĞË÷Òı, Ò²¾ÍÊÇYÖá(ĞéÖá)
+        int iReal = i[1]; // åˆ—ç´¢å¼•, ä¹Ÿå°±æ˜¯Xè½´(å®è½´)
+        int iImg = i[0]; // è¡Œç´¢å¼•, ä¹Ÿå°±æ˜¯Yè½´(è™šè½´)
 
         /*
-        ÂüµÂ²ªÂŞÌØ¼¯µü´ú¹«Ê½Zn+1=(Zn)^2+C
+        æ›¼å¾·å‹ƒç½—ç‰¹é›†è¿­ä»£å…¬å¼Zn+1=(Zn)^2+C
         */
 
-        // Ã¿¸öµã¶ÔÓ¦µÄC
-        double cReal = REAL_MIN + (double)iReal * SCALE_REAL;
-        double cImg = IMG_MIN + (double)(HEIGHT - iImg) * SCALE_IMG;
+        // æ¯ä¸ªç‚¹å¯¹åº”çš„C
+        Type cReal = REAL_MIN + (Type)iReal * SCALE_REAL;
+        Type cImg = IMG_MIN + (Type)(HEIGHT - iImg) * SCALE_IMG;
 
-        // Zn³õÊ¼Îª0 0
-        double zReal = 0;
-        double zImg = 0;
+        // Znåˆå§‹ä¸º0 0
+        Type zReal = 0;
+        Type zImg = 0;
 
-        const double MAX_LENGTH = 4.0;
-        double length = 0;
-        double temp = 0;
+        const Type MAX_LENGTH = 4.0;
+        Type length = 0;
+        Type temp = 0;
         unsigned int count = 0;
         do 
         {
             count++;
 
-            // ¼ÆËãZn+1µÄÊµ²¿
+            // è®¡ç®—Zn+1çš„å®éƒ¨
             temp = zReal * zReal - zImg * zImg + cReal;
 
-            // ¼ÆËãZn+1µÄĞé²¿
+            // è®¡ç®—Zn+1çš„è™šéƒ¨
             zImg = 2 * zReal * zImg + cImg;
 
             zReal = temp;
@@ -135,18 +135,70 @@ bool GPUGenerateMandelbrot(IN MandelbrotParam& param, INOUT MandelbrotImage& ima
 
         } while ((count < MAX_ITER) && (length < MAX_LENGTH));
         
-        // ¼ÆËãÉ«Ïà
+        // è®¡ç®—è‰²ç›¸
         float n = count / 64.0f; 
         float h = 1.0f - 2.0f * fabs(0.5f - n + floor(n));
         
-        // ÌÓÒİµãµÄÁÁ¶ÈÎª0, ÌÓÒİµã¼´ÊÇcout == MAX_ITER
+        // é€ƒé€¸ç‚¹çš„äº®åº¦ä¸º0, é€ƒé€¸ç‚¹å³æ˜¯cout == MAX_ITER
         float bfactor = direct3d::clamp((float)(MAX_ITER - count), 0.0f, 1.0f);
 
         imageView[i] = HSB2RGB(h, 0.75f, (1.0f - h * h * 0.83f) * bfactor);
     });
 
-    // ½«ÏÔ´æÖĞµÄÊı¾İ¿½±´»ØÄÚ´æ
+    // å°†æ˜¾å­˜ä¸­çš„æ•°æ®æ‹·è´å›å†…å­˜
     imageView.synchronize();
 
     return true;
+}
+
+bool AccGenerateMandelbrot(IN const MandelbrotParam<float>& param, INOUT MandelbrotImage& image)
+{
+    return AMPGenerateMandelbrot<float>(param, image);
+}
+
+bool AccGenerateMandelbrot(IN const MandelbrotParam<double>& param, INOUT MandelbrotImage& image)
+{
+    return AMPGenerateMandelbrot<double>(param, image);
+}
+
+
+void GetAccelerators(OUT vector<AccDevice>& accDevicesVec)
+{
+    accDevicesVec.clear();
+
+    vector<accelerator> accs = accelerator::get_all();
+    for (unsigned int i = 0; i < accs.size(); i++)
+    {
+        AccDevice accDevice;
+        accDevice.DeviceDesc = accs[i].description;
+        accDevice.DevicePath = accs[i].device_path;
+        accDevice.IsEmulated = accs[i].is_emulated;
+        accDevice.SupportDouble = accs[i].supports_double_precision;
+
+        accDevicesVec.push_back(accDevice);
+    }
+}
+
+bool SetDefaultAccelerator(IN const wstring& devicePath)
+{
+    vector<accelerator> accs = accelerator::get_all();
+    for (unsigned int i = 0; i < accs.size(); i++)
+    {
+        if (accs[i].device_path == devicePath)
+        {
+            accelerator::set_default(devicePath);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void GetDefaultAccelerator(OUT AccDevice& accDevice)
+{
+    accelerator acc;
+    accDevice.DeviceDesc = acc.description;
+    accDevice.DevicePath = acc.device_path;
+    accDevice.IsEmulated = acc.is_emulated;
+    accDevice.SupportDouble = acc.supports_double_precision;
 }

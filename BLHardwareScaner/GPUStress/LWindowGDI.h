@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef _LWINDOWGDI_H_
 #define _LWINDOWGDI_H_
 
@@ -9,44 +9,44 @@ using std::string;
 
 //#include "LMacroDefine.h"
 
-/// @brief Ó¦ÓÃ³ÌĞò²ÎÊıÀà
+/// @brief åº”ç”¨ç¨‹åºå‚æ•°ç±»
 ///
 /// 
 class LApParam
 {
 public:
-	/// @brief »ñÈ¡Ó¦ÓÃ³ÌĞòÊµÀı¾ä±ú
-	/// @return Ó¦ÓÃ³ÌĞòÊµÀı¾ä±ú
+	/// @brief è·å–åº”ç”¨ç¨‹åºå®ä¾‹å¥æŸ„
+	/// @return åº”ç”¨ç¨‹åºå®ä¾‹å¥æŸ„
 	static HINSTANCE GetInstance()
 	{
 		return m_hInstance;
 	}
 
-	/// @brief »ñÈ¡Ó¦ÓÃ³ÌĞòÃüÁîĞĞ²ÎÊı
-	/// @param[in] cmdLine ÃüÁîĞĞ²ÎÊı
+	/// @brief è·å–åº”ç”¨ç¨‹åºå‘½ä»¤è¡Œå‚æ•°
+	/// @param[in] cmdLine å‘½ä»¤è¡Œå‚æ•°
 	static void GetCmdLine(OUT string& cmdLine)
 	{
 		cmdLine.clear();
 		cmdLine.append(m_cmdLine);
 	}
 
-	/// @brief »ñÈ¡Ó¦ÓÃ³ÌĞòÏÔÊ¾²ÎÊı
-	/// @return Ó¦ÓÃ³ÌĞòÏÔÊ¾²ÎÊı
+	/// @brief è·å–åº”ç”¨ç¨‹åºæ˜¾ç¤ºå‚æ•°
+	/// @return åº”ç”¨ç¨‹åºæ˜¾ç¤ºå‚æ•°
 	static int GetCmdShow()
 	{
 		return m_cmdShow;
 	}
 
 private:
-	static HINSTANCE m_hInstance;  ///< Ó¦ÓÃ³ÌĞòÊµÀı¾ä±ú
-	static string m_cmdLine;  ///< ÃüÁîĞĞ²ÎÊı
-	static int m_cmdShow;  ///< ÏÔÊ¾²ÎÊı
+	static HINSTANCE m_hInstance;  ///< åº”ç”¨ç¨‹åºå®ä¾‹å¥æŸ„
+	static string m_cmdLine;  ///< å‘½ä»¤è¡Œå‚æ•°
+	static int m_cmdShow;  ///< æ˜¾ç¤ºå‚æ•°
 
 	friend int WINAPI WinMain(IN HINSTANCE hInstance, IN HINSTANCE hPrevInstance, 
 		IN LPSTR lpCmdLine, IN int nShowCmd );
 };
 
-/// @brief ×Ô¶¨Òå´°¿Ú»ùÀà
+/// @brief è‡ªå®šä¹‰çª—å£åŸºç±»
 /// 
 /// 
 class LWindow
@@ -55,91 +55,91 @@ public:
 	LWindow();
 	virtual ~LWindow();
    
-	/// @brief ÉèÖÃ´°¿ÚÊÇ·ñ¿ÉÒÔ¸Ä±ä´óĞ¡
-	/// @param[in] bRet true(¿ÉÒÔ¸Ä±ä´óĞ¡) false(²»¿ÉÒÔ¸Ä±ä´óĞ¡)
+	/// @brief è®¾ç½®çª—å£æ˜¯å¦å¯ä»¥æ”¹å˜å¤§å°
+	/// @param[in] bRet true(å¯ä»¥æ”¹å˜å¤§å°) false(ä¸å¯ä»¥æ”¹å˜å¤§å°)
 	void SetSizingBorder(IN bool bRet);
 
-    /// @brief ÉèÖÃ´°¿ÚÊÇ·ñÏÔÊ¾±êÌâ
-    /// @param[in] bRet true(ÏÔÊ¾±êÌâ) false(²»ÏÔÊ¾±êÌâ)
+    /// @brief è®¾ç½®çª—å£æ˜¯å¦æ˜¾ç¤ºæ ‡é¢˜
+    /// @param[in] bRet true(æ˜¾ç¤ºæ ‡é¢˜) false(ä¸æ˜¾ç¤ºæ ‡é¢˜)
     void SetShowCaption(IN bool bRet);
 
-    /// @brief ÉèÖÃ´°¿ÚÊÇ·ñÏÔÊ¾ÏµÍ³²Ëµ¥
+    /// @brief è®¾ç½®çª—å£æ˜¯å¦æ˜¾ç¤ºç³»ç»Ÿèœå•
     ///
-    /// ÉèÖÃÏÔÊ¾ÏµÍ³²Ëµ¥±ØĞèÍ¬Ê±ÉèÖÃÏÔÊ¾±êÌâ
-    /// @param[in] bRet true(ÏÔÊ¾ÏµÍ³²Ëµ¥) false(²»ÏÔÊ¾ÏµÍ³²Ëµ¥)
+    /// è®¾ç½®æ˜¾ç¤ºç³»ç»Ÿèœå•å¿…éœ€åŒæ—¶è®¾ç½®æ˜¾ç¤ºæ ‡é¢˜
+    /// @param[in] bRet true(æ˜¾ç¤ºç³»ç»Ÿèœå•) false(ä¸æ˜¾ç¤ºç³»ç»Ÿèœå•)
     void SetShowSysMenu(IN bool bRet);
 
-	/// @brief ÉèÖÃ´°¿ÚÏÔÊ¾×îĞ¡»¯°´Å¥
+	/// @brief è®¾ç½®çª—å£æ˜¾ç¤ºæœ€å°åŒ–æŒ‰é’®
     ///
-    /// ÉèÖÃÏÔÊ¾×îĞ¡»¯°´Å¥±ØĞèÍ¬Ê±ÉèÖÃÏÔÊ¾ÏµÍ³²Ëµ¥
-	/// @param[in] bRet true(ÏÔÊ¾×îĞ¡»¯°´Å¥) false(²»ÏÔÊ¾×îĞ¡»¯°´Å¥)
+    /// è®¾ç½®æ˜¾ç¤ºæœ€å°åŒ–æŒ‰é’®å¿…éœ€åŒæ—¶è®¾ç½®æ˜¾ç¤ºç³»ç»Ÿèœå•
+	/// @param[in] bRet true(æ˜¾ç¤ºæœ€å°åŒ–æŒ‰é’®) false(ä¸æ˜¾ç¤ºæœ€å°åŒ–æŒ‰é’®)
 	void SetShowMinimizeBox(IN bool bRet);
 
-	/// @brief ÉèÖÃ´°¿ÚÏÔÊ¾×î´ó»¯°´Å¥
+	/// @brief è®¾ç½®çª—å£æ˜¾ç¤ºæœ€å¤§åŒ–æŒ‰é’®
     ///
-    /// ÉèÖÃÏÔÊ¾×î´ó»¯°´Å¥±ØĞèÍ¬Ê±ÉèÖÃÏÔÊ¾ÏµÍ³²Ëµ¥
-	/// @param[in] bRet true(ÏÔÊ¾×î´ó»¯°´Å¥) false(²»ÏÔÊ¾×î´ó»¯°´Å¥)
+    /// è®¾ç½®æ˜¾ç¤ºæœ€å¤§åŒ–æŒ‰é’®å¿…éœ€åŒæ—¶è®¾ç½®æ˜¾ç¤ºç³»ç»Ÿèœå•
+	/// @param[in] bRet true(æ˜¾ç¤ºæœ€å¤§åŒ–æŒ‰é’®) false(ä¸æ˜¾ç¤ºæœ€å¤§åŒ–æŒ‰é’®)
 	void SetShowMaximizeBox(IN bool bRet);
 
-    /// @brief ÉèÖÃ´°¿ÚÎ»ÖÃ(Ä¬ÈÏ¾ÓÖĞÏÔÊ¾)
-    /// @param[in] x XÖá
-    /// @param[in] y YÖá
+    /// @brief è®¾ç½®çª—å£ä½ç½®(é»˜è®¤å±…ä¸­æ˜¾ç¤º)
+    /// @param[in] x Xè½´
+    /// @param[in] y Yè½´
     void SetPosition(IN int x, IN int y);
 
-	/// @brief ÉèÖÃ´°¿Ú´óĞ¡
-	/// @param[in] width ¿í¶È
-	/// @param[in] height ¸ß¶È
+	/// @brief è®¾ç½®çª—å£å¤§å°
+	/// @param[in] width å®½åº¦
+	/// @param[in] height é«˜åº¦
 	void SetSize(IN int width, IN int height);
 
-	/// @brief ÉèÖÃ´°¿Ú±êÌâ
-	/// @param[in] title ±êÌâ
+	/// @brief è®¾ç½®çª—å£æ ‡é¢˜
+	/// @param[in] title æ ‡é¢˜
 	void SetTitle(IN const string& title);
 
-	/// @brief »ñÈ¡´°¿Ú¿í¶È
-	/// @return ´°¿Ú¿í¶È
+	/// @brief è·å–çª—å£å®½åº¦
+	/// @return çª—å£å®½åº¦
 	int GetWidth();
 
-	/// @brief »ñÈ¡´°¿Ú¸ß¶È
-	/// @return ´°¿Ú¸ß¶È
+	/// @brief è·å–çª—å£é«˜åº¦
+	/// @return çª—å£é«˜åº¦
 	int GetHeight();
 
-    /// @brief »ñÈ¡¿Í»§Çø´°¿Ú¿í¶È
-    /// @return ¿Í»§Çø¿í¶È
+    /// @brief è·å–å®¢æˆ·åŒºçª—å£å®½åº¦
+    /// @return å®¢æˆ·åŒºå®½åº¦
     int GetClientWidth();
 
-    /// @brief »ñÈ¡¿Í»§Çø´°¿Ú¸ß¶È
-    /// @return ¿Í»§Çø¸ß¶È
+    /// @brief è·å–å®¢æˆ·åŒºçª—å£é«˜åº¦
+    /// @return å®¢æˆ·åŒºé«˜åº¦
     int GetClientHeight();
 
-	/// @brief »ñÈ¡´°¿Ú¾ä±ú
-	/// @return ´°¿Ú¾ä±ú
+	/// @brief è·å–çª—å£å¥æŸ„
+	/// @return çª—å£å¥æŸ„
 	HWND GetWndHandle();
 
-	/// @brief ÏÔÊ¾´°¿Ú
+	/// @brief æ˜¾ç¤ºçª—å£
 	void Show();
 
-	/// @brief ½øÈëÏûÏ¢Ñ­»·
+	/// @brief è¿›å…¥æ¶ˆæ¯å¾ªç¯
 	///
-	/// Ö»ÓĞÖ÷´°¿ÚÔÚLMainº¯ÊıÖĞ²Å¿Éµ÷ÓÃ¸Ãº¯Êı
+	/// åªæœ‰ä¸»çª—å£åœ¨LMainå‡½æ•°ä¸­æ‰å¯è°ƒç”¨è¯¥å‡½æ•°
 	virtual void Exe();
 
 private:
-	/// @brief ´´½¨´°¿Ú
+	/// @brief åˆ›å»ºçª—å£
 	///
-	/// ¸Ã·½·¨»á±»Show()ÔÚµÚÒ»´Î±»µ÷ÓÃÊ±µ÷ÓÃ
+	/// è¯¥æ–¹æ³•ä¼šè¢«Show()åœ¨ç¬¬ä¸€æ¬¡è¢«è°ƒç”¨æ—¶è°ƒç”¨
 	void Create();
 
-	/// @brief ´°¿Ú×Ô¼ºµÄÏûÏ¢´¦Àí·½·¨
+	/// @brief çª—å£è‡ªå·±çš„æ¶ˆæ¯å¤„ç†æ–¹æ³•
 	///
-	/// ¸Ã·½·¨½ÓÊÜ²»µ½WM_CREATEÏûÏ¢
+	/// è¯¥æ–¹æ³•æ¥å—ä¸åˆ°WM_CREATEæ¶ˆæ¯
 	/// @param[in] message
 	/// @param[in] wParam
 	/// @param[in] lParam
 	/// @return 
 	virtual LRESULT MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
 
-	/// @brief ´°¿Ú¹ı³Ì»Øµ÷º¯Êı
-	/// @param[in] hwnd ´°¿Ú¾ä±ú
+	/// @brief çª—å£è¿‡ç¨‹å›è°ƒå‡½æ•°
+	/// @param[in] hwnd çª—å£å¥æŸ„
 	/// @param[in] message
 	/// @param[in] wParam
 	/// @param[in] lParam
@@ -150,85 +150,85 @@ private:
 	void operator = (const LWindow&);
 
 private:
-	static int m_wndCount; ///< ´°¿Ú¼ÆÊı
+	static int m_wndCount; ///< çª—å£è®¡æ•°
 
 private:
-	WNDCLASSEX m_wndClassEx; ///< ´°¿ÚÀà½á¹¹
-	HWND m_hWnd;  ///< ´°¿Ú¾ä±ú
+	WNDCLASSEX m_wndClassEx; ///< çª—å£ç±»ç»“æ„
+	HWND m_hWnd;  ///< çª—å£å¥æŸ„
 
-	bool m_bWndHadCreated; ///< ´°¿ÚÊÇ·ñ±»´´½¨
-	string m_wndClassName; ///< ´°¿ÚÀàÃû³Æ
-	string m_wndTitle; ///< ´°¿Ú±êÌâ
-	int m_wndHeight; ///< ´°¿Ú¸ß¶È
-	int m_wndWidth; ///< ´°¿Ú¿í¶È
+	bool m_bWndHadCreated; ///< çª—å£æ˜¯å¦è¢«åˆ›å»º
+	string m_wndClassName; ///< çª—å£ç±»åç§°
+	string m_wndTitle; ///< çª—å£æ ‡é¢˜
+	int m_wndHeight; ///< çª—å£é«˜åº¦
+	int m_wndWidth; ///< çª—å£å®½åº¦
 
-    bool m_bUseDefaultPos; ///< ´°¿ÚÊÇ·ñÊ¹ÓÃÄ¬ÈÏÎ»ÖÃ(¾ÓÖĞ)
-    int m_wndPosX; ///< ´°¿ÚÎ»ÖÃX×ø±ê
-    int m_wndPosY; ///< ´°¿ÚÎ»ÖÃY×ø±ê
+    bool m_bUseDefaultPos; ///< çª—å£æ˜¯å¦ä½¿ç”¨é»˜è®¤ä½ç½®(å±…ä¸­)
+    int m_wndPosX; ///< çª—å£ä½ç½®Xåæ ‡
+    int m_wndPosY; ///< çª—å£ä½ç½®Yåæ ‡
 
-	DWORD m_windowStyle; ///< ´°¿Ú·ç¸ñ
+	DWORD m_windowStyle; ///< çª—å£é£æ ¼
 };
 
-/// @brief »æÖÆ½Ó¿Ú
+/// @brief ç»˜åˆ¶æ¥å£
 class IPaint
 {
 public:
-	/// @brief »æÖÆ
-	/// @param[in] hdc ÔÚÖ¸¶¨µÄhdcÖĞ»æÖÆ
+	/// @brief ç»˜åˆ¶
+	/// @param[in] hdc åœ¨æŒ‡å®šçš„hdcä¸­ç»˜åˆ¶
 	virtual void Paint(IN HDC hdc) = 0;
 };
 
-/// @ºó±¸»º³åÇøDCÀà
+/// @åå¤‡ç¼“å†²åŒºDCç±»
 class LBackBufferDC
 {
 public:
 	LBackBufferDC();
 	~LBackBufferDC();
 
-	/// @brief ³õÊ¼»¯ºó±¸»º³åÇø
-	/// @param[in] hWnd ´°¿Ú¾ä±ú
-	/// @param[in] width ºó±¸»º³åÇø¿í¶È
-	/// @param[in] height ºó±¸»º³åÇø¸ß¶È
+	/// @brief åˆå§‹åŒ–åå¤‡ç¼“å†²åŒº
+	/// @param[in] hWnd çª—å£å¥æŸ„
+	/// @param[in] width åå¤‡ç¼“å†²åŒºå®½åº¦
+	/// @param[in] height åå¤‡ç¼“å†²åŒºé«˜åº¦
 	void Init(IN HWND hWnd, IN int width, IN int height);
 
-	/// @brief ÒÔÖ¸¶¨±³¾°ÑÕÉ«À´Çå³ıºó±¸»º³åÇø
+	/// @brief ä»¥æŒ‡å®šèƒŒæ™¯é¢œè‰²æ¥æ¸…é™¤åå¤‡ç¼“å†²åŒº
 	/// @param[in] red
 	/// @param[in] green
 	/// @param[in] blue
-	/// @return ´íÎó·µ»Øfalse
+	/// @return é”™è¯¯è¿”å›false
 	bool Clear(BYTE red, BYTE green, BYTE blue);
 
-	/// @brief ÔÚºó±¸»º³åÇøÖĞ»æÖÆÍ¼ĞÎ
-	/// @param[in] pDrawObject »æÖÆµÄ¶ÔÏó
+	/// @brief åœ¨åå¤‡ç¼“å†²åŒºä¸­ç»˜åˆ¶å›¾å½¢
+	/// @param[in] pDrawObject ç»˜åˆ¶çš„å¯¹è±¡
 	void Draw(IPaint* pDrawObject);
 
-	/// @brief ¸´ÖÆºó±¸»º³åÇøÖĞµÄÄÚÈİµ½Ç°Ì¨»º³åÇø
+	/// @brief å¤åˆ¶åå¤‡ç¼“å†²åŒºä¸­çš„å†…å®¹åˆ°å‰å°ç¼“å†²åŒº
 	void CopyToFrontDC();
 
-	/// @brief »ñÈ¡ºó±¸»º³åÇøÉè±¸ÃèÊö±í¾ä±ú
-	/// @return ºó±¸»º³åÇøÉè±¸ÃèÊö±í¾ä±ú
+	/// @brief è·å–åå¤‡ç¼“å†²åŒºè®¾å¤‡æè¿°è¡¨å¥æŸ„
+	/// @return åå¤‡ç¼“å†²åŒºè®¾å¤‡æè¿°è¡¨å¥æŸ„
 	HDC GetBackDC();
 
 private:
-	HWND m_hWnd; ///< ´°¿Ú¾ä±ú
-	int m_width; ///< ºó±¸»º³åÇø¿í¶È
-	int m_height; ///< ºó±¸»º³åÇø¸ß¶È
-	HDC m_hBackDC; ///< ºó±¸»º³åÇøÉè±¸ÃèÊö±í¾ä±ú
-	HBITMAP m_hBitMap; ///< ºó±¸»º³åÇøÊ¹ÓÃµÄÎ»Í¼
-	HBITMAP m_hOldBitMap; ///< ºó±¸»º³åÇøÔ­Ê¼Î»Í¼
+	HWND m_hWnd; ///< çª—å£å¥æŸ„
+	int m_width; ///< åå¤‡ç¼“å†²åŒºå®½åº¦
+	int m_height; ///< åå¤‡ç¼“å†²åŒºé«˜åº¦
+	HDC m_hBackDC; ///< åå¤‡ç¼“å†²åŒºè®¾å¤‡æè¿°è¡¨å¥æŸ„
+	HBITMAP m_hBitMap; ///< åå¤‡ç¼“å†²åŒºä½¿ç”¨çš„ä½å›¾
+	HBITMAP m_hOldBitMap; ///< åå¤‡ç¼“å†²åŒºåŸå§‹ä½å›¾
 };
 
-/// @¸ß¾«¶È¼ÆÊ±Æ÷Àà
+/// @é«˜ç²¾åº¦è®¡æ—¶å™¨ç±»
 class LTimer
 {
 public:
     LTimer()
     {
-        // »ñÈ¡CPUµÄÊ±ÖÓÆµÂÊ(¼´Ã¿ÃëµÄµÎ´ğÊı)
+        // è·å–CPUçš„æ—¶é’Ÿé¢‘ç‡(å³æ¯ç§’çš„æ»´ç­”æ•°)
         QueryPerformanceFrequency((LARGE_INTEGER*)&m_performanceFreq);
     }
 
-    /// @brief ¿ªÊ¼¼ÆÊ±
+    /// @brief å¼€å§‹è®¡æ—¶
     void Start()
     {
         m_startTime = 0;
@@ -236,7 +236,7 @@ public:
         QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
     }
 
-    /// @brief ½áÊø¼ÆÊ±
+    /// @brief ç»“æŸè®¡æ—¶
     void End()
     {
         LONGLONG currentTime = 0;
@@ -244,8 +244,8 @@ public:
         m_time = currentTime - m_startTime;
     }
 
-    /// @brief »ñÈ¡¼ÆÊ±Ê±¼ä
-    /// @return ¼ÆÊ±Ê±¼ä(µ¥Î»ºÁÃë)
+    /// @brief è·å–è®¡æ—¶æ—¶é—´
+    /// @return è®¡æ—¶æ—¶é—´(å•ä½æ¯«ç§’)
     double Time()
     {
         double time = 0.0f;
@@ -254,8 +254,8 @@ public:
     }
 
 private:
-    LONGLONG m_time; ///< ¼ÆÊ±Ê±¼ä 
-    LONGLONG m_startTime; ///< ¼ÆÊ±Æ÷¿ªÊ¼Ê±¼ä 
-    LONGLONG m_performanceFreq; ///< CPUÊ±ÖÓÆµÂÊ(¼´Ã¿ÃëÖÓµÄµÎ´ğÊı)
+    LONGLONG m_time; ///< è®¡æ—¶æ—¶é—´ 
+    LONGLONG m_startTime; ///< è®¡æ—¶å™¨å¼€å§‹æ—¶é—´ 
+    LONGLONG m_performanceFreq; ///< CPUæ—¶é’Ÿé¢‘ç‡(å³æ¯ç§’é’Ÿçš„æ»´ç­”æ•°)
 };
 #endif

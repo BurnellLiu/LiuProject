@@ -1,4 +1,4 @@
-
+ï»¿
 #include "LWindowGDI.h"
 
 #include <string>
@@ -49,20 +49,20 @@ LWindow::LWindow()
 
 	ZeroMemory(&m_wndClassEx, sizeof(m_wndClassEx));
 	m_wndClassEx.cbSize = sizeof(WNDCLASSEX);
-	m_wndClassEx.style = CS_HREDRAW | CS_VREDRAW;  // ´°¿ÚÑùÊ½
+	m_wndClassEx.style = CS_HREDRAW | CS_VREDRAW;  // çª—å£æ ·å¼
 	m_wndClassEx.lpfnWndProc = WindowProc;
 	m_wndClassEx.cbClsExtra = 0;
 	m_wndClassEx.cbWndExtra = 0;
-	m_wndClassEx.hInstance = NULL;  // Ó¦ÓÃ³ÌĞòÊµÀı¾ä±ú
-	m_wndClassEx.hIcon = LoadIcon (NULL, IDI_APPLICATION);  // Ó¦ÓÃ³ÌĞòÍ¼±ê
-	m_wndClassEx.hCursor = LoadCursor (NULL, IDC_ARROW);  // Êó±ê¹â±ê
-	m_wndClassEx.hbrBackground = NULL;  // ¿Í»§Çø±³¾°É« Ê¹ÓÃË«»º³å½â¾öÆÁÄ»ÉÁË¸ÎÊÌâ,ĞèÒª½«±³¾°ÉèÎªNULL
-	m_wndClassEx.lpszMenuName  = NULL;  // ²Ëµ¥µÄÃû×Ö
-	m_wndClassEx.lpszClassName = NULL;  // ´°¿ÚÀàÃû³Æ
+	m_wndClassEx.hInstance = NULL;  // åº”ç”¨ç¨‹åºå®ä¾‹å¥æŸ„
+	m_wndClassEx.hIcon = LoadIcon (NULL, IDI_APPLICATION);  // åº”ç”¨ç¨‹åºå›¾æ ‡
+	m_wndClassEx.hCursor = LoadCursor (NULL, IDC_ARROW);  // é¼ æ ‡å…‰æ ‡
+	m_wndClassEx.hbrBackground = NULL;  // å®¢æˆ·åŒºèƒŒæ™¯è‰² ä½¿ç”¨åŒç¼“å†²è§£å†³å±å¹•é—ªçƒé—®é¢˜,éœ€è¦å°†èƒŒæ™¯è®¾ä¸ºNULL
+	m_wndClassEx.lpszMenuName  = NULL;  // èœå•çš„åå­—
+	m_wndClassEx.lpszClassName = NULL;  // çª—å£ç±»åç§°
 	m_wndClassEx.hIconSm = m_wndClassEx.hIcon;
 
 	/*
-	Ê¹ÓÃ´°¿Ú¼ÆÊı, ×Ô¶¯´´½¨´°¿ÚÀàÃû³Æ
+	ä½¿ç”¨çª—å£è®¡æ•°, è‡ªåŠ¨åˆ›å»ºçª—å£ç±»åç§°
 	*/
 	m_wndClassName.append("LWindow");
 	m_wndClassName.append(ConvertToString(m_wndCount));
@@ -208,7 +208,7 @@ void LWindow::Create()
 	DWORD dwRet = RegisterClassEx(&m_wndClassEx);
 	//LASSERT(dwRet != 0);
 
-    // ´°¿Ú¾ÓÖĞÏÔÊ¾
+    // çª—å£å±…ä¸­æ˜¾ç¤º
     if (m_bUseDefaultPos)
     {
         m_wndPosX = GetSystemMetrics(SM_CXFULLSCREEN)/2-m_wndWidth/2;
@@ -219,19 +219,19 @@ void LWindow::Create()
         WS_EX_APPWINDOW,
 		m_wndClassName.c_str(), 
 		m_wndTitle.c_str(),
-		m_windowStyle,  // ´°¿Ú·ç¸ñ
-		m_wndPosX,  // ´°¿ÚÎ»ÖÃX
-		m_wndPosY,  // ´°¿ÚÎ»ÖÃY 
-		m_wndWidth,  // ´°¿Ú¿í
-		m_wndHeight,  // ´°¿Ú¿í
-		NULL,  // ¸¸´°¿Ú¾ä±ú
-		NULL,  // ²Ëµ¥¾ä±ú
+		m_windowStyle,  // çª—å£é£æ ¼
+		m_wndPosX,  // çª—å£ä½ç½®X
+		m_wndPosY,  // çª—å£ä½ç½®Y 
+		m_wndWidth,  // çª—å£å®½
+		m_wndHeight,  // çª—å£å®½
+		NULL,  // çˆ¶çª—å£å¥æŸ„
+		NULL,  // èœå•å¥æŸ„
 		m_wndClassEx.hInstance,
 		NULL); 
 
 	//LASSERT(m_hWnd != NULL);
 
-	// ¼ÇÂ¼Ö¸Õë, ¸ÃÔËĞĞÔÚCreateWindow·½·¨Ö®ºó, ËùÒÔÀà×Ô¼ºµÄÏûÏ¢´¦Àíº¯Êı½ÓÊÜ²»µ½WM_CREATEÏûÏ¢
+	// è®°å½•æŒ‡é’ˆ, è¯¥è¿è¡Œåœ¨CreateWindowæ–¹æ³•ä¹‹å, æ‰€ä»¥ç±»è‡ªå·±çš„æ¶ˆæ¯å¤„ç†å‡½æ•°æ¥å—ä¸åˆ°WM_CREATEæ¶ˆæ¯
 	SetWindowLongW(m_hWnd, GWL_USERDATA, (LONG)this);
 
 }
@@ -266,7 +266,7 @@ LBackBufferDC::LBackBufferDC()
 	m_height = 0;
 	m_hBitMap = NULL;
 	m_hOldBitMap = NULL;
-	// ´´½¨¼æÈİµÄDC
+	// åˆ›å»ºå…¼å®¹çš„DC
 	m_hBackDC = CreateCompatibleDC(NULL);
 }
 
@@ -287,7 +287,7 @@ bool LBackBufferDC::Clear(BYTE red, BYTE green, BYTE blue)
     if (0 == bRet)
         return false;
 
-    // ÒÔÖ¸¶¨ÑÕÉ«À´Ìî³ä±³¾°
+    // ä»¥æŒ‡å®šé¢œè‰²æ¥å¡«å……èƒŒæ™¯
     HBRUSH hbkBrush = CreateSolidBrush(RGB(red, green, blue));
     RECT rect;
     rect.top = 0;
