@@ -1,6 +1,7 @@
 ﻿
 #include "MainWindow.h"
 
+
 #define ZOOM_IN 1.005 // 放大系数
 #define ZOOM_OUT 0.995 // 缩小系数
 
@@ -263,8 +264,56 @@ LRESULT LGameWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lP
 	return DefWindowProc(GetWndHandle(), message, wParam, lParam);
 }
 
+#define DEVICE_INI_FILE L".\\Device.ini"
+
+/// <SUMMARY>
+/// 生成设备文件
+/// </SUMMARY>
+void GenetateDeviceFile()
+{
+    DeleteFileW(DEVICE_INI_FILE);
+
+    vector<AccDevice> accDevicesVec;
+    GetAccelerators(accDevicesVec);
+
+    wchar_t strBuffer[256] = { 0 };
+    swprintf_s(strBuffer, L"%u", accDevicesVec.size());
+    WritePrivateProfileStringW(L"Device", L"Count", strBuffer, DEVICE_INI_FILE);
+
+    for (unsigned int i = 0; i < accDevicesVec.size(); i++)
+    {
+        swprintf_s(strBuffer, L"%u", i);
+        wstring appName = strBuffer;
+        WritePrivateProfileStringW(appName.c_str(), L"DeviceDesc", accDevicesVec[i].DeviceDesc.c_str(), DEVICE_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"DevicePath", accDevicesVec[i].DevicePath.c_str(), DEVICE_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"IsEmulated", accDevicesVec[i].IsEmulated ? L"True" : L"False", DEVICE_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"SupportDouble", accDevicesVec[i].SupportDouble ? L"True" : L"False", DEVICE_INI_FILE);
+    }
+}
+
 int LMain()
 {
+    // 将加速器设备保存在Device.ini文件中
+    string cmdLine;
+    LApParam::GetCmdLine(cmdLine);
+    if (cmdLine.empty())
+    {
+        GenetateDeviceFile();
+    }
+    else if (cmdLine.compare("GETDEV") == 0)
+    {
+        GenetateDeviceFile();
+        return 0;
+    }
+    else if (cmdLine.find("SETDEV") != string::npos)
+    {
+
+    }
+    else
+    {
+        return 0;
+    }
+
 	LGameWindow mainWnd;
     mainWnd.SetSize(500, 500);
     mainWnd.SetSizingBorder(false);
