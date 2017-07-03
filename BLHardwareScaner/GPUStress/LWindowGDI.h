@@ -169,15 +169,6 @@ private:
 	DWORD m_windowStyle; ///< 窗口风格
 };
 
-/// @brief 绘制接口
-class IPaint
-{
-public:
-	/// @brief 绘制
-	/// @param[in] hdc 在指定的hdc中绘制
-	virtual void Paint(IN HDC hdc) = 0;
-};
-
 /// @后备缓冲区DC类
 class LBackBufferDC
 {
@@ -197,10 +188,6 @@ public:
 	/// @param[in] blue
 	/// @return 错误返回false
 	bool Clear(BYTE red, BYTE green, BYTE blue);
-
-	/// @brief 在后备缓冲区中绘制图形
-	/// @param[in] pDrawObject 绘制的对象
-	void Draw(IPaint* pDrawObject);
 
 	/// @brief 复制后备缓冲区中的内容到前台缓冲区
 	void CopyToFrontDC();

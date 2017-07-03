@@ -267,6 +267,37 @@ LRESULT LGameWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lP
 #define DEVICE_INI_FILE L".\\Device.ini"
 
 /// <SUMMARY>
+/// 字符串转换为宽字符串
+/// </SUMMARY>
+/// <PARAM name = " strSrc" dir = "IN">
+/// 源字符串
+/// </PARAM>
+/// <PARAM name = " strDest" dir = "OUT">
+/// 存储转换后的宽字符串
+/// </PARAM>
+/// <RETURNS>
+/// 成功返回0, 失败返回false
+/// </RETURNS>
+bool StringToWString(const string& strSrc, wstring& strDest)
+{
+    int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);
+    if (nSize <= 0)
+        return false;
+    wchar_t* pwszDst = new wchar_t[nSize + 1];
+
+    int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
+
+    pwszDst[nSize] = 0;
+
+    strDest.clear();
+    strDest.assign(pwszDst);
+
+    delete[] pwszDst;
+
+    return true;
+}
+
+/// <SUMMARY>
 /// 生成设备文件
 /// </SUMMARY>
 void GenetateDeviceFile()
@@ -293,26 +324,42 @@ void GenetateDeviceFile()
 
 int LMain()
 {
-    // 将加速器设备保存在Device.ini文件中
+    
     string cmdLine;
     LApParam::GetCmdLine(cmdLine);
     if (cmdLine.empty())
     {
+        // 命令行为空时, 将加速器设备保存在Device.ini文件中
+        // 并使用默认的加速器进行曼德勃罗特集的计算
         GenetateDeviceFile();
     }
     else if (cmdLine.compare("GETDEV") == 0)
     {
+        // 命令行为GETDEV时, 只生成加速器设备文件Device.ini
+        // 然后直接退出
         GenetateDeviceFile();
         return 0;
     }
-    else if (cmdLine.find("SETDEV") != string::npos)
-    {
-
-    }
     else
     {
-        return 0;
+        // 命令行为其他时, 尝试在配置文件中查询指定节点, 
+        // 如果找不到, 则退出
+        wstring cmdLineW;
+        StringToWString(cmdLine, cmdLineW);
+        wchar_t devPath[256] = { 0 };
+        DWORD num = GetPrivateProfileStringW(
+            cmdLineW.c_str(), 
+            L"DevicePath", 
+            L"", 
+            devPath, 
+            256, 
+            DEVICE_INI_FILE);
+        if (0 == num)
+            return 0;
+
+        SetDefaultAccelerator(devPath);
     }
+
 
 	LGameWindow mainWnd;
     mainWnd.SetSize(500, 500);

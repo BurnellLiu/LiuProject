@@ -301,12 +301,6 @@ bool LBackBufferDC::Clear(BYTE red, BYTE green, BYTE blue)
     return true;
 }
 
-void LBackBufferDC::Draw(IPaint* pDrawObject)
-{
-	if (pDrawObject != NULL)
-		pDrawObject->Paint(m_hBackDC);
-}
-
 HDC LBackBufferDC::GetBackDC()
 {
 	return m_hBackDC;

@@ -10,24 +10,55 @@ using std::vector;
 #include "Mandelbrot.h"
 
 
+/// <SUMMARY>
+/// 中心点结构
+/// </SUMMARY>
 struct CenterPoint 
 {
-    double X;
-    double Y;
+    double X; // X轴点坐标
+    double Y; // Y轴点坐标
 };
 
+/// <SUMMARY>
+/// 游戏窗口
+/// </SUMMARY>
 class LGameWindow : public LWindow
 {
 public:
+    /// <SUMMARY>
+    /// 构造函数
+    /// </SUMMARY>
 	LGameWindow();
+
+    /// <SUMMARY>
+    /// 析构函数
+    /// </SUMMARY>
 	virtual ~LGameWindow();
 
+    /// <SUMMARY>
+    /// 运行
+    /// </SUMMARY>
 	virtual void Exe();
 
 private:
+    /// <SUMMARY>
+    /// 初始化
+    /// </SUMMARY>
 	void InitGame();
+
+    /// <SUMMARY>
+    /// 窗口绘制
+    /// </SUMMARY>
 	void PaintGame();
+
+    /// <SUMMARY>
+    /// 游戏循环
+    /// </SUMMARY>
 	void RunGame();
+
+    /// <SUMMARY>
+    /// 消息处理函数
+    /// </SUMMARY>
 	virtual LRESULT MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
 
 private:
