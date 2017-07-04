@@ -20,6 +20,7 @@
 class DiskSpeedPage;
 class CameraViewPage;
 class RestartAgingPage;
+class GPUStressPage;
 
 /// @brief 测试项页面
 class TestItemPage : public QWidget
@@ -58,6 +59,7 @@ private:
     DiskSpeedPage* m_pDiskSpeedPage;
     CameraViewPage* m_pCameraViewPage;
     RestartAgingPage* m_pRestartAgingPage;
+    GPUStressPage* m_pGPUStressPage;
 
     bool m_bCameraExist; ///< 标记是否存在摄像头
 

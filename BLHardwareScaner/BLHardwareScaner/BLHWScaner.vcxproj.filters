@@ -194,6 +194,12 @@
     <ClCompile Include="..\Src\Win8API\Win8API.cpp">
       <Filter>Src\Win8API</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\moc_GPUStressPage.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\TestItem\GPUStressPage.cpp">
+      <Filter>Ui\TestItem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Ui\HardwareInforPage.h">
@@ -246,6 +252,12 @@
     </CustomBuild>
     <CustomBuild Include="ResourceFiles\UIControlImage.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\GPUStress.ui">
+      <Filter>Ui\TestItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\TestItem\GPUStressPage.h">
+      <Filter>Ui\TestItem</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="..\Src\Win8API\Win8API.h">
       <Filter>Src\Win8API</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_GPUStress.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

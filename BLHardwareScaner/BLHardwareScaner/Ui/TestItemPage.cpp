@@ -8,12 +8,14 @@
 #include "TestItem\\DiskSpeedPage.h"
 #include "TestItem\\CameraViewPage.h"
 #include "TestItem\\RestartAgingPage.h"
+#include "TestItem\\GPUStressPage.h"
 
 #include "..\\Src\\LHardwareInfor.h"
 
 #define STRING_TESTITEM_DISK_SPEED QObject::tr("DiskSpeed")
 #define STRING_TESTITEM_CAMERA_VIEW QObject::tr("CameraView")
 #define STRING_TESTITEM_RESTAT_AGING QObject::tr("RestartAging")
+#define STRING_TESTITEM_GPU_STRESS QObject::tr("GPUStress")
 
 TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
     : QWidget(parent, flags)
@@ -42,6 +44,8 @@ TestItemPage::TestItemPage(IN float uiRatio, QWidget *parent, Qt::WFlags flags)
         m_pCameraViewPage = new CameraViewPage();   
     }
     m_pRestartAgingPage = new RestartAgingPage();
+
+    m_pGPUStressPage = new GPUStressPage(uiRatio);
     
 }
 
@@ -61,6 +65,11 @@ TestItemPage::~TestItemPage()
     {
         delete m_pRestartAgingPage;
         m_pRestartAgingPage = 0;
+    }
+    if (m_pGPUStressPage != 0)
+    {
+        delete m_pGPUStressPage;
+        m_pGPUStressPage = 0;
     }
 }
 
@@ -94,6 +103,9 @@ void TestItemPage::Init()
 
     this->AddTestItem(STRING_TESTITEM_RESTAT_AGING, QIcon(".\\Image\\TestItem\\RestartAging.png"));
     ui.stackedWidget->addWidget(m_pRestartAgingPage);
+
+    this->AddTestItem(STRING_TESTITEM_GPU_STRESS, QIcon(".\\Image\\TestItem\\GPUStress.png"));
+    ui.stackedWidget->addWidget(m_pGPUStressPage);
     
 
     if (APP_NORMAL == LAppParam::GetStartMode())
@@ -148,5 +160,10 @@ void TestItemPage::TestItemClicked(QListWidgetItem* pItem)
     if (pItem->text() == STRING_TESTITEM_RESTAT_AGING)
     {
         ui.stackedWidget->setCurrentWidget(m_pRestartAgingPage);
+    }
+
+    if (pItem->text() == STRING_TESTITEM_GPU_STRESS)
+    {
+        ui.stackedWidget->setCurrentWidget(m_pGPUStressPage);
     }
 }
