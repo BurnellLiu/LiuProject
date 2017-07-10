@@ -112,11 +112,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExeParam.cpp" />
     <ClCompile Include="LWindowGDI.cpp" />
     <ClCompile Include="Mandelbrot.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExeParam.h" />
     <ClInclude Include="LWindowGDI.h" />
     <ClInclude Include="Mandelbrot.h" />
     <ClInclude Include="MainWindow.h" />

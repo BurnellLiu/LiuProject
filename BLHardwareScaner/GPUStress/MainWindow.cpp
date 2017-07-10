@@ -1,6 +1,8 @@
 ﻿
 #include "MainWindow.h"
 
+#include "ExeParam.h"
+
 
 #define ZOOM_IN 1.005 // 放大系数
 #define ZOOM_OUT 0.995 // 缩小系数
@@ -264,64 +266,6 @@ LRESULT LGameWindow::MessageProc(IN UINT message, IN WPARAM wParam, IN LPARAM lP
 	return DefWindowProc(GetWndHandle(), message, wParam, lParam);
 }
 
-#define DEVICE_INI_FILE L".\\Device.ini"
-
-/// <SUMMARY>
-/// 字符串转换为宽字符串
-/// </SUMMARY>
-/// <PARAM name = " strSrc" dir = "IN">
-/// 源字符串
-/// </PARAM>
-/// <PARAM name = " strDest" dir = "OUT">
-/// 存储转换后的宽字符串
-/// </PARAM>
-/// <RETURNS>
-/// 成功返回0, 失败返回false
-/// </RETURNS>
-bool StringToWString(const string& strSrc, wstring& strDest)
-{
-    int nSize = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), 0, 0);
-    if (nSize <= 0)
-        return false;
-    wchar_t* pwszDst = new wchar_t[nSize + 1];
-
-    int iRet = MultiByteToWideChar(CP_ACP, 0, strSrc.c_str(), strSrc.length(), pwszDst, nSize);
-
-    pwszDst[nSize] = 0;
-
-    strDest.clear();
-    strDest.assign(pwszDst);
-
-    delete[] pwszDst;
-
-    return true;
-}
-
-/// <SUMMARY>
-/// 生成设备文件
-/// </SUMMARY>
-void GenetateDeviceFile()
-{
-    DeleteFileW(DEVICE_INI_FILE);
-
-    vector<AccDevice> accDevicesVec;
-    GetAccelerators(accDevicesVec);
-
-    wchar_t strBuffer[256] = { 0 };
-    swprintf_s(strBuffer, L"%u", accDevicesVec.size());
-    WritePrivateProfileStringW(L"Device", L"Count", strBuffer, DEVICE_INI_FILE);
-
-    for (unsigned int i = 0; i < accDevicesVec.size(); i++)
-    {
-        swprintf_s(strBuffer, L"%u", i);
-        wstring appName = strBuffer;
-        WritePrivateProfileStringW(appName.c_str(), L"DeviceDesc", accDevicesVec[i].DeviceDesc.c_str(), DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"DevicePath", accDevicesVec[i].DevicePath.c_str(), DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"IsEmulated", accDevicesVec[i].IsEmulated ? L"True" : L"False", DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"SupportDouble", accDevicesVec[i].SupportDouble ? L"True" : L"False", DEVICE_INI_FILE);
-    }
-}
-
 int LMain()
 {
     
@@ -331,35 +275,16 @@ int LMain()
     {
         // 命令行为空时, 将加速器设备保存在Device.ini文件中
         // 并使用默认的加速器进行曼德勃罗特集的计算
-        GenetateDeviceFile();
+        GenerateDefaultParamFile();
     }
     else if (cmdLine.compare("GETDEV") == 0)
     {
-        // 命令行为GETDEV时, 只生成加速器设备文件Device.ini
+        // 命令行为GETDEV时, 只生成参数文件
         // 然后直接退出
-        GenetateDeviceFile();
+        GenerateDefaultParamFile();
         return 0;
     }
-    else
-    {
-        // 命令行为其他时, 尝试在配置文件中查询指定节点, 
-        // 如果找不到, 则退出
-        wstring cmdLineW;
-        StringToWString(cmdLine, cmdLineW);
-        wchar_t devPath[256] = { 0 };
-        DWORD num = GetPrivateProfileStringW(
-            cmdLineW.c_str(), 
-            L"DevicePath", 
-            L"", 
-            devPath, 
-            256, 
-            DEVICE_INI_FILE);
-        if (0 == num)
-            return 0;
-
-        SetDefaultAccelerator(devPath);
-    }
-
+    
 
 	LGameWindow mainWnd;
     mainWnd.SetSize(500, 500);
