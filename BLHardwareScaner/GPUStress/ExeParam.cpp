@@ -1,14 +1,21 @@
 ﻿
 #include "ExeParam.h"
 
-#include <string>
-using std::string;
-
 #include <Windows.h>
 
 #include "Mandelbrot.h"
 
-#define DEVICE_INI_FILE L".\\ExeParam.ini"
+#define EXEPARAM_INI_FILE L".\\ExeParam.ini"
+
+#define EXEPARAM_SETION L"ExeParam"
+#define TIME_KEY L"Time"
+#define DEVICE_KEY L"Device"
+#define DEVICE_IDX_DEFAULT L"-1"
+
+#define DEVICE_SETTION L"Device"
+#define COUNT_KEY L"Count"
+
+#define DEVICE_PATH_KEY L"DevicePath"
 
 
 /// <SUMMARY>
@@ -44,29 +51,58 @@ static bool StringToWString(const string& strSrc, wstring& strDest)
 
 void GenerateDefaultParamFile()
 {
-    DeleteFileW(DEVICE_INI_FILE);
+    DeleteFileW(EXEPARAM_INI_FILE);
 
     // 配置文件中写入运行时间, 默认为10分钟
-    WritePrivateProfileStringW(L"ExeParam", L"Time", L"10", DEVICE_INI_FILE);
+    WritePrivateProfileStringW(EXEPARAM_SETION, TIME_KEY, L"10", EXEPARAM_INI_FILE);
 
-    WritePrivateProfileStringW(L"ExeParam", L"Device", L"-1", DEVICE_INI_FILE);
+    WritePrivateProfileStringW(EXEPARAM_SETION, DEVICE_KEY, DEVICE_IDX_DEFAULT, EXEPARAM_INI_FILE);
 
     vector<AccDevice> accDevicesVec;
     GetAccelerators(accDevicesVec);
 
     wchar_t strBuffer[256] = { 0 };
     swprintf_s(strBuffer, L"%u", accDevicesVec.size());
-    WritePrivateProfileStringW(L"Device", L"Count", strBuffer, DEVICE_INI_FILE);
+    WritePrivateProfileStringW(DEVICE_SETTION, COUNT_KEY, strBuffer, EXEPARAM_INI_FILE);
 
     for (unsigned int i = 0; i < accDevicesVec.size(); i++)
     {
         swprintf_s(strBuffer, L"%u", i);
         wstring appName = strBuffer;
-        WritePrivateProfileStringW(appName.c_str(), L"DeviceDesc", accDevicesVec[i].DeviceDesc.c_str(), DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"DevicePath", accDevicesVec[i].DevicePath.c_str(), DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"IsEmulated", accDevicesVec[i].IsEmulated ? L"True" : L"False", DEVICE_INI_FILE);
-        WritePrivateProfileStringW(appName.c_str(), L"SupportDouble", accDevicesVec[i].SupportDouble ? L"True" : L"False", DEVICE_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"DeviceDesc", accDevicesVec[i].DeviceDesc.c_str(), EXEPARAM_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), DEVICE_PATH_KEY, accDevicesVec[i].DevicePath.c_str(), EXEPARAM_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"IsEmulated", accDevicesVec[i].IsEmulated ? L"True" : L"False", EXEPARAM_INI_FILE);
+        WritePrivateProfileStringW(appName.c_str(), L"SupportDouble", accDevicesVec[i].SupportDouble ? L"True" : L"False", EXEPARAM_INI_FILE);
     }
+}
+
+bool IsParamFileExist()
+{
+    WIN32_FIND_DATAW wfd;
+    bool rValue = false;
+    HANDLE hFind = FindFirstFileW(EXEPARAM_INI_FILE, &wfd);
+    if (hFind != INVALID_HANDLE_VALUE)
+    {
+        rValue = true;
+    }
+    FindClose(hFind);
+    return rValue;
+}
+
+void GetExeParam(OUT ExeParam& exeParam)
+{
+    exeParam.DeviceIdx.clear();
+    exeParam.RunTime = 0;
+    exeParam.DevicePath.clear();
+
+    exeParam.RunTime = GetPrivateProfileIntW(EXEPARAM_SETION, TIME_KEY, 10, EXEPARAM_INI_FILE);
+
+    wchar_t buffer[256] = { 0 };
+    GetPrivateProfileStringW(EXEPARAM_SETION, DEVICE_KEY, DEVICE_IDX_DEFAULT, buffer, 256, EXEPARAM_INI_FILE);
+    exeParam.DeviceIdx = buffer;
+
+    GetPrivateProfileStringW(exeParam.DeviceIdx.c_str(), DEVICE_PATH_KEY, L"", buffer, 256, EXEPARAM_INI_FILE);
+    exeParam.DevicePath = buffer;
 }
 
 /*

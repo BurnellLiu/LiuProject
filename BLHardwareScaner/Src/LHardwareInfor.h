@@ -98,6 +98,7 @@ struct VideoCardInforArray
 {
     unsigned long Count; ///< 显卡数量
     wstring Description[MAX_VIDEOCARD_NUMBER]; ///< 显卡描述
+    wstring DevicePath[MAX_VIDEOCARD_NUMBER]; ///< 显卡设备路径
     VIDEO_CARD_TYPE Type[MAX_VIDEOCARD_NUMBER]; ///< 显卡类型
     unsigned long RAMSize[MAX_VIDEOCARD_NUMBER]; ///< 显存大小, 单位(M)
 };

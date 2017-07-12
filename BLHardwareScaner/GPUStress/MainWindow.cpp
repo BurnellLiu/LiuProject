@@ -180,7 +180,7 @@ void LGameWindow::PaintGame()
 
 }
 
-void LGameWindow::Exe()
+void LGameWindow::Exe(IN unsigned int runTime)
 {
 	this->InitGame();
 
@@ -229,6 +229,8 @@ void LGameWindow::Exe()
 
             // 累计耗时
             m_timeM += timer.Time() / 60000.0;
+            if (m_timeM >= runTime)
+                bDone = true;
         }
 
         
@@ -273,9 +275,9 @@ int LMain()
     LApParam::GetCmdLine(cmdLine);
     if (cmdLine.empty())
     {
-        // 命令行为空时, 将加速器设备保存在Device.ini文件中
-        // 并使用默认的加速器进行曼德勃罗特集的计算
-        GenerateDefaultParamFile();
+        // 命令行为空时, 如果参数文件不存在则创建参数文件
+        if (!IsParamFileExist())
+            GenerateDefaultParamFile();
     }
     else if (cmdLine.compare("GETDEV") == 0)
     {
@@ -283,6 +285,14 @@ int LMain()
         // 然后直接退出
         GenerateDefaultParamFile();
         return 0;
+    }
+
+    // 设置加速器
+    ExeParam exeParam;
+    GetExeParam(exeParam);
+    if (!exeParam.DevicePath.empty())
+    {
+        SetDefaultAccelerator(exeParam.DevicePath);
     }
     
 
@@ -296,7 +306,7 @@ int LMain()
     mainWnd.SetTitle("GPU Stress");
 
 	mainWnd.Show();
-	mainWnd.Exe();
+	mainWnd.Exe(exeParam.RunTime);
 
 	return 0;
 }

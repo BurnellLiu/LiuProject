@@ -323,6 +323,8 @@ private:
             if (0 != dwRet)
                 continue;
 
+            videoCardInfor.DevicePath[i] = instanceID;
+
             unsigned int busNumber;
             dwRet = displayCard.GetBusNumber(i, busNumber);
             if (0 != dwRet)

@@ -6,8 +6,11 @@
 #include <QtGui/QDialog>
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
+#include <QtCore/QProcess>
+#include <QtCore/QTimer>
 
 #include "ui_GPUStress.h"
+
 
 #ifndef IN
 #define IN
@@ -39,11 +42,16 @@ protected:
     void showEvent(QShowEvent* e);
 
 private slots:
+    /// @brief 测试按钮单击槽函数
+    void TestButtonClicked();
 
-private:
+    /// @brief GPU压力测试定时器超时函数
+    void GpuStressTimerTimeout();
 
 private:
     Ui::GPUStressForm ui;
+    QProcess m_gpuProcess; ///< GPU压力测试进程
+    QTimer m_gpuTimer; ///< GPU压力测试进程计时器
 };
 
 #endif

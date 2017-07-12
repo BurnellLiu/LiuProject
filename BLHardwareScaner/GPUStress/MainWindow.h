@@ -38,7 +38,10 @@ public:
     /// <SUMMARY>
     /// 运行
     /// </SUMMARY>
-	virtual void Exe();
+    /// <PARAM name="runTime" dir="IN">
+    /// 运行时间, 单位分钟
+    /// </PARAM>
+	virtual void Exe(IN unsigned int runTime);
 
 private:
     /// <SUMMARY>
