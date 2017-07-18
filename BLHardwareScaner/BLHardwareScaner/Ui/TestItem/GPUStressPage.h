@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _GPUSTRESS_PAGE_H_
 #define _GPUSTRESS_PAGE_H_
@@ -10,6 +10,8 @@
 #include <QtCore/QTimer>
 
 #include "ui_GPUStress.h"
+
+#include "..\\Src\\TemperatureProbe.h"
 
 
 #ifndef IN
@@ -24,34 +26,56 @@
 #define OUT
 #endif
 
-/// @brief GPUÑ¹Á¦²âÊÔÒ³Ãæ
+/// @brief GPUå‹åŠ›æµ‹è¯•é¡µé¢
 class GPUStressPage : public QDialog
 {
     Q_OBJECT
 
 public:
-    /// @brief ¹¹Ôìº¯Êı
-    /// @param[in] uiRatio UI·Å´óÏµÊı
+    /// @brief æ„é€ å‡½æ•°
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
     GPUStressPage(IN float uiRatio, IN QWidget *parent = 0, IN Qt::WFlags flags = 0);
 
-    /// @brief Îö¹¹º¯Êı
+    /// @brief ææ„å‡½æ•°
     ~GPUStressPage();
 
 protected:
-    /// @brief ´°¿ÚÏÔÊ¾ÊÂ¼ş
+    /// @brief çª—å£æ˜¾ç¤ºäº‹ä»¶
     void showEvent(QShowEvent* e);
 
 private slots:
-    /// @brief ²âÊÔ°´Å¥µ¥»÷²Ûº¯Êı
+    /// @brief æµ‹è¯•æŒ‰é’®å•å‡»æ§½å‡½æ•°
     void TestButtonClicked();
 
-    /// @brief GPUÑ¹Á¦²âÊÔ¶¨Ê±Æ÷³¬Ê±º¯Êı
+    /// @brief GPUå‹åŠ›æµ‹è¯•å®šæ—¶å™¨è¶…æ—¶å‡½æ•°
     void GpuStressTimerTimeout();
 
 private:
+    /// @brief è·å–æµ‹è¯•æ—¶é—´
+    /// @return è¿”å›æŒ‡å®šçš„æµ‹è¯•æ—¶é—´, å•ä½åˆ†é’Ÿ
+    int GetTestTime();
+
+    /// @brief è·å–æµ‹è¯•è®¾å¤‡è·¯å¾„
+    /// @return è¿”å›æŒ‡å®šçš„è®¾å¤‡è·¯å¾„
+    QString GetTestDevicePath();
+
+    /// @brief è®¾ç½®æµ‹è¯•å‚æ•°
+    /// @param[in] testTime æµ‹è¯•æ—¶é—´
+    /// @param[in] devicePath æµ‹è¯•è®¾å¤‡è·¯å¾„
+    void SetTestParam(int testTime, const QString& devicePath);
+
+    /// @brief åŠ è½½UIæ ·å¼
+    /// @param[in] uiRatio UIæ”¾å¤§ç³»æ•°
+    void LoadQSS(IN float uiRatio);
+
+private:
     Ui::GPUStressForm ui;
-    QProcess m_gpuProcess; ///< GPUÑ¹Á¦²âÊÔ½ø³Ì
-    QTimer m_gpuTimer; ///< GPUÑ¹Á¦²âÊÔ½ø³Ì¼ÆÊ±Æ÷
+    QProcess m_gpuProcess; ///< GPUå‹åŠ›æµ‹è¯•è¿›ç¨‹
+    QTimer m_gpuTimer; ///< GPUå‹åŠ›æµ‹è¯•è¿›ç¨‹è®¡æ—¶å™¨
+
+    unsigned int m_testStartTime; ///< æµ‹è¯•å¼€å§‹æ—¶é—´
+
+    TemperatureProbe m_tempProbe; ///< æ¸©åº¦æ¢æµ‹å¯¹è±¡
 };
 
 #endif
