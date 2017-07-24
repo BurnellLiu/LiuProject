@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import nltk
+import re
 
 from nltk.corpus import conll2000
 
@@ -247,20 +248,45 @@ class ClassifierChunker(nltk.ChunkParserI):
 
 
 def chunker_sample7():
+    """
+    分类器分块器示例代码
+    :return: 
+    """
     train_sents = conll2000.chunked_sents("train.txt", chunk_types=["NP"])
     test_sents = conll2000.chunked_sents("test.txt", chunk_types=["NP"])
     tagged_sents = [[((w, t), c) for (w, t, c) in nltk.chunk.tree2conlltags(sent)] for sent in train_sents]
     chunker = ClassifierChunker(tagged_sents)
     print(chunker.evaluate(test_sents))
 
-# 取出语料库中的一个句子
-sent = nltk.corpus.treebank.tagged_sents()[22]
 
-# 使用NE分块器进行命名实体识别，返回Tree对象，
-# Tree对象的label()方法可以查看命名实体的标签
-for tree in nltk.ne_chunk(sent).subtrees():
-    # 过滤根树
-    if tree.label() == "S":
-        continue
+def ner_sample():
+    """
+    命名实体识别示例
+    :return: 
+    """
+    # 取出语料库中的一个句子
+    sent = nltk.corpus.treebank.tagged_sents()[22]
 
-    print(tree)
+    # 使用NE分块器进行命名实体识别，返回Tree对象，
+    # Tree对象的label()方法可以查看命名实体的标签
+    for tree in nltk.ne_chunk(sent).subtrees():
+        # 过滤根树
+        if tree.label() == "S":
+            continue
+
+        print(tree)
+
+
+def extract_rels_sample():
+    """
+    关系抽取示例
+    :return: 
+    """
+    IN = re.compile(r'.*\bin\b(?!\b.+ing)')
+    for doc in nltk.corpus.ieer.parsed_docs('NYT_19980315'):
+        print(doc)
+        #for rel in nltk.sem.extract_rels('ORG', 'LOC', doc, corpus='ieer', pattern=IN):
+            #print(rel)
+
+
+extract_rels_sample()
