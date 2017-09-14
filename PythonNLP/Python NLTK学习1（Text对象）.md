@@ -22,12 +22,15 @@ Python版本可以随意选择，只要NLTK支持就可以。IDE的话笔者习�
 
 设置好下载目录，选择book选项，点击下载。《用Python进行自然语言处理》这本书中所用到的所有书籍数据都在book选项下，下载时间可能有点长，需要耐心等待。下载完成后我们的基本环境就搭建完成啦。
 
+Windows下设置下载目录后需要在系统环境变量中设置一个NTLK_DATA变量，重启电脑后生效，如下：
+![](http://www.burnelltek.com/static/img/2017/9/14151841.PNG)
+
 输入下面代码来看看书籍数据：
    
     import nltk
     form nltk.book import *
 
-![](http://www.burnelltek.com/static/img/1481795185592NLTK.PNG)
+![](http://www.burnelltek.com/static/img/2017/9/14151841.PNG)
 
 我们可以看到nltk预先帮我们加载了一些书籍数据text1~text9，text1~text9为Text类的实例对象名称，它们都代表一本书籍。实际上Text类的构造函数接受一个单词列表作为参数，NLTK库预先帮我们构造了几个Text对象。
 
