@@ -72,7 +72,7 @@ int main()
 	cvFindContours(pImgSrc, pMemStorage, &pContour, sizeof(CvContour), CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cvPoint(0, 0));
 
 	// ½«ÂÖÀª»­³ö
-	cvDrawContours(pImgContour, pContour, CV_RGB(0, 0, 255), CV_RGB(255, 0, 0), 2, 2, 8, cvPoint(0, 0));
+	cvDrawContours(pImgContour, pContour, cvScalar(0, 0, 255), cvScalar(255, 0, 0), 2, 2, 8, cvPoint(0, 0));
 
 	// ÏÔÊ¾ÂÖÀªÍ¼
 	cvNamedWindow("Contour", CV_WINDOW_AUTOSIZE);
